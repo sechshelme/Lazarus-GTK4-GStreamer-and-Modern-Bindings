@@ -1,7 +1,11 @@
 program project1;
 
 uses
-cl, fp_opencl;
+cl_version,
+cl_platform,
+cl,
+
+fp_opencl;
 
 procedure main;
 begin
