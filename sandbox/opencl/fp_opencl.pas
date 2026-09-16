@@ -4,11 +4,13 @@ interface
 
 const
   {$IFDEF Linux}
-  libopencl = 'opencl';
+  libopencl = 'OpenCL';
+  libm = 'm';
   {$ENDIF}
 
   {$IFDEF Windows}
-  libopencl = 'opencl-dll';
+  libopencl = 'OpenCL.dll';
+  libm = 'msvcrt';
   {$ENDIF}
 
 type
@@ -38,15 +40,16 @@ type
   Pint64_t = ^Tint64_t;
   PPint64_t = ^Pint64_t;
 
-  Tintptr_t=SizeUInt;
-
+  Tintptr_t = PtrUInt;
+  Tsize_t = SizeUInt;
+  Psize_t = ^Tsize_t;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
 
   {$DEFINE read_interface}
-//  {$include fp_opencl_includes.inc}
+  //  {$include fp_opencl_includes.inc}
   {$UNDEF read_interface}
 
 
@@ -57,4 +60,3 @@ implementation
 {$UNDEF read_implementation}
 
 end.
-

@@ -129,7 +129,7 @@ const
   CL_HUGE_VALF = Tcl_float(1e50);
   CL_HUGE_VAL = Tcl_double(1e500);
 
-function nanf(para1: pchar): single; cdecl; external libopencl;
+function nanf(para1: pchar): single; cdecl; external libm;
 
 function CL_NAN: single;
 
