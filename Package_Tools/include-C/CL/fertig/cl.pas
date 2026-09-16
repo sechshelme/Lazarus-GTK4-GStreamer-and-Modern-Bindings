@@ -2,6 +2,9 @@ unit cl;
 
 interface
 
+uses
+  fp_opencl, cl_platform, cl_version;
+
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}

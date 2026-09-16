@@ -20,6 +20,8 @@ uses
 
   procedure main;
   {$CODEALIGN LOCALMIN=16}
+//  {$ALIGN 16}
+
   var
     i1:Integer;
     m: Tmat4;

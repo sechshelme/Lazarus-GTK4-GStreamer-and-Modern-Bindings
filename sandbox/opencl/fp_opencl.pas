@@ -38,6 +38,9 @@ type
   Pint64_t = ^Tint64_t;
   PPint64_t = ^Pint64_t;
 
+  Tintptr_t=SizeUInt;
+
+
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
