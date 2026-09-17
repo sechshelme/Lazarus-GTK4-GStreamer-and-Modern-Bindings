@@ -2,8 +2,7 @@ program project1;
 
 (*
 
-udo apt install pocl-opencl-icd
-
+sudo apt install pocl-opencl-icd
 sudo apt install intel-oneapi-runtime-opencl
 
 *)
@@ -29,7 +28,7 @@ const
 
 const kernel_source: pchar =
     '__kernel void vector_add(__global const float *A, __global const float *B, __global float *C) { '#10 +
-    '    int i = get_global_id(0);       g                                                           '#10 +
+    '    int i = get_global_id(0);                                                                  '#10 +
     '    C[i] = A[i] + B[i];                                                                        '#10 +
     '}' +
     '__kernel void vector_mul(__global const float *A, __global const float *B, __global float *C) { '#10 +
@@ -37,21 +36,42 @@ const kernel_source: pchar =
     '    C[i] = A[i] * B[i];                                                                        '#10 +
     '}';
 
-  function LoadProgram(device_id: Tcl_device_id; context: Tcl_context; prg_source: pchar): Tcl_program;
+  function LoadProgram(queue: Tcl_command_queue; prg_source: pchar): Tcl_program;
   var
+    context: Tcl_context;
+    device_id: Tcl_device_id;
     build_res: Tcl_int;
     log_size: Tsize_t;
     build_log: array of char = nil;
+
+    // Hilfszeiger, um den Pascal-Header auszutricksen
+    p_context: Pointer;
+    p_device: Pointer;
   begin
+    p_context := nil;
+    p_device := nil;
+
+    // 1. Kontext und Device absolut sicher als untypisierte Pointer auslesen
+    clGetCommandQueueInfo(queue, CL_QUEUE_CONTEXT, SizeOf(Pointer), @p_context, nil);
+    clGetCommandQueueInfo(queue, CL_QUEUE_DEVICE, SizeOf(Pointer), @p_device, nil);
+
+    // 2. Zurück auf die OpenCL-Typen casten
+    context := Tcl_context(p_context);
+    device_id := Tcl_device_id(p_device);
+
+    // 3. Programm erstellen und kompilieren
     Result := clCreateProgramWithSource(context, 1, @prg_source, nil, nil);
     build_res := clBuildProgram(Result, 1, @device_id, nil, nil, nil);
+
     if build_res <> CL_SUCCESS then begin
       clGetProgramBuildInfo(Result, device_id, CL_PROGRAM_BUILD_LOG, 0, nil, @log_size);
-      SetLength(build_log, log_size);
-      clGetProgramBuildInfo(Result, device_id, CL_PROGRAM_BUILD_LOG, log_size, PChar(build_log), nil);
-      WriteLn('--- COMPILER FEHLERPROTOKOLL ---');
-      WriteLn(pchar(@build_log[0]));
-      WriteLn('--------------------------------');
+      if log_size > 0 then begin
+        SetLength(build_log, log_size);
+        clGetProgramBuildInfo(Result, device_id, CL_PROGRAM_BUILD_LOG, log_size, pchar(build_log), nil);
+        WriteLn('--- COMPILER FEHLERPROTOKOLL ---');
+        WriteLn(pchar(@build_log[0]));
+        WriteLn('--------------------------------');
+      end;
       Result := nil;
     end;
   end;
@@ -65,11 +85,13 @@ const kernel_source: pchar =
     device_id: Tcl_device_id = nil;
     ret_num_platforms: Tcl_uint = 0;
     ret_num_devices: Tcl_uint = 0;
-    context: Tcl_context;
-    command_queue: Tcl_command_queue;
-    a_mem_obj, b_mem_obj, c_mem_obj: Tcl_mem;
-    prg: Tcl_program;
-    kernel: Tcl_kernel;
+    context: Tcl_context = nil;
+    command_queue: Tcl_command_queue = nil;
+    a_mem_obj: Tcl_mem = nil;
+    b_mem_obj: Tcl_mem = nil;
+    c_mem_obj: Tcl_mem = nil;
+    prg: Tcl_program = nil;
+    kernel: Tcl_kernel = nil;
   begin
     A := PSingle(GetMem(sizeof(single) * ARRAY_SIZE));
     B := PSingle(GetMem(sizeof(single) * ARRAY_SIZE));
@@ -82,7 +104,7 @@ const kernel_source: pchar =
     end;
 
     clGetPlatformIDs(1, @platform_id, @ret_num_platforms);
-    clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, @device_id, @ret_num_devices);
+    clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_DEFAULT, 1, @device_id, @ret_num_devices);
     PrintVersion(platform_id, device_id);
 
     context := clCreateContext(nil, 1, @device_id, nil, nil, nil);
@@ -95,29 +117,33 @@ const kernel_source: pchar =
     clEnqueueWriteBuffer(command_queue, a_mem_obj, CL_TRUE, 0, ARRAY_SIZE * sizeof(single), A, 0, nil, nil);
     clEnqueueWriteBuffer(command_queue, b_mem_obj, CL_TRUE, 0, ARRAY_SIZE * sizeof(single), B, 0, nil, nil);
 
-    prg := LoadProgram(device_id, context, kernel_source);
+    prg := LoadProgram(command_queue, kernel_source);
 
-    //    prg := clCreateProgramWithSource(context, 1, @kernel_source, nil, nil);
-    //    clBuildProgram(prg, 1, @device_id, nil, nil, nil);
+    if prg <> nil then begin
+      kernel := clCreateKernel(prg, 'vector_add', nil);
 
-    kernel := clCreateKernel(prg, 'vector_add', nil);
+      if kernel <> nil then begin
+        clSetKernelArg(kernel, 0, sizeof(Tcl_mem), @a_mem_obj);
+        clSetKernelArg(kernel, 1, sizeof(Tcl_mem), @b_mem_obj);
+        clSetKernelArg(kernel, 2, sizeof(Tcl_mem), @c_mem_obj);
 
-    clSetKernelArg(kernel, 0, sizeof(Tcl_mem), @a_mem_obj);
-    clSetKernelArg(kernel, 1, sizeof(Tcl_mem), @b_mem_obj);
-    clSetKernelArg(kernel, 2, sizeof(Tcl_mem), @c_mem_obj);
+        global_item_size := ARRAY_SIZE;
+        local_item_size := 64;
+        clEnqueueNDRangeKernel(command_queue, kernel, 1, nil, @global_item_size, @local_item_size, 0, nil, nil);
 
-    global_item_size := ARRAY_SIZE;
-    local_item_size := 64;
-    clEnqueueNDRangeKernel(command_queue, kernel, 1, nil, @global_item_size, @local_item_size, 0, nil, nil);
+        clEnqueueReadBuffer(command_queue, c_mem_obj, CL_TRUE, 0, ARRAY_SIZE * sizeof(single), C, 0, nil, nil);
 
-    clEnqueueReadBuffer(command_queue, c_mem_obj, CL_TRUE, 0, ARRAY_SIZE * sizeof(single), C, 0, nil, nil);
-
-    for  i := 0 to 9 do begin
-      WriteLn(A[i]: 4: 2, ' x ', B[i]: 4: 2, ' = ', C[i]: 4: 2);
+        for i := 0 to 9 do begin
+          WriteLn(A[i]: 4: 2, ' + ', B[i]: 4: 2, ' = ', C[i]: 4: 2);
+        end;
+      end else begin
+        WriteLn('Fehler: Kernel konnte nicht erstellt werden. Name falsch?');
+      end;
     end;
 
     clFlush(command_queue);
     clFinish(command_queue);
+
     clReleaseKernel(kernel);
     clReleaseProgram(prg);
     clReleaseMemObject(a_mem_obj);
