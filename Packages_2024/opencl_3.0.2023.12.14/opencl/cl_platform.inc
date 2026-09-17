@@ -1,13 +1,4 @@
-unit cl_platform;
-
-interface
-
-uses
-  fp_opencl;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 type
@@ -1425,7 +1416,10 @@ type
   // === Konventiert am: 16-9-26 15:57:32 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 function CL_NAN: single;
@@ -1434,4 +1428,4 @@ begin
 end;
 
 
-end.
+{$ENDIF read_implementation}

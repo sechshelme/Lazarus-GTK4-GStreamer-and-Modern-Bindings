@@ -1,13 +1,4 @@
-unit cl_version;
-
-interface
-
-uses
-  fp_opencl;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 const
@@ -25,8 +16,11 @@ const
   // === Konventiert am: 16-9-26 15:57:34 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

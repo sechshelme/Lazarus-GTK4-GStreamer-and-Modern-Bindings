@@ -1,42 +1,33 @@
-unit cl;
-
-interface
-
-uses
-  fp_opencl, cl_platform, cl_version;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 type
   Pcl_platform_id = ^Tcl_platform_id;
-  Tcl_platform_id = Pcl_platform_id;
+  Tcl_platform_id = type Pointer;
 
   Pcl_device_id = ^Tcl_device_id;
-  Tcl_device_id = Pcl_device_id;
+  Tcl_device_id = type Pointer;
 
   Pcl_context = ^Tcl_context;
-  Tcl_context = Pcl_context;
+  Tcl_context = type Pointer;
 
   Pcl_command_queue = ^Tcl_command_queue;
-  Tcl_command_queue = Pcl_command_queue;
+  Tcl_command_queue = type Pointer;
 
   Pcl_mem = ^Tcl_mem;
-  Tcl_mem = Pcl_mem;
+  Tcl_mem = type Pointer;
 
   Pcl_program = ^Tcl_program;
-  Tcl_program = Pcl_program;
+  Tcl_program = type Pointer;
 
   Pcl_kernel = ^Tcl_kernel;
-  Tcl_kernel = Pcl_kernel;
+  Tcl_kernel = type Pointer;
 
   Pcl_event = ^Tcl_event;
-  Tcl_event = Pcl_event;
+  Tcl_event = type Pointer;
 
   Pcl_sampler = ^Tcl_sampler;
-  Tcl_sampler = Pcl_sampler;
+  Tcl_sampler = type Pointer;
 
   Pcl_bool = ^Tcl_bool;
   Tcl_bool = Boolean32;
@@ -1017,6 +1008,9 @@ function clEnqueueTask(command_queue: Tcl_command_queue; kernel: Tcl_kernel; num
 // === Konventiert am: 16-9-26 13:48:26 ===
 
 
-implementation
+{$ENDIF read_interface}
 
-end.
+
+{$IFDEF read_implementation}
+
+{$ENDIF read_implementation}

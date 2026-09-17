@@ -49,14 +49,18 @@ type
   {$ENDIF}
 
   {$DEFINE read_interface}
-  //  {$include fp_opencl_includes.inc}
+ {$include opencl/cl_version}
+ {$include opencl/cl_platform}
+ {$include opencl/cl}
   {$UNDEF read_interface}
 
 
 implementation
 
 {$DEFINE read_implementation}
-//{$include fp_opencl_includes.inc}
+{$include opencl/cl_version}
+{$include opencl/cl_platform}
+{$include opencl/cl}
 {$UNDEF read_implementation}
 
 end.

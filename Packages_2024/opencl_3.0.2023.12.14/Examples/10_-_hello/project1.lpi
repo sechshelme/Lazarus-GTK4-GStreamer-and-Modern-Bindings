@@ -23,12 +23,14 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
+    <RequiredPackages>
+      <Item>
+        <PackageName Value="fp_opencl_package"/>
+      </Item>
+    </RequiredPackages>
     <Units>
       <Unit>
         <Filename Value="project1.lpr"/>
-      </Unit>
-      <Unit>
-        <Filename Value="fp_opencl.pas"/>
       </Unit>
     </Units>
   </ProjectOptions>
