@@ -63,4 +63,21 @@ implementation
 {$include opencl/cl}
 {$UNDEF read_implementation}
 
+// wegen "division_by_zero" in den clibs
+{$IF defined(CPUX86) or defined(CPUX64)}
+{$asmmode intel}
+procedure SetMXCSR;
+var
+  w2: word = 8064;
+begin
+  asm
+           Ldmxcsr w2
+  end;
+end;
+{$ENDIF}
+
+begin
+  {$IF defined(CPUX86) or defined(CPUX64)}
+  SetMXCSR;
+  {$ENDIF}
 end.

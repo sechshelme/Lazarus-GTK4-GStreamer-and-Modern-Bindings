@@ -12,6 +12,7 @@ begin
   WriteLn('Plattform Name: ', s);
   clGetDeviceInfo(device_id, CL_DEVICE_VERSION, SizeOf(s), pchar(s), nil);
   WriteLn('Hardware Version: ', s);
+  WriteLn();
 end;
 
 
