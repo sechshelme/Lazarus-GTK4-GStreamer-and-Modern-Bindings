@@ -16,6 +16,7 @@ type
   LLVMValueRef = Pointer;
   LLVMBuilderRef = Pointer;
   LLVMExecutionEngineRef = Pointer;
+  PLLVMExecutionEngineRef=LLVMExecutionEngineRef;
   LLVMBasicBlockRef = Pointer;
 
   function LLVMContextCreate: LLVMContextRef; cdecl; external LLVM_Lib;
@@ -37,12 +38,15 @@ type
   procedure LLVMInitializeX86TargetMC; cdecl; external LLVM_Lib;
   procedure LLVMInitializeX86AsmPrinter; cdecl; external LLVM_Lib;
 
-  function LLVMCreateExecutionEngineForModule(var OutEE: LLVMExecutionEngineRef; M: LLVMModuleRef; var OutError: pansichar): longbool; cdecl; external LLVM_Lib;
+  function LLVMCreateExecutionEngineForModule(OutEE: PLLVMExecutionEngineRef; M: LLVMModuleRef; OutError: PPChar): longbool; cdecl; external LLVM_Lib;
   function LLVMGetFunctionAddress(EE: LLVMExecutionEngineRef; Name: pansichar): QWord; cdecl; external LLVM_Lib;
 
   procedure LLVMDisposeBuilder(Builder: LLVMBuilderRef); cdecl; external LLVM_Lib;
   procedure LLVMDisposeExecutionEngine(EE: LLVMExecutionEngineRef); cdecl; external LLVM_Lib;
   procedure LLVMContextDispose(C: LLVMContextRef); cdecl; external LLVM_Lib;
+
+  procedure LLVMDumpModule(M: LLVMModuleRef)  cdecl; external LLVM_Lib;
+
 
 type
   TAddFunction = function(a, b: int32): int32; cdecl;
@@ -91,7 +95,7 @@ type
     SumValue := LLVMBuildAdd(Builder, Arg1, Arg2, 'add_tmp');
     LLVMBuildRet(Builder, SumValue);
 
-    if LLVMCreateExecutionEngineForModule(EE, Module, ErrStr) then begin
+    if LLVMCreateExecutionEngineForModule(@EE, Module, @ErrStr) then begin
       WriteLn('JIT-Fehler: ', ErrStr);
       Exit;
     end;
@@ -104,6 +108,12 @@ type
 
       WriteLn('=== JIT ERGEBNIS ===');
       WriteLn('15 + 27 = ', Ergebnis);
+
+
+      WriteLn();
+      WriteLn('=== DUMP ERGEBNIS ===');
+
+          LLVMDumpModule(module);
     end else begin
       WriteLn('Funktionsadresse nicht gefunden.');
     end;
