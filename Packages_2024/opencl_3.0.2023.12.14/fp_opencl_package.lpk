@@ -14,6 +14,14 @@
         <Filename Value="fp_opencl.pas"/>
         <UnitName Value="fp_opencl"/>
       </Item>
+      <Item>
+        <Filename Value="fp_cl_egl.pas"/>
+        <UnitName Value="fp_cl_egl"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_cl_gl.pas"/>
+        <UnitName Value="fp_cl_gl"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>

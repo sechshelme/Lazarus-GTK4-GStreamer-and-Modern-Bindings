@@ -9,6 +9,8 @@ sudo apt install intel-oneapi-runtime-opencl
 
 
 uses
+  fp_cl_gl,
+  fp_cl_egl,
   fp_opencl;
 
 const

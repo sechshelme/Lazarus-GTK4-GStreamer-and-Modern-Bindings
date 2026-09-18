@@ -8,7 +8,7 @@ unit fp_opencl_package;
 interface
 
 uses
-  fp_opencl, LazarusPackageIntf;
+  fp_opencl, fp_cl_egl, fp_cl_gl, LazarusPackageIntf;
 
 implementation
 
