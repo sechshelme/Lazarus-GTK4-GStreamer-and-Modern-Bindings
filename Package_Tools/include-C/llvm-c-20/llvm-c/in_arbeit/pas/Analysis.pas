@@ -3,7 +3,7 @@ unit Analysis;
 interface
 
 uses
-  fp_llvm;
+  fp_llvm, Types;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

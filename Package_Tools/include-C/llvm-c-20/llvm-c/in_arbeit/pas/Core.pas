@@ -3,72 +3,13 @@ unit Core;
 interface
 
 uses
-  fp_llvm;
+  fp_llvm,Types;
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
 
-{===-- llvm-c/Core.h - Core Library C Interface ------------------*- C -*-===*\
-|*                                                                            *|
-|* Part of the LLVM Project, under the Apache License v2.0 with LLVM          *|
-|* Exceptions.                                                                *|
-|* See https://llvm.org/LICENSE.txt for license information.                  *|
-|* SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception                    *|
-|*                                                                            *|
-|*===----------------------------------------------------------------------===*|
-|*                                                                            *|
-|* This header declares the C interface to libLLVMCore.a, which implements    *|
-|* the LLVM intermediate representation.                                      *|
-|*                                                                            *|
-\*===----------------------------------------------------------------------=== }
-{$ifndef LLVM_C_CORE_H}
-{$define LLVM_C_CORE_H}
-{$include "llvm-c/Deprecated.h"}
-{$include "llvm-c/ErrorHandling.h"}
-{$include "llvm-c/ExternC.h"}
-{$include "llvm-c/Types.h"}
-{*
- * @defgroup LLVMC LLVM-C: C interface to LLVM
- *
- * This module exposes parts of the LLVM library as a C API.
- *
- * @
-  }
-{*
- * @defgroup LLVMCTransforms Transforms
-  }
-{*
- * @defgroup LLVMCCore Core
- *
- * This modules provide an interface to libLLVMCore, which implements
- * the LLVM intermediate representation as well as other related types
- * and utilities.
- *
- * Many exotic languages can interoperate with C code but have a harder time
- * with C++ due to name mangling. So in addition to C, this interface enables
- * tools written in such languages.
- *
- * @
-  }
-{*
- * @defgroup LLVMCCoreTypes Types and Enumerations
- *
- * @
-  }
-{/ External users depend on the following values being stable. It is not safe }
-{/ to reorder them. }
-{ Terminator Instructions  }
-{ removed 6 due to API changes  }
-{ Standard Unary Operators  }
-{ Standard Binary Operators  }
-{ Logical Operators  }
-{ Memory Operators  }
-{ Cast Operators  }
-{ Other Operators  }
-{ Atomic operators  }
-{ Exception Handling Operators  }
 type
   PLLVMOpcode = ^TLLVMOpcode;
   TLLVMOpcode =  Longint;
@@ -140,29 +81,8 @@ type
     LLVMCatchPad = 63;
     LLVMCleanupPad = 64;
     LLVMCatchSwitch = 65;
-;
-{*< type with no size  }
-{*< 16 bit floating point type  }
-{*< 32 bit floating point type  }
-{*< 64 bit floating point type  }
-{*< 80 bit floating point type (X87)  }
-{*< 128 bit floating point type (112-bit mantissa) }
-{*< 128 bit floating point type (two 64-bits)  }
-{*< Labels  }
-{*< Arbitrary bit width integers  }
-{*< Functions  }
-{*< Structures  }
-{*< Arrays  }
-{*< Pointers  }
-{*< Fixed width SIMD vector type  }
-{*< Metadata  }
-{ 15 previously used by LLVMX86_MMXTypeKind  }
-{*< Tokens  }
-{*< Scalable SIMD vector type  }
-{*< 16 bit brain floating point type  }
-{*< X86 AMX  }
-{*< Target extension type  }
-type
+
+  type
   PLLVMTypeKind = ^TLLVMTypeKind;
   TLLVMTypeKind =  Longint;
   Const
@@ -186,27 +106,8 @@ type
     LLVMBFloatTypeKind = 18;
     LLVMX86_AMXTypeKind = 19;
     LLVMTargetExtTypeKind = 20;
-;
-{*< Externally visible function  }
-{*< Keep one copy of function when linking (inline) }
-{*< Same, but only replaced by something
-                            equivalent.  }
-{*< Obsolete  }
-{*< Keep one copy of function when linking (weak)  }
-{*< Same, but only replaced by something
-                            equivalent.  }
-{*< Special purpose, only applies to global arrays  }
-{*< Rename collisions when linking (static
-                               functions)  }
-{*< Like Internal, but omit from symbol table  }
-{*< Obsolete  }
-{*< Obsolete  }
-{*< ExternalWeak linkage description  }
-{*< Obsolete  }
-{*< Tentative definitions  }
-{*< Like Private, but linker removes.  }
-{*< Like LinkerPrivate, but is weak.  }
-type
+
+  type
   PLLVMLinkage = ^TLLVMLinkage;
   TLLVMLinkage =  Longint;
   Const
@@ -227,39 +128,31 @@ type
     LLVMCommonLinkage = 14;
     LLVMLinkerPrivateLinkage = 15;
     LLVMLinkerPrivateWeakLinkage = 16;
-;
-{*< The GV is visible  }
-{*< The GV is hidden  }
-{*< The GV is protected  }
-type
+
+  type
   PLLVMVisibility = ^TLLVMVisibility;
   TLLVMVisibility =  Longint;
   Const
     LLVMDefaultVisibility = 0;
     LLVMHiddenVisibility = 1;
     LLVMProtectedVisibility = 2;
-;
-{*< Address of the GV is significant.  }
-{*< Address of the GV is locally insignificant.  }
-{*< Address of the GV is globally insignificant.  }
-type
+
+  type
   PLLVMUnnamedAddr = ^TLLVMUnnamedAddr;
   TLLVMUnnamedAddr =  Longint;
   Const
     LLVMNoUnnamedAddr = 0;
     LLVMLocalUnnamedAddr = 1;
     LLVMGlobalUnnamedAddr = 2;
-;
-{*< Function to be imported from DLL.  }
-{*< Function to be accessible from DLL.  }
-type
+
+  type
   PLLVMDLLStorageClass = ^TLLVMDLLStorageClass;
   TLLVMDLLStorageClass =  Longint;
   Const
     LLVMDefaultStorageClass = 0;
     LLVMDLLImportStorageClass = 1;
     LLVMDLLExportStorageClass = 2;
-;
+
 type
   PLLVMCallConv = ^TLLVMCallConv;
   TLLVMCallConv =  Longint;
@@ -305,7 +198,7 @@ type
     LLVMMSP430BUILTINCallConv = 94;
     LLVMAMDGPULSCallConv = 95;
     LLVMAMDGPUESCallConv = 96;
-;
+
 type
   PLLVMValueKind = ^TLLVMValueKind;
   TLLVMValueKind =  Longint;
@@ -338,18 +231,8 @@ type
     LLVMPoisonValueValueKind = 25;
     LLVMConstantTargetNoneValueKind = 26;
     LLVMConstantPtrAuthValueKind = 27;
-;
-{*< equal  }
-{*< not equal  }
-{*< unsigned greater than  }
-{*< unsigned greater or equal  }
-{*< unsigned less than  }
-{*< unsigned less or equal  }
-{*< signed greater than  }
-{*< signed greater or equal  }
-{*< signed less than  }
-{*< signed less or equal  }
-type
+
+  type
   PLLVMIntPredicate = ^TLLVMIntPredicate;
   TLLVMIntPredicate =  Longint;
   Const
@@ -363,24 +246,8 @@ type
     LLVMIntSGE = 39;
     LLVMIntSLT = 40;
     LLVMIntSLE = 41;
-;
-{*< Always false (always folded)  }
-{*< True if ordered and equal  }
-{*< True if ordered and greater than  }
-{*< True if ordered and greater than or equal  }
-{*< True if ordered and less than  }
-{*< True if ordered and less than or equal  }
-{*< True if ordered and operands are unequal  }
-{*< True if ordered (no nans)  }
-{*< True if unordered: isnan(X) | isnan(Y)  }
-{*< True if unordered or equal  }
-{*< True if unordered or greater than  }
-{*< True if unordered, greater than, or equal  }
-{*< True if unordered or less than  }
-{*< True if unordered, less than, or equal  }
-{*< True if unordered or not equal  }
-{*< Always true (always folded)  }
-type
+
+  type
   PLLVMRealPredicate = ^TLLVMRealPredicate;
   TLLVMRealPredicate =  Longint;
   Const
@@ -400,16 +267,14 @@ type
     LLVMRealULE = 13;
     LLVMRealUNE = 14;
     LLVMRealPredicateTrue = 15;
-;
-{*< A catch clause    }
-{*< A filter clause   }
-type
+
+  type
   PLLVMLandingPadClauseTy = ^TLLVMLandingPadClauseTy;
   TLLVMLandingPadClauseTy =  Longint;
   Const
     LLVMLandingPadCatch = 0;
     LLVMLandingPadFilter = 1;
-;
+
 type
   PLLVMThreadLocalMode = ^TLLVMThreadLocalMode;
   TLLVMThreadLocalMode =  Longint;
@@ -419,32 +284,8 @@ type
     LLVMLocalDynamicTLSModel = 2;
     LLVMInitialExecTLSModel = 3;
     LLVMLocalExecTLSModel = 4;
-;
-{*< A load or store which is not atomic  }
-{*< Lowest level of atomicity, guarantees
-                                     somewhat sane results, lock free.  }
-{*< guarantees that if you take all the
-                                     operations affecting a specific address,
-                                     a consistent ordering exists  }
-{*< Acquire provides a barrier of the sort
-                                   necessary to acquire a lock to access other
-                                   memory with normal loads and stores.  }
-{*< Release is similar to Acquire, but with
-                                   a barrier of the sort necessary to release
-                                   a lock.  }
-{*< provides both an Acquire and a
-                                          Release barrier (for fences and
-                                          operations which both read and write
-                                           memory).  }
-{*< provides Acquire semantics
-                                                 for loads and Release
-                                                 semantics for stores.
-                                                 Additionally, it guarantees
-                                                 that a total ordering exists
-                                                 between all
-                                                 SequentiallyConsistent
-                                                 operations.  }
-type
+
+  type
   PLLVMAtomicOrdering = ^TLLVMAtomicOrdering;
   TLLVMAtomicOrdering =  Longint;
   Const
@@ -455,44 +296,8 @@ type
     LLVMAtomicOrderingRelease = 5;
     LLVMAtomicOrderingAcquireRelease = 6;
     LLVMAtomicOrderingSequentiallyConsistent = 7;
-;
-{*< Set the new value and return the one old  }
-{*< Add a value and return the old one  }
-{*< Subtract a value and return the old one  }
-{*< And a value and return the old one  }
-{*< Not-And a value and return the old one  }
-{*< OR a value and return the old one  }
-{*< Xor a value and return the old one  }
-{*< Sets the value if it's greater than the
-                            original using a signed comparison and return
-                            the old one  }
-{*< Sets the value if it's Smaller than the
-                            original using a signed comparison and return
-                            the old one  }
-{*< Sets the value if it's greater than the
-                           original using an unsigned comparison and return
-                           the old one  }
-{*< Sets the value if it's greater than the
-                            original using an unsigned comparison and return
-                            the old one  }
-{*< Add a floating point value and return the
-                            old one  }
-{*< Subtract a floating point value and return the
-                          old one  }
-{*< Sets the value if it's greater than the
-                           original using an floating point comparison and
-                           return the old one  }
-{*< Sets the value if it's smaller than the
-                           original using an floating point comparison and
-                           return the old one  }
-{*< Increments the value, wrapping back to zero
-                               when incremented above input value  }
-{*< Decrements the value, wrapping back to
-                               the input value when decremented below zero  }
-{*<Subtracts the value only if no unsigned
-                                 overflow  }
-{*<Subtracts the value, clamping to zero  }
-type
+
+  type
   PLLVMAtomicRMWBinOp = ^TLLVMAtomicRMWBinOp;
   TLLVMAtomicRMWBinOp =  Longint;
   Const
@@ -515,7 +320,7 @@ type
     LLVMAtomicRMWBinOpUDecWrap = 16;
     LLVMAtomicRMWBinOpUSubCond = 17;
     LLVMAtomicRMWBinOpUSubSat = 18;
-;
+
 type
   PLLVMDiagnosticSeverity = ^TLLVMDiagnosticSeverity;
   TLLVMDiagnosticSeverity =  Longint;
@@ -524,57 +329,15 @@ type
     LLVMDSWarning = 1;
     LLVMDSRemark = 2;
     LLVMDSNote = 3;
-;
+
 type
   PLLVMInlineAsmDialect = ^TLLVMInlineAsmDialect;
   TLLVMInlineAsmDialect =  Longint;
   Const
     LLVMInlineAsmDialectATT = 0;
     LLVMInlineAsmDialectIntel = 1;
-;
-{*
-   * Emits an error if two values disagree, otherwise the resulting value is
-   * that of the operands.
-   *
-   * @see Module::ModFlagBehavior::Error
-    }
-{*
-   * Emits a warning if two values disagree. The result value will be the
-   * operand for the flag from the first module being linked.
-   *
-   * @see Module::ModFlagBehavior::Warning
-    }
-{*
-   * Adds a requirement that another module flag be present and have a
-   * specified value after linking is performed. The value must be a metadata
-   * pair, where the first element of the pair is the ID of the module flag
-   * to be restricted, and the second element of the pair is the value the
-   * module flag should be restricted to. This behavior can be used to
-   * restrict the allowable results (via triggering of an error) of linking
-   * IDs with the **Override** behavior.
-   *
-   * @see Module::ModFlagBehavior::Require
-    }
-{*
-   * Uses the specified value, regardless of the behavior or value of the
-   * other module. If both modules specify **Override**, but the values
-   * differ, an error will be emitted.
-   *
-   * @see Module::ModFlagBehavior::Override
-    }
-{*
-   * Appends the two values, which are required to be metadata nodes.
-   *
-   * @see Module::ModFlagBehavior::Append
-    }
-{*
-   * Appends the two values, which are required to be metadata
-   * nodes. However, duplicate entries in the second list are dropped
-   * during the append operation.
-   *
-   * @see Module::ModFlagBehavior::AppendUnique
-    }
-type
+
+  type
   PLLVMModuleFlagBehavior = ^TLLVMModuleFlagBehavior;
   TLLVMModuleFlagBehavior =  Longint;
   Const
@@ -584,13 +347,7 @@ type
     LLVMModuleFlagBehaviorOverride = 3;
     LLVMModuleFlagBehaviorAppend = 4;
     LLVMModuleFlagBehaviorAppendUnique = 5;
-;
-{*
- * Attribute index are either LLVMAttributeReturnIndex,
- * LLVMAttributeFunctionIndex or a parameter number from 1 to N.
-  }
-type
-  Txxxxxxx =  Longint;
+
   Const
     LLVMAttributeReturnIndex = 0;
     LLVMAttributeFunctionIndex = -(1);
@@ -598,14 +355,8 @@ type
 type
   PLLVMAttributeIndex = ^TLLVMAttributeIndex;
   TLLVMAttributeIndex = dword;
-{*
- * Tail call kind for LLVMSetTailCallKind and LLVMGetTailCallKind.
- *
- * Note that 'musttail' implies 'tail'.
- *
- * @see CallInst::TailCallKind
-  }
 
+  type
   PLLVMTailCallKind = ^TLLVMTailCallKind;
   TLLVMTailCallKind =  Longint;
   Const
@@ -613,9 +364,7 @@ type
     LLVMTailCallKindTail = 1;
     LLVMTailCallKindMustTail = 2;
     LLVMTailCallKindNoTail = 3;
-;
-type
-  Txxxxxxxx =  Longint;
+
   Const
     LLVMFastMathAllowReassoc = 1 shl 0;
     LLVMFastMathNoNaNs = 1 shl 1;
@@ -625,687 +374,126 @@ type
     LLVMFastMathAllowContract = 1 shl 5;
     LLVMFastMathApproxFunc = 1 shl 6;
     LLVMFastMathNone = 0;
-    LLVMFastMathAll = (((((LLVMFastMathAllowReassoc or LLVMFastMathNoNaNs) or LLVMFastMathNoInfs) or LLVMFastMathNoSignedZeros) or LLVMFastMathAllowReciprocal) or LLVMFastMathAllowContract) or LLVMFastMathApproxFunc;
+    LLVMFastMathAll = LLVMFastMathAllowReassoc or LLVMFastMathNoNaNs or LLVMFastMathNoInfs or LLVMFastMathNoSignedZeros or LLVMFastMathAllowReciprocal or LLVMFastMathAllowContract or LLVMFastMathApproxFunc;
 
-{*
- * Flags to indicate what fast-math-style optimizations are allowed
- * on operations.
- *
- * See https://llvm.org/docs/LangRef.html#fast-math-flags
-  }
 type
   PLLVMFastMathFlags = ^TLLVMFastMathFlags;
   TLLVMFastMathFlags = dword;
-  Txxxxxxxxx =  Longint;
-  Const
+
+Const
     LLVMGEPFlagInBounds = 1 shl 0;
     LLVMGEPFlagNUSW = 1 shl 1;
     LLVMGEPFlagNUW = 1 shl 2;
 
-{*
- * Flags that constrain the allowed wrap semantics of a getelementptr
- * instruction.
- *
- * See https://llvm.org/docs/LangRef.html#getelementptr-instruction
-  }
 type
   PLLVMGEPNoWrapFlags = ^TLLVMGEPNoWrapFlags;
   TLLVMGEPNoWrapFlags = dword;
-{*
- * @
-  }
-{* Deallocate and destroy all ManagedStatic variables.
-    @see llvm::llvm_shutdown
-    @see ManagedStatic  }
 
 procedure LLVMShutdown;cdecl;external libllvm;
-{===-- Version query -----------------------------------------------------=== }
-{*
- * Return the major, minor, and patch version of LLVM
- *
- * The version components are returned via the function's three output
- * parameters or skipped if a NULL pointer was supplied.
-  }
 procedure LLVMGetVersion(Major:Pdword; Minor:Pdword; Patch:Pdword);cdecl;external libllvm;
-{===-- Error handling ----------------------------------------------------=== }
 function LLVMCreateMessage(Message:Pchar):Pchar;cdecl;external libllvm;
 procedure LLVMDisposeMessage(Message:Pchar);cdecl;external libllvm;
-{*
- * @defgroup LLVMCCoreContext Contexts
- *
- * Contexts are execution states for the core LLVM IR system.
- *
- * Most types are tied to a context instance. Multiple contexts can
- * exist simultaneously. A single context is not thread safe. However,
- * different contexts can execute on different threads simultaneously.
- *
- * @
-  }
+
 type
-
   TLLVMDiagnosticHandler = procedure (para1:TLLVMDiagnosticInfoRef; para2:pointer);cdecl;
-
   TLLVMYieldCallback = procedure (para1:TLLVMContextRef; para2:pointer);cdecl;
-{*
- * Create a new context.
- *
- * Every call to this function should be paired with a call to
- * LLVMContextDispose() or the context will leak memory.
-  }
 
 function LLVMContextCreate:TLLVMContextRef;cdecl;external libllvm;
-{*
- * Obtain the global context instance.
-  }
 function LLVMGetGlobalContext:TLLVMContextRef;cdecl;external libllvm;
-{*
- * Set the diagnostic handler for this context.
-  }
 procedure LLVMContextSetDiagnosticHandler(C:TLLVMContextRef; Handler:TLLVMDiagnosticHandler; DiagnosticContext:pointer);cdecl;external libllvm;
-{*
- * Get the diagnostic handler of this context.
-  }
 function LLVMContextGetDiagnosticHandler(C:TLLVMContextRef):TLLVMDiagnosticHandler;cdecl;external libllvm;
-{*
- * Get the diagnostic context of this context.
-  }
 function LLVMContextGetDiagnosticContext(C:TLLVMContextRef):pointer;cdecl;external libllvm;
-{*
- * Set the yield callback function for this context.
- *
- * @see LLVMContext::setYieldCallback()
-  }
 procedure LLVMContextSetYieldCallback(C:TLLVMContextRef; Callback:TLLVMYieldCallback; OpaqueHandle:pointer);cdecl;external libllvm;
-{*
- * Retrieve whether the given context is set to discard all value names.
- *
- * @see LLVMContext::shouldDiscardValueNames()
-  }
 function LLVMContextShouldDiscardValueNames(C:TLLVMContextRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Set whether the given context discards all value names.
- *
- * If true, only the names of GlobalValue objects will be available in the IR.
- * This can be used to save memory and runtime, especially in release mode.
- *
- * @see LLVMContext::setDiscardValueNames()
-  }
 procedure LLVMContextSetDiscardValueNames(C:TLLVMContextRef; Discard:TLLVMBool);cdecl;external libllvm;
-{*
- * Destroy a context instance.
- *
- * This should be called for every call to LLVMContextCreate() or memory
- * will be leaked.
-  }
 procedure LLVMContextDispose(C:TLLVMContextRef);cdecl;external libllvm;
-{*
- * Return a string representation of the DiagnosticInfo. Use
- * LLVMDisposeMessage to free the string.
- *
- * @see DiagnosticInfo::print()
-  }
 function LLVMGetDiagInfoDescription(DI:TLLVMDiagnosticInfoRef):Pchar;cdecl;external libllvm;
-{*
- * Return an enum LLVMDiagnosticSeverity.
- *
- * @see DiagnosticInfo::getSeverity()
-  }
 function LLVMGetDiagInfoSeverity(DI:TLLVMDiagnosticInfoRef):TLLVMDiagnosticSeverity;cdecl;external libllvm;
 function LLVMGetMDKindIDInContext(C:TLLVMContextRef; Name:Pchar; SLen:dword):dword;cdecl;external libllvm;
 function LLVMGetMDKindID(Name:Pchar; SLen:dword):dword;cdecl;external libllvm;
-{*
- * Maps a synchronization scope name to a ID unique within this context.
-  }
 function LLVMGetSyncScopeID(C:TLLVMContextRef; Name:Pchar; SLen:Tsize_t):dword;cdecl;external libllvm;
-{*
- * Return an unique id given the name of a enum attribute,
- * or 0 if no attribute by that name exists.
- *
- * See http://llvm.org/docs/LangRef.html#parameter-attributes
- * and http://llvm.org/docs/LangRef.html#function-attributes
- * for the list of available attributes.
- *
- * NB: Attribute names and/or id are subject to change without
- * going through the C API deprecation cycle.
-  }
 function LLVMGetEnumAttributeKindForName(Name:Pchar; SLen:Tsize_t):dword;cdecl;external libllvm;
 function LLVMGetLastEnumAttributeKind:dword;cdecl;external libllvm;
-{*
- * Create an enum attribute.
-  }
 function LLVMCreateEnumAttribute(C:TLLVMContextRef; KindID:dword; Val:Tuint64_t):TLLVMAttributeRef;cdecl;external libllvm;
-{*
- * Get the unique id corresponding to the enum attribute
- * passed as argument.
-  }
 function LLVMGetEnumAttributeKind(A:TLLVMAttributeRef):dword;cdecl;external libllvm;
-{*
- * Get the enum attribute's value. 0 is returned if none exists.
-  }
 function LLVMGetEnumAttributeValue(A:TLLVMAttributeRef):Tuint64_t;cdecl;external libllvm;
-{*
- * Create a type attribute
-  }
 function LLVMCreateTypeAttribute(C:TLLVMContextRef; KindID:dword; type_ref:TLLVMTypeRef):TLLVMAttributeRef;cdecl;external libllvm;
-{*
- * Get the type attribute's value.
-  }
 function LLVMGetTypeAttributeValue(A:TLLVMAttributeRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a ConstantRange attribute.
- *
- * LowerWords and UpperWords need to be NumBits divided by 64 rounded up
- * elements long.
-  }
 function LLVMCreateConstantRangeAttribute(C:TLLVMContextRef; KindID:dword; NumBits:dword; LowerWords:Puint64_t; UpperWords:Puint64_t):TLLVMAttributeRef;cdecl;external libllvm;
-{*
- * Create a string attribute.
-  }
 function LLVMCreateStringAttribute(C:TLLVMContextRef; K:Pchar; KLength:dword; V:Pchar; VLength:dword):TLLVMAttributeRef;cdecl;external libllvm;
-{*
- * Get the string attribute's kind.
-  }
 function LLVMGetStringAttributeKind(A:TLLVMAttributeRef; Length:Pdword):Pchar;cdecl;external libllvm;
-{*
- * Get the string attribute's value.
-  }
 function LLVMGetStringAttributeValue(A:TLLVMAttributeRef; Length:Pdword):Pchar;cdecl;external libllvm;
-{*
- * Check for the different types of attributes.
-  }
 function LLVMIsEnumAttribute(A:TLLVMAttributeRef):TLLVMBool;cdecl;external libllvm;
 function LLVMIsStringAttribute(A:TLLVMAttributeRef):TLLVMBool;cdecl;external libllvm;
 function LLVMIsTypeAttribute(A:TLLVMAttributeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Obtain a Type from a context by its registered name.
-  }
 function LLVMGetTypeByName2(C:TLLVMContextRef; Name:Pchar):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreModule Modules
- *
- * Modules represent the top-level structure in an LLVM program. An LLVM
- * module is effectively a translation unit or a collection of
- * translation units merged together.
- *
- * @
-  }
-{*
- * Create a new, empty module in the global context.
- *
- * This is equivalent to calling LLVMModuleCreateWithNameInContext with
- * LLVMGetGlobalContext() as the context parameter.
- *
- * Every invocation should be paired with LLVMDisposeModule() or memory
- * will be leaked.
-  }
 function LLVMModuleCreateWithName(ModuleID:Pchar):TLLVMModuleRef;cdecl;external libllvm;
-{*
- * Create a new, empty module in a specific context.
- *
- * Every invocation should be paired with LLVMDisposeModule() or memory
- * will be leaked.
-  }
 function LLVMModuleCreateWithNameInContext(ModuleID:Pchar; C:TLLVMContextRef):TLLVMModuleRef;cdecl;external libllvm;
-{*
- * Return an exact copy of the specified module.
-  }
 function LLVMCloneModule(M:TLLVMModuleRef):TLLVMModuleRef;cdecl;external libllvm;
-{*
- * Destroy a module instance.
- *
- * This must be called for every created module or memory will be
- * leaked.
-  }
 procedure LLVMDisposeModule(M:TLLVMModuleRef);cdecl;external libllvm;
-{*
- * Soon to be deprecated.
- * See https://llvm.org/docs/RemoveDIsDebugInfo.html#c-api-changes
- *
- * Returns true if the module is in the new debug info mode which uses
- * non-instruction debug records instead of debug intrinsics for variable
- * location tracking.
-  }
 function LLVMIsNewDbgInfoFormat(M:TLLVMModuleRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Soon to be deprecated.
- * See https://llvm.org/docs/RemoveDIsDebugInfo.html#c-api-changes
- *
- * Convert module into desired debug info format.
-  }
 procedure LLVMSetIsNewDbgInfoFormat(M:TLLVMModuleRef; UseNewFormat:TLLVMBool);cdecl;external libllvm;
-{*
- * Obtain the identifier of a module.
- *
- * @param M Module to obtain identifier of
- * @param Len Out parameter which holds the length of the returned string.
- * @return The identifier of M.
- * @see Module::getModuleIdentifier()
-  }
 function LLVMGetModuleIdentifier(M:TLLVMModuleRef; Len:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Set the identifier of a module to a string Ident with length Len.
- *
- * @param M The module to set identifier
- * @param Ident The string to set M's identifier to
- * @param Len Length of Ident
- * @see Module::setModuleIdentifier()
-  }
 procedure LLVMSetModuleIdentifier(M:TLLVMModuleRef; Ident:Pchar; Len:Tsize_t);cdecl;external libllvm;
-{*
- * Obtain the module's original source file name.
- *
- * @param M Module to obtain the name of
- * @param Len Out parameter which holds the length of the returned string
- * @return The original source file name of M
- * @see Module::getSourceFileName()
-  }
 function LLVMGetSourceFileName(M:TLLVMModuleRef; Len:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Set the original source file name of a module to a string Name with length
- * Len.
- *
- * @param M The module to set the source file name of
- * @param Name The string to set M's source file name to
- * @param Len Length of Name
- * @see Module::setSourceFileName()
-  }
 procedure LLVMSetSourceFileName(M:TLLVMModuleRef; Name:Pchar; Len:Tsize_t);cdecl;external libllvm;
-{*
- * Obtain the data layout for a module.
- *
- * @see Module::getDataLayoutStr()
- *
- * LLVMGetDataLayout is DEPRECATED, as the name is not only incorrect,
- * but match the name of another method on the module. Prefer the use
- * of LLVMGetDataLayoutStr, which is not ambiguous.
-  }
 function LLVMGetDataLayoutStr(M:TLLVMModuleRef):Pchar;cdecl;external libllvm;
 function LLVMGetDataLayout(M:TLLVMModuleRef):Pchar;cdecl;external libllvm;
-{*
- * Set the data layout for a module.
- *
- * @see Module::setDataLayout()
-  }
 procedure LLVMSetDataLayout(M:TLLVMModuleRef; DataLayoutStr:Pchar);cdecl;external libllvm;
-{*
- * Obtain the target triple for a module.
- *
- * @see Module::getTargetTriple()
-  }
 function LLVMGetTarget(M:TLLVMModuleRef):Pchar;cdecl;external libllvm;
-{*
- * Set the target triple for a module.
- *
- * @see Module::setTargetTriple()
-  }
 procedure LLVMSetTarget(M:TLLVMModuleRef; Triple:Pchar);cdecl;external libllvm;
-{*
- * Returns the module flags as an array of flag-key-value triples.  The caller
- * is responsible for freeing this array by calling
- * \c LLVMDisposeModuleFlagsMetadata.
- *
- * @see Module::getModuleFlagsMetadata()
-  }
 function LLVMCopyModuleFlagsMetadata(M:TLLVMModuleRef; Len:Psize_t):PLLVMModuleFlagEntry;cdecl;external libllvm;
-{*
- * Destroys module flags metadata entries.
-  }
 procedure LLVMDisposeModuleFlagsMetadata(Entries:PLLVMModuleFlagEntry);cdecl;external libllvm;
-{*
- * Returns the flag behavior for a module flag entry at a specific index.
- *
- * @see Module::ModuleFlagEntry::Behavior
-  }
 function LLVMModuleFlagEntriesGetFlagBehavior(Entries:PLLVMModuleFlagEntry; Index:dword):TLLVMModuleFlagBehavior;cdecl;external libllvm;
-{*
- * Returns the key for a module flag entry at a specific index.
- *
- * @see Module::ModuleFlagEntry::Key
-  }
 function LLVMModuleFlagEntriesGetKey(Entries:PLLVMModuleFlagEntry; Index:dword; Len:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Returns the metadata for a module flag entry at a specific index.
- *
- * @see Module::ModuleFlagEntry::Val
-  }
 function LLVMModuleFlagEntriesGetMetadata(Entries:PLLVMModuleFlagEntry; Index:dword):TLLVMMetadataRef;cdecl;external libllvm;
-{*
- * Add a module-level flag to the module-level flags metadata if it doesn't
- * already exist.
- *
- * @see Module::getModuleFlag()
-  }
 function LLVMGetModuleFlag(M:TLLVMModuleRef; Key:Pchar; KeyLen:Tsize_t):TLLVMMetadataRef;cdecl;external libllvm;
-{*
- * Add a module-level flag to the module-level flags metadata if it doesn't
- * already exist.
- *
- * @see Module::addModuleFlag()
-  }
 procedure LLVMAddModuleFlag(M:TLLVMModuleRef; Behavior:TLLVMModuleFlagBehavior; Key:Pchar; KeyLen:Tsize_t; Val:TLLVMMetadataRef);cdecl;external libllvm;
-{*
- * Dump a representation of a module to stderr.
- *
- * @see Module::dump()
-  }
 procedure LLVMDumpModule(M:TLLVMModuleRef);cdecl;external libllvm;
-{*
- * Print a representation of a module to a file. The ErrorMessage needs to be
- * disposed with LLVMDisposeMessage. Returns 0 on success, 1 otherwise.
- *
- * @see Module::print()
-  }
 function LLVMPrintModuleToFile(M:TLLVMModuleRef; Filename:Pchar; ErrorMessage:PPchar):TLLVMBool;cdecl;external libllvm;
-{*
- * Return a string representation of the module. Use
- * LLVMDisposeMessage to free the string.
- *
- * @see Module::print()
-  }
 function LLVMPrintModuleToString(M:TLLVMModuleRef):Pchar;cdecl;external libllvm;
-{*
- * Get inline assembly for a module.
- *
- * @see Module::getModuleInlineAsm()
-  }
 function LLVMGetModuleInlineAsm(M:TLLVMModuleRef; Len:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Set inline assembly for a module.
- *
- * @see Module::setModuleInlineAsm()
-  }
-procedure LLVMSetModuleInlineAsm2(M:TLLVMModuleRef; Asm:Pchar; Len:Tsize_t);cdecl;external libllvm;
-{*
- * Append inline assembly to a module.
- *
- * @see Module::appendModuleInlineAsm()
-  }
-procedure LLVMAppendModuleInlineAsm(M:TLLVMModuleRef; Asm:Pchar; Len:Tsize_t);cdecl;external libllvm;
-{*
- * Create the specified uniqued inline asm string.
- *
- * @see InlineAsm::get()
-  }
-function LLVMGetInlineAsm(Ty:TLLVMTypeRef; AsmString:Pchar; AsmStringSize:Tsize_t; Constraints:Pchar; ConstraintsSize:Tsize_t; 
+procedure LLVMSetModuleInlineAsm2(M:TLLVMModuleRef; Asm_:Pchar; Len:Tsize_t);cdecl;external libllvm;
+procedure LLVMAppendModuleInlineAsm(M:TLLVMModuleRef; Asm_:Pchar; Len:Tsize_t);cdecl;external libllvm;
+function LLVMGetInlineAsm(Ty:TLLVMTypeRef; AsmString:Pchar; AsmStringSize:Tsize_t; Constraints:Pchar; ConstraintsSize:Tsize_t;
            HasSideEffects:TLLVMBool; IsAlignStack:TLLVMBool; Dialect:TLLVMInlineAsmDialect; CanThrow:TLLVMBool):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Get the template string used for an inline assembly snippet
- *
-  }
 function LLVMGetInlineAsmAsmString(InlineAsmVal:TLLVMValueRef; Len:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Get the raw constraint string for an inline assembly snippet
- *
-  }
 function LLVMGetInlineAsmConstraintString(InlineAsmVal:TLLVMValueRef; Len:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Get the dialect used by the inline asm snippet
- *
-  }
 function LLVMGetInlineAsmDialect(InlineAsmVal:TLLVMValueRef):TLLVMInlineAsmDialect;cdecl;external libllvm;
-{*
- * Get the function type of the inline assembly snippet. The same type that
- * was passed into LLVMGetInlineAsm originally
- *
- * @see LLVMGetInlineAsm
- *
-  }
 function LLVMGetInlineAsmFunctionType(InlineAsmVal:TLLVMValueRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Get if the inline asm snippet has side effects
- *
-  }
 function LLVMGetInlineAsmHasSideEffects(InlineAsmVal:TLLVMValueRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Get if the inline asm snippet needs an aligned stack
- *
-  }
 function LLVMGetInlineAsmNeedsAlignedStack(InlineAsmVal:TLLVMValueRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Get if the inline asm snippet may unwind the stack
- *
-  }
 function LLVMGetInlineAsmCanUnwind(InlineAsmVal:TLLVMValueRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Obtain the context to which this module is associated.
- *
- * @see Module::getContext()
-  }
 function LLVMGetModuleContext(M:TLLVMModuleRef):TLLVMContextRef;cdecl;external libllvm;
-{* Deprecated: Use LLVMGetTypeByName2 instead.  }
 function LLVMGetTypeByName(M:TLLVMModuleRef; Name:Pchar):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain an iterator to the first NamedMDNode in a Module.
- *
- * @see llvm::Module::named_metadata_begin()
-  }
 function LLVMGetFirstNamedMetadata(M:TLLVMModuleRef):TLLVMNamedMDNodeRef;cdecl;external libllvm;
-{*
- * Obtain an iterator to the last NamedMDNode in a Module.
- *
- * @see llvm::Module::named_metadata_end()
-  }
 function LLVMGetLastNamedMetadata(M:TLLVMModuleRef):TLLVMNamedMDNodeRef;cdecl;external libllvm;
-{*
- * Advance a NamedMDNode iterator to the next NamedMDNode.
- *
- * Returns NULL if the iterator was already at the end and there are no more
- * named metadata nodes.
-  }
 function LLVMGetNextNamedMetadata(NamedMDNode:TLLVMNamedMDNodeRef):TLLVMNamedMDNodeRef;cdecl;external libllvm;
-{*
- * Decrement a NamedMDNode iterator to the previous NamedMDNode.
- *
- * Returns NULL if the iterator was already at the beginning and there are
- * no previous named metadata nodes.
-  }
 function LLVMGetPreviousNamedMetadata(NamedMDNode:TLLVMNamedMDNodeRef):TLLVMNamedMDNodeRef;cdecl;external libllvm;
-{*
- * Retrieve a NamedMDNode with the given name, returning NULL if no such
- * node exists.
- *
- * @see llvm::Module::getNamedMetadata()
-  }
 function LLVMGetNamedMetadata(M:TLLVMModuleRef; Name:Pchar; NameLen:Tsize_t):TLLVMNamedMDNodeRef;cdecl;external libllvm;
-{*
- * Retrieve a NamedMDNode with the given name, creating a new node if no such
- * node exists.
- *
- * @see llvm::Module::getOrInsertNamedMetadata()
-  }
 function LLVMGetOrInsertNamedMetadata(M:TLLVMModuleRef; Name:Pchar; NameLen:Tsize_t):TLLVMNamedMDNodeRef;cdecl;external libllvm;
-{*
- * Retrieve the name of a NamedMDNode.
- *
- * @see llvm::NamedMDNode::getName()
-  }
 function LLVMGetNamedMetadataName(NamedMD:TLLVMNamedMDNodeRef; NameLen:Psize_t):Pchar;cdecl;external libllvm;
-{*
- * Obtain the number of operands for named metadata in a module.
- *
- * @see llvm::Module::getNamedMetadata()
-  }
 function LLVMGetNamedMetadataNumOperands(M:TLLVMModuleRef; Name:Pchar):dword;cdecl;external libllvm;
-{*
- * Obtain the named metadata operands for a module.
- *
- * The passed LLVMValueRef pointer should refer to an array of
- * LLVMValueRef at least LLVMGetNamedMetadataNumOperands long. This
- * array will be populated with the LLVMValueRef instances. Each
- * instance corresponds to a llvm::MDNode.
- *
- * @see llvm::Module::getNamedMetadata()
- * @see llvm::MDNode::getOperand()
-  }
 procedure LLVMGetNamedMetadataOperands(M:TLLVMModuleRef; Name:Pchar; Dest:PLLVMValueRef);cdecl;external libllvm;
-{*
- * Add an operand to named metadata.
- *
- * @see llvm::Module::getNamedMetadata()
- * @see llvm::MDNode::addOperand()
-  }
 procedure LLVMAddNamedMetadataOperand(M:TLLVMModuleRef; Name:Pchar; Val:TLLVMValueRef);cdecl;external libllvm;
-{*
- * Return the directory of the debug location for this value, which must be
- * an llvm::Instruction, llvm::GlobalVariable, or llvm::Function.
- *
- * @see llvm::Instruction::getDebugLoc()
- * @see llvm::GlobalVariable::getDebugInfo()
- * @see llvm::Function::getSubprogram()
-  }
 function LLVMGetDebugLocDirectory(Val:TLLVMValueRef; Length:Pdword):Pchar;cdecl;external libllvm;
-{*
- * Return the filename of the debug location for this value, which must be
- * an llvm::Instruction, llvm::GlobalVariable, or llvm::Function.
- *
- * @see llvm::Instruction::getDebugLoc()
- * @see llvm::GlobalVariable::getDebugInfo()
- * @see llvm::Function::getSubprogram()
-  }
 function LLVMGetDebugLocFilename(Val:TLLVMValueRef; Length:Pdword):Pchar;cdecl;external libllvm;
-{*
- * Return the line number of the debug location for this value, which must be
- * an llvm::Instruction, llvm::GlobalVariable, or llvm::Function.
- *
- * @see llvm::Instruction::getDebugLoc()
- * @see llvm::GlobalVariable::getDebugInfo()
- * @see llvm::Function::getSubprogram()
-  }
 function LLVMGetDebugLocLine(Val:TLLVMValueRef):dword;cdecl;external libllvm;
-{*
- * Return the column number of the debug location for this value, which must be
- * an llvm::Instruction.
- *
- * @see llvm::Instruction::getDebugLoc()
-  }
 function LLVMGetDebugLocColumn(Val:TLLVMValueRef):dword;cdecl;external libllvm;
-{*
- * Add a function to a module under a specified name.
- *
- * @see llvm::Function::Create()
-  }
 function LLVMAddFunction(M:TLLVMModuleRef; Name:Pchar; FunctionTy:TLLVMTypeRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Obtain a Function value from a Module by its name.
- *
- * The returned value corresponds to a llvm::Function value.
- *
- * @see llvm::Module::getFunction()
-  }
 function LLVMGetNamedFunction(M:TLLVMModuleRef; Name:Pchar):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Obtain a Function value from a Module by its name.
- *
- * The returned value corresponds to a llvm::Function value.
- *
- * @see llvm::Module::getFunction()
-  }
 function LLVMGetNamedFunctionWithLength(M:TLLVMModuleRef; Name:Pchar; Length:Tsize_t):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Obtain an iterator to the first Function in a Module.
- *
- * @see llvm::Module::begin()
-  }
 function LLVMGetFirstFunction(M:TLLVMModuleRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Obtain an iterator to the last Function in a Module.
- *
- * @see llvm::Module::end()
-  }
 function LLVMGetLastFunction(M:TLLVMModuleRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Advance a Function iterator to the next Function.
- *
- * Returns NULL if the iterator was already at the end and there are no more
- * functions.
-  }
 function LLVMGetNextFunction(Fn:TLLVMValueRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Decrement a Function iterator to the previous Function.
- *
- * Returns NULL if the iterator was already at the beginning and there are
- * no previous functions.
-  }
 function LLVMGetPreviousFunction(Fn:TLLVMValueRef):TLLVMValueRef;cdecl;external libllvm;
-{* Deprecated: Use LLVMSetModuleInlineAsm2 instead.  }
-procedure LLVMSetModuleInlineAsm(M:TLLVMModuleRef; Asm:Pchar);cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreType Types
- *
- * Types represent the type of a value.
- *
- * Types are associated with a context instance. The context internally
- * deduplicates types so there is only 1 instance of a specific type
- * alive at a time. In other words, a unique type is shared among all
- * consumers within a context.
- *
- * A Type in the C API corresponds to llvm::Type.
- *
- * Types have the following hierarchy:
- *
- *   types:
- *     integer type
- *     real type
- *     function type
- *     sequence types:
- *       array type
- *       pointer type
- *       vector type
- *     void type
- *     label type
- *     opaque type
- *
- * @
-  }
-{*
- * Obtain the enumerated type of a Type instance.
- *
- * @see llvm::Type:getTypeID()
-  }
+procedure LLVMSetModuleInlineAsm(M:TLLVMModuleRef; Asm_:Pchar);cdecl;external libllvm;
 function LLVMGetTypeKind(Ty:TLLVMTypeRef):TLLVMTypeKind;cdecl;external libllvm;
-{*
- * Whether the type has a known size.
- *
- * Things that don't have a size are abstract types, labels, and void.a
- *
- * @see llvm::Type::isSized()
-  }
 function LLVMTypeIsSized(Ty:TLLVMTypeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Obtain the context to which this type instance is associated.
- *
- * @see llvm::Type::getContext()
-  }
 function LLVMGetTypeContext(Ty:TLLVMTypeRef):TLLVMContextRef;cdecl;external libllvm;
-{*
- * Dump a representation of a type to stderr.
- *
- * @see llvm::Type::dump()
-  }
 procedure LLVMDumpType(Val:TLLVMTypeRef);cdecl;external libllvm;
-{*
- * Return a string representation of the type. Use
- * LLVMDisposeMessage to free the string.
- *
- * @see llvm::Type::print()
-  }
 function LLVMPrintTypeToString(Val:TLLVMTypeRef):Pchar;cdecl;external libllvm;
-{*
- * @defgroup LLVMCCoreTypeInt Integer Types
- *
- * Functions in this section operate on integer types.
- *
- * @
-  }
-{*
- * Obtain an integer type from a context with specified bit width.
-  }
+
 function LLVMInt1TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
 function LLVMInt8TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
 function LLVMInt16TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
@@ -1313,10 +501,7 @@ function LLVMInt32TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external l
 function LLVMInt64TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
 function LLVMInt128TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
 function LLVMIntTypeInContext(C:TLLVMContextRef; NumBits:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain an integer type from the global context with a specified bit
- * width.
-  }
+
 function LLVMInt1Type:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMInt8Type:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMInt16Type:TLLVMTypeRef;cdecl;external libllvm;
@@ -1325,48 +510,14 @@ function LLVMInt64Type:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMInt128Type:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMIntType(NumBits:dword):TLLVMTypeRef;cdecl;external libllvm;
 function LLVMGetIntTypeWidth(IntegerTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreTypeFloat Floating Point Types
- *
- * @
-  }
-{*
- * Obtain a 16-bit floating point type from a context.
-  }
 function LLVMHalfTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a 16-bit brain floating point type from a context.
-  }
 function LLVMBFloatTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a 32-bit floating point type from a context.
-  }
 function LLVMFloatTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a 64-bit floating point type from a context.
-  }
 function LLVMDoubleTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a 80-bit floating point type (X87) from a context.
-  }
 function LLVMX86FP80TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a 128-bit floating point type (112-bit mantissa) from a
- * context.
-  }
 function LLVMFP128TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a 128-bit floating point type (two 64-bits) from a context.
-  }
 function LLVMPPCFP128TypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain a floating point type from the global context.
- *
- * These map to the functions in this group of the same name.
-  }
+
 function LLVMHalfType:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMBFloatType:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMFloatType:TLLVMTypeRef;cdecl;external libllvm;
@@ -1374,335 +525,57 @@ function LLVMDoubleType:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMX86FP80Type:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMFP128Type:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMPPCFP128Type:TLLVMTypeRef;cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreTypeFunction Function Types
- *
- * @
-  }
-{*
- * Obtain a function type consisting of a specified signature.
- *
- * The function is defined as a tuple of a return Type, a list of
- * parameter types, and whether the function is variadic.
-  }
+
 function LLVMFunctionType(ReturnType:TLLVMTypeRef; ParamTypes:PLLVMTypeRef; ParamCount:dword; IsVarArg:TLLVMBool):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Returns whether a function type is variadic.
-  }
 function LLVMIsFunctionVarArg(FunctionTy:TLLVMTypeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Obtain the Type this function Type returns.
-  }
 function LLVMGetReturnType(FunctionTy:TLLVMTypeRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain the number of parameters this function accepts.
-  }
 function LLVMCountParamTypes(FunctionTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * Obtain the types of a function's parameters.
- *
- * The Dest parameter should point to a pre-allocated array of
- * LLVMTypeRef at least LLVMCountParamTypes() large. On return, the
- * first LLVMCountParamTypes() entries in the array will be populated
- * with LLVMTypeRef instances.
- *
- * @param FunctionTy The function type to operate on.
- * @param Dest Memory address of an array to be filled with result.
-  }
 procedure LLVMGetParamTypes(FunctionTy:TLLVMTypeRef; Dest:PLLVMTypeRef);cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreTypeStruct Structure Types
- *
- * These functions relate to LLVMTypeRef instances.
- *
- * @see llvm::StructType
- *
- * @
-  }
-{*
- * Create a new structure type in a context.
- *
- * A structure is specified by a list of inner elements/types and
- * whether these can be packed together.
- *
- * @see llvm::StructType::create()
-  }
-function LLVMStructTypeInContext(C:TLLVMContextRef; ElementTypes:PLLVMTypeRef; ElementCount:dword; Packed:TLLVMBool):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a new structure type in the global context.
- *
- * @see llvm::StructType::create()
-  }
-function LLVMStructType(ElementTypes:PLLVMTypeRef; ElementCount:dword; Packed:TLLVMBool):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create an empty structure in a context having a specified name.
- *
- * @see llvm::StructType::create()
-  }
+function LLVMStructTypeInContext(C:TLLVMContextRef; ElementTypes:PLLVMTypeRef; ElementCount:dword; Pack:TLLVMBool):TLLVMTypeRef;cdecl;external libllvm;
+function LLVMStructType(ElementTypes:PLLVMTypeRef; ElementCount:dword; Pack:TLLVMBool):TLLVMTypeRef;cdecl;external libllvm;
 function LLVMStructCreateNamed(C:TLLVMContextRef; Name:Pchar):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain the name of a structure.
- *
- * @see llvm::StructType::getName()
-  }
 function LLVMGetStructName(Ty:TLLVMTypeRef):Pchar;cdecl;external libllvm;
-{*
- * Set the contents of a structure type.
- *
- * @see llvm::StructType::setBody()
-  }
-procedure LLVMStructSetBody(StructTy:TLLVMTypeRef; ElementTypes:PLLVMTypeRef; ElementCount:dword; Packed:TLLVMBool);cdecl;external libllvm;
-{*
- * Get the number of elements defined inside the structure.
- *
- * @see llvm::StructType::getNumElements()
-  }
+procedure LLVMStructSetBody(StructTy:TLLVMTypeRef; ElementTypes:PLLVMTypeRef; ElementCount:dword; Pack:TLLVMBool);cdecl;external libllvm;
 function LLVMCountStructElementTypes(StructTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * Get the elements within a structure.
- *
- * The function is passed the address of a pre-allocated array of
- * LLVMTypeRef at least LLVMCountStructElementTypes() long. After
- * invocation, this array will be populated with the structure's
- * elements. The objects in the destination array will have a lifetime
- * of the structure type itself, which is the lifetime of the context it
- * is contained in.
-  }
 procedure LLVMGetStructElementTypes(StructTy:TLLVMTypeRef; Dest:PLLVMTypeRef);cdecl;external libllvm;
-{*
- * Get the type of the element at a given index in the structure.
- *
- * @see llvm::StructType::getTypeAtIndex()
-  }
 function LLVMStructGetTypeAtIndex(StructTy:TLLVMTypeRef; i:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Determine whether a structure is packed.
- *
- * @see llvm::StructType::isPacked()
-  }
 function LLVMIsPackedStruct(StructTy:TLLVMTypeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Determine whether a structure is opaque.
- *
- * @see llvm::StructType::isOpaque()
-  }
 function LLVMIsOpaqueStruct(StructTy:TLLVMTypeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Determine whether a structure is literal.
- *
- * @see llvm::StructType::isLiteral()
-  }
 function LLVMIsLiteralStruct(StructTy:TLLVMTypeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreTypeSequential Sequential Types
- *
- * Sequential types represents "arrays" of types. This is a super class
- * for array, vector, and pointer types.
- *
- * @
-  }
-{*
- * Obtain the element type of an array or vector type.
- *
- * @see llvm::SequentialType::getElementType()
-  }
 function LLVMGetElementType(Ty:TLLVMTypeRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Returns type's subtypes
- *
- * @see llvm::Type::subtypes()
-  }
 procedure LLVMGetSubtypes(Tp:TLLVMTypeRef; Arr:PLLVMTypeRef);cdecl;external libllvm;
-{*
- *  Return the number of types in the derived type.
- *
- * @see llvm::Type::getNumContainedTypes()
-  }
 function LLVMGetNumContainedTypes(Tp:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * Create a fixed size array type that refers to a specific type.
- *
- * The created type will exist in the context that its element type
- * exists in.
- *
- * @deprecated LLVMArrayType is deprecated in favor of the API accurate
- * LLVMArrayType2
- * @see llvm::ArrayType::get()
-  }
 function LLVMArrayType(ElementType:TLLVMTypeRef; ElementCount:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a fixed size array type that refers to a specific type.
- *
- * The created type will exist in the context that its element type
- * exists in.
- *
- * @see llvm::ArrayType::get()
-  }
 function LLVMArrayType2(ElementType:TLLVMTypeRef; ElementCount:Tuint64_t):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain the length of an array type.
- *
- * This only works on types that represent arrays.
- *
- * @deprecated LLVMGetArrayLength is deprecated in favor of the API accurate
- * LLVMGetArrayLength2
- * @see llvm::ArrayType::getNumElements()
-  }
 function LLVMGetArrayLength(ArrayTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * Obtain the length of an array type.
- *
- * This only works on types that represent arrays.
- *
- * @see llvm::ArrayType::getNumElements()
-  }
 function LLVMGetArrayLength2(ArrayTy:TLLVMTypeRef):Tuint64_t;cdecl;external libllvm;
-{*
- * Create a pointer type that points to a defined type.
- *
- * The created type will exist in the context that its pointee type
- * exists in.
- *
- * @see llvm::PointerType::get()
-  }
 function LLVMPointerType(ElementType:TLLVMTypeRef; AddressSpace:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Determine whether a pointer is opaque.
- *
- * True if this is an instance of an opaque PointerType.
- *
- * @see llvm::Type::isOpaquePointerTy()
-  }
 function LLVMPointerTypeIsOpaque(Ty:TLLVMTypeRef):TLLVMBool;cdecl;external libllvm;
-{*
- * Create an opaque pointer type in a context.
- *
- * @see llvm::PointerType::get()
-  }
 function LLVMPointerTypeInContext(C:TLLVMContextRef; AddressSpace:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain the address space of a pointer type.
- *
- * This only works on types that represent pointers.
- *
- * @see llvm::PointerType::getAddressSpace()
-  }
 function LLVMGetPointerAddressSpace(PointerTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * Create a vector type that contains a defined type and has a specific
- * number of elements.
- *
- * The created type will exist in the context thats its element type
- * exists in.
- *
- * @see llvm::VectorType::get()
-  }
 function LLVMVectorType(ElementType:TLLVMTypeRef; ElementCount:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a vector type that contains a defined type and has a scalable
- * number of elements.
- *
- * The created type will exist in the context thats its element type
- * exists in.
- *
- * @see llvm::ScalableVectorType::get()
-  }
 function LLVMScalableVectorType(ElementType:TLLVMTypeRef; ElementCount:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain the (possibly scalable) number of elements in a vector type.
- *
- * This only works on types that represent vectors (fixed or scalable).
- *
- * @see llvm::VectorType::getNumElements()
-  }
 function LLVMGetVectorSize(VectorTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
- * Get the pointer value for the associated ConstantPtrAuth constant.
- *
- * @see llvm::ConstantPtrAuth::getPointer
-  }
 function LLVMGetConstantPtrAuthPointer(PtrAuth:TLLVMValueRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Get the key value for the associated ConstantPtrAuth constant.
- *
- * @see llvm::ConstantPtrAuth::getKey
-  }
 function LLVMGetConstantPtrAuthKey(PtrAuth:TLLVMValueRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Get the discriminator value for the associated ConstantPtrAuth constant.
- *
- * @see llvm::ConstantPtrAuth::getDiscriminator
-  }
 function LLVMGetConstantPtrAuthDiscriminator(PtrAuth:TLLVMValueRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * Get the address discriminator value for the associated ConstantPtrAuth
- * constant.
- *
- * @see llvm::ConstantPtrAuth::getAddrDiscriminator
-  }
 function LLVMGetConstantPtrAuthAddrDiscriminator(PtrAuth:TLLVMValueRef):TLLVMValueRef;cdecl;external libllvm;
-{*
- * @
-  }
-{*
- * @defgroup LLVMCCoreTypeOther Other Types
- *
- * @
-  }
-{*
- * Create a void type in a context.
-  }
+
 function LLVMVoidTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a label type in a context.
-  }
 function LLVMLabelTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a X86 AMX type in a context.
-  }
 function LLVMX86AMXTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a token type in a context.
-  }
 function LLVMTokenTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a metadata type in a context.
-  }
 function LLVMMetadataTypeInContext(C:TLLVMContextRef):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * These are similar to the above functions except they operate on the
- * global context.
-  }
+
 function LLVMVoidType:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMLabelType:TLLVMTypeRef;cdecl;external libllvm;
 function LLVMX86AMXType:TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Create a target extension type in LLVM context.
-  }
-function LLVMTargetExtTypeInContext(C:TLLVMContextRef; Name:Pchar; TypeParams:PLLVMTypeRef; TypeParamCount:dword; IntParams:Pdword; 
+
+function LLVMTargetExtTypeInContext(C:TLLVMContextRef; Name:Pchar; TypeParams:PLLVMTypeRef; TypeParamCount:dword; IntParams:Pdword;
            IntParamCount:dword):TLLVMTypeRef;cdecl;external libllvm;
-{*
- * Obtain the name for this target extension type.
- *
- * @see llvm::TargetExtType::getName()
-  }
 function LLVMGetTargetExtTypeName(TargetExtTy:TLLVMTypeRef):Pchar;cdecl;external libllvm;
-{*
- * Obtain the number of type parameters for this target extension type.
- *
- * @see llvm::TargetExtType::getNumTypeParameters()
-  }
 function LLVMGetTargetExtTypeNumTypeParams(TargetExtTy:TLLVMTypeRef):dword;cdecl;external libllvm;
-{*
+s{*
  * Get the type parameter at the given index for the target extension type.
  *
  * @see llvm::TargetExtType::getTypeParameter()
