@@ -17,7 +17,7 @@
 #include "llvm-c/DataTypes.h"
 #include "llvm-c/ExternC.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCSupportTypes Types and Enumerations
@@ -178,6 +178,6 @@ typedef struct LLVMOpaqueDbgRecord *LLVMDbgRecordRef;
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

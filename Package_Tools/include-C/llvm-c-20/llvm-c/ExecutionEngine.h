@@ -24,7 +24,7 @@
 #include "llvm-c/TargetMachine.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCExecutionEngine Execution Engine
@@ -197,6 +197,6 @@ LLVMJITEventListenerRef LLVMCreatePerfJITEventListener(void);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

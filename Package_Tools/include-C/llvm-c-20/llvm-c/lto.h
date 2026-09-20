@@ -100,7 +100,7 @@ typedef struct LLVMOpaqueLTOCodeGenerator *lto_code_gen_t;
 /** opaque reference to a thin code generator */
 typedef struct LLVMOpaqueThinLTOCodeGenerator *thinlto_code_gen_t;
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * Returns a printable string.
@@ -954,6 +954,6 @@ extern void thinlto_codegen_set_cache_size_files(thinlto_code_gen_t cg,
  * @} // endgroup LLVMCTLTO_CACHING
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_LTO_H */

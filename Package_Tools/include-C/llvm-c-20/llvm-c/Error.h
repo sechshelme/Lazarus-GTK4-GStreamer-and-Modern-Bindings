@@ -16,7 +16,7 @@
 
 #include "llvm-c/ExternC.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCError Error Handling
@@ -86,6 +86,6 @@ LLVMErrorRef LLVMCreateStringError(const char *ErrMsg);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

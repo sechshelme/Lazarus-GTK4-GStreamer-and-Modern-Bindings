@@ -25,7 +25,7 @@
  * @{
  */
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * Create a disassembler for the TripleName.  Symbolic disassembly is supported
@@ -107,6 +107,6 @@ size_t LLVMDisasmInstruction(LLVMDisasmContextRef DC, uint8_t *Bytes,
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_DISASSEMBLER_H */

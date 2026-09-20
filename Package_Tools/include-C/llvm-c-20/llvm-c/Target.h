@@ -23,7 +23,7 @@
 #include "llvm-c/Types.h"
 #include "llvm/Config/llvm-config.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCTarget Target information
@@ -287,6 +287,6 @@ unsigned long long LLVMOffsetOfElement(LLVMTargetDataRef TD,
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

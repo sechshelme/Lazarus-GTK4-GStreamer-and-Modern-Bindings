@@ -25,15 +25,15 @@
 #endif
 
 #ifdef __cplusplus
-#define LLVM_C_EXTERN_C_BEGIN                                                  \
+#define                                                   \
   extern "C" {                                                                 \
   LLVM_C_STRICT_PROTOTYPES_BEGIN
-#define LLVM_C_EXTERN_C_END                                                    \
+#define                                                     \
   LLVM_C_STRICT_PROTOTYPES_END                                                 \
   }
 #else
-#define LLVM_C_EXTERN_C_BEGIN LLVM_C_STRICT_PROTOTYPES_BEGIN
-#define LLVM_C_EXTERN_C_END LLVM_C_STRICT_PROTOTYPES_END
+#define  LLVM_C_STRICT_PROTOTYPES_BEGIN
+#define  LLVM_C_STRICT_PROTOTYPES_END
 #endif
 
 #endif

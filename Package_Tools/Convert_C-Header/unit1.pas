@@ -75,7 +75,7 @@ var
   s: string;
 begin
   Memo1.Clear;
-  slFile := FindAllFiles('/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/xraylib', '*.h', True);
+  slFile := FindAllFiles('/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/llvm-c-20', '*.h', True);
   Memo1.Lines := slFile;
 
   for i := 0 to slFile.Count - 1 do begin
@@ -131,8 +131,8 @@ begin
       slHeader[j] := StringReplace(slHeader[j], 'G_GNUC_FORMAT', ';//', [rfReplaceAll]);
       slHeader[j] := StringReplace(slHeader[j], 'G_GNUC_ALLOC_SIZE', ';//', [rfReplaceAll]);
 
-      slHeader[j] := StringReplace(slHeader[j], 'XRL_EXTERN', 'extern', [rfReplaceAll]);
-//      slHeader[j] := StringReplace(slHeader[j], '}', ';', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'LLVM_C_EXTERN_C_BEGIN', '', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'LLVM_C_EXTERN_C_END', '', [rfReplaceAll]);
 
 
 

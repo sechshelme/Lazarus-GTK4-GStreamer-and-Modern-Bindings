@@ -30,7 +30,7 @@
 #include "llvm-c/TargetMachine.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 typedef void *(*LLVMMemoryManagerCreateContextCallback)(void *CtxCtx);
 typedef void (*LLVMMemoryManagerNotifyTerminatingCallback)(void *CtxCtx);
@@ -98,6 +98,6 @@ void LLVMOrcRTDyldObjectLinkingLayerRegisterJITEventListener(
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_ORCEE_H */

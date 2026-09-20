@@ -21,7 +21,7 @@
 
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMC LLVM-C: C interface to LLVM
@@ -467,11 +467,8 @@ typedef enum {
  * Attribute index are either LLVMAttributeReturnIndex,
  * LLVMAttributeFunctionIndex or a parameter number from 1 to N.
  */
-enum {
-  LLVMAttributeReturnIndex = 0U,
-  // ISO C restricts enumerator values to range of 'int'
-  // (4294967295 is too large)
-  // LLVMAttributeFunctionIndex = ~0U,
+enum xxxxxxx{
+  LLVMAttributeReturnIndex = 0,
   LLVMAttributeFunctionIndex = -1,
 };
 
@@ -491,7 +488,7 @@ typedef enum {
   LLVMTailCallKindNoTail = 3,
 } LLVMTailCallKind;
 
-enum {
+enum xxxxxxxx{
   LLVMFastMathAllowReassoc = (1 << 0),
   LLVMFastMathNoNaNs = (1 << 1),
   LLVMFastMathNoInfs = (1 << 2),
@@ -514,7 +511,7 @@ enum {
  */
 typedef unsigned LLVMFastMathFlags;
 
-enum {
+enum xxxxxxxxx{
   LLVMGEPFlagInBounds = (1 << 0),
   LLVMGEPFlagNUSW = (1 << 1),
   LLVMGEPFlagNUW = (1 << 2),
@@ -1835,6 +1832,17 @@ unsigned LLVMGetTargetExtTypeIntParam(LLVMTypeRef TargetExtTy, unsigned Idx);
 // macro in a progressively-indented fashion, which is not desired
 // clang-format off
 
+/*xxxxxxxxxxxxxxxxx
+ nm -D /usr/lib/x86_64-linux-gnu/libLLVM-20.so | grep LLVMIsAArgument
+00000000010c98b0 T LLVMIsAArgument@@LLVM_20.1
+tux@tux-B660M-DS3H-DDR4:/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/llvm-c-20/llvm-c/in_arbeit$ nm -D /usr/lib/x86_64-linux-gnu/libLLVM-20.so | grep LLVMIsABasicBlock
+00000000010c98d0 T LLVMIsABasicBlock@@LLVM_20.1
+
+function LLVMIsAArgument(Val: LLVMValueRef): LLVMValueRef; cdecl; external 'LLVM';
+function LLVMIsABasicBlock(Val: LLVMValueRef): LLVMValueRef; cdecl; external 'LLVM';
+
+
+
 #define LLVM_FOR_EACH_VALUE_SUBCLASS(macro) \
   macro(Argument)                           \
   macro(BasicBlock)                         \
@@ -1925,6 +1933,9 @@ unsigned LLVMGetTargetExtTypeIntParam(LLVMTypeRef TargetExtTy, unsigned Idx);
       macro(AtomicCmpXchgInst)              \
       macro(AtomicRMWInst)                  \
       macro(FenceInst)
+
+*/
+
 
 // clang-format on
 
@@ -2019,19 +2030,11 @@ LLVMBool LLVMIsUndef(LLVMValueRef Val);
 LLVMBool LLVMIsPoison(LLVMValueRef Val);
 
 /**
- * Convert value instances between types.
- *
- * Internally, an LLVMValueRef is "pinned" to a specific type. This
- * series of functions allows you to cast an instance to a specific
- * type.
- *
- * If the cast is not valid for the specified type, NULL is returned.
- *
- * @see llvm::dyn_cast_or_null<>
- */
 #define LLVM_DECLARE_VALUE_CAST(name) \
   LLVMValueRef LLVMIsA##name(LLVMValueRef Val);
 LLVM_FOR_EACH_VALUE_SUBCLASS(LLVM_DECLARE_VALUE_CAST)
+ */
+
 
 LLVMValueRef LLVMIsAMDNode(LLVMValueRef Val);
 LLVMValueRef LLVMIsAValueAsMetadata(LLVMValueRef Val);
@@ -2417,9 +2420,9 @@ LLVMValueRef LLVMGetAggregateElement(LLVMValueRef C, unsigned Idx);
  *
  * @see ConstantDataSequential::getElementAsConstant()
  */
-LLVM_ATTRIBUTE_C_DEPRECATED(
-    LLVMValueRef LLVMGetElementAsConstant(LLVMValueRef C, unsigned idx),
-    "Use LLVMGetAggregateElement instead");
+// xxxxxxLLVM_ATTRIBUTE_C_DEPRECATED(
+    LLVMValueRef LLVMGetElementAsConstant(LLVMValueRef C, unsigned idx)
+;
 
 /**
  * Create a ConstantVector from values.
@@ -2454,9 +2457,8 @@ LLVMValueRef LLVMAlignOf(LLVMTypeRef Ty);
 LLVMValueRef LLVMSizeOf(LLVMTypeRef Ty);
 LLVMValueRef LLVMConstNeg(LLVMValueRef ConstantVal);
 LLVMValueRef LLVMConstNSWNeg(LLVMValueRef ConstantVal);
-LLVM_ATTRIBUTE_C_DEPRECATED(
-    LLVMValueRef LLVMConstNUWNeg(LLVMValueRef ConstantVal),
-    "Use LLVMConstNull instead.");
+//xxxxxx LLVM_ATTRIBUTE_C_DEPRECATED(
+    LLVMValueRef LLVMConstNUWNeg(LLVMValueRef ConstantVal);
 LLVMValueRef LLVMConstNot(LLVMValueRef ConstantVal);
 LLVMValueRef LLVMConstAdd(LLVMValueRef LHSConstant, LLVMValueRef RHSConstant);
 LLVMValueRef LLVMConstNSWAdd(LLVMValueRef LHSConstant, LLVMValueRef RHSConstant);
@@ -4398,10 +4400,10 @@ LLVMValueRef LLVMBuildBinOp(LLVMBuilderRef B, LLVMOpcode Op,
 LLVMValueRef LLVMBuildNeg(LLVMBuilderRef, LLVMValueRef V, const char *Name);
 LLVMValueRef LLVMBuildNSWNeg(LLVMBuilderRef B, LLVMValueRef V,
                              const char *Name);
-LLVM_ATTRIBUTE_C_DEPRECATED(LLVMValueRef LLVMBuildNUWNeg(LLVMBuilderRef B,
+// xxxxxLLVM_ATTRIBUTE_C_DEPRECATED(
+LLVMValueRef LLVMBuildNUWNeg(LLVMBuilderRef B,
                                                          LLVMValueRef V,
-                                                         const char *Name),
-                            "Use LLVMBuildNeg + LLVMSetNUW instead.");
+                                                         const char *Name);
 LLVMValueRef LLVMBuildFNeg(LLVMBuilderRef, LLVMValueRef V, const char *Name);
 LLVMValueRef LLVMBuildNot(LLVMBuilderRef, LLVMValueRef V, const char *Name);
 
@@ -4841,6 +4843,6 @@ LLVMBool LLVMIsMultithreaded(void);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_CORE_H */

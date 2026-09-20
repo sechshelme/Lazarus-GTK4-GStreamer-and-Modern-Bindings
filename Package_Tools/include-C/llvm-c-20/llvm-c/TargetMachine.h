@@ -23,7 +23,7 @@
 #include "llvm-c/Target.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @addtogroup LLVMCTarget
@@ -239,6 +239,6 @@ void LLVMAddAnalysisPasses(LLVMTargetMachineRef T, LLVMPassManagerRef PM);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

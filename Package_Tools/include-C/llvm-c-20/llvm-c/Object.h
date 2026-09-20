@@ -23,7 +23,7 @@
 #include "llvm-c/Types.h"
 #include "llvm/Config/llvm-config.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCObject Object file reading and writing
@@ -227,6 +227,6 @@ LLVMBool LLVMIsSymbolIteratorAtEnd(LLVMObjectFileRef ObjectFile,
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

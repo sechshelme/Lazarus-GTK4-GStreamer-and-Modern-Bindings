@@ -31,7 +31,7 @@
 #include "llvm-c/TargetMachine.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCExecutionEngineORC On-Request-Compilation
@@ -1278,6 +1278,6 @@ LLVMErrorRef LLVMOrcDumpObjects_CallOperator(LLVMOrcDumpObjectsRef DumpObjects,
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_ORC_H */

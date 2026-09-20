@@ -28,7 +28,7 @@
 
 #include "llvm-c/LLJIT.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCExecutionEngineLLJITUtils LLJIT Utilities
@@ -47,6 +47,6 @@ LLVMErrorRef LLVMOrcLLJITEnableDebugSupport(LLVMOrcLLJITRef J);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_LLJITUTILS_H */

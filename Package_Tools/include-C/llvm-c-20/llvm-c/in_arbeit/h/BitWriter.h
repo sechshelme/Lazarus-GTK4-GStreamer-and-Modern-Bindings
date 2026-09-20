@@ -22,7 +22,7 @@
 #include "llvm-c/ExternC.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCBitWriter Bit Writer
@@ -51,6 +51,6 @@ LLVMMemoryBufferRef LLVMWriteBitcodeToMemoryBuffer(LLVMModuleRef M);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

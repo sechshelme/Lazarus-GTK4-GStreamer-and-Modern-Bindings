@@ -16,7 +16,7 @@
 
 #include "llvm-c/ExternC.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @addtogroup LLVMCError
@@ -52,6 +52,6 @@ void LLVMEnablePrettyStackTrace(void);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

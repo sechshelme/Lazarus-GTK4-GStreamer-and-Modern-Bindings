@@ -17,7 +17,7 @@
 #include "llvm-c/ExternC.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCCoreIRReader IR Reader
@@ -43,6 +43,6 @@ LLVMBool LLVMParseIRInContext(LLVMContextRef ContextRef,
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

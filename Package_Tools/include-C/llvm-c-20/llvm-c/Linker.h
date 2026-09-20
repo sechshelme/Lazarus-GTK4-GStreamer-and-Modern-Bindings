@@ -17,7 +17,7 @@
 #include "llvm-c/ExternC.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCCoreLinker Linker
@@ -40,7 +40,7 @@ typedef enum {
 */
 LLVMBool LLVMLinkModules2(LLVMModuleRef Dest, LLVMModuleRef Src);
 
-LLVM_C_EXTERN_C_END
+
 
 /**
  * @}

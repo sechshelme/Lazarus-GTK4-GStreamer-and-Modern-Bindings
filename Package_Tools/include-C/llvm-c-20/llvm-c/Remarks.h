@@ -23,7 +23,7 @@
 #include <stddef.h>
 #endif /* !defined(__cplusplus) */
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCREMARKS Remarks
@@ -339,6 +339,6 @@ extern uint32_t LLVMRemarkVersion(void);
  * @} // endgoup LLVMCREMARKS
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif /* LLVM_C_REMARKS_H */

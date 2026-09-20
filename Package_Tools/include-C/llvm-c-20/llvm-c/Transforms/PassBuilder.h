@@ -25,7 +25,7 @@
  * @{
  */
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * A set of options passed which are attached to the Pass Manager upon run.
@@ -129,6 +129,6 @@ void LLVMDisposePassBuilderOptions(LLVMPassBuilderOptionsRef Options);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif // LLVM_C_TRANSFORMS_PASSBUILDER_H

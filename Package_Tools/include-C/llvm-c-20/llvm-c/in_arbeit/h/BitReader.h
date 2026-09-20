@@ -22,7 +22,7 @@
 #include "llvm-c/ExternC.h"
 #include "llvm-c/Types.h"
 
-LLVM_C_EXTERN_C_BEGIN
+
 
 /**
  * @defgroup LLVMCBitReader Bit Reader
@@ -82,6 +82,6 @@ LLVMBool LLVMGetBitcodeModule2(LLVMMemoryBufferRef MemBuf, LLVMModuleRef *OutM);
  * @}
  */
 
-LLVM_C_EXTERN_C_END
+
 
 #endif

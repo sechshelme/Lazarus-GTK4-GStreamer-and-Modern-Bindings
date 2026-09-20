@@ -29,15 +29,6 @@
 
 #ifndef _MSC_VER
 
-#if !defined(UINT32_MAX)
-# error "The standard header <cstdint> is not C++11 compliant. Must #define "\
-        "__STDC_LIMIT_MACROS before #including llvm-c/DataTypes.h"
-#endif
-
-#if !defined(UINT32_C)
-# error "The standard header <cstdint> is not C++11 compliant. Must #define "\
-        "__STDC_CONSTANT_MACROS before #including llvm-c/DataTypes.h"
-#endif
 
 /* Note that <inttypes.h> includes <stdint.h>, if this is a C99 system. */
 #include <sys/types.h>

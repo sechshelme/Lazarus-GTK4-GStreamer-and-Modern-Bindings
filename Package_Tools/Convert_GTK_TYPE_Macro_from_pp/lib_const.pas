@@ -369,6 +369,7 @@ const
     (libs: 'libapr'; units: 'fp_apr'),
     (libs: 'libapriltag'; units: 'fp_apriltag'),
     (libs: 'libopencl'; units: 'fp_apriltag'),
+    (libs: 'libllvm'; units: 'fp_llvm'),
 
 
 
