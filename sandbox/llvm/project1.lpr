@@ -4,7 +4,37 @@ program project1;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils, ctypes;
+  Types,
+  Analysis,
+  BitReader,
+  BitWriter,
+  blake3,
+  Comdat,
+  Core,
+  DataTypes,
+  DebugInfo,
+  Disassembler,
+  DisassemblerTypes,
+  Error,
+  ErrorHandling,
+  ExecutionEngine,
+  IRReader,
+  Linker,
+  LLJIT,
+  LLJITUtils,
+  lto,
+  Object_,                   // name ??
+  Orc,
+  OrcEE,
+  Remarks,
+  Support,
+  Target,
+  TargetMachine,
+
+  PassBuilder,
+
+
+  Classes, SysUtils, ctypes, fp_llvm;
 
 const
   LLVM_Lib = 'libLLVM-20.so';

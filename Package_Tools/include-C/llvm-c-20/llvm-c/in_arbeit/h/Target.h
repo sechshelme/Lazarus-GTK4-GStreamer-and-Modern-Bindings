@@ -37,99 +37,75 @@ enum LLVMByteOrdering { LLVMBigEndian, LLVMLittleEndian };
 typedef struct LLVMOpaqueTargetData *LLVMTargetDataRef;
 typedef struct LLVMOpaqueTargetLibraryInfotData *LLVMTargetLibraryInfoRef;
 
-/* Declare all of the target-initialization functions that are available. */
+/* xxxxxxx
 #define LLVM_TARGET(TargetName) \
   void LLVMInitialize##TargetName##TargetInfo(void);
 #include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  /* Explicit undef to make SWIG happier */
+#undef LLVM_TARGET 
 
 #define LLVM_TARGET(TargetName) void LLVMInitialize##TargetName##Target(void);
 #include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  /* Explicit undef to make SWIG happier */
+#undef LLVM_TARGET 
 
 #define LLVM_TARGET(TargetName) \
   void LLVMInitialize##TargetName##TargetMC(void);
 #include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  /* Explicit undef to make SWIG happier */
+#undef LLVM_TARGET 
 
-/* Declare all of the available assembly printer initialization functions. */
 #define LLVM_ASM_PRINTER(TargetName) \
   void LLVMInitialize##TargetName##AsmPrinter(void);
 #include "llvm/Config/AsmPrinters.def"
-#undef LLVM_ASM_PRINTER  /* Explicit undef to make SWIG happier */
+#undef LLVM_ASM_PRINTER  
 
-/* Declare all of the available assembly parser initialization functions. */
 #define LLVM_ASM_PARSER(TargetName) \
   void LLVMInitialize##TargetName##AsmParser(void);
 #include "llvm/Config/AsmParsers.def"
-#undef LLVM_ASM_PARSER  /* Explicit undef to make SWIG happier */
+#undef LLVM_ASM_PARSER  
 
-/* Declare all of the available disassembler initialization functions. */
 #define LLVM_DISASSEMBLER(TargetName) \
   void LLVMInitialize##TargetName##Disassembler(void);
 #include "llvm/Config/Disassemblers.def"
-#undef LLVM_DISASSEMBLER  /* Explicit undef to make SWIG happier */
+#undef LLVM_DISASSEMBLER  
 
-/** LLVMInitializeAllTargetInfos - The main program should call this function if
-    it wants access to all available targets that LLVM is configured to
-    support. */
 static inline void LLVMInitializeAllTargetInfos(void) {
 #define LLVM_TARGET(TargetName) LLVMInitialize##TargetName##TargetInfo();
 #include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  /* Explicit undef to make SWIG happier */
+#undef LLVM_TARGET  
 }
 
-/** LLVMInitializeAllTargets - The main program should call this function if it
-    wants to link in all available targets that LLVM is configured to
-    support. */
 static inline void LLVMInitializeAllTargets(void) {
 #define LLVM_TARGET(TargetName) LLVMInitialize##TargetName##Target();
 #include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  /* Explicit undef to make SWIG happier */
+#undef LLVM_TARGET  
 }
 
-/** LLVMInitializeAllTargetMCs - The main program should call this function if
-    it wants access to all available target MC that LLVM is configured to
-    support. */
 static inline void LLVMInitializeAllTargetMCs(void) {
 #define LLVM_TARGET(TargetName) LLVMInitialize##TargetName##TargetMC();
 #include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  /* Explicit undef to make SWIG happier */
+#undef LLVM_TARGET  
 }
 
-/** LLVMInitializeAllAsmPrinters - The main program should call this function if
-    it wants all asm printers that LLVM is configured to support, to make them
-    available via the TargetRegistry. */
 static inline void LLVMInitializeAllAsmPrinters(void) {
 #define LLVM_ASM_PRINTER(TargetName) LLVMInitialize##TargetName##AsmPrinter();
 #include "llvm/Config/AsmPrinters.def"
-#undef LLVM_ASM_PRINTER  /* Explicit undef to make SWIG happier */
+#undef LLVM_ASM_PRINTER 
 }
 
-/** LLVMInitializeAllAsmParsers - The main program should call this function if
-    it wants all asm parsers that LLVM is configured to support, to make them
-    available via the TargetRegistry. */
 static inline void LLVMInitializeAllAsmParsers(void) {
 #define LLVM_ASM_PARSER(TargetName) LLVMInitialize##TargetName##AsmParser();
 #include "llvm/Config/AsmParsers.def"
-#undef LLVM_ASM_PARSER  /* Explicit undef to make SWIG happier */
+#undef LLVM_ASM_PARSER  
 }
 
-/** LLVMInitializeAllDisassemblers - The main program should call this function
-    if it wants all disassemblers that LLVM is configured to support, to make
-    them available via the TargetRegistry. */
 static inline void LLVMInitializeAllDisassemblers(void) {
 #define LLVM_DISASSEMBLER(TargetName) \
   LLVMInitialize##TargetName##Disassembler();
 #include "llvm/Config/Disassemblers.def"
-#undef LLVM_DISASSEMBLER  /* Explicit undef to make SWIG happier */
+#undef LLVM_DISASSEMBLER  
 }
 
-/** LLVMInitializeNativeTarget - The main program should call this function to
-    initialize the native target corresponding to the host.  This is useful
-    for JIT applications to ensure that the target gets linked in correctly. */
 static inline LLVMBool LLVMInitializeNativeTarget(void) {
-  /* If we have a native target, initialize it to ensure it is linked in. */
+
 #ifdef LLVM_NATIVE_TARGET
   LLVM_NATIVE_TARGETINFO();
   LLVM_NATIVE_TARGET();
@@ -140,9 +116,6 @@ static inline LLVMBool LLVMInitializeNativeTarget(void) {
 #endif
 }
 
-/** LLVMInitializeNativeTargetAsmParser - The main program should call this
-    function to initialize the parser for the native target corresponding to the
-    host. */
 static inline LLVMBool LLVMInitializeNativeAsmParser(void) {
 #ifdef LLVM_NATIVE_ASMPARSER
   LLVM_NATIVE_ASMPARSER();
@@ -152,9 +125,6 @@ static inline LLVMBool LLVMInitializeNativeAsmParser(void) {
 #endif
 }
 
-/** LLVMInitializeNativeTargetAsmPrinter - The main program should call this
-    function to initialize the printer for the native target corresponding to
-    the host. */
 static inline LLVMBool LLVMInitializeNativeAsmPrinter(void) {
 #ifdef LLVM_NATIVE_ASMPRINTER
   LLVM_NATIVE_ASMPRINTER();
@@ -164,9 +134,6 @@ static inline LLVMBool LLVMInitializeNativeAsmPrinter(void) {
 #endif
 }
 
-/** LLVMInitializeNativeTargetDisassembler - The main program should call this
-    function to initialize the disassembler for the native target corresponding
-    to the host. */
 static inline LLVMBool LLVMInitializeNativeDisassembler(void) {
 #ifdef LLVM_NATIVE_DISASSEMBLER
   LLVM_NATIVE_DISASSEMBLER();
@@ -176,13 +143,8 @@ static inline LLVMBool LLVMInitializeNativeDisassembler(void) {
 #endif
 }
 
-/*===-- Target Data -------------------------------------------------------===*/
+*/
 
-/**
- * Obtain the data layout for a module.
- *
- * @see Module::getDataLayout()
- */
 LLVMTargetDataRef LLVMGetModuleDataLayout(LLVMModuleRef M);
 
 /**
@@ -214,7 +176,7 @@ char *LLVMCopyStringRepOfTargetData(LLVMTargetDataRef TD);
 /** Returns the byte order of a target, either LLVMBigEndian or
     LLVMLittleEndian.
     See the method llvm::DataLayout::isLittleEndian. */
-enum LLVMByteOrdering LLVMByteOrder(LLVMTargetDataRef TD);
+ LLVMByteOrdering LLVMByteOrder(LLVMTargetDataRef TD);
 
 /** Returns the pointer size in bytes for a target.
     See the method llvm::DataLayout::getPointerSize. */
