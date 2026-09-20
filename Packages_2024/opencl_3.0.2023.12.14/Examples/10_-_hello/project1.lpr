@@ -1,17 +1,80 @@
 program project1;
 
-(*
-
-sudo apt install pocl-opencl-icd
-sudo apt install intel-oneapi-runtime-opencl
-
-*)
-
-
 uses
-  fp_cl_gl,
-  fp_cl_egl,
   fp_opencl;
+
+function GetDeviceName(device_id: Tcl_device_id): string;
+var
+  size: Tsize_t = 0;
+begin
+  clGetDeviceInfo(device_id, CL_DEVICE_NAME, 0, nil, @size);
+  SetLength(Result, size - 1);
+  clGetDeviceInfo(device_id, CL_DEVICE_NAME, size, @Result[1], nil);
+end;
+
+function SelectOpenCLDevice: Tcl_device_id;
+type
+  TAvailableDevice = record
+    id: Tcl_device_id;
+    platform_id: Tcl_platform_id;
+  end;
+var
+  num_platforms, num_devices: Tcl_uint;
+  platforms: array of Tcl_platform_id = nil;
+  devices: array of Tcl_device_id = nil;
+  menu_items: array of TAvailableDevice = nil;
+  i, j: Integer;
+  choice: Integer = 0;
+  ret: Tcl_int;
+begin
+  Result := nil;
+
+  ret := clGetPlatformIDs(0, nil, @num_platforms);
+  if (ret <> CL_SUCCESS) or (num_platforms = 0) then begin
+    WriteLn('Keine OpenCL Plattformen gefunden.');
+    Exit;
+  end;
+
+  SetLength(platforms, num_platforms);
+  clGetPlatformIDs(num_platforms, @platforms[0], nil);
+
+  for i := 0 to num_platforms - 1 do begin
+    num_devices := 0;
+    ret := clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, 0, nil, @num_devices);
+
+    if (ret <> CL_SUCCESS) or (num_devices = 0) then Continue;
+
+    SetLength(devices, num_devices);
+    ret := clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, num_devices, @devices[0], nil);
+    if ret <> CL_SUCCESS then Continue;
+
+    for j := 0 to num_devices - 1 do begin
+      if devices[j] = nil then Continue;
+
+      SetLength(menu_items, Length(menu_items) + 1);
+      with menu_items[High(menu_items)] do begin
+        id := devices[j];
+        platform_id := platforms[i];
+        WriteLn('[', Length(menu_items), '] Plattform ', i, ': ', GetDeviceName(devices[j]));
+      end;
+    end;
+  end;
+
+  if Length(menu_items) = 0 then begin
+    WriteLn('Keine aktiven OpenCL-Geräte verfügbar. (Prüfe Umgebungsvariablen!)');
+    Exit;
+  end;
+
+  WriteLn(#10'=== Verfügbare OpenCL Geräte ===');
+  while (choice < 1) or (choice > Length(menu_items)) do begin
+    WriteLn('Bitte wählen Sie ein Gerät (1-', Length(menu_items), '):');
+    ReadLn(choice);
+  end;
+
+  Result := menu_items[choice - 1].id;
+end;
+// ===========
+
 
 const
   ARRAY_SIZE = 1024;
@@ -32,10 +95,6 @@ const kernel_source: pchar =
     '__kernel void vector_add(__global const float *A, __global const float *B, __global float *C) { '#10 +
     '    int i = get_global_id(0);                                                                  '#10 +
     '    C[i] = A[i] + B[i];                                                                        '#10 +
-    '}' +
-    '__kernel void vector_mul(__global const float *A, __global const float *B, __global float *C) { '#10 +
-    '    int i = get_global_id(0);                                                                  '#10 +
-    '    C[i] = A[i] * B[i];                                                                        '#10 +
     '}';
 
   function LoadProgram(queue: Tcl_command_queue; prg_source: pchar): Tcl_program;
@@ -46,22 +105,18 @@ const kernel_source: pchar =
     log_size: Tsize_t;
     build_log: array of char = nil;
 
-    // Hilfszeiger, um den Pascal-Header auszutricksen
     p_context: Pointer;
     p_device: Pointer;
   begin
     p_context := nil;
     p_device := nil;
 
-    // 1. Kontext und Device absolut sicher als untypisierte Pointer auslesen
     clGetCommandQueueInfo(queue, CL_QUEUE_CONTEXT, SizeOf(Pointer), @p_context, nil);
     clGetCommandQueueInfo(queue, CL_QUEUE_DEVICE, SizeOf(Pointer), @p_device, nil);
 
-    // 2. Zurück auf die OpenCL-Typen casten
     context := Tcl_context(p_context);
     device_id := Tcl_device_id(p_device);
 
-    // 3. Programm erstellen und kompilieren
     Result := clCreateProgramWithSource(context, 1, @prg_source, nil, nil);
     build_res := clBuildProgram(Result, 1, @device_id, nil, nil, nil);
 
@@ -106,7 +161,9 @@ const kernel_source: pchar =
     end;
 
     clGetPlatformIDs(1, @platform_id, @ret_num_platforms);
-    clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_DEFAULT, 1, @device_id, @ret_num_devices);
+
+    device_id:=    SelectOpenCLDevice;
+    WriteLn('=========================================');
     PrintVersion(platform_id, device_id);
 
     context := clCreateContext(nil, 1, @device_id, nil, nil, nil);
