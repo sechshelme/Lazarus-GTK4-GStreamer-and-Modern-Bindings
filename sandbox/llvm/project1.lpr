@@ -11,8 +11,8 @@ uses
   blake3,
   Comdat,
   Core,
-
   DataTypes,
+
   DebugInfo,
   Disassembler,
   DisassemblerTypes,

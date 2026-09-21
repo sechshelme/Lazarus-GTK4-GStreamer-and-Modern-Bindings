@@ -15,6 +15,7 @@ type
   TLLVMBool = Boolean32;
 
   TLLVMMemoryBufferRef = type Pointer;
+  PLLVMMemoryBufferRef=^TLLVMMemoryBufferRef;
   TLLVMContextRef = type Pointer;
   TLLVMModuleRef = type Pointer;
   PLLVMModuleRef=^TLLVMModuleRef;
@@ -23,10 +24,13 @@ type
   TLLVMValueRef = type Pointer;
   PLLVMValueRef=^TLLVMValueRef;
   TLLVMBasicBlockRef = type Pointer;
+  PLLVMBasicBlockRef=^TLLVMBasicBlockRef;
   TLLVMMetadataRef = type Pointer;
+  PLLVMMetadataRef=^TLLVMMetadataRef;
   TLLVMNamedMDNodeRef = type Pointer;
 
   TLLVMValueMetadataEntry = type Pointer;
+  PLLVMValueMetadataEntry=^TLLVMValueMetadataEntry;
 
   TLLVMBuilderRef = type Pointer;
   TLLVMDIBuilderRef = type Pointer;
@@ -34,7 +38,9 @@ type
   TLLVMPassManagerRef = type Pointer;
   TLLVMUseRef = type Pointer;
   TLLVMOperandBundleRef = type Pointer;
+  PLLVMOperandBundleRef=^TLLVMOperandBundleRef;
   TLLVMAttributeRef = type Pointer;
+  PLLVMAttributeRef=^TLLVMAttributeRef;
   TLLVMDiagnosticInfoRef = type Pointer;
 
   PLLVMComdatRef = ^TLLVMComdatRef;
