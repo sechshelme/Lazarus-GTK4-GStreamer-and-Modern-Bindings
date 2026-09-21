@@ -3,7 +3,7 @@ unit Disassembler;
 interface
 
 uses
-  fp_llvm, Types;
+  fp_llvm, Types, DisassemblerTypes;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

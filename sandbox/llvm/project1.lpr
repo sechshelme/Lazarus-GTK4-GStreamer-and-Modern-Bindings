@@ -12,30 +12,31 @@ uses
   Comdat,
   Core,
   DataTypes,
-
   DebugInfo,
-  Disassembler,
   DisassemblerTypes,
-  Error,
+  Disassembler,
   ErrorHandling,
+  Error,
+  Target,
+  TargetMachine,
   ExecutionEngine,
   IRReader,
   Linker,
+  Orc,
+  OrcEE,
   LLJIT,
+
   LLJITUtils,
   lto,
   Object_,                   // name ??
-  Orc,
-  OrcEE,
   Remarks,
   Support,
-  Target,
-  TargetMachine,
 
   PassBuilder,
 
 
-  Classes, SysUtils, ctypes, fp_llvm;
+  Classes, SysUtils, ctypes,
+  fp_llvm;
 
 const
   LLVM_Lib = 'libLLVM-20.so';
@@ -47,7 +48,7 @@ type
   LLVMValueRef = Pointer;
   LLVMBuilderRef = Pointer;
   LLVMExecutionEngineRef = Pointer;
-  PLLVMExecutionEngineRef=LLVMExecutionEngineRef;
+  PLLVMExecutionEngineRef = LLVMExecutionEngineRef;
   LLVMBasicBlockRef = Pointer;
 
   function LLVMContextCreate: LLVMContextRef; cdecl; external LLVM_Lib;
@@ -76,7 +77,7 @@ type
   procedure LLVMDisposeExecutionEngine(EE: LLVMExecutionEngineRef); cdecl; external LLVM_Lib;
   procedure LLVMContextDispose(C: LLVMContextRef); cdecl; external LLVM_Lib;
 
-  procedure LLVMDumpModule(M: LLVMModuleRef)  cdecl; external LLVM_Lib;
+  procedure LLVMDumpModule(M: LLVMModuleRef) cdecl; external LLVM_Lib;
 
 
 type
@@ -144,7 +145,7 @@ type
       WriteLn();
       WriteLn('=== DUMP ERGEBNIS ===');
 
-          LLVMDumpModule(module);
+      LLVMDumpModule(module);
     end else begin
       WriteLn('Funktionsadresse nicht gefunden.');
     end;

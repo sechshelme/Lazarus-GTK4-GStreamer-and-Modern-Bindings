@@ -44,6 +44,8 @@ type
   Tssize_t = SizeInt;
   Pssize_t = ^Tssize_t;
 
+  Tuintptr_t=PtrUInt;
+
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

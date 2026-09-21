@@ -3,244 +3,393 @@ unit Target;
 interface
 
 uses
-  fp_llvm;
+  fp_llvm, Types;
 
-{$IFDEF FPC}
-{$PACKRECORDS C}
-{$ENDIF}
+  {$IFDEF FPC}
+  {$PACKRECORDS C}
+  {$ENDIF}
 
 
-{===-- llvm-c/Target.h - Target Lib C Iface --------------------*- C++ -*-=== }
-{                                                                             }
-{ Part of the LLVM Project, under the Apache License v2.0 with LLVM           }
-{ Exceptions.                                                                 }
-{ See https://llvm.org/LICENSE.txt for license information.                   }
-{ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception                     }
-{                                                                             }
-{===----------------------------------------------------------------------=== }
-{                                                                             }
-{ This header declares the C interface to libLLVMTarget.a, which              }
-{ implements target information.                                              }
-{                                                                             }
-{ Many exotic languages can interoperate with C code but have a harder time   }
-{ with C++ due to name mangling. So in addition to C, this interface enables  }
-{ tools written in such languages.                                            }
-{                                                                             }
-{===----------------------------------------------------------------------=== }
-{$ifndef LLVM_C_TARGET_H}
-{$define LLVM_C_TARGET_H}
-{$include "llvm-c/ExternC.h"}
-{$include "llvm-c/Types.h"}
-{$include "llvm/Config/llvm-config.h"}
-{*
- * @defgroup LLVMCTarget Target information
- * @ingroup LLVMC
- *
- * @
-  }
 type
-  TLLVMByteOrdering =  Longint;
-  Const
-    LLVMBigEndian = 0;
-    LLVMLittleEndian = 1;
+  TLLVMByteOrdering = longint;
+const
+  LLVMBigEndian = 0;
+  LLVMLittleEndian = 1;
 
 type
   PLLVMTargetDataRef = ^TLLVMTargetDataRef;
-  TLLVMTargetDataRef = PLLVMOpaqueTargetData;
+  TLLVMTargetDataRef = type Pointer;
 
   PLLVMTargetLibraryInfoRef = ^TLLVMTargetLibraryInfoRef;
-  TLLVMTargetLibraryInfoRef = PLLVMOpaqueTargetLibraryInfotData;
-{ xxxxxxx
-#define LLVM_TARGET(TargetName) \
-  void LLVMInitialize##TargetName##TargetInfo(void);
-#include "llvm/Config/Targets.def"
-#undef LLVM_TARGET 
+  TLLVMTargetLibraryInfoRef = type Pointer;
 
-#define LLVM_TARGET(TargetName) void LLVMInitialize##TargetName##Target(void);
-#include "llvm/Config/Targets.def"
-#undef LLVM_TARGET 
+procedure LLVMInitializeAArch64TargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeAMDGPUTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeARMTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeAVRTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeBPFTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeHexagonTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeLanaiTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeLoongArchTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeMipsTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeMSP430TargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeNVPTXTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializePowerPCTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeRISCVTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeSparcTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeSPIRVTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeSystemZTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeVETargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeWebAssemblyTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeX86TargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeXCoreTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeM68kTargetInfo; cdecl; external libllvm;
+procedure LLVMInitializeXtensaTargetInfo; cdecl; external libllvm;
 
-#define LLVM_TARGET(TargetName) \
-  void LLVMInitialize##TargetName##TargetMC(void);
-#include "llvm/Config/Targets.def"
-#undef LLVM_TARGET 
+procedure LLVMInitializeAArch64Target; cdecl; external libllvm;
+procedure LLVMInitializeAMDGPUTarget; cdecl; external libllvm;
+procedure LLVMInitializeARMTarget; cdecl; external libllvm;
+procedure LLVMInitializeAVRTarget; cdecl; external libllvm;
+procedure LLVMInitializeBPFTarget; cdecl; external libllvm;
+procedure LLVMInitializeHexagonTarget; cdecl; external libllvm;
+procedure LLVMInitializeLanaiTarget; cdecl; external libllvm;
+procedure LLVMInitializeLoongArchTarget; cdecl; external libllvm;
+procedure LLVMInitializeMipsTarget; cdecl; external libllvm;
+procedure LLVMInitializeMSP430Target; cdecl; external libllvm;
+procedure LLVMInitializeNVPTXTarget; cdecl; external libllvm;
+procedure LLVMInitializePowerPCTarget; cdecl; external libllvm;
+procedure LLVMInitializeRISCVTarget; cdecl; external libllvm;
+procedure LLVMInitializeSparcTarget; cdecl; external libllvm;
+procedure LLVMInitializeSPIRVTarget; cdecl; external libllvm;
+procedure LLVMInitializeSystemZTarget; cdecl; external libllvm;
+procedure LLVMInitializeVETarget; cdecl; external libllvm;
+procedure LLVMInitializeWebAssemblyTarget; cdecl; external libllvm;
+procedure LLVMInitializeX86Target; cdecl; external libllvm;
+procedure LLVMInitializeXCoreTarget; cdecl; external libllvm;
+procedure LLVMInitializeM68kTarget; cdecl; external libllvm;
+procedure LLVMInitializeXtensaTarget; cdecl; external libllvm;
 
-#define LLVM_ASM_PRINTER(TargetName) \
-  void LLVMInitialize##TargetName##AsmPrinter(void);
-#include "llvm/Config/AsmPrinters.def"
-#undef LLVM_ASM_PRINTER  
+procedure LLVMInitializeAArch64TargetMC; cdecl; external libllvm;
+procedure LLVMInitializeAMDGPUTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeARMTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeAVRTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeBPFTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeHexagonTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeLanaiTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeLoongArchTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeMipsTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeMSP430TargetMC; cdecl; external libllvm;
+procedure LLVMInitializeNVPTXTargetMC; cdecl; external libllvm;
+procedure LLVMInitializePowerPCTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeRISCVTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeSparcTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeSPIRVTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeSystemZTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeVETargetMC; cdecl; external libllvm;
+procedure LLVMInitializeWebAssemblyTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeX86TargetMC; cdecl; external libllvm;
+procedure LLVMInitializeXCoreTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeM68kTargetMC; cdecl; external libllvm;
+procedure LLVMInitializeXtensaTargetMC; cdecl; external libllvm;
 
-#define LLVM_ASM_PARSER(TargetName) \
-  void LLVMInitialize##TargetName##AsmParser(void);
-#include "llvm/Config/AsmParsers.def"
-#undef LLVM_ASM_PARSER  
+procedure LLVMInitializeAArch64AsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeAMDGPUAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeARMAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeAVRAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeBPFAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeHexagonAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeLanaiAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeLoongArchAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeMipsAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeMSP430AsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeNVPTXAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializePowerPCAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeRISCVAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeSparcAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeSPIRVAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeSystemZAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeVEAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeWebAssemblyAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeX86AsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeXCoreAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeM68kAsmPrinter; cdecl; external libllvm;
+procedure LLVMInitializeXtensaAsmPrinter; cdecl; external libllvm;
 
-#define LLVM_DISASSEMBLER(TargetName) \
-  void LLVMInitialize##TargetName##Disassembler(void);
-#include "llvm/Config/Disassemblers.def"
-#undef LLVM_DISASSEMBLER  
+procedure LLVMInitializeAArch64AsmParser; cdecl; external libllvm;
+procedure LLVMInitializeAMDGPUAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeARMAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeAVRAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeBPFAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeHexagonAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeLanaiAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeLoongArchAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeMipsAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeMSP430AsmParser; cdecl; external libllvm;
+procedure LLVMInitializeNVPTXAsmParser; cdecl; external libllvm;
+procedure LLVMInitializePowerPCAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeRISCVAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeSparcAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeSystemZAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeVEAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeWebAssemblyAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeX86AsmParser; cdecl; external libllvm;
+procedure LLVMInitializeXCoreAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeM68kAsmParser; cdecl; external libllvm;
+procedure LLVMInitializeXtensaAsmParser; cdecl; external libllvm;
 
-static inline void LLVMInitializeAllTargetInfos(void) 
-#define LLVM_TARGET(TargetName) LLVMInitialize##TargetName##TargetInfo();
-#include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  
+procedure LLVMInitializeAArch64Disassembler; cdecl; external libllvm;
+procedure LLVMInitializeAMDGPUDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeARMDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeAVRDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeBPFDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeHexagonDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeLanaiDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeLoongArchDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeMipsDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeMSP430Disassembler; cdecl; external libllvm;
+procedure LLVMInitializePowerPCDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeRISCVDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeSparcDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeSystemZDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeVEDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeWebAssemblyDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeX86Disassembler; cdecl; external libllvm;
+procedure LLVMInitializeXCoreDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeM68kDisassembler; cdecl; external libllvm;
+procedure LLVMInitializeXtensaDisassembler; cdecl; external libllvm;
 
+procedure LLVMInitializeAllTargetInfos; inline;
+procedure LLVMInitializeAllTargets; inline;
+procedure LLVMInitializeAllTargetMCs; inline;
+procedure LLVMInitializeAllAsmPrinters; inline;
+procedure LLVMInitializeAllAsmParsers; inline;
+procedure LLVMInitializeAllDisassemblers; inline;
 
-static inline void LLVMInitializeAllTargets(void) 
-#define LLVM_TARGET(TargetName) LLVMInitialize##TargetName##Target();
-#include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  
+function LLVMInitializeNativeTarget: longbool; inline;
+function LLVMInitializeNativeAsmParser: longbool; inline;
+function LLVMInitializeNativeAsmPrinter: longbool; inline;
+function LLVMInitializeNativeDisassembler: longbool; inline;
 
-
-static inline void LLVMInitializeAllTargetMCs(void) 
-#define LLVM_TARGET(TargetName) LLVMInitialize##TargetName##TargetMC();
-#include "llvm/Config/Targets.def"
-#undef LLVM_TARGET  
-
-
-static inline void LLVMInitializeAllAsmPrinters(void) 
-#define LLVM_ASM_PRINTER(TargetName) LLVMInitialize##TargetName##AsmPrinter();
-#include "llvm/Config/AsmPrinters.def"
-#undef LLVM_ASM_PRINTER 
-
-
-static inline void LLVMInitializeAllAsmParsers(void) 
-#define LLVM_ASM_PARSER(TargetName) LLVMInitialize##TargetName##AsmParser();
-#include "llvm/Config/AsmParsers.def"
-#undef LLVM_ASM_PARSER  
-
-
-static inline void LLVMInitializeAllDisassemblers(void) 
-#define LLVM_DISASSEMBLER(TargetName) \
-  LLVMInitialize##TargetName##Disassembler();
-#include "llvm/Config/Disassemblers.def"
-#undef LLVM_DISASSEMBLER  
-
-
-static inline LLVMBool LLVMInitializeNativeTarget(void) 
-
-#ifdef LLVM_NATIVE_TARGET
-  LLVM_NATIVE_TARGETINFO();
-  LLVM_NATIVE_TARGET();
-  LLVM_NATIVE_TARGETMC();
-  return 0;
-#else
-  return 1;
-#endif
-
-
-static inline LLVMBool LLVMInitializeNativeAsmParser(void) 
-#ifdef LLVM_NATIVE_ASMPARSER
-  LLVM_NATIVE_ASMPARSER();
-  return 0;
-#else
-  return 1;
-#endif
-
-
-static inline LLVMBool LLVMInitializeNativeAsmPrinter(void) 
-#ifdef LLVM_NATIVE_ASMPRINTER
-  LLVM_NATIVE_ASMPRINTER();
-  return 0;
-#else
-  return 1;
-#endif
-
-
-static inline LLVMBool LLVMInitializeNativeDisassembler(void) 
-#ifdef LLVM_NATIVE_DISASSEMBLER
-  LLVM_NATIVE_DISASSEMBLER();
-  return 0;
-#else
-  return 1;
-#endif
-
-
- }
-
-function LLVMGetModuleDataLayout(M:TLLVMModuleRef):TLLVMTargetDataRef;cdecl;external libllvm;
-{*
- * Set the data layout for a module.
- *
- * @see Module::setDataLayout()
-  }
-procedure LLVMSetModuleDataLayout(M:TLLVMModuleRef; DL:TLLVMTargetDataRef);cdecl;external libllvm;
-{* Creates target data from a target layout string.
-    See the constructor llvm::DataLayout::DataLayout.  }
-function LLVMCreateTargetData(StringRep:Pchar):TLLVMTargetDataRef;cdecl;external libllvm;
-{* Deallocates a TargetData.
-    See the destructor llvm::DataLayout::~DataLayout.  }
-procedure LLVMDisposeTargetData(TD:TLLVMTargetDataRef);cdecl;external libllvm;
-{* Adds target library information to a pass manager. This does not take
-    ownership of the target library info.
-    See the method llvm::PassManagerBase::add.  }
-procedure LLVMAddTargetLibraryInfo(TLI:TLLVMTargetLibraryInfoRef; PM:TLLVMPassManagerRef);cdecl;external libllvm;
-{* Converts target data to a target layout string. The string must be disposed
-    with LLVMDisposeMessage.
-    See the constructor llvm::DataLayout::DataLayout.  }
-function LLVMCopyStringRepOfTargetData(TD:TLLVMTargetDataRef):Pchar;cdecl;external libllvm;
-{* Returns the byte order of a target, either LLVMBigEndian or
-    LLVMLittleEndian.
-    See the method llvm::DataLayout::isLittleEndian.  }
-function LLVMByteOrder(TD:TLLVMTargetDataRef):TLLVMByteOrdering;cdecl;external libllvm;
-{* Returns the pointer size in bytes for a target.
-    See the method llvm::DataLayout::getPointerSize.  }
-function LLVMPointerSize(TD:TLLVMTargetDataRef):dword;cdecl;external libllvm;
-{* Returns the pointer size in bytes for a target for a specified
-    address space.
-    See the method llvm::DataLayout::getPointerSize.  }
-function LLVMPointerSizeForAS(TD:TLLVMTargetDataRef; AS:dword):dword;cdecl;external libllvm;
-{* Returns the integer type that is the same size as a pointer on a target.
-    See the method llvm::DataLayout::getIntPtrType.  }
-function LLVMIntPtrType(TD:TLLVMTargetDataRef):TLLVMTypeRef;cdecl;external libllvm;
-{* Returns the integer type that is the same size as a pointer on a target.
-    This version allows the address space to be specified.
-    See the method llvm::DataLayout::getIntPtrType.  }
-function LLVMIntPtrTypeForAS(TD:TLLVMTargetDataRef; AS:dword):TLLVMTypeRef;cdecl;external libllvm;
-{* Returns the integer type that is the same size as a pointer on a target.
-    See the method llvm::DataLayout::getIntPtrType.  }
-function LLVMIntPtrTypeInContext(C:TLLVMContextRef; TD:TLLVMTargetDataRef):TLLVMTypeRef;cdecl;external libllvm;
-{* Returns the integer type that is the same size as a pointer on a target.
-    This version allows the address space to be specified.
-    See the method llvm::DataLayout::getIntPtrType.  }
-function LLVMIntPtrTypeForASInContext(C:TLLVMContextRef; TD:TLLVMTargetDataRef; AS:dword):TLLVMTypeRef;cdecl;external libllvm;
-{* Computes the size of a type in bits for a target.
-    See the method llvm::DataLayout::getTypeSizeInBits.  }
-function LLVMSizeOfTypeInBits(TD:TLLVMTargetDataRef; Ty:TLLVMTypeRef):qword;cdecl;external libllvm;
-{* Computes the storage size of a type in bytes for a target.
-    See the method llvm::DataLayout::getTypeStoreSize.  }
-function LLVMStoreSizeOfType(TD:TLLVMTargetDataRef; Ty:TLLVMTypeRef):qword;cdecl;external libllvm;
-{* Computes the ABI size of a type in bytes for a target.
-    See the method llvm::DataLayout::getTypeAllocSize.  }
-function LLVMABISizeOfType(TD:TLLVMTargetDataRef; Ty:TLLVMTypeRef):qword;cdecl;external libllvm;
-{* Computes the ABI alignment of a type in bytes for a target.
-    See the method llvm::DataLayout::getTypeABISize.  }
-function LLVMABIAlignmentOfType(TD:TLLVMTargetDataRef; Ty:TLLVMTypeRef):dword;cdecl;external libllvm;
-{* Computes the call frame alignment of a type in bytes for a target.
-    See the method llvm::DataLayout::getTypeABISize.  }
-function LLVMCallFrameAlignmentOfType(TD:TLLVMTargetDataRef; Ty:TLLVMTypeRef):dword;cdecl;external libllvm;
-{* Computes the preferred alignment of a type in bytes for a target.
-    See the method llvm::DataLayout::getTypeABISize.  }
-function LLVMPreferredAlignmentOfType(TD:TLLVMTargetDataRef; Ty:TLLVMTypeRef):dword;cdecl;external libllvm;
-{* Computes the preferred alignment of a global variable in bytes for a target.
-    See the method llvm::DataLayout::getPreferredAlignment.  }
-function LLVMPreferredAlignmentOfGlobal(TD:TLLVMTargetDataRef; GlobalVar:TLLVMValueRef):dword;cdecl;external libllvm;
-{* Computes the structure element that contains the byte offset for a target.
-    See the method llvm::StructLayout::getElementContainingOffset.  }
-function LLVMElementAtOffset(TD:TLLVMTargetDataRef; StructTy:TLLVMTypeRef; Offset:qword):dword;cdecl;external libllvm;
-{* Computes the byte offset of the indexed struct element for a target.
-    See the method llvm::StructLayout::getElementContainingOffset.  }
-function LLVMOffsetOfElement(TD:TLLVMTargetDataRef; StructTy:TLLVMTypeRef; Element:dword):qword;cdecl;external libllvm;
-{*
- * @
-  }
-{$endif}
+function LLVMGetModuleDataLayout(M: TLLVMModuleRef): TLLVMTargetDataRef; cdecl; external libllvm;
+procedure LLVMSetModuleDataLayout(M: TLLVMModuleRef; DL: TLLVMTargetDataRef); cdecl; external libllvm;
+function LLVMCreateTargetData(StringRep: pchar): TLLVMTargetDataRef; cdecl; external libllvm;
+procedure LLVMDisposeTargetData(TD: TLLVMTargetDataRef); cdecl; external libllvm;
+procedure LLVMAddTargetLibraryInfo(TLI: TLLVMTargetLibraryInfoRef; PM: TLLVMPassManagerRef); cdecl; external libllvm;
+function LLVMCopyStringRepOfTargetData(TD: TLLVMTargetDataRef): pchar; cdecl; external libllvm;
+function LLVMByteOrder(TD: TLLVMTargetDataRef): TLLVMByteOrdering; cdecl; external libllvm;
+function LLVMPointerSize(TD: TLLVMTargetDataRef): dword; cdecl; external libllvm;
+function LLVMPointerSizeForAS(TD: TLLVMTargetDataRef; AS_: dword): dword; cdecl; external libllvm;
+function LLVMIntPtrType(TD: TLLVMTargetDataRef): TLLVMTypeRef; cdecl; external libllvm;
+function LLVMIntPtrTypeForAS(TD: TLLVMTargetDataRef; AS_: dword): TLLVMTypeRef; cdecl; external libllvm;
+function LLVMIntPtrTypeInContext(C: TLLVMContextRef; TD: TLLVMTargetDataRef): TLLVMTypeRef; cdecl; external libllvm;
+function LLVMIntPtrTypeForASInContext(C: TLLVMContextRef; TD: TLLVMTargetDataRef; AS_: dword): TLLVMTypeRef; cdecl; external libllvm;
+function LLVMSizeOfTypeInBits(TD: TLLVMTargetDataRef; Ty: TLLVMTypeRef): qword; cdecl; external libllvm;
+function LLVMStoreSizeOfType(TD: TLLVMTargetDataRef; Ty: TLLVMTypeRef): qword; cdecl; external libllvm;
+function LLVMABISizeOfType(TD: TLLVMTargetDataRef; Ty: TLLVMTypeRef): qword; cdecl; external libllvm;
+function LLVMABIAlignmentOfType(TD: TLLVMTargetDataRef; Ty: TLLVMTypeRef): dword; cdecl; external libllvm;
+function LLVMCallFrameAlignmentOfType(TD: TLLVMTargetDataRef; Ty: TLLVMTypeRef): dword; cdecl; external libllvm;
+function LLVMPreferredAlignmentOfType(TD: TLLVMTargetDataRef; Ty: TLLVMTypeRef): dword; cdecl; external libllvm;
+function LLVMPreferredAlignmentOfGlobal(TD: TLLVMTargetDataRef; GlobalVar: TLLVMValueRef): dword; cdecl; external libllvm;
+function LLVMElementAtOffset(TD: TLLVMTargetDataRef; StructTy: TLLVMTypeRef; Offset: qword): dword; cdecl; external libllvm;
+function LLVMOffsetOfElement(TD: TLLVMTargetDataRef; StructTy: TLLVMTypeRef; Element: dword): qword; cdecl; external libllvm;
 
 // === Konventiert am: 20-9-26 17:11:04 ===
 
 
 implementation
 
+procedure LLVMInitializeAllTargetInfos; inline;
+begin
+  LLVMInitializeAArch64TargetInfo;
+  LLVMInitializeAMDGPUTargetInfo;
+  LLVMInitializeARMTargetInfo;
+  LLVMInitializeAVRTargetInfo;
+  LLVMInitializeBPFTargetInfo;
+  LLVMInitializeHexagonTargetInfo;
+  LLVMInitializeLanaiTargetInfo;
+  LLVMInitializeLoongArchTargetInfo;
+  LLVMInitializeMipsTargetInfo;
+  LLVMInitializeMSP430TargetInfo;
+  LLVMInitializeNVPTXTargetInfo;
+  LLVMInitializePowerPCTargetInfo;
+  LLVMInitializeRISCVTargetInfo;
+  LLVMInitializeSparcTargetInfo;
+  LLVMInitializeSPIRVTargetInfo;
+  LLVMInitializeSystemZTargetInfo;
+  LLVMInitializeVETargetInfo;
+  LLVMInitializeWebAssemblyTargetInfo;
+  LLVMInitializeX86TargetInfo;
+  LLVMInitializeXCoreTargetInfo;
+  LLVMInitializeM68kTargetInfo;
+  LLVMInitializeXtensaTargetInfo;
+end;
 
+procedure LLVMInitializeAllTargets; inline;
+begin
+  LLVMInitializeAArch64Target;
+  LLVMInitializeAMDGPUTarget;
+  LLVMInitializeARMTarget;
+  LLVMInitializeAVRTarget;
+  LLVMInitializeBPFTarget;
+  LLVMInitializeHexagonTarget;
+  LLVMInitializeLanaiTarget;
+  LLVMInitializeLoongArchTarget;
+  LLVMInitializeMipsTarget;
+  LLVMInitializeMSP430Target;
+  LLVMInitializeNVPTXTarget;
+  LLVMInitializePowerPCTarget;
+  LLVMInitializeRISCVTarget;
+  LLVMInitializeSparcTarget;
+  LLVMInitializeSPIRVTarget;
+  LLVMInitializeSystemZTarget;
+  LLVMInitializeVETarget;
+  LLVMInitializeWebAssemblyTarget;
+  LLVMInitializeX86Target;
+  LLVMInitializeXCoreTarget;
+  LLVMInitializeM68kTarget;
+  LLVMInitializeXtensaTarget;
+end;
+
+procedure LLVMInitializeAllTargetMCs; inline;
+begin
+  LLVMInitializeAArch64TargetMC;
+  LLVMInitializeAMDGPUTargetMC;
+  LLVMInitializeARMTargetMC;
+  LLVMInitializeAVRTargetMC;
+  LLVMInitializeBPFTargetMC;
+  LLVMInitializeHexagonTargetMC;
+  LLVMInitializeLanaiTargetMC;
+  LLVMInitializeLoongArchTargetMC;
+  LLVMInitializeMipsTargetMC;
+  LLVMInitializeMSP430TargetMC;
+  LLVMInitializeNVPTXTargetMC;
+  LLVMInitializePowerPCTargetMC;
+  LLVMInitializeRISCVTargetMC;
+  LLVMInitializeSparcTargetMC;
+  LLVMInitializeSPIRVTargetMC;
+  LLVMInitializeSystemZTargetMC;
+  LLVMInitializeVETargetMC;
+  LLVMInitializeWebAssemblyTargetMC;
+  LLVMInitializeX86TargetMC;
+  LLVMInitializeXCoreTargetMC;
+  LLVMInitializeM68kTargetMC;
+  LLVMInitializeXtensaTargetMC;
+end;
+
+procedure LLVMInitializeAllAsmPrinters; inline;
+begin
+  LLVMInitializeAArch64AsmPrinter;
+  LLVMInitializeAMDGPUAsmPrinter;
+  LLVMInitializeARMAsmPrinter;
+  LLVMInitializeAVRAsmPrinter;
+  LLVMInitializeBPFAsmPrinter;
+  LLVMInitializeHexagonAsmPrinter;
+  LLVMInitializeLanaiAsmPrinter;
+  LLVMInitializeLoongArchAsmPrinter;
+  LLVMInitializeMipsAsmPrinter;
+  LLVMInitializeMSP430AsmPrinter;
+  LLVMInitializeNVPTXAsmPrinter;
+  LLVMInitializePowerPCAsmPrinter;
+  LLVMInitializeRISCVAsmPrinter;
+  LLVMInitializeSparcAsmPrinter;
+  LLVMInitializeSPIRVAsmPrinter;
+  LLVMInitializeSystemZAsmPrinter;
+  LLVMInitializeVEAsmPrinter;
+  LLVMInitializeWebAssemblyAsmPrinter;
+  LLVMInitializeX86AsmPrinter;
+  LLVMInitializeXCoreAsmPrinter;
+  LLVMInitializeM68kAsmPrinter;
+  LLVMInitializeXtensaAsmPrinter;
+end;
+
+procedure LLVMInitializeAllAsmParsers; inline;
+begin
+  LLVMInitializeAArch64AsmParser;
+  LLVMInitializeAMDGPUAsmParser;
+  LLVMInitializeARMAsmParser;
+  LLVMInitializeAVRAsmParser;
+  LLVMInitializeBPFAsmParser;
+  LLVMInitializeHexagonAsmParser;
+  LLVMInitializeLanaiAsmParser;
+  LLVMInitializeLoongArchAsmParser;
+  LLVMInitializeMipsAsmParser;
+  LLVMInitializeMSP430AsmParser;
+  LLVMInitializeNVPTXAsmParser;
+  LLVMInitializePowerPCAsmParser;
+  LLVMInitializeRISCVAsmParser;
+  LLVMInitializeSparcAsmParser;
+  LLVMInitializeSystemZAsmParser;
+  LLVMInitializeVEAsmParser;
+  LLVMInitializeWebAssemblyAsmParser;
+  LLVMInitializeX86AsmParser;
+  LLVMInitializeXCoreAsmParser;
+  LLVMInitializeM68kAsmParser;
+  LLVMInitializeXtensaAsmParser;
+end;
+
+procedure LLVMInitializeAllDisassemblers; inline;
+begin
+  LLVMInitializeAArch64Disassembler;
+  LLVMInitializeAMDGPUDisassembler;
+  LLVMInitializeARMDisassembler;
+  LLVMInitializeAVRDisassembler;
+  LLVMInitializeBPFDisassembler;
+  LLVMInitializeHexagonDisassembler;
+  LLVMInitializeLanaiDisassembler;
+  LLVMInitializeLoongArchDisassembler;
+  LLVMInitializeMipsDisassembler;
+  LLVMInitializeMSP430Disassembler;
+  LLVMInitializePowerPCDisassembler;
+  LLVMInitializeRISCVDisassembler;
+  LLVMInitializeSparcDisassembler;
+  LLVMInitializeSystemZDisassembler;
+  LLVMInitializeVEDisassembler;
+  LLVMInitializeWebAssemblyDisassembler;
+  LLVMInitializeX86Disassembler;
+  LLVMInitializeXCoreDisassembler;
+  LLVMInitializeM68kDisassembler;
+  LLVMInitializeXtensaDisassembler;
+end;
+
+function LLVMInitializeNativeTarget: longbool; inline;
+begin
+  {$if defined(cpux86_64) or defined(cpui386)}
+  LLVMInitializeX86TargetInfo;
+  LLVMInitializeX86Target;
+  LLVMInitializeX86TargetMC;
+  {$else}
+  Exit(True);
+  {$endif}
+end;
+
+function LLVMInitializeNativeAsmParser: longbool; inline;
+begin
+  {$if defined(cpux86_64) or defined(cpui386)}
+  LLVMInitializeX86AsmParser;
+  Exit(False);
+  {$else}
+  Exit(True);
+  {$endif}
+end;
+
+function LLVMInitializeNativeAsmPrinter: longbool; inline;
+begin
+  {$if defined(cpux86_64) or defined(cpui386)}
+  LLVMInitializeX86AsmPrinter;
+  Exit(False);
+  {$else}
+  Exit(True);
+  {$endif}
+end;
+
+function LLVMInitializeNativeDisassembler: longbool; inline;
+begin
+  {$if defined(cpux86_64) or defined(cpui386)}
+  LLVMInitializeX86Disassembler;
+  Exit(False);
+  {$else}
+  Exit(True);
+  {$endif}
+end;
 
 end.
