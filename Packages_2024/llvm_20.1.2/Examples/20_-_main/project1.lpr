@@ -24,11 +24,6 @@ type
     LLVMBuildRet(builder, calc_func(builder, LLVMGetParam(Result, 0), LLVMGetParam(Result, 1), ''));
   end;
 
-  function call_calc(builder: TLLVMBuilderRef; func, a, b: TLLVMValueRef): TLLVMValueRef;
-  begin
-    Result := LLVMBuildCall2(builder, LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False), func, @[a, b], 2, 'res');
-  end;
-
   function read_int(builder: TLLVMBuilderRef; scanf_func: TLLVMValueRef): TLLVMValueRef;
   var
     input_ptr: TLLVMValueRef;
@@ -72,22 +67,16 @@ type
 
     int_val_1 := read_int(builder, scanf_func);
     int_val_2 := LLVMConstInt(LLVMInt32Type, 20, False);
-    int_res_1 := call_calc(builder, add_func, int_val_1, int_val_2);
+    int_res_1 := LLVMBuildCall2(builder, LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False), add_func, @[int_val_1, int_val_2], 2, 'res');
 
     int_val_3 := LLVMConstInt(LLVMInt32Type, 30, False);
-    int_res_1 := call_calc(builder, add_func, int_res_1, int_val_3);
+    int_res_1 := LLVMBuildCall2(builder, LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False), add_func, @[int_res_1, int_val_3], 2, 'res');
 
     int_val_4 := LLVMConstInt(LLVMInt32Type, 3, False);
-    int_res_1 := call_calc(builder, mul_func, int_res_1, int_val_4);
+    int_res_1 := LLVMBuildCall2(builder, LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False), mul_func, @[int_res_1, int_val_4], 2, 'res');
 
     str_val_1 := LLVMBuildGlobalStringPtr(builder, 'Das Resultat ist: (%d + %d + %d) x %d = %d'#10, '');
     LLVMBuildCall2(builder, LLVMGlobalGetValueType(printf_func), printf_func, @[str_val_1, int_val_1, int_val_2, int_val_3, int_val_4, int_res_1], 6, '');
-
-
-    str_val_1 := LLVMBuildGlobalStringPtr(builder, '*', '');
-    LLVMBuildCall2(builder, LLVMGlobalGetValueType(printf_func), printf_func, @[str_val_1], 1, '');
-    str_val_1 := LLVMBuildGlobalStringPtr(builder, #10, '');
-    LLVMBuildCall2(builder, LLVMGlobalGetValueType(printf_func), printf_func, @[str_val_1], 1, '');
 
     LLVMBuildRet(builder, LLVMConstInt(LLVMInt32Type(), 0, False));
 
