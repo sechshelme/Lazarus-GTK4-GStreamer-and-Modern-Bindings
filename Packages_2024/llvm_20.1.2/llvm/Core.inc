@@ -499,6 +499,7 @@ function LLVMInt16Type: TLLVMTypeRef; cdecl; external libllvm;
 function LLVMInt32Type: TLLVMTypeRef; cdecl; external libllvm;
 function LLVMInt64Type: TLLVMTypeRef; cdecl; external libllvm;
 function LLVMInt128Type: TLLVMTypeRef; cdecl; external libllvm;
+
 function LLVMIntType(NumBits: dword): TLLVMTypeRef; cdecl; external libllvm;
 function LLVMGetIntTypeWidth(IntegerTy: TLLVMTypeRef): dword; cdecl; external libllvm;
 function LLVMHalfTypeInContext(C: TLLVMContextRef): TLLVMTypeRef; cdecl; external libllvm;
