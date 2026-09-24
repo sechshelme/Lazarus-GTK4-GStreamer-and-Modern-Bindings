@@ -7,25 +7,68 @@ uses
   fp_llvm;
 
 type
-  TAddFunction = function(a, b: int32): int32; cdecl;
+  TFunction = function(a, b: int32): int32; cdecl;
+
+  procedure CreateAddFunc(Module: TLLVMModuleRef);
+  var
+    context: TLLVMContextRef;
+    builder: TLLVMBuilderRef;
+    sumfunc: TLLVMValueRef;
+  begin
+    context := LLVMGetModuleContext(Module);
+    builder := LLVMCreateBuilderInContext(context);
+
+    sumfunc := LLVMAddFunction(Module, 'add', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, sumfunc, 'entry'));
+    LLVMBuildRet(builder, LLVMBuildAdd(builder, LLVMGetParam(sumfunc, 0), LLVMGetParam(sumfunc, 1), ''));
+    LLVMDisposeBuilder(builder);
+  end;
+
+  procedure CreateMulFunc(Module: TLLVMModuleRef);
+  var
+    context: TLLVMContextRef;
+    builder: TLLVMBuilderRef;
+    sumfunc: TLLVMValueRef;
+  begin
+    context := LLVMGetModuleContext(Module);
+    builder := LLVMCreateBuilderInContext(context);
+
+    sumfunc := LLVMAddFunction(Module, 'mul', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, sumfunc, 'entry'));
+    LLVMBuildRet(builder, LLVMBuildMul(builder, LLVMGetParam(sumfunc, 0), LLVMGetParam(sumfunc, 1), ''));
+    LLVMDisposeBuilder(builder);
+  end;
+
+procedure CompileAndRund  (module: TLLVMModuleRef);
+var
+  EE: TLLVMExecutionEngineRef;
+  ErrStr: PChar;
+  Res: Int32;
+  DummyMod: TLLVMModuleRef;
+begin
+  if LLVMCreateExecutionEngineForModule(@EE, Module, @ErrStr) then begin
+    WriteLn('JIT-Fehler: ', ErrStr);
+    LLVMDisposeMessage(ErrStr);
+    Exit;
+  end;
+
+  WriteLn('=== JIT ERGEBNIS ===');
+
+  Res := TFunction(LLVMGetFunctionAddress(EE, 'add'))(15, 27);
+  WriteLn('15 + 27 = ', Res);
+  Res := TFunction(LLVMGetFunctionAddress(EE, 'mul'))(5, 7);
+  WriteLn('5 x 7 = ', Res, #10);
+
+  WriteLn('=== DUMP ERGEBNIS ===');
+
+  LLVMRemoveModule(EE, Module, @DummyMod, @ErrStr);
+  LLVMDisposeExecutionEngine(EE);
+  end;
 
   procedure main;
   var
     Context: TLLVMContextRef;
     Module: TLLVMModuleRef;
-    Builder: TLLVMBuilderRef;
-    IntType: TLLVMTypeRef;
-    ParamTypes: array[0..1] of TLLVMTypeRef;
-    FuncType: TLLVMTypeRef;
-    SumFunc: TLLVMValueRef;
-    EntryBlock: TLLVMBasicBlockRef;
-    Arg1, Arg2, SumValue: TLLVMValueRef;
-
-    EE: TLLVMExecutionEngineRef = nil;
-    ErrStr: pansichar = nil;
-    FuncAddress: QWord;
-    AddPtr: TAddFunction;
-    Ergebnis: int32;
   begin
     LLVMLinkInMCJIT;
     LLVMInitializeX86TargetInfo;
@@ -35,48 +78,15 @@ type
 
     Context := LLVMContextCreate;
     Module := LLVMModuleCreateWithNameInContext('JIT_Modul', Context);
-    Builder := LLVMCreateBuilderInContext(Context);
 
-    IntType := LLVMInt32TypeInContext(Context);
-    ParamTypes[0] := IntType;
-    ParamTypes[1] := IntType;
+    CreateAddFunc(Module);
+    CreateMulFunc(Module);
 
-    FuncType := LLVMFunctionType(IntType, @ParamTypes, 2, False);
-    SumFunc := LLVMAddFunction(Module, 'mein_add', FuncType);
+    CompileAndRund(Module);
 
-    EntryBlock := LLVMAppendBasicBlockInContext(Context, SumFunc, 'entry');
-    LLVMPositionBuilderAtEnd(Builder, EntryBlock);
+    LLVMDumpModule(module);
 
-    Arg1 := LLVMGetParam(SumFunc, 0);
-    Arg2 := LLVMGetParam(SumFunc, 1);
-
-    SumValue := LLVMBuildAdd(Builder, Arg1, Arg2, 'add_tmp');
-    LLVMBuildRet(Builder, SumValue);
-
-    if LLVMCreateExecutionEngineForModule(@EE, Module, @ErrStr) then begin
-      WriteLn('JIT-Fehler: ', ErrStr);
-      Exit;
-    end;
-
-    FuncAddress := LLVMGetFunctionAddress(EE, 'mein_add');
-
-    if FuncAddress <> 0 then begin
-      AddPtr := TAddFunction(FuncAddress);
-      Ergebnis := AddPtr(15, 27);
-
-      WriteLn('=== JIT ERGEBNIS ===');
-      WriteLn('15 + 27 = ', Ergebnis);
-
-      WriteLn();
-      WriteLn('=== DUMP ERGEBNIS ===');
-
-      LLVMDumpModule(module);
-    end else begin
-      WriteLn('Funktionsadresse nicht gefunden.');
-    end;
-
-    LLVMDisposeBuilder(Builder);
-    LLVMDisposeExecutionEngine(EE);
+    LLVMDisposeModule(Module);
     LLVMContextDispose(Context);
   end;
 

@@ -14,14 +14,26 @@ uses
 const
   OutputPath = '/tmp/output.s';
 
-type
-  Tcalc_func = function(para1: TLLVMBuilderRef; LHS, RHS: TLLVMValueRef; Name: pchar): TLLVMValueRef; cdecl;
-
-  function gen_func(module: TLLVMModuleRef; builder: TLLVMBuilderRef; calc_func: Tcalc_func): TLLVMValueRef;
+  function gen_add_func(module: TLLVMModuleRef): TLLVMValueRef;
+  var
+    builder: TLLVMBuilderRef;
   begin
-    Result := LLVMAddFunction(module, 'calc', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
+    builder := LLVMCreateBuilderInContext(LLVMGetModuleContext(module));
+    Result := LLVMAddFunction(module, 'add', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
     LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(Result, 'entry'));
-    LLVMBuildRet(builder, calc_func(builder, LLVMGetParam(Result, 0), LLVMGetParam(Result, 1), ''));
+    LLVMBuildRet(builder, LLVMBuildAdd(builder, LLVMGetParam(Result, 0), LLVMGetParam(Result, 1), ''));
+    LLVMDisposeBuilder(builder);
+  end;
+
+  function gen_mul_func(module: TLLVMModuleRef): TLLVMValueRef;
+  var
+    builder: TLLVMBuilderRef;
+  begin
+    builder := LLVMCreateBuilderInContext(LLVMGetModuleContext(module));
+    Result := LLVMAddFunction(module, 'mul', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(Result, 'entry'));
+    LLVMBuildRet(builder, LLVMBuildMul(builder, LLVMGetParam(Result, 0), LLVMGetParam(Result, 1), ''));
+    LLVMDisposeBuilder(builder);
   end;
 
   function read_int(builder: TLLVMBuilderRef; scanf_func: TLLVMValueRef): TLLVMValueRef;
@@ -52,8 +64,8 @@ type
     builder := LLVMCreateBuilder;
 
     // === Generate Functions
-    add_func := gen_func(module, builder, @LLVMBuildAdd);
-    mul_func := gen_func(module, builder, @LLVMBuildMul);
+    add_func := gen_add_func(module);
+    mul_func := gen_mul_func(module);
 
     printf_func := LLVMAddFunction(module, 'printf', LLVMFunctionType(LLVMInt32Type, @[LLVMPointerTypeInContext(LLVMGetGlobalContext, 0)], 1, True));
     scanf_func := LLVMAddFunction(module, 'scanf', LLVMFunctionType(LLVMInt32Type, @[LLVMPointerTypeInContext(LLVMGetGlobalContext, 0)], 1, True));
