@@ -1,13 +1,7 @@
 program project1;
 
-
-{$mode objfpc}{$H+}
-
 uses
   fp_llvm;
-
-type
-  TFunction = function(a, b: int32): int32; cdecl;
 
   procedure CreateAddFunc(Module: TLLVMModuleRef);
   var
@@ -39,7 +33,35 @@ type
     LLVMDisposeBuilder(builder);
   end;
 
+procedure CreateCalcFunc(Module: TLLVMModuleRef);
+var
+  context: TLLVMContextRef;
+  builder: TLLVMBuilderRef;
+  calcfunc: TLLVMValueRef;
+  FuncType2, FuncType3: TLLVMTypeRef;
+  Res: TLLVMValueRef;
+begin
+  context := LLVMGetModuleContext(Module);
+  builder := LLVMCreateBuilderInContext(context);
+
+  FuncType2 := LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False);
+  FuncType3 := LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type, LLVMInt32Type], 3, False);
+
+  calcfunc := LLVMAddFunction(Module, 'calc', FuncType3);
+  LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, calcfunc, 'entry'));
+
+  Res := LLVMBuildCall2(builder, FuncType2, LLVMGetNamedFunction(Module, 'mul'), @[LLVMGetParam(calcfunc, 0), LLVMGetParam(calcfunc, 1)], 2, '');
+  Res := LLVMBuildCall2(builder, FuncType2, LLVMGetNamedFunction(Module, 'add'), @[LLVMGetParam(calcfunc, 2), Res], 2, '');
+
+  LLVMBuildRet(builder, Res);
+  LLVMDisposeBuilder(builder);
+end;
+
+
 procedure CompileAndRund  (module: TLLVMModuleRef);
+type
+  TFunction2 = function(a, b: int32): int32; cdecl;
+  TFunction3 = function(a, b, c: int32): int32; cdecl;
 var
   EE: TLLVMExecutionEngineRef;
   ErrStr: PChar;
@@ -54,10 +76,12 @@ begin
 
   WriteLn('=== JIT ERGEBNIS ===');
 
-  Res := TFunction(LLVMGetFunctionAddress(EE, 'add'))(15, 27);
+  Res := {%H-}TFunction2(LLVMGetFunctionAddress(EE, 'add'))(15, 27);
   WriteLn('15 + 27 = ', Res);
-  Res := TFunction(LLVMGetFunctionAddress(EE, 'mul'))(5, 7);
-  WriteLn('5 x 7 = ', Res, #10);
+  Res := {%H-}TFunction2(LLVMGetFunctionAddress(EE, 'mul'))(5, 7);
+  WriteLn('5 x 7 = ', Res);
+  Res := {%H-}TFunction3(LLVMGetFunctionAddress(EE, 'calc'))(2, 3, 4);
+  WriteLn('2 x 3 + 4 = ', Res, #10);
 
   WriteLn('=== DUMP ERGEBNIS ===');
 
@@ -81,6 +105,7 @@ begin
 
     CreateAddFunc(Module);
     CreateMulFunc(Module);
+    CreateCalcFunc(Module);
 
     CompileAndRund(Module);
 
