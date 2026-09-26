@@ -370,6 +370,7 @@ const
     (libs: 'libapriltag'; units: 'fp_apriltag'),
     (libs: 'libopencl'; units: 'fp_apriltag'),
     (libs: 'libllvm'; units: 'fp_llvm'),
+    (libs: 'libatspi'; units: 'fp_glib2, fp_atspi'),
 
 
 
