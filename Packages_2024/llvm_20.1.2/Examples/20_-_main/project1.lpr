@@ -51,12 +51,10 @@ const
     module: TLLVMModuleRef;
     builder: TLLVMBuilderRef;
     add_func, mul_func, printf_func, main_func,
-    int_val_1, int_val_2, str_val_1, scanf_func, int_res_1,
-    int_val_3, int_val_4: TLLVMValueRef;
+    int_val_1, int_val_2, str_val_1, scanf_func, int_res_1, int_val_3, int_val_4: TLLVMValueRef;
     error, default_triple: pchar;
     target: TLLVMTargetRef;
     target_machine: TLLVMTargetMachineRef;
-
   begin
 
     // === Init
@@ -69,7 +67,6 @@ const
 
     printf_func := LLVMAddFunction(module, 'printf', LLVMFunctionType(LLVMInt32Type, @[LLVMPointerTypeInContext(LLVMGetGlobalContext, 0)], 1, True));
     scanf_func := LLVMAddFunction(module, 'scanf', LLVMFunctionType(LLVMInt32Type, @[LLVMPointerTypeInContext(LLVMGetGlobalContext, 0)], 1, True));
-
 
     main_func := LLVMAddFunction(module, 'main', LLVMFunctionType(LLVMInt32Type(), nil, 0, False));
     LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(main_func, 'entry'));
