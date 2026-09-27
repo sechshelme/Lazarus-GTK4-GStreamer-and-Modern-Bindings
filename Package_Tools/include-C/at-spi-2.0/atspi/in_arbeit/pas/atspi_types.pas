@@ -82,29 +82,29 @@ const
 
   // === Konventiert am: 26-9-26 13:14:53 ===
 
-function ATSPI_TYPE_KEY_DEFINITION: TGType;
-function ATSPI_TYPE_DEVICE_EVENT: TGType;
-function ATSPI_TYPE_EVENT: TGType;
+//function ATSPI_TYPE_KEY_DEFINITION: TGType;
+//function ATSPI_TYPE_DEVICE_EVENT: TGType;
+//function ATSPI_TYPE_EVENT: TGType;
 
 
 
 implementation
 
 
-function ATSPI_TYPE_KEY_DEFINITION: TGType;
-begin
-  ATSPI_TYPE_KEY_DEFINITION := atspi_key_definition_get_type;
-end;
-
-function ATSPI_TYPE_DEVICE_EVENT: TGType;
-begin
-  ATSPI_TYPE_DEVICE_EVENT := atspi_device_event_get_type;
-end;
-
-function ATSPI_TYPE_EVENT: TGType;
-begin
-  ATSPI_TYPE_EVENT := atspi_event_get_type;
-end;
+//function ATSPI_TYPE_KEY_DEFINITION: TGType;
+//begin
+//  ATSPI_TYPE_KEY_DEFINITION := atspi_key_definition_get_type;
+//end;
+//
+//function ATSPI_TYPE_DEVICE_EVENT: TGType;
+//begin
+//  ATSPI_TYPE_DEVICE_EVENT := atspi_device_event_get_type;
+//end;
+//
+//function ATSPI_TYPE_EVENT: TGType;
+//begin
+//  ATSPI_TYPE_EVENT := atspi_event_get_type;
+//end;
 
 
 end.

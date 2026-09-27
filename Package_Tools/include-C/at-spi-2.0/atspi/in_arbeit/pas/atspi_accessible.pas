@@ -3,7 +3,9 @@ unit atspi_accessible;
 interface
 
 uses
-  fp_glib2, fp_atspi;
+  fp_glib2, fp_atspi, atspi_constants, atspi_object, atspi_stateset, atspi_action, atspi_collection,
+  atspi_component, atspi_document, atspi_editabletext, atspi_text, atspi_hyperlink, atspi_hypertext, atspi_image,
+  atspi_selection, atspi_table, atspi_table_cell, atspi_value;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
@@ -11,6 +13,8 @@ uses
 
 
 type
+  PAtspiAccessiblePrivate = type Pointer;
+
   PAtspiAccessible = ^TAtspiAccessible;
   TAtspiAccessible = record
     parent: TAtspiObject;

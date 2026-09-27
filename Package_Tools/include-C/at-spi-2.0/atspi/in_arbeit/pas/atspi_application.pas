@@ -3,7 +3,7 @@ unit atspi_application;
 interface
 
 uses
-  fp_glib2, fp_atspi;
+  fp_glib2, fp_atspi, atspi_constants;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
@@ -37,10 +37,10 @@ function atspi_application_get_type: TGType; cdecl; external libatspi;
 
 function ATSPI_TYPE_APPLICATION: TGType;
 function ATSPI_APPLICATION(obj: Pointer): PAtspiApplication;
-function ATSPI_APPLICATION_CLASS(klass: Pointer): PAtspiAccessibleClass;
+function ATSPI_APPLICATION_CLASS(klass: Pointer): PAtspiApplicationClass;
 function ATSPI_IS_APPLICATION(obj: Pointer): Tgboolean;
 function ATSPI_IS_APPLICATION_CLASS(klass: Pointer): Tgboolean;
-function ATSPI_APPLICATION_GET_CLASS(obj: Pointer): PAtspiAccessibleClass;
+function ATSPI_APPLICATION_GET_CLASS(obj: Pointer): PAtspiApplicationClass;
 
 implementation
 
@@ -54,9 +54,9 @@ begin
   Result := PAtspiApplication(g_type_check_instance_cast(obj, ATSPI_TYPE_APPLICATION));
 end;
 
-function ATSPI_APPLICATION_CLASS(klass: Pointer): PAtspiAccessibleClass;
+function ATSPI_APPLICATION_CLASS(klass: Pointer): PAtspiApplicationClass;
 begin
-  Result := PAtspiAccessibleClass(g_type_check_class_cast(klass, ATSPI_TYPE_APPLICATION));
+  Result := PAtspiApplicationClass(g_type_check_class_cast(klass, ATSPI_TYPE_APPLICATION));
 end;
 
 function ATSPI_IS_APPLICATION(obj: Pointer): Tgboolean;
@@ -69,9 +69,9 @@ begin
   Result := g_type_check_class_is_a(klass, ATSPI_TYPE_APPLICATION);
 end;
 
-function ATSPI_APPLICATION_GET_CLASS(obj: Pointer): PAtspiAccessibleClass;
+function ATSPI_APPLICATION_GET_CLASS(obj: Pointer): PAtspiApplicationClass;
 begin
-  Result := PAtspiAccessibleClass(PGTypeInstance(obj)^.g_class);
+  Result := PAtspiApplicationClass(PGTypeInstance(obj)^.g_class);
 end;
 
 

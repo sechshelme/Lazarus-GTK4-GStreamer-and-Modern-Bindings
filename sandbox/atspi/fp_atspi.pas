@@ -15,9 +15,20 @@ const
   {$ENDIF}
 
 
+  type
+  PAtspiApplication=Pointer;
+  PAtspiAccessible=Pointer;
+
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
+
+  type
+  Ttimeval=Int64;
+
+  PDBusConnection=type Pointer;
+  PDBusServer=type Pointer;
+  PDBusMessageIter=type Pointer;
 
   {$DEFINE read_interface}
 //  {$include fp_atspi_includes.inc}
