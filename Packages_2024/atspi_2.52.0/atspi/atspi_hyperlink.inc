@@ -1,0 +1,72 @@
+
+
+  {$IFDEF read_struct}
+type
+  PAtspiHyperlink = ^TAtspiHyperlink;
+  TAtspiHyperlink = record
+    parent: TAtspiObject;
+  end;
+
+  PAtspiHyperlinkClass = ^TAtspiHyperlinkClass;
+  TAtspiHyperlinkClass = record
+    parent_class: TAtspiObjectClass;
+  end;
+  {$ENDIF read_struct}
+
+{$IFDEF read_function}
+function atspi_hyperlink_get_type: TGType; cdecl; external libatspi;
+function _atspi_hyperlink_new(app: PAtspiApplication; path: Pgchar): PAtspiHyperlink; cdecl; external libatspi;
+function atspi_hyperlink_get_n_anchors(obj: PAtspiHyperlink; error: PPGError): Tgint; cdecl; external libatspi;
+function atspi_hyperlink_get_uri(obj: PAtspiHyperlink; i: longint; error: PPGError): Pgchar; cdecl; external libatspi;
+function atspi_hyperlink_get_object(obj: PAtspiHyperlink; i: Tgint; error: PPGError): PAtspiAccessible; cdecl; external libatspi;
+function atspi_hyperlink_get_index_range(obj: PAtspiHyperlink; error: PPGError): PAtspiRange; cdecl; external libatspi;
+function atspi_hyperlink_get_start_index(obj: PAtspiHyperlink; error: PPGError): Tgint; cdecl; external libatspi;
+function atspi_hyperlink_get_end_index(obj: PAtspiHyperlink; error: PPGError): Tgint; cdecl; external libatspi;
+function atspi_hyperlink_is_valid(obj: PAtspiHyperlink; error: PPGError): Tgboolean; cdecl; external libatspi;
+
+// === Konventiert am: 26-9-26 13:07:46 ===
+
+function ATSPI_TYPE_HYPERLINK: TGType;
+function ATSPI_HYPERLINK(obj: Pointer): PAtspiHyperlink;
+function ATSPI_HYPERLINK_CLASS(klass: Pointer): PAtspiHyperlinkClass;
+function ATSPI_IS_HYPERLINK(obj: Pointer): Tgboolean;
+function ATSPI_IS_HYPERLINK_CLASS(klass: Pointer): Tgboolean;
+function ATSPI_HYPERLINK_GET_CLASS(obj: Pointer): PAtspiHyperlinkClass;
+{$ENDIF read_function}
+
+
+{$IFDEF read_implementation}
+
+function ATSPI_TYPE_HYPERLINK: TGType;
+begin
+  ATSPI_TYPE_HYPERLINK := atspi_hyperlink_get_type;
+end;
+
+function ATSPI_HYPERLINK(obj: Pointer): PAtspiHyperlink;
+begin
+  Result := PAtspiHyperlink(g_type_check_instance_cast(obj, ATSPI_TYPE_HYPERLINK));
+end;
+
+function ATSPI_HYPERLINK_CLASS(klass: Pointer): PAtspiHyperlinkClass;
+begin
+  Result := PAtspiHyperlinkClass(g_type_check_class_cast(klass, ATSPI_TYPE_HYPERLINK));
+end;
+
+function ATSPI_IS_HYPERLINK(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, ATSPI_TYPE_HYPERLINK);
+end;
+
+function ATSPI_IS_HYPERLINK_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, ATSPI_TYPE_HYPERLINK);
+end;
+
+function ATSPI_HYPERLINK_GET_CLASS(obj: Pointer): PAtspiHyperlinkClass;
+begin
+  Result := PAtspiHyperlinkClass(PGTypeInstance(obj)^.g_class);
+end;
+
+
+
+{$ENDIF read_implementation}
