@@ -638,25 +638,7 @@ https://github.com/memononen/fontstash
 
 # =====
 
-Goocanvas: Ein Canvas-Widget für GTK, das intern Cairo nutzt. Man fügt Linien-Objekte hinzu, und das Widget kümmert sich um das Zeichnen.
-Cairo-Chart: Eine sehr kleine, reine C-Library, die ausschließlich für das Zeichnen von Diagrammen auf Cairo-Surfaces gebaut wurd
-
-
-# ===========
-
-1. Blend2D (Das "bessere" Skia für C)
-Blend2D ist ein Kraftpaket. Es wurde von Grund auf so optimiert, dass es JIT-Kompilierung nutzt (es generiert während der Laufzeit schnellen Maschinencode für Grafiken).
-Vorteil: Es ist oft schneller als Skia bei Software-Rendering (CPU).
-C-Support: Es hat eine erstklassige, native C-API (kein nachträglicher Wrapper).
-Ideal für: Hochleistungs-Desktop-Apps, komplexe Vektorgrafiken, Charts oder UI-Toolkits, die auf der CPU laufen sollen.
-Repo: github.com
-2. NanoVG (Der "Easy-Mode" für GPU)
-NanoVG ist winzig. Es ist im Grunde eine API, die sich wie das HTML5-Canvas anfühlt, aber alles direkt über OpenGL (oder Metal/Vulkan) auf die Grafikkarte schickt.
-Vorteil: Extrem einfach zu integrieren. Du kopierst buchstäblich nur eine .c und eine .h Datei in dein Projekt.
-C-Support: Reines C von Haus aus.
-Ideal für: Spiele-UIs, Overlays oder Tools, die sowieso schon einen OpenGL-Kontext haben.
-Repo: github.com
-
+Goocanvas: Ein Canvas-Widget für GTK3
 
 
 # ===========
@@ -671,21 +653,30 @@ git submodule update --init --recursive
 
 # ===========   Brandneu, gibt es in LTS noch nicht
 
-libglycin-2-0  
+## GTK4
 libglycin-gtk4
+libevince_gtk4
+libgnome-qr-gtk-4-0
+libppsdocument-4.0-6,  libppsview-4.0-5  // Nicht frei gegeben 
+gstreamer1.0-gtk4    // https://github.com/GStreamer/gst-plugins-rs
 
-sudo apt install libglycin-gtk4-2-0                           
-sudo apt install libglycin-gtk4-2-dev  # für Entwicklung
-https://gitlab.gnome.org/GNOME/glycin/
 
---------------
-
-libdialog               # https://invisible-island.net/archives/dialog/
+## Sonstiges
+libdialog                                                     // https://invisible-island.net/archives/dialog/
 ../dialog-1.3-20260107/configure --with-shared
+gr-framework  gr-framework-plugin-cairo  libgr-framework-dev  // Ähnlich mathGL / https://github.com/sciapp/gr
+libvectorscan-dev                                             // alt libhyperscan-dev 
+
+# ==== Linux Libary nicht bei Ubuntu dabei
+
+https://github.com/raysan5/raylib
+
+/home/tux/Schreibtisch/von_Git/gcc/gcc/libgomp/libgomp_g.h
+
+
 
 --------------
 
-libhyperscan-dev  // neu libvectorscan-dev
 
 libtinysparql
 
@@ -704,12 +695,17 @@ aptkit // ????
 libapt-inst
 xraylib
 
+libapriltag
+
+sudo apt-get install libdispatch-dev
+
+
+
+
+
+
 
 --------------
-
-Lib Ähnlich mathGL
-https://github.com/sciapp/gr
-sudo apt install gr-framework  gr-framework-plugin-cairo  libgr-framework-dev
 
 
 
@@ -719,17 +715,15 @@ https://github.com/lcallarec/live-chart
 
 
 
-# ==== Linux Libary nicht bei Ubuntu dabei
 
-https://github.com/raysan5/raylib
+# ==== Alternative Paketmanager
 
-/home/tux/Schreibtisch/von_Git/gcc/gcc/libgomp/libgomp_g.h
-
-
-# =========================
-
-# Zeigt neuste Pakete an
+## Konsole
 aptitude
+
+## GUI
+synaptic
+
 
 
 # winboat
@@ -742,9 +736,6 @@ http://127.0.0.1:47270/
 
 
 COLUMNS=200 apt search '^lib.*-dev$' > test.txt
-
-
-
 
 
 
@@ -845,12 +836,16 @@ apt search '\-dev' | grep '^[a-zA-Z0-9].*-dev/' | cut -d'/' -f1 | while read pkg
   apt show "$pkg"
 done
 
+# Pakete mit Abhängigkeit
+
+apt-cache rdepends libgtk-4-1 | grep lib
+apt-cache rdepends libgmp10 | grep lib
+apt-cache rdepends libgmp-dev | grep lib
+
+pkcon required-by libgmp-dev
 
 
-find . -type d -exec chmod 775 {} +
-find . -type f -exec chmod 664 {} +
 
-find . -type d -exec chmod 775 {} +; find . -type f -exec chmod 664 {} +
 
 # MSYS2 Alternative
 
@@ -868,21 +863,6 @@ oder
 make install mingw-w64-ucrt-x86_64-gtk4
 
 /home/tux/.local/bin
-
-
-# Wine Start
-
-Fehlerhaft: 
-
-/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Packages_2024/expat_2.6.1/Examples/10_-_Hello 
-
-Gut:
-
-/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Packages_2024/lapack_3.12.0
-
-
-ioquake3
-
 
 
 # GITHUB release automatisch
@@ -930,8 +910,8 @@ Date:   Fri Apr 17 10:15:17 2026 -0400
     Part-of: <https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9821>
 
 
-# Distrobox Tips
 
+# ====== Distrobox Tipps
 
 ## {TAB} für Packetauswahl
 sudo apt install bash-completion
@@ -946,14 +926,19 @@ sudo ln var/run/host/n4800/ n4800 -s
 cat /etc/os-release
 
 
-# GST GTK4
-sudo apt install gstreamer1.0-gtk4
-https://github.com/GStreamer/gst-plugins-rs
+# openCL-Treiber
+
+# 1. Treiber für den Prozessor (CPU-Laufzeitumgebung)
+sudo apt install pocl-opencl-icd
+
+# 2. Treiber für die Grafikchips (Intel HD 4000 / AMD Radeon)
+sudo apt install mesa-opencl-icd
 
 
-# Issues auflisten
 
-Achtung, die mur Curl geben nur die neusten Issues aus
+# ===== Issues auflisten
+
+Achtung, die mir Curl geben nur die neusten Issues aus
 
 ## Github
 ```sh
@@ -966,10 +951,14 @@ curl -s -H "User-Agent: Mozilla" "https://api.github.com/search/issues?q=author:
 curl -s "https://gitlab.gnome.org/api/v4/issues?author_username=sechshelme&scope=all" | jq -r '.[] | "[\(.state)]\t#\(.iid)\t\(.title)"'
 ```
 
-
 ## Freedeskop
 ```sh
 curl -s "https://gitlab.freedesktop.org/api/v4/issues?author_username=sechshelme&scope=all" | jq -r '.[] | "[\(.state)]\t#\(.iid)\t\(.title)"'
+```
+
+## Lazarus
+```sh
+curl -s "https://gitlab.com/api/v4/issues?author_username=sechshelme&scope=all" | jq -r '.[] | "[\(.state)]\t#\(.iid)\t\(.title)"'
 ```
 
 

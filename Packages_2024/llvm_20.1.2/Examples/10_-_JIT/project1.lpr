@@ -7,14 +7,14 @@ uses
   var
     context: TLLVMContextRef;
     builder: TLLVMBuilderRef;
-    sumfunc: TLLVMValueRef;
+    func: TLLVMValueRef;
   begin
     context := LLVMGetModuleContext(Module);
     builder := LLVMCreateBuilderInContext(context);
 
-    sumfunc := LLVMAddFunction(Module, 'add', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, sumfunc, 'entry'));
-    LLVMBuildRet(builder, LLVMBuildAdd(builder, LLVMGetParam(sumfunc, 0), LLVMGetParam(sumfunc, 1), ''));
+    func := LLVMAddFunction(Module, 'add', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, func, ''));
+    LLVMBuildRet(builder, LLVMBuildAdd(builder, LLVMGetParam(func, 0), LLVMGetParam(func, 1), ''));
     LLVMDisposeBuilder(builder);
   end;
 
@@ -22,14 +22,14 @@ uses
   var
     context: TLLVMContextRef;
     builder: TLLVMBuilderRef;
-    sumfunc: TLLVMValueRef;
+    func: TLLVMValueRef;
   begin
     context := LLVMGetModuleContext(Module);
     builder := LLVMCreateBuilderInContext(context);
 
-    sumfunc := LLVMAddFunction(Module, 'mul', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, sumfunc, 'entry'));
-    LLVMBuildRet(builder, LLVMBuildMul(builder, LLVMGetParam(sumfunc, 0), LLVMGetParam(sumfunc, 1), ''));
+    func := LLVMAddFunction(Module, 'mul', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, func, ''));
+    LLVMBuildRet(builder, LLVMBuildMul(builder, LLVMGetParam(func, 0), LLVMGetParam(func, 1), ''));
     LLVMDisposeBuilder(builder);
   end;
 
@@ -37,62 +37,60 @@ uses
   var
     context: TLLVMContextRef;
     builder: TLLVMBuilderRef;
-    calcfunc: TLLVMValueRef;
-    FuncType2, FuncType3: TLLVMTypeRef;
-    Res: TLLVMValueRef;
+    func, res: TLLVMValueRef;
+    funcType2, funcType3: TLLVMTypeRef;
   begin
     context := LLVMGetModuleContext(Module);
     builder := LLVMCreateBuilderInContext(context);
 
-    FuncType2 := LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False);
-    FuncType3 := LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type, LLVMInt32Type], 3, False);
+    funcType2 := LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False);
+    funcType3 := LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type, LLVMInt32Type], 3, False);
 
-    calcfunc := LLVMAddFunction(Module, 'calc', FuncType3);
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, calcfunc, 'entry'));
+    func := LLVMAddFunction(Module, 'calc', funcType3);
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, func, ''));
 
-    Res := LLVMBuildCall2(builder, FuncType2, LLVMGetNamedFunction(Module, 'mul'), @[LLVMGetParam(calcfunc, 0), LLVMGetParam(calcfunc, 1)], 2, '');
-    Res := LLVMBuildCall2(builder, FuncType2, LLVMGetNamedFunction(Module, 'add'), @[LLVMGetParam(calcfunc, 2), Res], 2, '');
+    res := LLVMBuildCall2(builder, funcType2, LLVMGetNamedFunction(Module, 'mul'), @[LLVMGetParam(func, 0), LLVMGetParam(func, 1)], 2, '');
+    res := LLVMBuildCall2(builder, funcType2, LLVMGetNamedFunction(Module, 'add'), @[LLVMGetParam(func, 2), res], 2, '');
 
-    LLVMBuildRet(builder, Res);
+    LLVMBuildRet(builder, res);
     LLVMDisposeBuilder(builder);
   end;
 
-
-  procedure CreateIlogbFunc(Module: TLLVMModuleRef);
+  procedure CreateCosFunc(Module: TLLVMModuleRef);
   var
-    func, Res: TLLVMValueRef;
-    IlogbType: TLLVMTypeRef;
     context: TLLVMContextRef;
     builder: TLLVMBuilderRef;
+    func: TLLVMValueRef;
+    funcType: TLLVMTypeRef;
   begin
     context := LLVMGetModuleContext(Module);
     builder := LLVMCreateBuilderInContext(context);
 
-    IlogbType := LLVMFunctionType(LLVMInt32Type, @[LLVMDoubleType], 1, False);
+    funcType := LLVMFunctionType(LLVMFloatType, @[LLVMFloatType], 1, False);
 
-    func := LLVMAddFunction(Module, 'my_ilogb', LLVMFunctionType(LLVMInt32Type, @[LLVMDoubleType], 1, False));
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, func, 'entry'));
+    func := LLVMAddFunction(Module, 'sin', LLVMFunctionType(LLVMFloatType, @[LLVMFloatType], 1, False));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlockInContext(context, func, ''));
 
-    Res := LLVMBuildCall2(builder, IlogbType, LLVMAddFunction(Module, 'ilogb', IlogbType), @[LLVMGetParam(func, 0)], 1, '');
-
-    LLVMBuildRet(builder, Res);
+    LLVMBuildRet(builder, LLVMBuildCall2(builder, funcType, LLVMAddFunction(Module, 'sinf', funcType), @[LLVMGetParam(func, 0)], 1, ''));
     LLVMDisposeBuilder(builder);
   end;
 
   procedure CompileAndRund(module: TLLVMModuleRef);
   type
-    TFunction1 = function(a: double): int32; cdecl;
+    TFunction1 = function(a: single): single; cdecl;
     TFunction2 = function(a, b: int32): int32; cdecl;
     TFunction3 = function(a, b, c: int32): int32; cdecl;
   var
     EE: TLLVMExecutionEngineRef;
     ErrStr: pchar;
-    Res: int32;
+    Res_i: int32;
     DummyMod: TLLVMModuleRef;
+    Res_f: single;
   begin
     {$IFDEF LINUX}
     LLVMLoadLibraryPermanently('libm.so.6');
-    {$ENDIF}    if LLVMCreateExecutionEngineForModule(@EE, Module, @ErrStr) then begin
+    {$ENDIF}
+    if LLVMCreateExecutionEngineForModule(@EE, Module, @ErrStr) then begin
       WriteLn('JIT-Fehler: ', ErrStr);
       LLVMDisposeMessage(ErrStr);
       Exit;
@@ -100,15 +98,15 @@ uses
 
     WriteLn('=== JIT ERGEBNIS ===');
 
-    Res := {%H-}TFunction2(LLVMGetFunctionAddress(EE, 'add'))(15, 27);
-    WriteLn('15 + 27 = ', Res);
-    Res := {%H-}TFunction2(LLVMGetFunctionAddress(EE, 'mul'))(5, 7);
-    WriteLn('5 x 7 = ', Res);
-    Res := {%H-}TFunction3(LLVMGetFunctionAddress(EE, 'calc'))(2, 3, 4);
-    WriteLn('2 x 3 + 4 = ', Res, #10);
+    Res_i := {%H-}TFunction2(LLVMGetFunctionAddress(EE, 'add'))(15, 27);
+    WriteLn('15 + 27 = ', Res_i);
+    Res_i := {%H-}TFunction2(LLVMGetFunctionAddress(EE, 'mul'))(5, 7);
+    WriteLn('5 x 7 = ', Res_i);
+    Res_i := {%H-}TFunction3(LLVMGetFunctionAddress(EE, 'calc'))(2, 3, 4);
+    WriteLn('2 x 3 + 4 = ', Res_i, #10);
 
-    Res := {%H-}TFunction1(LLVMGetFunctionAddress(EE, 'my_ilogb'))(12.34);
-    WriteLn('ilogb(12.34) = ', Res, #10);
+    Res_f := {%H-}TFunction1(LLVMGetFunctionAddress(EE, 'sin'))(1.0);
+    WriteLn('sin(1.0) = ', Res_f: 4: 2, #10);
 
     WriteLn('=== DUMP ERGEBNIS ===');
 
@@ -118,8 +116,8 @@ uses
 
   procedure main;
   var
-    Context: TLLVMContextRef;
-    Module: TLLVMModuleRef;
+    context: TLLVMContextRef;
+    module: TLLVMModuleRef;
   begin
     LLVMLinkInMCJIT;
     LLVMInitializeX86TargetInfo;
@@ -127,20 +125,20 @@ uses
     LLVMInitializeX86TargetMC;
     LLVMInitializeX86AsmPrinter;
 
-    Context := LLVMContextCreate;
-    Module := LLVMModuleCreateWithNameInContext('JIT_Modul', Context);
+    context := LLVMContextCreate;
+    module := LLVMModuleCreateWithNameInContext('JIT_Modul', context);
 
-    CreateAddFunc(Module);
-    CreateMulFunc(Module);
-    CreateCalcFunc(Module);
-    CreateIlogbFunc(Module);
+    CreateAddFunc(module);
+    CreateMulFunc(module);
+    CreateCalcFunc(module);
+    CreateCosFunc(module);
 
-    CompileAndRund(Module);
+    CompileAndRund(module);
 
     LLVMDumpModule(module);
 
-    LLVMDisposeModule(Module);
-    LLVMContextDispose(Context);
+    LLVMDisposeModule(module);
+    LLVMContextDispose(context);
   end;
 
 begin

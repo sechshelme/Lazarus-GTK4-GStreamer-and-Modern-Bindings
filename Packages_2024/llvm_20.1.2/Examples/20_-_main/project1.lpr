@@ -20,7 +20,7 @@ const
   begin
     builder := LLVMCreateBuilderInContext(LLVMGetModuleContext(module));
     Result := LLVMAddFunction(module, 'add', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(Result, 'entry'));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(Result, ''));
     LLVMBuildRet(builder, LLVMBuildAdd(builder, LLVMGetParam(Result, 0), LLVMGetParam(Result, 1), ''));
     LLVMDisposeBuilder(builder);
   end;
@@ -31,18 +31,18 @@ const
   begin
     builder := LLVMCreateBuilderInContext(LLVMGetModuleContext(module));
     Result := LLVMAddFunction(module, 'mul', LLVMFunctionType(LLVMInt32Type, @[LLVMInt32Type, LLVMInt32Type], 2, False));
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(Result, 'entry'));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(Result, ''));
     LLVMBuildRet(builder, LLVMBuildMul(builder, LLVMGetParam(Result, 0), LLVMGetParam(Result, 1), ''));
     LLVMDisposeBuilder(builder);
   end;
 
   function read_int(builder: TLLVMBuilderRef; scanf_func: TLLVMValueRef): TLLVMValueRef;
   var
-    input_ptr: TLLVMValueRef;
+    val: TLLVMValueRef;
   begin
-    input_ptr := LLVMBuildAlloca(builder, LLVMInt32Type, '');
-    LLVMBuildCall2(builder, LLVMGlobalGetValueType(scanf_func), scanf_func, @[LLVMBuildGlobalStringPtr(builder, '%d', ''), input_ptr], 2, '');
-    Result := LLVMBuildLoad2(builder, LLVMInt32Type, input_ptr, '');
+    val := LLVMBuildAlloca(builder, LLVMInt32Type, '');
+    LLVMBuildCall2(builder, LLVMGlobalGetValueType(scanf_func), scanf_func, @[LLVMBuildGlobalStringPtr(builder, '%d', ''), val], 2, '');
+    Result := LLVMBuildLoad2(builder, LLVMInt32Type, val, '');
   end;
 
 

@@ -36,7 +36,7 @@ const
     printf_func := LLVMAddFunction(module, 'printf', LLVMFunctionType(LLVMInt32Type, @[LLVMPointerTypeInContext(LLVMGetGlobalContext, 0)], 1, True));
     main_func := LLVMAddFunction(module, 'main', LLVMFunctionType(LLVMInt32Type, nil, 0, False));
 
-    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(main_func, 'entry'));
+    LLVMPositionBuilderAtEnd(builder, LLVMAppendBasicBlock(main_func, ''));
 
     str_val := LLVMBuildGlobalStringPtr(builder, 'Hier kommt eine Schleife'#10, '');
     LLVMBuildCall2(builder, LLVMGlobalGetValueType(printf_func), printf_func, @[str_val], 1, '');
