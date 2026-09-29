@@ -371,6 +371,8 @@ const
     (libs: 'libopencl'; units: 'fp_apriltag'),
     (libs: 'libllvm'; units: 'fp_llvm'),
     (libs: 'libatspi'; units: 'fp_glib2, fp_atspi'),
+    (libs: 'libgif'; units: 'fp_glib2, fp_atspi'),
+    (libs: 'libniftiio'; units: 'fp_niftiio'),
 
 
 
