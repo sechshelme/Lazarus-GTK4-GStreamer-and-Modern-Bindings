@@ -1,13 +1,6 @@
 program project1;
 
 uses
-  znzlib,
-  nifti1,
-  nifti1_io,
-  nifti2,
-  nifti2_io,
-  nifticdf,
-
   fp_nifti;
 
   procedure main;
@@ -15,7 +8,7 @@ uses
     filename = '/home/tux/Schreibtisch/gifti_io/fmri_pitch.nii.gz';
   var
     load_data: integer = 0;
-    nim: Pnifti_image;
+    nim: Pnifti2_image;
     i: integer;
   begin
     nim := nifti_image_read(filename, load_data);

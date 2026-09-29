@@ -1,13 +1,4 @@
-unit nifti1_io;
-
-interface
-
-uses
-  fp_nifti, nifti1, znzlib;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 type
   Pmat44 = ^Tmat44;
@@ -341,7 +332,10 @@ const
   // === Konventiert am: 29-9-26 14:50:21 ===
 
 
-implementation
+{$ENDIF read_interface}
 
 
-end.
+{$IFDEF read_implementation}
+
+
+{$ENDIF read_implementation}
