@@ -6,13 +6,17 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
-        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)/"/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Files>
       <Item>
         <Filename Value="fp_nifti.pas"/>
         <UnitName Value="fp_nifti"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_nifti2.pas"/>
+        <UnitName Value="fp_nifti2"/>
       </Item>
     </Files>
     <RequiredPkgs>

@@ -8,7 +8,7 @@ unit fp_nifti_package;
 interface
 
 uses
-  fp_nifti, LazarusPackageIntf;
+  fp_nifti, fp_nifti2, LazarusPackageIntf;
 
 implementation
 

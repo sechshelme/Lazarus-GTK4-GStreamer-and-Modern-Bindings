@@ -4,11 +4,17 @@ interface
 
 const
   {$IFDEF Linux}
-  libniftiio = 'niftiio'; // ???
+  libniftiio = 'niftiio';
+  libnifti2 = 'nifti2';
+  libnifticdf = 'nifticdf';
+  libznz = 'znz';
   {$ENDIF}
 
   {$IFDEF Windows}
-  libnifti = 'niftiio.dll';
+  libnifti2 = 'nifti2.dll';
+  libniftiio = 'niftiio.dll';
+  libnifticdf = 'nifticdf.dll';
+  libznz = 'znz.dll';
   {$ENDIF}
 
 type
@@ -35,8 +41,8 @@ type
   {$include nifti/znzlib.inc}
   {$include nifti/nifti1.inc}
   {$include nifti/nifti1_io.inc}
-  {$include nifti/nifti2.inc}
-  {$include nifti/nifti2_io.inc}
+//  {$include nifti/nifti2.inc}
+//  {$include nifti/nifti2_io.inc}
   {$include nifti/nifticdf.inc}
   {$UNDEF read_interface}
 
@@ -46,8 +52,8 @@ implementation
 {$include nifti/znzlib.inc}
 {$include nifti/nifti1.inc}
 {$include nifti/nifti1_io.inc}
-{$include nifti/nifti2.inc}
-{$include nifti/nifti2_io.inc}
+//{$include nifti/nifti2.inc}
+//{$include nifti/nifti2_io.inc}
 {$include nifti/nifticdf.inc}
 {$UNDEF read_implementation}
 

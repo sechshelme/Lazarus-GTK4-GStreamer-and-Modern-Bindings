@@ -16,19 +16,19 @@ type
   PznzFile = ^TznzFile;
   TznzFile = Pznzptr;
 
-function znzopen(path: pchar; mode: pchar; use_compression: longint): TznzFile; cdecl; external libniftiio;
-function znzdopen(fd: longint; mode: pchar; use_compression: longint): TznzFile; cdecl; external libniftiio;
-function Xznzclose(file_: PznzFile): longint; cdecl; external libniftiio;
-function znzread(buf: pointer; size: Tsize_t; nmemb: Tsize_t; file_: TznzFile): Tsize_t; cdecl; external libniftiio;
-function znzwrite(buf: pointer; size: Tsize_t; nmemb: Tsize_t; file_: TznzFile): Tsize_t; cdecl; external libniftiio;
-function znzseek(file_: TznzFile; offset: Tznz_off_t; whence: longint): Tznz_off_t; cdecl; external libniftiio;
-function znzrewind(stream: TznzFile): longint; cdecl; external libniftiio;
-function znztell(file_: TznzFile): Tznz_off_t; cdecl; external libniftiio;
-function znzputs(str: pchar; file_: TznzFile): longint; cdecl; external libniftiio;
-function znzgets(str: pchar; size: longint; file_: TznzFile): pchar; cdecl; external libniftiio;
-function znzputc(c: longint; file_: TznzFile): longint; cdecl; external libniftiio;
-function znzgetc(file_: TznzFile): longint; cdecl; external libniftiio;
-function znzprintf(stream: TznzFile; format: pchar): longint; cdecl; varargs; external libniftiio;
+function znzopen(path: pchar; mode: pchar; use_compression: longint): TznzFile; cdecl; external libznz;
+function znzdopen(fd: longint; mode: pchar; use_compression: longint): TznzFile; cdecl; external libznz;
+function Xznzclose(file_: PznzFile): longint; cdecl; external libznz;
+function znzread(buf: pointer; size: Tsize_t; nmemb: Tsize_t; file_: TznzFile): Tsize_t; cdecl; external libznz;
+function znzwrite(buf: pointer; size: Tsize_t; nmemb: Tsize_t; file_: TznzFile): Tsize_t; cdecl; external libznz;
+function znzseek(file_: TznzFile; offset: Tznz_off_t; whence: longint): Tznz_off_t; cdecl; external libznz;
+function znzrewind(stream: TznzFile): longint; cdecl; external libznz;
+function znztell(file_: TznzFile): Tznz_off_t; cdecl; external libznz;
+function znzputs(str: pchar; file_: TznzFile): longint; cdecl; external libznz;
+function znzgets(str: pchar; size: longint; file_: TznzFile): pchar; cdecl; external libznz;
+function znzputc(c: longint; file_: TznzFile): longint; cdecl; external libznz;
+function znzgetc(file_: TznzFile): longint; cdecl; external libznz;
+function znzprintf(stream: TznzFile; format: pchar): longint; cdecl; varargs; external libznz;
 
 {$ENDIF read_interface}
 
