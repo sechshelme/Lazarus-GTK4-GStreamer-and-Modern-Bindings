@@ -15,20 +15,16 @@ const
   {$ENDIF}
 
 
-//  type
-//  PAtspiApplication=Pointer;
-//  PAtspiAccessible=Pointer;
-
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
 
-  type
-  Ttimeval=Int64;
+type
+  Ttimeval = int64;
 
-  PDBusConnection=type Pointer;
-  PDBusServer=type Pointer;
-  PDBusMessageIter=type Pointer;
+  PDBusConnection = type Pointer;
+  PDBusServer = type Pointer;
+  PDBusMessageIter = type Pointer;
 
 
   {$DEFINE read_enum}
@@ -50,4 +46,3 @@ implementation
 {$UNDEF read_implementation}
 
 end.
-

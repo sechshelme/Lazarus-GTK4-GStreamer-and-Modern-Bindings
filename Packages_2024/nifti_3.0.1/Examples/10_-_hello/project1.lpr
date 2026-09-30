@@ -3,7 +3,7 @@ program project1;
 (*
 Demo nii Files:
 
-https://codeload.github.com/neurolabusc/niivue-images/zip/refs/heads/main
+https://github.com/neurolabusc/niivue-images
 *)
 
 uses

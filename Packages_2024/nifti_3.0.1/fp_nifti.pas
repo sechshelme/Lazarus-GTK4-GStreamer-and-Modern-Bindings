@@ -41,8 +41,6 @@ type
   {$include nifti/znzlib.inc}
   {$include nifti/nifti1.inc}
   {$include nifti/nifti1_io.inc}
-//  {$include nifti/nifti2.inc}
-//  {$include nifti/nifti2_io.inc}
   {$include nifti/nifticdf.inc}
   {$UNDEF read_interface}
 
@@ -52,8 +50,6 @@ implementation
 {$include nifti/znzlib.inc}
 {$include nifti/nifti1.inc}
 {$include nifti/nifti1_io.inc}
-//{$include nifti/nifti2.inc}
-//{$include nifti/nifti2_io.inc}
 {$include nifti/nifticdf.inc}
 {$UNDEF read_implementation}
 

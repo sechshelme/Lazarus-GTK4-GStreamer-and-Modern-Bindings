@@ -696,6 +696,7 @@ libapt-inst
 xraylib
 
 libapriltag
+libmlt
 
 sudo apt-get install libdispatch-dev
 
@@ -703,6 +704,10 @@ sudo apt-get install libdispatch-dev
 
 
 
+
+https://blends.debian.org/med/
+https://blends.debian.org/science/tasks/
+https://blends.debian.org/blends/
 
 
 --------------
@@ -754,26 +759,6 @@ https://github.com/longradix/gnuplot_i
 
 
 sudo apt install libgif-dev 
-
-# =========================
-
-
-Gepflegte Widget-Sets in C (Stand 2025)
-GTK: Wird aktiv weiterentwickelt und ist eines der modernsten und am weitesten verbreiteten C-Toolkits für grafische Oberflächen.
-
-EFL (Enlightenment Foundation Libraries): Ebenfalls aktiv gepflegt und in der Entwicklung, vor allem im Umfeld der Enlightenment-Community.
-
-IUP: Wird weiterhin betreut und regelmäßig aktualisiert, insbesondere für wissenschaftliche und technische Anwendungen.
-
-Tcl/Tk: Auch wenn Tcl/Tk eng mit der Skriptsprache Tcl verbunden ist, wird das Toolkit (geschrieben in C) weiterhin gepflegt und erhält Updates.
-
-libui: Ein leichtgewichtiges, modernes Toolkit in C, das noch aktiv weiterentwickelt wird.
-
-
-kconfig // menuconfig vom kernel
-
-
-meson setup build --wipe -Denable_tests=true -Denable_libcurl=true
 
 
 # Ubuntu no LTS Upgraden

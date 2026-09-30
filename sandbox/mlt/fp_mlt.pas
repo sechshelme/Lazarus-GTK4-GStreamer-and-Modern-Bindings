@@ -1,16 +1,14 @@
-unit fp_wayland;
+unit fp_mlt;
 
 interface
 
+const
   {$IFDEF Linux}
-  libwayland_client = 'wayland-client';
-  libwayland_server = 'wayland-server';
-  libwayland_cursor = 'wayland-cursor';
-  libwayland_egl_core = 'wayland-egl';
+  libmlt = 'mlt-7';
   {$ENDIF}
 
   {$IFDEF Windows}
-  {$FATAL  no supported}
+  libmlt = 'libmlt-7.dll';
   {$ENDIF}
 
 type
@@ -40,42 +38,19 @@ type
   Pint64_t = ^Tint64_t;
   PPint64_t = ^Pint64_t;
 
-  Tsize_t = SizeUInt;
-  Psize_t = ^Tsize_t;
-
-  Tva_list = Pointer; // ????
-
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
 
-type
-  Tprocedure = procedure;
-  Pprocedure = ^Tprocedure;
-
-  Ppid_t = type Pointer;
-  Puid_t = type Pointer;
-  Pgid_t = type Pointer;
-
-  Pwl_resource_=type Pointer;
-  Pwl_global = type Pointer;
-
-  {$DEFINE read_enum}
-  {$include fp_wayland_includes.inc}
-  {$UNDEF read_enum}
-
-  {$DEFINE read_struct}
-  {$include fp_wayland_includes.inc}
-  {$UNDEF read_struct}
-
-  {$DEFINE read_function}
-  {$include fp_wayland_includes.inc}
-  {$UNDEF read_function}
+  {$DEFINE read_interface}
+  //{$include fp_mlt_includes.inc}
+  {$UNDEF read_interface}
 
 implementation
 
 {$DEFINE read_implementation}
-{$include fp_wayland_includes.inc}
+//{$include fp_mlt_includes.inc}
 {$UNDEF read_implementation}
 
 end.
+
