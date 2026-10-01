@@ -38,6 +38,10 @@ type
   Pint64_t = ^Tint64_t;
   PPint64_t = ^Pint64_t;
 
+  PFILE=type Pointer;
+  Tva_list=Pointer; // ?????
+  Tpthread_mutex_t=Pointer; // ??????
+
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}

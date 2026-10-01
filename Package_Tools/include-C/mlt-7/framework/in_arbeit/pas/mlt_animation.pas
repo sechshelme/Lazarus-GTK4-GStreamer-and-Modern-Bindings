@@ -3,7 +3,7 @@ unit mlt_animation;
 interface
 
 uses
-  fp_mlt;
+  fp_mlt, mlt_types, mlt_property;
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
@@ -34,8 +34,8 @@ function mlt_animation_remove(self:Tmlt_animation; position:longint):longint;cde
 procedure mlt_animation_interpolate(self:Tmlt_animation);cdecl;external libmlt;
 function mlt_animation_next_key(self:Tmlt_animation; item:Tmlt_animation_item; position:longint):longint;cdecl;external libmlt;
 function mlt_animation_prev_key(self:Tmlt_animation; item:Tmlt_animation_item; position:longint):longint;cdecl;external libmlt;
-function mlt_animation_serialize_cut_tf(self:Tmlt_animation; in:longint; out:longint; para4:Tmlt_time_format):Pchar;cdecl;external libmlt;
-function mlt_animation_serialize_cut(self:Tmlt_animation; in:longint; out:longint):Pchar;cdecl;external libmlt;
+function mlt_animation_serialize_cut_tf(self:Tmlt_animation; in_:longint; out_:longint; para4:Tmlt_time_format):Pchar;cdecl;external libmlt;
+function mlt_animation_serialize_cut(self:Tmlt_animation; in_:longint; out_:longint):Pchar;cdecl;external libmlt;
 function mlt_animation_serialize_tf(self:Tmlt_animation; para2:Tmlt_time_format):Pchar;cdecl;external libmlt;
 function mlt_animation_serialize(self:Tmlt_animation):Pchar;cdecl;external libmlt;
 function mlt_animation_key_count(self:Tmlt_animation):longint;cdecl;external libmlt;
