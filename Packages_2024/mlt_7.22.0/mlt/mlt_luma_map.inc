@@ -1,0 +1,24 @@
+{$IFDEF read_interface}
+
+
+type
+  Pmlt_luma_map = ^Tmlt_luma_map;
+  Tmlt_luma_map = type Pointer;
+
+procedure mlt_luma_map_init(self: Tmlt_luma_map); cdecl; external libmlt;
+function mlt_luma_map_new(path: pchar): Tmlt_luma_map; cdecl; external libmlt;
+function mlt_luma_map_render(self: Tmlt_luma_map): Puint16_t; cdecl; external libmlt;
+function mlt_luma_map_from_pgm(filename: pchar; map: PPuint16_t; width: Plongint; height: Plongint): longint; cdecl; external libmlt;
+procedure mlt_luma_map_from_yuv422(image: Puint8_t; map: PPuint16_t; width: longint; height: longint); cdecl; external libmlt;
+
+// === Konventiert am: 30-9-26 19:36:14 ===
+
+
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
+
+
+
+{$ENDIF read_implementation}
