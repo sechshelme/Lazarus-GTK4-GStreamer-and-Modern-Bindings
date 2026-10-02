@@ -3,7 +3,7 @@ unit cpl_vsi;
 interface
 
 uses
-  fp_gdal, cpl_port;
+  fp_gdal, cpl_port, cpl_progress;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
@@ -198,7 +198,7 @@ procedure VSIInstallCachedFileHandler; cdecl; external libgdal;
 procedure VSIInstallCryptFileHandler; cdecl; external libgdal;
 procedure VSISetCryptKey(pabyKey: PGByte; nKeySize: longint); cdecl; external libgdal;
 procedure VSICleanupFileManager; cdecl; external libgdal;
-function VSIDuplicateFileSystemHandler(pszSourceFSName: pchar; pszNewFSName: pchar): Tbool; cdecl; external libgdal;
+function VSIDuplicateFileSystemHandler(pszSourceFSName: pchar; pszNewFSName: pchar): Boolean; cdecl; external libgdal;
 function VSIFileFromMemBuffer(pszFilename: pchar; pabyData: PGByte; nDataLength: Tvsi_l_offset; bTakeOwnership: longint): PVSILFILE; cdecl; external libgdal;
 function VSIGetMemFileBuffer(pszFilename: pchar; pnDataLength: Pvsi_l_offset; bUnlinkAndSeize: longint): PGByte; cdecl; external libgdal;
 

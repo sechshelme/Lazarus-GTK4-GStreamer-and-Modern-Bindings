@@ -16,6 +16,11 @@ const
   Psize_t=^Tsize_t;
 
   PFILE=type Pointer;
+  Ptime_t=type Pointer;
+  Ptm=type Pointer;
+
+  Pwchar_t=type Pointer;
+  Tva_list=type Pointer; // ????
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
