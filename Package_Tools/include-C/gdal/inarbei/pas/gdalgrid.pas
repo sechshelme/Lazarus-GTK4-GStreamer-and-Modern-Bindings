@@ -1,0 +1,115 @@
+unit gdalgrid;
+
+interface
+
+uses
+  fp_gdal;
+
+{$IFDEF FPC}
+{$PACKRECORDS C}
+{$ENDIF}
+
+
+{*****************************************************************************
+ * $Id$
+ *
+ * Project:  GDAL Gridding API.
+ * Purpose:  Prototypes, and definitions for of GDAL scattered data gridder.
+ * Author:   Andrey Kiselev, dron@ak4719.spb.edu
+ *
+ ******************************************************************************
+ * Copyright (c) 2007, Andrey Kiselev <dron@ak4719.spb.edu>
+ * Copyright (c) 2012, Even Rouault <even dot rouault at spatialys.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *************************************************************************** }
+{$ifndef GDALGRID_H_INCLUDED}
+{$define GDALGRID_H_INCLUDED}
+{*
+ * \file gdalgrid.h
+ *
+ * GDAL gridder related entry points and definitions.
+  }
+{$include "gdal_alg.h"}
+{
+ *  GridCreate Algorithm names
+xxxxxxxxxxxxxx
+static const char szAlgNameInvDist[] = "invdist";
+static const char szAlgNameInvDistNearestNeighbor[] = "invdistnn";
+static const char szAlgNameAverage[] = "average";
+static const char szAlgNameNearest[] = "nearest";
+static const char szAlgNameMinimum[] = "minimum";
+static const char szAlgNameMaximum[] = "maximum";
+static const char szAlgNameRange[] = "range";
+static const char szAlgNameCount[] = "count";
+static const char szAlgNameAverageDistance[] = "average_distance";
+static const char szAlgNameAverageDistancePts[] = "average_distance_pts";
+static const char szAlgNameLinear[] = "linear";
+  }
+{! @cond Doxygen_Suppress  }
+type
+
+  TGDALGridFunction = function (para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+               para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;
+{! @endcond  }
+
+function GDALGridInverseDistanceToAPower(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridInverseDistanceToAPowerNearestNeighbor(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridInverseDistanceToAPowerNoSearch(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridMovingAverage(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridNearestNeighbor(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridDataMetricMinimum(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridDataMetricMaximum(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridDataMetricRange(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridDataMetricCount(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridDataMetricAverageDistance(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridDataMetricAverageDistancePts(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+function GDALGridLinear(para1:pointer; para2:TGUInt32; para3:Pdouble; para4:Pdouble; para5:Pdouble; 
+           para6:Tdouble; para7:Tdouble; para8:Pdouble; para9:pointer):TCPLErr;cdecl;external libgdal;
+{$ifndef GDAL_COMPILATION}
+{ ParseAlgorithmAndOptions() is used by PostGIS Raster, hence this alias  }
+{* Compatibility deprecated alias for GDALGridParseAlgorithmAndOptions()  }
+
+const
+  ParseAlgorithmAndOptions = GDALGridParseAlgorithmAndOptions;  
+{$endif}
+
+function GDALGridParseAlgorithmAndOptions(para1:Pchar; para2:PGDALGridAlgorithm; para3:Ppointer):TCPLErr;cdecl;external libgdal;
+{$endif}
+{ GDALGRID_H_INCLUDED  }
+
+// === Konventiert am: 2-10-26 16:37:48 ===
+
+
+implementation
+
+
+
+end.

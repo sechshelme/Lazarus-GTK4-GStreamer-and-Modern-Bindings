@@ -375,6 +375,7 @@ const
     (libs: 'libniftiio'; units: 'fp_niftiio'),
     (libs: 'libgifti'; units: 'fp_nifti'),
     (libs: 'libmlt'; units: 'fp_mlt'),
+    (libs: 'libgdal'; units: 'fp_gdal'),
 
 
 

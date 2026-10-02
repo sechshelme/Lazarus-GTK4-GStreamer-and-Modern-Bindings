@@ -1,0 +1,38 @@
+unit fp_gdal;
+
+interface
+
+const
+  {$IFDEF Linux}
+  libgdal = 'gdal';
+  {$ENDIF}
+
+  {$IFDEF Windows}
+  libgdal = 'gdal.dll';
+  {$ENDIF}
+
+  type
+  Tsize_t=SizeUInt;
+  Psize_t=^Tsize_t;
+
+  PFILE=type Pointer;
+
+  {$IFDEF FPC}
+  {$PACKRECORDS C}
+  {$ENDIF}
+
+
+  PVSIVirtualHandle =type Pointer; // von C++
+
+  {$DEFINE read_interface}
+  //{$include fp_gdal_includes.inc}
+  {$UNDEF read_interface}
+
+implementation
+
+{$DEFINE read_implementation}
+//{$include fp_gdal_includes.inc}
+{$UNDEF read_implementation}
+
+end.
+
