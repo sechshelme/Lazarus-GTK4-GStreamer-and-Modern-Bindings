@@ -22,16 +22,16 @@ cpl_string,
 cpl_time,
 cpl_virtualmem,
 ogr_core,
-
 ogr_srs_api,
 ogr_api,
-
-
+ogr_geocoding,
+ogr_recordbatch,
 gdal,
 gdal_alg,
 gdal_csv,
 gdal_frmts,
 gdalgrid,
+
 gdal_pam,
 gdalpansharpen,
 gdal_proxy,
@@ -42,8 +42,6 @@ gdalwarper,
 gnm,
 gnm_api,
 memdataset,
-ogr_geocoding,
-ogr_recordbatch,
 
 cpl_minixml,
 cpl_minizip_zip,

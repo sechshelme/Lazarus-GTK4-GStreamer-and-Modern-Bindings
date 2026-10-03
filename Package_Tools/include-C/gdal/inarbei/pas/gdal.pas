@@ -3,7 +3,7 @@ unit gdal;
 interface
 
 uses
-  fp_gdal, cpl_port, cpl_progress, cpl_error, ogr_srs_api;
+  fp_gdal, cpl_port, cpl_progress, cpl_error, ogr_srs_api, ogr_api, ogr_core, cpl_virtualmem;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
@@ -338,7 +338,9 @@ function GDALGetDriverShortName(para1: TGDALDriverH): pchar; cdecl; external lib
 function GDALGetDriverLongName(para1: TGDALDriverH): pchar; cdecl; external libgdal;
 function GDALGetDriverHelpTopic(para1: TGDALDriverH): pchar; cdecl; external libgdal;
 function GDALGetDriverCreationOptionList(para1: TGDALDriverH): pchar; cdecl; external libgdal;
+
 type
+  PPGDAL_GCP = ^PGDAL_GCP;
   PGDAL_GCP = ^TGDAL_GCP;
   TGDAL_GCP = record
     pszId: pchar;
@@ -448,19 +450,19 @@ function GDALDatasetRollbackTransaction(hDS: TGDALDatasetH): TOGRErr; cdecl; ext
 procedure GDALDatasetClearStatistics(hDS: TGDALDatasetH); cdecl; external libgdal;
 function GDALDatasetGetFieldDomainNames(para1: TGDALDatasetH; para2: TCSLConstList): PPchar; cdecl; external libgdal;
 function GDALDatasetGetFieldDomain(hDS: TGDALDatasetH; pszName: pchar): TOGRFieldDomainH; cdecl; external libgdal;
-function GDALDatasetAddFieldDomain(hDS: TGDALDatasetH; hFieldDomain: TOGRFieldDomainH; ppszFailureReason: PPchar): Tbool; cdecl; external libgdal;
-function GDALDatasetDeleteFieldDomain(hDS: TGDALDatasetH; pszName: pchar; ppszFailureReason: PPchar): Tbool; cdecl; external libgdal;
-function GDALDatasetUpdateFieldDomain(hDS: TGDALDatasetH; hFieldDomain: TOGRFieldDomainH; ppszFailureReason: PPchar): Tbool; cdecl; external libgdal;
+function GDALDatasetAddFieldDomain(hDS: TGDALDatasetH; hFieldDomain: TOGRFieldDomainH; ppszFailureReason: PPchar): boolean; cdecl; external libgdal;
+function GDALDatasetDeleteFieldDomain(hDS: TGDALDatasetH; pszName: pchar; ppszFailureReason: PPchar): boolean; cdecl; external libgdal;
+function GDALDatasetUpdateFieldDomain(hDS: TGDALDatasetH; hFieldDomain: TOGRFieldDomainH; ppszFailureReason: PPchar): boolean; cdecl; external libgdal;
 function GDALDatasetGetRelationshipNames(para1: TGDALDatasetH; para2: TCSLConstList): PPchar; cdecl; external libgdal;
 function GDALDatasetGetRelationship(hDS: TGDALDatasetH; pszName: pchar): TGDALRelationshipH; cdecl; external libgdal;
-function GDALDatasetAddRelationship(hDS: TGDALDatasetH; hRelationship: TGDALRelationshipH; ppszFailureReason: PPchar): Tbool; cdecl; external libgdal;
-function GDALDatasetDeleteRelationship(hDS: TGDALDatasetH; pszName: pchar; ppszFailureReason: PPchar): Tbool; cdecl; external libgdal;
-function GDALDatasetUpdateRelationship(hDS: TGDALDatasetH; hRelationship: TGDALRelationshipH; ppszFailureReason: PPchar): Tbool; cdecl; external libgdal;
+function GDALDatasetAddRelationship(hDS: TGDALDatasetH; hRelationship: TGDALRelationshipH; ppszFailureReason: PPchar): boolean; cdecl; external libgdal;
+function GDALDatasetDeleteRelationship(hDS: TGDALDatasetH; pszName: pchar; ppszFailureReason: PPchar): boolean; cdecl; external libgdal;
+function GDALDatasetUpdateRelationship(hDS: TGDALDatasetH; hRelationship: TGDALRelationshipH; ppszFailureReason: PPchar): boolean; cdecl; external libgdal;
 
 type
   TGDALQueryLoggerFunc = procedure(pszSQL: pchar; pszError: pchar; lNumRecords: Tint64_t; lExecutionTimeMilliseconds: Tint64_t; pQueryLoggerArg: pointer); cdecl;
 
-function GDALDatasetSetQueryLoggerFunc(hDS: TGDALDatasetH; pfnQueryLoggerFunc: TGDALQueryLoggerFunc; poQueryLoggerArg: pointer): Tbool; cdecl; external libgdal;
+function GDALDatasetSetQueryLoggerFunc(hDS: TGDALDatasetH; pfnQueryLoggerFunc: TGDALQueryLoggerFunc; poQueryLoggerArg: pointer): boolean; cdecl; external libgdal;
 
 type
   PGDALSubdatasetInfoH = ^TGDALSubdatasetInfoH;
@@ -501,45 +503,45 @@ function GDALSetRasterColorTable(para1: TGDALRasterBandH; para2: TGDALColorTable
 function GDALHasArbitraryOverviews(para1: TGDALRasterBandH): longint; cdecl; external libgdal;
 function GDALGetOverviewCount(para1: TGDALRasterBandH): longint; cdecl; external libgdal;
 function GDALGetOverview(para1: TGDALRasterBandH; para2: longint): TGDALRasterBandH; cdecl; external libgdal;
-function GDALGetRasterNoDataValue(para1: TGDALRasterBandH; para2: Plongint): Tdouble; cdecl; external libgdal;
+function GDALGetRasterNoDataValue(para1: TGDALRasterBandH; para2: Plongint): double; cdecl; external libgdal;
 function GDALGetRasterNoDataValueAsInt64(para1: TGDALRasterBandH; para2: Plongint): Tint64_t; cdecl; external libgdal;
 function GDALGetRasterNoDataValueAsUInt64(para1: TGDALRasterBandH; para2: Plongint): Tuint64_t; cdecl; external libgdal;
-function GDALSetRasterNoDataValue(para1: TGDALRasterBandH; para2: Tdouble): TCPLErr; cdecl; external libgdal;
+function GDALSetRasterNoDataValue(para1: TGDALRasterBandH; para2: double): TCPLErr; cdecl; external libgdal;
 function GDALSetRasterNoDataValueAsInt64(para1: TGDALRasterBandH; para2: Tint64_t): TCPLErr; cdecl; external libgdal;
 function GDALSetRasterNoDataValueAsUInt64(para1: TGDALRasterBandH; para2: Tuint64_t): TCPLErr; cdecl; external libgdal;
 function GDALDeleteRasterNoDataValue(para1: TGDALRasterBandH): TCPLErr; cdecl; external libgdal;
 function GDALGetRasterCategoryNames(para1: TGDALRasterBandH): PPchar; cdecl; external libgdal;
 function GDALSetRasterCategoryNames(para1: TGDALRasterBandH; para2: TCSLConstList): TCPLErr; cdecl; external libgdal;
-function GDALGetRasterMinimum(para1: TGDALRasterBandH; pbSuccess: Plongint): Tdouble; cdecl; external libgdal;
-function GDALGetRasterMaximum(para1: TGDALRasterBandH; pbSuccess: Plongint): Tdouble; cdecl; external libgdal;
+function GDALGetRasterMinimum(para1: TGDALRasterBandH; pbSuccess: Plongint): double; cdecl; external libgdal;
+function GDALGetRasterMaximum(para1: TGDALRasterBandH; pbSuccess: Plongint): double; cdecl; external libgdal;
 function GDALGetRasterStatistics(para1: TGDALRasterBandH; bApproxOK: longint; bForce: longint; pdfMin: Pdouble; pdfMax: Pdouble;
   pdfMean: Pdouble; pdfStdDev: Pdouble): TCPLErr; cdecl; external libgdal;
 function GDALComputeRasterStatistics(para1: TGDALRasterBandH; bApproxOK: longint; pdfMin: Pdouble; pdfMax: Pdouble; pdfMean: Pdouble;
   pdfStdDev: Pdouble; pfnProgress: TGDALProgressFunc; pProgressData: pointer): TCPLErr; cdecl; external libgdal;
-function GDALSetRasterStatistics(hBand: TGDALRasterBandH; dfMin: Tdouble; dfMax: Tdouble; dfMean: Tdouble; dfStdDev: Tdouble): TCPLErr; cdecl; external libgdal;
+function GDALSetRasterStatistics(hBand: TGDALRasterBandH; dfMin: double; dfMax: double; dfMean: double; dfStdDev: double): TCPLErr; cdecl; external libgdal;
 function GDALRasterBandAsMDArray(para1: TGDALRasterBandH): TGDALMDArrayH; cdecl; external libgdal;
 function GDALGetRasterUnitType(para1: TGDALRasterBandH): pchar; cdecl; external libgdal;
 function GDALSetRasterUnitType(hBand: TGDALRasterBandH; pszNewValue: pchar): TCPLErr; cdecl; external libgdal;
-function GDALGetRasterOffset(para1: TGDALRasterBandH; pbSuccess: Plongint): Tdouble; cdecl; external libgdal;
-function GDALSetRasterOffset(hBand: TGDALRasterBandH; dfNewOffset: Tdouble): TCPLErr; cdecl; external libgdal;
-function GDALGetRasterScale(para1: TGDALRasterBandH; pbSuccess: Plongint): Tdouble; cdecl; external libgdal;
-function GDALSetRasterScale(hBand: TGDALRasterBandH; dfNewOffset: Tdouble): TCPLErr; cdecl; external libgdal;
+function GDALGetRasterOffset(para1: TGDALRasterBandH; pbSuccess: Plongint): double; cdecl; external libgdal;
+function GDALSetRasterOffset(hBand: TGDALRasterBandH; dfNewOffset: double): TCPLErr; cdecl; external libgdal;
+function GDALGetRasterScale(para1: TGDALRasterBandH; pbSuccess: Plongint): double; cdecl; external libgdal;
+function GDALSetRasterScale(hBand: TGDALRasterBandH; dfNewOffset: double): TCPLErr; cdecl; external libgdal;
 function GDALComputeRasterMinMax(hBand: TGDALRasterBandH; bApproxOK: longint; adfMinMax: Pdouble): TCPLErr; cdecl; external libgdal;
 function GDALFlushRasterCache(hBand: TGDALRasterBandH): TCPLErr; cdecl; external libgdal;
-function GDALGetRasterHistogram(hBand: TGDALRasterBandH; dfMin: Tdouble; dfMax: Tdouble; nBuckets: longint; panHistogram: Plongint;
+function GDALGetRasterHistogram(hBand: TGDALRasterBandH; dfMin: double; dfMax: double; nBuckets: longint; panHistogram: Plongint;
   bIncludeOutOfRange: longint; bApproxOK: longint; pfnProgress: TGDALProgressFunc; pProgressData: pointer): TCPLErr; cdecl; external libgdal; deprecated;
-function GDALGetRasterHistogramEx(hBand: TGDALRasterBandH; dfMin: Tdouble; dfMax: Tdouble; nBuckets: longint; panHistogram: PGUIntBig;
+function GDALGetRasterHistogramEx(hBand: TGDALRasterBandH; dfMin: double; dfMax: double; nBuckets: longint; panHistogram: PGUIntBig;
   bIncludeOutOfRange: longint; bApproxOK: longint; pfnProgress: TGDALProgressFunc; pProgressData: pointer): TCPLErr; cdecl; external libgdal;
 function GDALGetDefaultHistogram(hBand: TGDALRasterBandH; pdfMin: Pdouble; pdfMax: Pdouble; pnBuckets: Plongint; ppanHistogram: PPlongint;
   bForce: longint; pfnProgress: TGDALProgressFunc; pProgressData: pointer): TCPLErr; cdecl; external libgdal; deprecated;
 function GDALGetDefaultHistogramEx(hBand: TGDALRasterBandH; pdfMin: Pdouble; pdfMax: Pdouble; pnBuckets: Plongint; ppanHistogram: PPGUIntBig;
   bForce: longint; pfnProgress: TGDALProgressFunc; pProgressData: pointer): TCPLErr; cdecl; external libgdal;
-function GDALSetDefaultHistogram(hBand: TGDALRasterBandH; dfMin: Tdouble; dfMax: Tdouble; nBuckets: longint; panHistogram: Plongint): TCPLErr; cdecl; external libgdal; deprecated;
-function GDALSetDefaultHistogramEx(hBand: TGDALRasterBandH; dfMin: Tdouble; dfMax: Tdouble; nBuckets: longint; panHistogram: PGUIntBig): TCPLErr; cdecl; external libgdal;
+function GDALSetDefaultHistogram(hBand: TGDALRasterBandH; dfMin: double; dfMax: double; nBuckets: longint; panHistogram: Plongint): TCPLErr; cdecl; external libgdal; deprecated;
+function GDALSetDefaultHistogramEx(hBand: TGDALRasterBandH; dfMin: double; dfMax: double; nBuckets: longint; panHistogram: PGUIntBig): TCPLErr; cdecl; external libgdal;
 function GDALGetRandomRasterSample(para1: TGDALRasterBandH; para2: longint; para3: Psingle): longint; cdecl; external libgdal;
 function GDALGetRasterSampleOverview(para1: TGDALRasterBandH; para2: longint): TGDALRasterBandH; cdecl; external libgdal;
 function GDALGetRasterSampleOverviewEx(para1: TGDALRasterBandH; para2: TGUIntBig): TGDALRasterBandH; cdecl; external libgdal;
-function GDALFillRaster(hBand: TGDALRasterBandH; dfRealValue: Tdouble; dfImaginaryValue: Tdouble): TCPLErr; cdecl; external libgdal;
+function GDALFillRaster(hBand: TGDALRasterBandH; dfRealValue: double; dfImaginaryValue: double): TCPLErr; cdecl; external libgdal;
 function GDALComputeBandStats(hBand: TGDALRasterBandH; nSampleStep: longint; pdfMean: Pdouble; pdfStdDev: Pdouble; pfnProgress: TGDALProgressFunc;
   pProgressData: pointer): TCPLErr; cdecl; external libgdal;
 function GDALOverviewMagnitudeCorrection(hBaseBand: TGDALRasterBandH; nOverviewCount: longint; pahOverviews: PGDALRasterBandH; pfnProgress: TGDALProgressFunc; pProgressData: pointer): TCPLErr; cdecl; external libgdal;
@@ -550,7 +552,7 @@ function GDALAddDerivedBandPixelFuncWithArgs(pszName: pchar; pfnPixelFunc: TGDAL
 function GDALGetMaskBand(hBand: TGDALRasterBandH): TGDALRasterBandH; cdecl; external libgdal;
 function GDALGetMaskFlags(hBand: TGDALRasterBandH): longint; cdecl; external libgdal;
 function GDALCreateMaskBand(hBand: TGDALRasterBandH; nFlags: longint): TCPLErr; cdecl; external libgdal;
-function GDALIsMaskBand(hBand: TGDALRasterBandH): Tbool; cdecl; external libgdal;
+function GDALIsMaskBand(hBand: TGDALRasterBandH): boolean; cdecl; external libgdal;
 
 const
   GMF_ALL_VALID = $01;
@@ -564,9 +566,9 @@ const
 function GDALGetDataCoverageStatus(hBand: TGDALRasterBandH; nXOff: longint; nYOff: longint; nXSize: longint; nYSize: longint;
   nMaskFlagStop: longint; pdfDataPct: Pdouble): longint; cdecl; external libgdal;
 
-function GDALARGetNextUpdatedRegion(hARIO: TGDALAsyncReaderH; dfTimeout: Tdouble; pnXBufOff: Plongint; pnYBufOff: Plongint; pnXBufSize: Plongint;
+function GDALARGetNextUpdatedRegion(hARIO: TGDALAsyncReaderH; dfTimeout: double; pnXBufOff: Plongint; pnYBufOff: Plongint; pnXBufSize: Plongint;
   pnYBufSize: Plongint): TGDALAsyncStatusType; cdecl; external libgdal;
-function GDALARLockBuffer(hARIO: TGDALAsyncReaderH; dfTimeout: Tdouble): longint; cdecl; external libgdal;
+function GDALARLockBuffer(hARIO: TGDALAsyncReaderH; dfTimeout: double): longint; cdecl; external libgdal;
 procedure GDALARUnlockBuffer(hARIO: TGDALAsyncReaderH); cdecl; external libgdal;
 
 function GDALGeneralCmdLineProcessor(nArgc: longint; ppapszArgv: PPPchar; nOptions: longint): longint; cdecl; external libgdal;
@@ -587,66 +589,58 @@ function GDALLoadTabFile(para1: pchar; para2: Pdouble; para3: PPchar; para4: Plo
 function GDALReadTabFile(para1: pchar; para2: Pdouble; para3: PPchar; para4: Plongint; para5: PPGDAL_GCP): longint; cdecl; external libgdal;
 function GDALLoadOziMapFile(para1: pchar; para2: Pdouble; para3: PPchar; para4: Plongint; para5: PPGDAL_GCP): longint; cdecl; external libgdal;
 function GDALReadOziMapFile(para1: pchar; para2: Pdouble; para3: PPchar; para4: Plongint; para5: PPGDAL_GCP): longint; cdecl; external libgdal;
-function GDALDecToDMS(para1: Tdouble; para2: pchar; para3: longint): pchar; cdecl; external libgdal;
-function GDALPackedDMSToDec(para1: Tdouble): Tdouble; cdecl; external libgdal;
-function GDALDecToPackedDMS(para1: Tdouble): Tdouble; cdecl; external libgdal;
+function GDALDecToDMS(para1: double; para2: pchar; para3: longint): pchar; cdecl; external libgdal;
+function GDALPackedDMSToDec(para1: double): double; cdecl; external libgdal;
+function GDALDecToPackedDMS(para1: double): double; cdecl; external libgdal;
 
 function GDALVersionInfo(para1: pchar): pchar; cdecl; external libgdal;
-
 function GDALCheckVersion(nVersionMajor: longint; nVersionMinor: longint; pszCallingComponentName: pchar): longint; cdecl; external libgdal;
-const
-  GDALExtractRPCInfoV1 = GDALExtractRPCInfo;
-  {$else}
 
-const
-  GDALRPCInfo = GDALRPCInfoV2;
-  GDALExtractRPCInfo = GDALExtractRPCInfoV2;
-  {$endif}
 type
   PGDALRPCInfoV1 = ^TGDALRPCInfoV1;
   TGDALRPCInfoV1 = record
-    dfLINE_OFF: Tdouble;
-    dfSAMP_OFF: Tdouble;
-    dfLAT_OFF: Tdouble;
-    dfLONG_OFF: Tdouble;
-    dfHEIGHT_OFF: Tdouble;
-    dfLINE_SCALE: Tdouble;
-    dfSAMP_SCALE: Tdouble;
-    dfLAT_SCALE: Tdouble;
-    dfLONG_SCALE: Tdouble;
-    dfHEIGHT_SCALE: Tdouble;
-    adfLINE_NUM_COEFF: array[0..19] of Tdouble;
-    adfLINE_DEN_COEFF: array[0..19] of Tdouble;
-    adfSAMP_NUM_COEFF: array[0..19] of Tdouble;
-    adfSAMP_DEN_COEFF: array[0..19] of Tdouble;
-    dfMIN_LONG: Tdouble;
-    dfMIN_LAT: Tdouble;
-    dfMAX_LONG: Tdouble;
-    dfMAX_LAT: Tdouble;
+    dfLINE_OFF: double;
+    dfSAMP_OFF: double;
+    dfLAT_OFF: double;
+    dfLONG_OFF: double;
+    dfHEIGHT_OFF: double;
+    dfLINE_SCALE: double;
+    dfSAMP_SCALE: double;
+    dfLAT_SCALE: double;
+    dfLONG_SCALE: double;
+    dfHEIGHT_SCALE: double;
+    adfLINE_NUM_COEFF: array[0..19] of double;
+    adfLINE_DEN_COEFF: array[0..19] of double;
+    adfSAMP_NUM_COEFF: array[0..19] of double;
+    adfSAMP_DEN_COEFF: array[0..19] of double;
+    dfMIN_LONG: double;
+    dfMIN_LAT: double;
+    dfMAX_LONG: double;
+    dfMAX_LAT: double;
   end;
 
   PGDALRPCInfoV2 = ^TGDALRPCInfoV2;
   TGDALRPCInfoV2 = record
-    dfLINE_OFF: Tdouble;
-    dfSAMP_OFF: Tdouble;
-    dfLAT_OFF: Tdouble;
-    dfLONG_OFF: Tdouble;
-    dfHEIGHT_OFF: Tdouble;
-    dfLINE_SCALE: Tdouble;
-    dfSAMP_SCALE: Tdouble;
-    dfLAT_SCALE: Tdouble;
-    dfLONG_SCALE: Tdouble;
-    dfHEIGHT_SCALE: Tdouble;
-    adfLINE_NUM_COEFF: array[0..19] of Tdouble;
-    adfLINE_DEN_COEFF: array[0..19] of Tdouble;
-    adfSAMP_NUM_COEFF: array[0..19] of Tdouble;
-    adfSAMP_DEN_COEFF: array[0..19] of Tdouble;
-    dfMIN_LONG: Tdouble;
-    dfMIN_LAT: Tdouble;
-    dfMAX_LONG: Tdouble;
-    dfMAX_LAT: Tdouble;
-    dfERR_BIAS: Tdouble;
-    dfERR_RAND: Tdouble;
+    dfLINE_OFF: double;
+    dfSAMP_OFF: double;
+    dfLAT_OFF: double;
+    dfLONG_OFF: double;
+    dfHEIGHT_OFF: double;
+    dfLINE_SCALE: double;
+    dfSAMP_SCALE: double;
+    dfLAT_SCALE: double;
+    dfLONG_SCALE: double;
+    dfHEIGHT_SCALE: double;
+    adfLINE_NUM_COEFF: array[0..19] of double;
+    adfLINE_DEN_COEFF: array[0..19] of double;
+    adfSAMP_NUM_COEFF: array[0..19] of double;
+    adfSAMP_DEN_COEFF: array[0..19] of double;
+    dfMIN_LONG: double;
+    dfMIN_LAT: double;
+    dfMAX_LONG: double;
+    dfMAX_LAT: double;
+    dfERR_BIAS: double;
+    dfERR_RAND: double;
   end;
 
 function GDALExtractRPCInfoV1(para1: TCSLConstList; para2: PGDALRPCInfoV1): longint; cdecl; external libgdal;
@@ -720,10 +714,10 @@ function GDALRATGetColOfUsage(para1: TGDALRasterAttributeTableH; para2: TGDALRAT
 function GDALRATGetRowCount(para1: TGDALRasterAttributeTableH): longint; cdecl; external libgdal;
 function GDALRATGetValueAsString(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint): pchar; cdecl; external libgdal;
 function GDALRATGetValueAsInt(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint): longint; cdecl; external libgdal;
-function GDALRATGetValueAsDouble(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint): Tdouble; cdecl; external libgdal;
+function GDALRATGetValueAsDouble(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint): double; cdecl; external libgdal;
 procedure GDALRATSetValueAsString(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint; para4: pchar); cdecl; external libgdal;
 procedure GDALRATSetValueAsInt(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint; para4: longint); cdecl; external libgdal;
-procedure GDALRATSetValueAsDouble(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint; para4: Tdouble); cdecl; external libgdal;
+procedure GDALRATSetValueAsDouble(para1: TGDALRasterAttributeTableH; para2: longint; para3: longint; para4: double); cdecl; external libgdal;
 function GDALRATChangesAreWrittenToFile(hRAT: TGDALRasterAttributeTableH): longint; cdecl; external libgdal;
 function GDALRATValuesIOAsDouble(hRAT: TGDALRasterAttributeTableH; eRWFlag: TGDALRWFlag; iField: longint; iStartRow: longint; iLength: longint;
   pdfData: Pdouble): TCPLErr; cdecl; external libgdal;
@@ -733,7 +727,7 @@ function GDALRATValuesIOAsString(hRAT: TGDALRasterAttributeTableH; eRWFlag: TGDA
   papszStrList: TCSLConstList): TCPLErr; cdecl; external libgdal;
 procedure GDALRATSetRowCount(para1: TGDALRasterAttributeTableH; para2: longint); cdecl; external libgdal;
 function GDALRATCreateColumn(para1: TGDALRasterAttributeTableH; para2: pchar; para3: TGDALRATFieldType; para4: TGDALRATFieldUsage): TCPLErr; cdecl; external libgdal;
-function GDALRATSetLinearBinning(para1: TGDALRasterAttributeTableH; para2: Tdouble; para3: Tdouble): TCPLErr; cdecl; external libgdal;
+function GDALRATSetLinearBinning(para1: TGDALRasterAttributeTableH; para2: double; para3: double): TCPLErr; cdecl; external libgdal;
 function GDALRATGetLinearBinning(para1: TGDALRasterAttributeTableH; para2: Pdouble; para3: Pdouble): longint; cdecl; external libgdal;
 function GDALRATSetTableType(hRAT: TGDALRasterAttributeTableH; eInTableType: TGDALRATTableType): TCPLErr; cdecl; external libgdal;
 function GDALRATGetTableType(hRAT: TGDALRasterAttributeTableH): TGDALRATTableType; cdecl; external libgdal;
@@ -742,7 +736,7 @@ function GDALRATTranslateToColorTable(para1: TGDALRasterAttributeTableH; nEntryC
 procedure GDALRATDumpReadable(para1: TGDALRasterAttributeTableH; para2: PFILE); cdecl; external libgdal;
 function GDALRATClone(para1: TGDALRasterAttributeTableH): TGDALRasterAttributeTableH; cdecl; external libgdal;
 function GDALRATSerializeJSON(para1: TGDALRasterAttributeTableH): pointer; cdecl; external libgdal;
-function GDALRATGetRowOfValue(para1: TGDALRasterAttributeTableH; para2: Tdouble): longint; cdecl; external libgdal;
+function GDALRATGetRowOfValue(para1: TGDALRasterAttributeTableH; para2: double): longint; cdecl; external libgdal;
 procedure GDALRATRemoveStatistics(para1: TGDALRasterAttributeTableH); cdecl; external libgdal;
 
 type
@@ -770,12 +764,12 @@ function GDALRelationshipGetLeftTableName(para1: TGDALRelationshipH): pchar; cde
 function GDALRelationshipGetRightTableName(para1: TGDALRelationshipH): pchar; cdecl; external libgdal;
 function GDALRelationshipGetMappingTableName(para1: TGDALRelationshipH): pchar; cdecl; external libgdal;
 procedure GDALRelationshipSetMappingTableName(para1: TGDALRelationshipH; para2: pchar); cdecl; external libgdal;
-function GDALRelationshipGetLeftTableFields(para1: TGDALRelationshipH): ^pchar; cdecl; external libgdal;
-function GDALRelationshipGetRightTableFields(para1: TGDALRelationshipH): ^pchar; cdecl; external libgdal;
+function GDALRelationshipGetLeftTableFields(para1: TGDALRelationshipH): Ppchar; cdecl; external libgdal;
+function GDALRelationshipGetRightTableFields(para1: TGDALRelationshipH): Ppchar; cdecl; external libgdal;
 procedure GDALRelationshipSetLeftTableFields(para1: TGDALRelationshipH; para2: TCSLConstList); cdecl; external libgdal;
 procedure GDALRelationshipSetRightTableFields(para1: TGDALRelationshipH; para2: TCSLConstList); cdecl; external libgdal;
-function GDALRelationshipGetLeftMappingTableFields(para1: TGDALRelationshipH): ^pchar; cdecl; external libgdal;
-function GDALRelationshipGetRightMappingTableFields(para1: TGDALRelationshipH): ^pchar; cdecl; external libgdal;
+function GDALRelationshipGetLeftMappingTableFields(para1: TGDALRelationshipH): Ppchar; cdecl; external libgdal;
+function GDALRelationshipGetRightMappingTableFields(para1: TGDALRelationshipH): Ppchar; cdecl; external libgdal;
 procedure GDALRelationshipSetLeftMappingTableFields(para1: TGDALRelationshipH; para2: TCSLConstList); cdecl; external libgdal;
 procedure GDALRelationshipSetRightMappingTableFields(para1: TGDALRelationshipH; para2: TCSLConstList); cdecl; external libgdal;
 function GDALRelationshipGetType(para1: TGDALRelationshipH): TGDALRelationshipType; cdecl; external libgdal;
@@ -848,30 +842,30 @@ function GDALDatasetGetRootGroup(hDS: TGDALDatasetH): TGDALGroupH; cdecl; extern
 procedure GDALGroupRelease(hGroup: TGDALGroupH); cdecl; external libgdal;
 function GDALGroupGetName(hGroup: TGDALGroupH): pchar; cdecl; external libgdal;
 function GDALGroupGetFullName(hGroup: TGDALGroupH): pchar; cdecl; external libgdal;
-function GDALGroupGetMDArrayNames(hGroup: TGDALGroupH; papszOptions: TCSLConstList): ^pchar; cdecl; external libgdal;
+function GDALGroupGetMDArrayNames(hGroup: TGDALGroupH; papszOptions: TCSLConstList): Ppchar; cdecl; external libgdal;
 function GDALGroupOpenMDArray(hGroup: TGDALGroupH; pszMDArrayName: pchar; papszOptions: TCSLConstList): TGDALMDArrayH; cdecl; external libgdal;
 function GDALGroupOpenMDArrayFromFullname(hGroup: TGDALGroupH; pszMDArrayName: pchar; papszOptions: TCSLConstList): TGDALMDArrayH; cdecl; external libgdal;
 function GDALGroupResolveMDArray(hGroup: TGDALGroupH; pszName: pchar; pszStartingPoint: pchar; papszOptions: TCSLConstList): TGDALMDArrayH; cdecl; external libgdal;
-function GDALGroupGetGroupNames(hGroup: TGDALGroupH; papszOptions: TCSLConstList): ^pchar; cdecl; external libgdal;
+function GDALGroupGetGroupNames(hGroup: TGDALGroupH; papszOptions: TCSLConstList): Ppchar; cdecl; external libgdal;
 function GDALGroupOpenGroup(hGroup: TGDALGroupH; pszSubGroupName: pchar; papszOptions: TCSLConstList): TGDALGroupH; cdecl; external libgdal;
 function GDALGroupOpenGroupFromFullname(hGroup: TGDALGroupH; pszMDArrayName: pchar; papszOptions: TCSLConstList): TGDALGroupH; cdecl; external libgdal;
-function GDALGroupGetVectorLayerNames(hGroup: TGDALGroupH; papszOptions: TCSLConstList): ^pchar; cdecl; external libgdal;
+function GDALGroupGetVectorLayerNames(hGroup: TGDALGroupH; papszOptions: TCSLConstList): Ppchar; cdecl; external libgdal;
 function GDALGroupOpenVectorLayer(hGroup: TGDALGroupH; pszVectorLayerName: pchar; papszOptions: TCSLConstList): TOGRLayerH; cdecl; external libgdal;
 function GDALGroupGetDimensions(hGroup: TGDALGroupH; pnCount: Psize_t; papszOptions: TCSLConstList): PGDALDimensionH; cdecl; external libgdal;
 function GDALGroupGetAttribute(hGroup: TGDALGroupH; pszName: pchar): TGDALAttributeH; cdecl; external libgdal;
 function GDALGroupGetAttributes(hGroup: TGDALGroupH; pnCount: Psize_t; papszOptions: TCSLConstList): PGDALAttributeH; cdecl; external libgdal;
 function GDALGroupGetStructuralInfo(hGroup: TGDALGroupH): TCSLConstList; cdecl; external libgdal;
 function GDALGroupCreateGroup(hGroup: TGDALGroupH; pszSubGroupName: pchar; papszOptions: TCSLConstList): TGDALGroupH; cdecl; external libgdal;
-function GDALGroupDeleteGroup(hGroup: TGDALGroupH; pszName: pchar; papszOptions: TCSLConstList): Tbool; cdecl; external libgdal;
+function GDALGroupDeleteGroup(hGroup: TGDALGroupH; pszName: pchar; papszOptions: TCSLConstList): boolean; cdecl; external libgdal;
 function GDALGroupCreateDimension(hGroup: TGDALGroupH; pszName: pchar; pszType: pchar; pszDirection: pchar; nSize: TGUInt64;
   papszOptions: TCSLConstList): TGDALDimensionH; cdecl; external libgdal;
 function GDALGroupCreateMDArray(hGroup: TGDALGroupH; pszName: pchar; nDimensions: Tsize_t; pahDimensions: PGDALDimensionH; hEDT: TGDALExtendedDataTypeH;
   papszOptions: TCSLConstList): TGDALMDArrayH; cdecl; external libgdal;
-function GDALGroupDeleteMDArray(hGroup: TGDALGroupH; pszName: pchar; papszOptions: TCSLConstList): Tbool; cdecl; external libgdal;
+function GDALGroupDeleteMDArray(hGroup: TGDALGroupH; pszName: pchar; papszOptions: TCSLConstList): boolean; cdecl; external libgdal;
 function GDALGroupCreateAttribute(hGroup: TGDALGroupH; pszName: pchar; nDimensions: Tsize_t; panDimensions: PGUInt64; hEDT: TGDALExtendedDataTypeH;
   papszOptions: TCSLConstList): TGDALAttributeH; cdecl; external libgdal;
-function GDALGroupDeleteAttribute(hGroup: TGDALGroupH; pszName: pchar; papszOptions: TCSLConstList): Tbool; cdecl; external libgdal;
-function GDALGroupRename(hGroup: TGDALGroupH; pszNewName: pchar): Tbool; cdecl; external libgdal;
+function GDALGroupDeleteAttribute(hGroup: TGDALGroupH; pszName: pchar; papszOptions: TCSLConstList): boolean; cdecl; external libgdal;
+function GDALGroupRename(hGroup: TGDALGroupH; pszNewName: pchar): boolean; cdecl; external libgdal;
 function GDALGroupSubsetDimensionFromSelection(hGroup: TGDALGroupH; pszSelection: pchar; papszOptions: TCSLConstList): TGDALGroupH; cdecl; external libgdal;
 procedure GDALMDArrayRelease(hMDArray: TGDALMDArrayH); cdecl; external libgdal;
 function GDALMDArrayGetName(hArray: TGDALMDArrayH): pchar; cdecl; external libgdal;
@@ -890,24 +884,24 @@ function GDALMDArrayGetAttribute(hArray: TGDALMDArrayH; pszName: pchar): TGDALAt
 function GDALMDArrayGetAttributes(hArray: TGDALMDArrayH; pnCount: Psize_t; papszOptions: TCSLConstList): PGDALAttributeH; cdecl; external libgdal;
 function GDALMDArrayCreateAttribute(hArray: TGDALMDArrayH; pszName: pchar; nDimensions: Tsize_t; panDimensions: PGUInt64; hEDT: TGDALExtendedDataTypeH;
   papszOptions: TCSLConstList): TGDALAttributeH; cdecl; external libgdal;
-function GDALMDArrayDeleteAttribute(hArray: TGDALMDArrayH; pszName: pchar; papszOptions: TCSLConstList): Tbool; cdecl; external libgdal;
-function GDALMDArrayResize(hArray: TGDALMDArrayH; panNewDimSizes: PGUInt64; papszOptions: TCSLConstList): Tbool; cdecl; external libgdal;
+function GDALMDArrayDeleteAttribute(hArray: TGDALMDArrayH; pszName: pchar; papszOptions: TCSLConstList): boolean; cdecl; external libgdal;
+function GDALMDArrayResize(hArray: TGDALMDArrayH; panNewDimSizes: PGUInt64; papszOptions: TCSLConstList): boolean; cdecl; external libgdal;
 function GDALMDArrayGetRawNoDataValue(hArray: TGDALMDArrayH): pointer; cdecl; external libgdal;
-function GDALMDArrayGetNoDataValueAsDouble(hArray: TGDALMDArrayH; pbHasNoDataValue: Plongint): Tdouble; cdecl; external libgdal;
+function GDALMDArrayGetNoDataValueAsDouble(hArray: TGDALMDArrayH; pbHasNoDataValue: Plongint): double; cdecl; external libgdal;
 function GDALMDArrayGetNoDataValueAsInt64(hArray: TGDALMDArrayH; pbHasNoDataValue: Plongint): Tint64_t; cdecl; external libgdal;
 function GDALMDArrayGetNoDataValueAsUInt64(hArray: TGDALMDArrayH; pbHasNoDataValue: Plongint): Tuint64_t; cdecl; external libgdal;
 function GDALMDArraySetRawNoDataValue(hArray: TGDALMDArrayH; para2: pointer): longint; cdecl; external libgdal;
-function GDALMDArraySetNoDataValueAsDouble(hArray: TGDALMDArrayH; dfNoDataValue: Tdouble): longint; cdecl; external libgdal;
+function GDALMDArraySetNoDataValueAsDouble(hArray: TGDALMDArrayH; dfNoDataValue: double): longint; cdecl; external libgdal;
 function GDALMDArraySetNoDataValueAsInt64(hArray: TGDALMDArrayH; nNoDataValue: Tint64_t): longint; cdecl; external libgdal;
 function GDALMDArraySetNoDataValueAsUInt64(hArray: TGDALMDArrayH; nNoDataValue: Tuint64_t): longint; cdecl; external libgdal;
-function GDALMDArraySetScale(hArray: TGDALMDArrayH; dfScale: Tdouble): longint; cdecl; external libgdal;
-function GDALMDArraySetScaleEx(hArray: TGDALMDArrayH; dfScale: Tdouble; eStorageType: TGDALDataType): longint; cdecl; external libgdal;
-function GDALMDArrayGetScale(hArray: TGDALMDArrayH; pbHasValue: Plongint): Tdouble; cdecl; external libgdal;
-function GDALMDArrayGetScaleEx(hArray: TGDALMDArrayH; pbHasValue: Plongint; peStorageType: PGDALDataType): Tdouble; cdecl; external libgdal;
-function GDALMDArraySetOffset(hArray: TGDALMDArrayH; dfOffset: Tdouble): longint; cdecl; external libgdal;
-function GDALMDArraySetOffsetEx(hArray: TGDALMDArrayH; dfOffset: Tdouble; eStorageType: TGDALDataType): longint; cdecl; external libgdal;
-function GDALMDArrayGetOffset(hArray: TGDALMDArrayH; pbHasValue: Plongint): Tdouble; cdecl; external libgdal;
-function GDALMDArrayGetOffsetEx(hArray: TGDALMDArrayH; pbHasValue: Plongint; peStorageType: PGDALDataType): Tdouble; cdecl; external libgdal;
+function GDALMDArraySetScale(hArray: TGDALMDArrayH; dfScale: double): longint; cdecl; external libgdal;
+function GDALMDArraySetScaleEx(hArray: TGDALMDArrayH; dfScale: double; eStorageType: TGDALDataType): longint; cdecl; external libgdal;
+function GDALMDArrayGetScale(hArray: TGDALMDArrayH; pbHasValue: Plongint): double; cdecl; external libgdal;
+function GDALMDArrayGetScaleEx(hArray: TGDALMDArrayH; pbHasValue: Plongint; peStorageType: PGDALDataType): double; cdecl; external libgdal;
+function GDALMDArraySetOffset(hArray: TGDALMDArrayH; dfOffset: double): longint; cdecl; external libgdal;
+function GDALMDArraySetOffsetEx(hArray: TGDALMDArrayH; dfOffset: double; eStorageType: TGDALDataType): longint; cdecl; external libgdal;
+function GDALMDArrayGetOffset(hArray: TGDALMDArrayH; pbHasValue: Plongint): double; cdecl; external libgdal;
+function GDALMDArrayGetOffsetEx(hArray: TGDALMDArrayH; pbHasValue: Plongint; peStorageType: PGDALDataType): double; cdecl; external libgdal;
 function GDALMDArrayGetBlockSize(hArray: TGDALMDArrayH; pnCount: Psize_t): PGUInt64; cdecl; external libgdal;
 function GDALMDArraySetUnit(hArray: TGDALMDArrayH; para2: pchar): longint; cdecl; external libgdal;
 function GDALMDArrayGetUnit(hArray: TGDALMDArrayH): pchar; cdecl; external libgdal;
@@ -935,7 +929,7 @@ function GDALMDArrayGetGridded(hArray: TGDALMDArrayH; pszGridOptions: pchar; hXA
 function GDALMDArrayGetCoordinateVariables(hArray: TGDALMDArrayH; pnCount: Psize_t): PGDALMDArrayH; cdecl; external libgdal;
 procedure GDALReleaseArrays(arrays: PGDALMDArrayH; nCount: Tsize_t); cdecl; external libgdal;
 function GDALMDArrayCache(hArray: TGDALMDArrayH; papszOptions: TCSLConstList): longint; cdecl; external libgdal;
-function GDALMDArrayRename(hArray: TGDALMDArrayH; pszNewName: pchar): Tbool; cdecl; external libgdal;
+function GDALMDArrayRename(hArray: TGDALMDArrayH; pszNewName: pchar): boolean; cdecl; external libgdal;
 procedure GDALAttributeRelease(hAttr: TGDALAttributeH); cdecl; external libgdal;
 procedure GDALReleaseAttributes(attributes: PGDALAttributeH; nCount: Tsize_t); cdecl; external libgdal;
 function GDALAttributeGetName(hAttr: TGDALAttributeH): pchar; cdecl; external libgdal;
@@ -948,17 +942,17 @@ function GDALAttributeReadAsRaw(hAttr: TGDALAttributeH; pnSize: Psize_t): PGByte
 procedure GDALAttributeFreeRawResult(hAttr: TGDALAttributeH; raw: PGByte; nSize: Tsize_t); cdecl; external libgdal;
 function GDALAttributeReadAsString(hAttr: TGDALAttributeH): pchar; cdecl; external libgdal;
 function GDALAttributeReadAsInt(hAttr: TGDALAttributeH): longint; cdecl; external libgdal;
-function GDALAttributeReadAsDouble(hAttr: TGDALAttributeH): Tdouble; cdecl; external libgdal;
-function GDALAttributeReadAsStringArray(hAttr: TGDALAttributeH): ^pchar; cdecl; external libgdal;
+function GDALAttributeReadAsDouble(hAttr: TGDALAttributeH): double; cdecl; external libgdal;
+function GDALAttributeReadAsStringArray(hAttr: TGDALAttributeH): Ppchar; cdecl; external libgdal;
 function GDALAttributeReadAsIntArray(hAttr: TGDALAttributeH; pnCount: Psize_t): Plongint; cdecl; external libgdal;
 function GDALAttributeReadAsDoubleArray(hAttr: TGDALAttributeH; pnCount: Psize_t): Pdouble; cdecl; external libgdal;
 function GDALAttributeWriteRaw(hAttr: TGDALAttributeH; para2: pointer; para3: Tsize_t): longint; cdecl; external libgdal;
 function GDALAttributeWriteString(hAttr: TGDALAttributeH; para2: pchar): longint; cdecl; external libgdal;
 function GDALAttributeWriteStringArray(hAttr: TGDALAttributeH; para2: TCSLConstList): longint; cdecl; external libgdal;
 function GDALAttributeWriteInt(hAttr: TGDALAttributeH; para2: longint): longint; cdecl; external libgdal;
-function GDALAttributeWriteDouble(hAttr: TGDALAttributeH; para2: Tdouble): longint; cdecl; external libgdal;
+function GDALAttributeWriteDouble(hAttr: TGDALAttributeH; para2: double): longint; cdecl; external libgdal;
 function GDALAttributeWriteDoubleArray(hAttr: TGDALAttributeH; para2: Pdouble; para3: Tsize_t): longint; cdecl; external libgdal;
-function GDALAttributeRename(hAttr: TGDALAttributeH; pszNewName: pchar): Tbool; cdecl; external libgdal;
+function GDALAttributeRename(hAttr: TGDALAttributeH; pszNewName: pchar): boolean; cdecl; external libgdal;
 procedure GDALDimensionRelease(hDim: TGDALDimensionH); cdecl; external libgdal;
 procedure GDALReleaseDimensions(dims: PGDALDimensionH; nCount: Tsize_t); cdecl; external libgdal;
 function GDALDimensionGetName(hDim: TGDALDimensionH): pchar; cdecl; external libgdal;
@@ -968,7 +962,7 @@ function GDALDimensionGetDirection(hDim: TGDALDimensionH): pchar; cdecl; externa
 function GDALDimensionGetSize(hDim: TGDALDimensionH): TGUInt64; cdecl; external libgdal;
 function GDALDimensionGetIndexingVariable(hDim: TGDALDimensionH): TGDALMDArrayH; cdecl; external libgdal;
 function GDALDimensionSetIndexingVariable(hDim: TGDALDimensionH; hArray: TGDALMDArrayH): longint; cdecl; external libgdal;
-function GDALDimensionRename(hDim: TGDALDimensionH; pszNewName: pchar): Tbool; cdecl; external libgdal;
+function GDALDimensionRename(hDim: TGDALDimensionH; pszNewName: pchar): boolean; cdecl; external libgdal;
 
 // === Konventiert am: 2-10-26 16:32:45 ===
 

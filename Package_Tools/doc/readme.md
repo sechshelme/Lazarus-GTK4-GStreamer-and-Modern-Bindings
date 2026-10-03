@@ -129,7 +129,7 @@ Im Browser: http://localhost:3000
 # Release Updaten
 ```
 #!/bin/bash
-VERSION="10.26test"
+VERSION="10.26"
 git archive --format=zip HEAD -o "Lazarus-GNOME-${VERSION}-packages.zip"
 zip -d "Lazarus-GNOME-${VERSION}-packages.zip" "**/C-include/"
 gh release create "${VERSION}" "./Lazarus-GNOME-${VERSION}-packages.zip" --title "Lazarus-GNOME-${VERSION}" --notes "release Lazarus-GNOME-${VERSION}"

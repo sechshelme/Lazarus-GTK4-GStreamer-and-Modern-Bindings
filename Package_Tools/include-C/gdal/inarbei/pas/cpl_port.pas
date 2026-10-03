@@ -38,6 +38,7 @@ type
   PGIntBig = ^TGIntBig;
   TGIntBig = int64;
 
+  PPGUIntBig = ^PGUIntBig;
   PGUIntBig = ^TGUIntBig;
   TGUIntBig = uint64;
 

@@ -13,6 +13,9 @@ const
 
   type
   Tint64_t=Int64;
+  Pint64_t=^Tint64_t;
+  Tuint64_t=UInt64;
+  Puint64_t=^Tuint64_t;
 
   Tsize_t=SizeUInt;
   Psize_t=^Tsize_t;
