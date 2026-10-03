@@ -12,6 +12,8 @@ const
   {$ENDIF}
 
   type
+  Tint64_t=Int64;
+
   Tsize_t=SizeUInt;
   Psize_t=^Tsize_t;
 

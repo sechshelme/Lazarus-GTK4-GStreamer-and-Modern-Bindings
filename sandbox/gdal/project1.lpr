@@ -21,8 +21,10 @@ cpl_spawn,
 cpl_string,
 cpl_time,
 cpl_virtualmem,
+ogr_core,
 
 ogr_srs_api,
+ogr_api,
 
 
 gdal,
@@ -40,8 +42,6 @@ gdalwarper,
 gnm,
 gnm_api,
 memdataset,
-ogr_api,
-ogr_core,
 ogr_geocoding,
 ogr_recordbatch,
 
