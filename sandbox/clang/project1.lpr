@@ -1,16 +1,18 @@
 program project1;
 
 uses
-  BuildSystem,
-  CXCompilationDatabase,
-  CXDiagnostic,
   CXErrorCode,
+  CXString,
+  CXCompilationDatabase,
   CXFile,
   CXSourceLocation,
-  CXString,
+  CXDiagnostic,
+  BuildSystem,
+
+  Index,
+
   Documentation,
   FatalErrorHandler,
-  Index,
   Rewrite,
 
   fp_llvm,

@@ -11,6 +11,11 @@ const
   libclang = 'clang.dll';
   {$ENDIF}
 
+  type
+  Tsize_t=SizeUInt;
+  Psize_t          =^Tsize_t;
+
+  Ttime_t=UInt64;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
