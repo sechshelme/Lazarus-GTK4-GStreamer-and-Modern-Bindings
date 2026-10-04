@@ -44,8 +44,8 @@ function CPLAtofM(para1: pchar): double; cdecl; external libgdal;
 
 function CPLScanString(para1: pchar; para2: longint; para3: longint; para4: longint): pchar; cdecl; external libgdal;
 function CPLScanDouble(para1: pchar; para2: longint): double; cdecl; external libgdal;
-function CPLScanLong(para1: pchar; para2: longint): longint; cdecl; external libgdal;
-function CPLScanULong(para1: pchar; para2: longint): dword; cdecl; external libgdal;
+function CPLScanLong(para1: pchar; para2: longint): Tclong; cdecl; external libgdal;
+function CPLScanULong(para1: pchar; para2: longint): Tculong; cdecl; external libgdal;
 function CPLScanUIntBig(para1: pchar; para2: longint): TGUIntBig; cdecl; external libgdal;
 function CPLAtoGIntBig(pszString: pchar): TGIntBig; cdecl; external libgdal;
 function CPLAtoGIntBigEx(pszString: pchar; bWarn: longint; pbOverflow: Plongint): TGIntBig; cdecl; external libgdal;

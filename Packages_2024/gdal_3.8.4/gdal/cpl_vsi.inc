@@ -3,8 +3,8 @@
 
 function VSIFOpen(para1: pchar; para2: pchar): PFILE; cdecl; external libgdal;
 function VSIFClose(para1: PFILE): longint; cdecl; external libgdal;
-function VSIFSeek(para1: PFILE; para2: longint; para3: longint): longint; cdecl; external libgdal;
-function VSIFTell(para1: PFILE): longint; cdecl; external libgdal;
+function VSIFSeek(para1: PFILE; para2: Tclong; para3: longint): longint; cdecl; external libgdal;
+function VSIFTell(para1: PFILE): Tclong; cdecl; external libgdal;
 procedure VSIRewind(para1: PFILE); cdecl; external libgdal;
 procedure VSIFFlush(para1: PFILE); cdecl; external libgdal;
 function VSIFRead(para1: pointer; para2: Tsize_t; para3: Tsize_t; para4: PFILE): Tsize_t; cdecl; external libgdal;
@@ -140,8 +140,8 @@ type
 
 function VSIGetNextDirEntry(dir: PVSIDIR): PVSIDIREntry; cdecl; external libgdal;
 procedure VSICloseDir(dir: PVSIDIR); cdecl; external libgdal;
-function VSIMkdir(pszPathname: pchar; mode: longint): longint; cdecl; external libgdal;
-function VSIMkdirRecursive(pszPathname: pchar; mode: longint): longint; cdecl; external libgdal;
+function VSIMkdir(pszPathname: pchar; mode: Tclong): longint; cdecl; external libgdal;
+function VSIMkdirRecursive(pszPathname: pchar; mode: Tclong): longint; cdecl; external libgdal;
 function VSIRmdir(pszDirname: pchar): longint; cdecl; external libgdal;
 function VSIRmdirRecursive(pszDirname: pchar): longint; cdecl; external libgdal;
 function VSIUnlink(pszFilename: pchar): longint; cdecl; external libgdal;
@@ -202,7 +202,7 @@ type
   TVSIFilesystemPluginStatCallback = function(pUserData: pointer; pszFilename: pchar; pStatBuf: PVSIStatBufL; nFlags: longint): longint; cdecl;
   TVSIFilesystemPluginUnlinkCallback = function(pUserData: pointer; pszFilename: pchar): longint; cdecl;
   TVSIFilesystemPluginRenameCallback = function(pUserData: pointer; oldpath: pchar; newpath: pchar): longint; cdecl;
-  TVSIFilesystemPluginMkdirCallback = function(pUserData: pointer; pszDirname: pchar; nMode: longint): longint; cdecl;
+  TVSIFilesystemPluginMkdirCallback = function(pUserData: pointer; pszDirname: pchar; nMode: Tclong): longint; cdecl;
   TVSIFilesystemPluginRmdirCallback = function(pUserData: pointer; pszDirname: pchar): longint; cdecl;
   TVSIFilesystemPluginReadDirCallback = function(pUserData: pointer; pszDirname: pchar; nMaxFiles: longint): PPchar; cdecl;
   TVSIFilesystemPluginSiblingFilesCallback = function(pUserData: pointer; pszDirname: pchar): PPchar; cdecl;
@@ -249,8 +249,8 @@ function VSIAllocFilesystemPluginCallbacksStruct: PVSIFilesystemPluginCallbacksS
 procedure VSIFreeFilesystemPluginCallbacksStruct(poCb: PVSIFilesystemPluginCallbacksStruct); cdecl; external libgdal;
 function VSIInstallPluginHandler(pszPrefix: pchar; poCb: PVSIFilesystemPluginCallbacksStruct): longint; cdecl; external libgdal;
 
-function VSITime(para1: Pdword): dword; cdecl; external libgdal;
-function VSICTime(para1: dword): pchar; cdecl; external libgdal;
+function VSITime(para1: Pculong): dword; cdecl; external libgdal;
+function VSICTime(para1: Tculong): pchar; cdecl; external libgdal;
 function VSIGMTime(pnTime: Ptime_t; poBrokenTime: Ptm): Ptm; cdecl; external libgdal;
 function VSILocalTime(pnTime: Ptime_t; poBrokenTime: Ptm): Ptm; cdecl; external libgdal;
 

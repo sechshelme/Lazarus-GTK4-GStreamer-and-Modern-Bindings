@@ -4,7 +4,7 @@
 type
   PCPLHashSet = type Pointer;
 
-  TCPLHashSetHashFunc = function(elt: pointer): dword; cdecl;
+  TCPLHashSetHashFunc = function(elt: pointer): Tculong; cdecl;
   TCPLHashSetEqualFunc = function(elt1: pointer; elt2: pointer): longint; cdecl;
   TCPLHashSetFreeEltFunc = procedure(elt: pointer); cdecl;
   TCPLHashSetIterEltFunc = function(elt: pointer; user_data: pointer): longint; cdecl;
@@ -18,9 +18,9 @@ function CPLHashSetInsert(set_: PCPLHashSet; elt: pointer): longint; cdecl; exte
 function CPLHashSetLookup(set_: PCPLHashSet; elt: pointer): pointer; cdecl; external libgdal;
 function CPLHashSetRemove(set_: PCPLHashSet; elt: pointer): longint; cdecl; external libgdal;
 function CPLHashSetRemoveDeferRehash(set_: PCPLHashSet; elt: pointer): longint; cdecl; external libgdal;
-function CPLHashSetHashPointer(elt: pointer): dword; cdecl; external libgdal;
+function CPLHashSetHashPointer(elt: pointer): Tculong; cdecl; external libgdal;
 function CPLHashSetEqualPointer(elt1: pointer; elt2: pointer): longint; cdecl; external libgdal;
-function CPLHashSetHashStr(pszStr: pointer): dword; cdecl; external libgdal;
+function CPLHashSetHashStr(pszStr: pointer): Tculong; cdecl; external libgdal;
 function CPLHashSetEqualStr(pszStr1: pointer; pszStr2: pointer): longint; cdecl; external libgdal;
 
 // === Konventiert am: 2-10-26 15:57:13 ===

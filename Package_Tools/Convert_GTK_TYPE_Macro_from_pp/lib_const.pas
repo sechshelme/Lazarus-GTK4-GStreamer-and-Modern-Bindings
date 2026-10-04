@@ -376,6 +376,7 @@ const
     (libs: 'libgifti'; units: 'fp_nifti'),
     (libs: 'libmlt'; units: 'fp_mlt'),
     (libs: 'libgdal'; units: 'fp_gdal'),
+    (libs: 'libgclang'; units: 'fp_clang'),
 
 
 

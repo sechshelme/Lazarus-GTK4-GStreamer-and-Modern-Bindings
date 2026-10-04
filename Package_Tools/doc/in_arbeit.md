@@ -928,6 +928,7 @@ Achtung, die mir Curl geben nur die neusten Issues aus
 ## Github
 ```sh
 gh search issues "author:sechshelme" -L 100
+
 curl -s -H "User-Agent: Mozilla" "https://api.github.com/search/issues?q=author:sechshelme+type:issue" | jq -r '.items[] | "[\(.state)]\t#\(.number)\t\(.title)"'
 ```
 

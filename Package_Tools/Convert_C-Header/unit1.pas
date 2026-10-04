@@ -75,7 +75,7 @@ var
   s: string;
 begin
   Memo1.Clear;
-  slFile := FindAllFiles('/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/gdal', '*.h', True);
+  slFile := FindAllFiles('/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/clang-c', '*.h', True);
   Memo1.Lines := slFile;
 
   for i := 0 to slFile.Count - 1 do begin
@@ -116,13 +116,11 @@ begin
       slHeader[j] := StringReplace(slHeader[j], 'G_DEFINE_AUTOPTR_CLEANUP_FUNC', '//G_DEFINE_AUTOPTR_CLEANUP_FUNC ', [rfReplaceAll]);
 
 
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_C_START', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_C_END', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_DLL', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_STDCALL', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_WARN_UNUSED_RESULT', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_RETURNS_NONNULL', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'CPL_NO_RETURN', '', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'LLVM_CLANG_C_EXTERN_C_BEGIN', '', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'LLVM_CLANG_C_EXTERN_C_END', '', [rfReplaceAll]);
+
+
+      slHeader[j] := StringReplace(slHeader[j], 'CINDEX_LINKAGE', 'extern', [rfReplaceAll]);
 
 
       slHeader[j] := checkAvaiables(slHeader[j]);

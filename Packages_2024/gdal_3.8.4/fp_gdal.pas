@@ -27,6 +27,19 @@ type
   Pwchar_t = type Pointer;
   Tva_list = type Pointer; // ????
 
+type
+  {$IFDEF Linux}
+  Tclong = int64;
+  Tculong = uint64;
+  {$ENDIF}
+
+  {$IFDEF Windows}
+  Tclong = int32;
+  Tculong = uint32;
+  {$ENDIF}
+  Pclong = ^Tclong;
+  Pculong = ^Tculong;
+
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
