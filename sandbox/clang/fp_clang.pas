@@ -4,11 +4,11 @@ interface
 
 const
   {$IFDEF Linux}
-  libgclang = 'clang'; // ????
+  libclang = 'clang-20';
   {$ENDIF}
 
   {$IFDEF Windows}
-  libclang = 'clang.dll';
+  libclang = 'clang-20.dll';
   {$ENDIF}
 
   type

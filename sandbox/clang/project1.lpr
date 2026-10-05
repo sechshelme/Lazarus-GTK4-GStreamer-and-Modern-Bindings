@@ -8,9 +8,7 @@ uses
   CXSourceLocation,
   CXDiagnostic,
   BuildSystem,
-
   Index,
-
   Documentation,
   FatalErrorHandler,
   Rewrite,
@@ -18,58 +16,100 @@ uses
   fp_llvm,
   fp_clang;
 
+const
+  sourcePath = '/home/tux/Schreibtisch/gtk4_2/main.c';
 
-enum CXChildVisitResult inspect_ast(CXCursor cursor, CXCursor parent, CXClientData client_data) {
-    // 1. Die genaue Quellcode-Position des aktuellen Elements ermitteln
-    CXSourceLocation location = clang_getCursorLocation(cursor);
+  function inspect_ast(cursor: TCXCursor; parent: TCXCursor; client_data: TCXClientData): TCXChildVisitResult; cdecl;
+  const
+    counter: integer = 0;
+  var
+    location: TCXSourceLocation;
+    kind: TCXCursorKind;
+    name, filename: pchar;
+    spelling, cx_filename_str: TCXString;
+    cx_file: TCXFile = nil;
+  begin
+    inc(counter);
+    kind := clang_getCursorKind(cursor);
+    spelling := clang_getCursorSpelling(cursor);
+    name := clang_getCString(spelling);
 
-    // 2. Prüfen, ob das Element aus einem System-Header (wie stdio.h) stammt
-    if (clang_Location_isInSystemHeader(location)) {
-        // Ignorieren und mit dem nächsten Element fortfahren
-        return CXChildVisit_Continue;
-    }
+    location := clang_getCursorLocation(cursor);
+    clang_getSpellingLocation(location, @cx_file, nil, nil, nil);
 
-    // Ab hier wird nur noch dein eigener Code verarbeitet!
-    enum CXCursorKind kind = clang_getCursorKind(cursor);
-    CXString spelling = clang_getCursorSpelling(cursor);
-    const char* name = clang_getCString(spelling);
+    Write('cnt:', counter: 5);
+    if cx_file <> nil then begin
+      cx_filename_str := clang_getFileName(cx_file);
+      filename := clang_getCString(cx_filename_str);
+      Write(filename: 46, '   ');
+    end else begin
+      Write('[Compiler Built-in]': 46, '   ');
+    end;
 
-    if (kind == CXCursor_FunctionDecl) {
-        printf("Eigene C-Funktion gefunden: %s\n", name);
-    } else if (kind == CXCursor_VarDecl) {
-        printf("Eigene Variable deklariert: %s\n", name);
-    }
+    case kind of
+      CXCursor_FunctionDecl: begin
+        WriteLn('Funktion gefunden: ', name);
+      end;
+      CXCursor_VarDecl: begin
+        WriteLn('Variable deklariert: ', name);
+      end;
+      else begin
+        WriteLn('kind: (', kind, ')  ', name);
+      end;
+    end;
 
     clang_disposeString(spelling);
-    return CXChildVisit_Recurse;
-}
+    if cx_file <> nil then begin
+      clang_disposeString(cx_filename_str);
+    end;
 
+    if clang_Location_isInSystemHeader(location) <> 0 then begin
+      Exit(CXChildVisit_Continue);
+    end;
+
+    Result := CXChildVisit_Recurse;
+  end;
 
   procedure main;
+  var
+    index: TCXIndex;
+    tu: TCXTranslationUnit;
+    root_cursor: TCXCursor;
+  const
+    arg: array of pchar = (
+      '-I/usr/include/gtk-4.0',
+      '-I/usr/include/pango-1.0',
+      '-I/usr/include/glib-2.0',
+      '-I/usr/lib/x86_64-linux-gnu/glib-2.0/include',
+      '-I/usr/include/harfbuzz',
+      '-I/usr/include/freetype2',
+      '-I/usr/include/libpng16',
+      '-I/usr/include/libmount',
+      '-I/usr/include/blkid',
+      '-I/usr/include/fribidi',
+      '-I/usr/include/cairo',
+      '-I/usr/include/pixman-1',
+      '-I/usr/include/gdk-pixbuf-2.0',
+      '-I/usr/include/x86_64-linux-gnu',
+      '-I/usr/include/webp',
+      '-I/usr/include/graphene-1.0',
+      '-I/usr/lib/x86_64-linux-gnu/graphene-1.0/include');
+
   begin
-    // 1. Index erstellen
-    CXIndex index = clang_createIndex(0, 0);
+    index := clang_createIndex(0, 1);
+    tu := clang_parseTranslationUnit(index, sourcePath, PPChar(arg), Length(arg), nil, 0, CXTranslationUnit_None);
+    //    tu := clang_parseTranslationUnit(index, sourcePath, nil, 0, nil, 0, CXTranslationUnit_None);
 
-    // 2. C-Datei parsen (Erstellt die "Translation Unit")
-    CXTranslationUnit tu = clang_parseTranslationUnit(
-        index, "main.c", NULL, 0, NULL, 0, CXTranslationUnit_None
-    );
+    if tu = nil then begin
+      WriteLn('Fehler beim Parsen.');
+      Exit;
+    end;
 
-    if (tu == NULL) {
-        printf("Fehler beim Parsen.\n");
-        return 1;
-    }
+    root_cursor := clang_getTranslationUnitCursor(tu);
+    clang_visitChildren(root_cursor, @inspect_ast, nil);
 
-    // 3. Den Wurzelknoten des AST holen
-    CXCursor root_cursor = clang_getTranslationUnitCursor(tu);
-
-    // 4. Den Baum abwandern und unsere Funktion aufrufen
-    clang_visitChildren(root_cursor, inspect_ast, NULL);
-
-    // Speicher freigeben
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index);
-    return 0;
   end;
 
 begin

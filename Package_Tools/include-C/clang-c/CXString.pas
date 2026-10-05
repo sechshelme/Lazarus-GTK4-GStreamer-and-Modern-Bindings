@@ -23,9 +23,9 @@ type
     Count: dword;
   end;
 
-function clang_getCString(_string: TCXString): pchar; cdecl; external libgclang;
-procedure clang_disposeString(_string: TCXString); cdecl; external libgclang;
-procedure clang_disposeStringSet(set_: PCXStringSet); cdecl; external libgclang;
+function clang_getCString(_string: TCXString): pchar; cdecl; external libclang;
+procedure clang_disposeString(_string: TCXString); cdecl; external libclang;
+procedure clang_disposeStringSet(set_: PCXStringSet); cdecl; external libclang;
 
 // === Konventiert am: 4-10-26 17:29:49 ===
 
