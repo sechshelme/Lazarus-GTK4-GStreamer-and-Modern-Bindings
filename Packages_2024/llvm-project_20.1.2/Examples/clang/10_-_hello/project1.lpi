@@ -25,15 +25,12 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="fp_llvm_package"/>
+        <PackageName Value="fp_llvm_project_package"/>
       </Item>
     </RequiredPackages>
     <Units>
       <Unit>
         <Filename Value="project1.lpr"/>
-      </Unit>
-      <Unit>
-        <Filename Value="fp_clang.pas"/>
       </Unit>
     </Units>
   </ProjectOptions>

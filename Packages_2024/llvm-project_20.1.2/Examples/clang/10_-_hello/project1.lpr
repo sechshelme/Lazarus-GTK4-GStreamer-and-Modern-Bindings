@@ -1,20 +1,8 @@
 program project1;
 
 uses
-  CXErrorCode,
-  CXString,
-  CXCompilationDatabase,
-  CXFile,
-  CXSourceLocation,
-  CXDiagnostic,
-  BuildSystem,
-  Index,
-  Documentation,
-  FatalErrorHandler,
-  Rewrite,
-
-  fp_llvm,
-  fp_clang;
+  fp_clang,
+  fp_llvm;
 
 const
   sourcePath = '/home/tux/Schreibtisch/gtk4_2/main.c';

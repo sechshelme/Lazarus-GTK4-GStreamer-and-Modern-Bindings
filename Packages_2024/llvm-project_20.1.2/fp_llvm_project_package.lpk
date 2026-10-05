@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="5">
-    <Name Value="fp_llvm_package"/>
+    <Name Value="fp_llvm_project_package"/>
     <Type Value="RunAndDesignTime"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -13,6 +13,10 @@
       <Item>
         <Filename Value="fp_llvm.pas"/>
         <UnitName Value="fp_llvm"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_clang.pas"/>
+        <UnitName Value="fp_clang"/>
       </Item>
     </Files>
     <RequiredPkgs>

@@ -2,13 +2,13 @@
   This source is only used to compile and install the package.
  }
 
-unit fp_llvm_package;
+unit fp_llvm_project_package;
 
 {$warn 5023 off : no warning about unused units}
 interface
 
 uses
-  fp_llvm, LazarusPackageIntf;
+  fp_llvm, fp_clang, LazarusPackageIntf;
 
 implementation
 
@@ -17,5 +17,5 @@ begin
 end;
 
 initialization
-  RegisterPackage('fp_llvm_package', @Register);
+  RegisterPackage('fp_llvm_project_package', @Register);
 end.
