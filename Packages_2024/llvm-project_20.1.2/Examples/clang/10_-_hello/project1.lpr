@@ -5,7 +5,7 @@ uses
   fp_llvm;
 
 const
-  sourcePath = '/home/tux/Schreibtisch/gtk4_2/main.c';
+  sourcePath = 'test.c';
 
   function inspect_ast(cursor: TCXCursor; parent: TCXCursor; client_data: TCXClientData): TCXChildVisitResult; cdecl;
   const
@@ -16,6 +16,7 @@ const
     name, filename: pchar;
     spelling, cx_filename_str: TCXString;
     cx_file: TCXFile = nil;
+    curstr: String;
   begin
     inc(counter);
     kind := clang_getCursorKind(cursor);
@@ -29,22 +30,39 @@ const
     if cx_file <> nil then begin
       cx_filename_str := clang_getFileName(cx_file);
       filename := clang_getCString(cx_filename_str);
-      Write(filename: 46, '   ');
+      Write(filename: 56, '   ');
     end else begin
-      Write('[Compiler Built-in]': 46, '   ');
+      Write('[Compiler Built-in]': 56, '   ');
     end;
+
+    Write('  (', kind:4, ')  ');
 
     case kind of
       CXCursor_FunctionDecl: begin
-        WriteLn('Funktion gefunden: ', name);
+          curstr:='function';
+      end;
+      CXCursor_CallExpr: begin
+          curstr:='call';
+      end;
+      CXCursor_CompoundStmt: begin
+          curstr:='{}';
+      end;
+      CXCursor_ReturnStmt: begin
+          curstr:='return';
       end;
       CXCursor_VarDecl: begin
-        WriteLn('Variable deklariert: ', name);
+        curstr:='variables';
+      end;
+      CXCursor_StringLiteral: begin
+        curstr:='string';
       end;
       else begin
-        WriteLn('kind: (', kind, ')  ', name);
+        curstr:='(unknow)';
       end;
     end;
+
+    WriteLn(curstr,'   ', name);
+
 
     clang_disposeString(spelling);
     if cx_file <> nil then begin
@@ -65,23 +83,7 @@ const
     root_cursor: TCXCursor;
   const
     arg: array of pchar = (
-      '-I/usr/include/gtk-4.0',
-      '-I/usr/include/pango-1.0',
-      '-I/usr/include/glib-2.0',
-      '-I/usr/lib/x86_64-linux-gnu/glib-2.0/include',
-      '-I/usr/include/harfbuzz',
-      '-I/usr/include/freetype2',
-      '-I/usr/include/libpng16',
-      '-I/usr/include/libmount',
-      '-I/usr/include/blkid',
-      '-I/usr/include/fribidi',
-      '-I/usr/include/cairo',
-      '-I/usr/include/pixman-1',
-      '-I/usr/include/gdk-pixbuf-2.0',
-      '-I/usr/include/x86_64-linux-gnu',
-      '-I/usr/include/webp',
-      '-I/usr/include/graphene-1.0',
-      '-I/usr/lib/x86_64-linux-gnu/graphene-1.0/include');
+      '-I/usr/include');
 
   begin
     index := clang_createIndex(0, 1);
