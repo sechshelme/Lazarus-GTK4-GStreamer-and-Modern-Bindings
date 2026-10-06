@@ -37,32 +37,38 @@ const
 
     Write('  (', kind:4, ')  ');
 
-    case kind of
-      CXCursor_FunctionDecl: begin
-          curstr:='function';
-      end;
-      CXCursor_CallExpr: begin
-          curstr:='call';
-      end;
-      CXCursor_CompoundStmt: begin
-          curstr:='{}';
-      end;
-      CXCursor_ReturnStmt: begin
-          curstr:='return';
-      end;
-      CXCursor_VarDecl: begin
-        curstr:='variables';
-      end;
-      CXCursor_StringLiteral: begin
-        curstr:='string';
-      end;
-      else begin
-        curstr:='(unknow)';
-      end;
-    end;
+    //case kind of
+    //  CXCursor_FunctionDecl: begin
+    //      curstr:='function';
+    //  end;
+    //  CXCursor_CallExpr: begin
+    //      curstr:='call';
+    //  end;
+    //  CXCursor_CompoundStmt: begin
+    //      curstr:='{';
+    //  end;
+    //  CXCursor_ReturnStmt: begin
+    //      curstr:='return';
+    //  end;
+    //  CXCursor_VarDecl: begin
+    //    curstr:='variables';
+    //  end;
+    //  CXCursor_StringLiteral: begin
+    //    curstr:='string';
+    //  end;
+    //  CXCursor_IfStmt: begin         // Wert: 200
+    //      curstr := 'if-statement';
+    //  end;
+    //  CXCursor_BinaryOperator: begin // Wert: 114
+    //      curstr := 'operator';
+    //  end;
+    //  else begin
+    //    curstr:='(unknow)';
+    //  end;
+    //end;
 
+    curstr:='';;
     WriteLn(curstr,'   ', name);
-
 
     clang_disposeString(spelling);
     if cx_file <> nil then begin
