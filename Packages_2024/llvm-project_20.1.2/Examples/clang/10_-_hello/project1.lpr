@@ -5,78 +5,63 @@ uses
   fp_llvm;
 
 const
-  sourcePath = 'test.c';
+  sourcePath = '../test_file.c';
+
+type
+  TNodeStack = record
+    Cursors: array [0..512] of TCXCursor;
+    Count: integer;
+  end;
+  PNodeStack = ^TNodeStack;
 
   function inspect_ast(cursor: TCXCursor; parent: TCXCursor; client_data: TCXClientData): TCXChildVisitResult; cdecl;
-  const
-    counter: integer = 0;
   var
     location: TCXSourceLocation;
     kind: TCXCursorKind;
     name, filename: pchar;
     spelling, cx_filename_str: TCXString;
+    kind_spelling: TCXString;
     cx_file: TCXFile = nil;
-    curstr: String;
+    line, column: cardinal;
+  const
+     stack: TNodeStack=();
   begin
-    inc(counter);
+    location := clang_getCursorLocation(cursor);
+    clang_getSpellingLocation(location, @cx_file, @line, @column, nil);
+
+    if clang_Location_isInSystemHeader(location) <> 0 then begin
+      Exit(CXChildVisit_Continue);
+    end;
+
+    while (stack.Count > 0) and (clang_equalCursors(stack.Cursors[stack.Count - 1], parent) = 0) do begin
+      Dec(stack.Count);
+    end;
+
     kind := clang_getCursorKind(cursor);
     spelling := clang_getCursorSpelling(cursor);
     name := clang_getCString(spelling);
 
-    location := clang_getCursorLocation(cursor);
-    clang_getSpellingLocation(location, @cx_file, nil, nil, nil);
-
-    Write('cnt:', counter: 5);
     if cx_file <> nil then begin
       cx_filename_str := clang_getFileName(cx_file);
       filename := clang_getCString(cx_filename_str);
-      Write(filename: 56, '   ');
+      Write(filename, ':', line: 3, ':', column: 2);
+      clang_disposeString(cx_filename_str);
     end else begin
-      Write('[Compiler Built-in]': 56, '   ');
+      Write('[Compiler Built-in]:': 20);
     end;
 
-    Write('  (', kind:4, ')  ');
+    kind_spelling := clang_getCursorKindSpelling(kind);
+    Write('  (', clang_getCString(kind_spelling): 22, ')  ');
+    clang_disposeString(kind_spelling);
 
-    //case kind of
-    //  CXCursor_FunctionDecl: begin
-    //      curstr:='function';
-    //  end;
-    //  CXCursor_CallExpr: begin
-    //      curstr:='call';
-    //  end;
-    //  CXCursor_CompoundStmt: begin
-    //      curstr:='{';
-    //  end;
-    //  CXCursor_ReturnStmt: begin
-    //      curstr:='return';
-    //  end;
-    //  CXCursor_VarDecl: begin
-    //    curstr:='variables';
-    //  end;
-    //  CXCursor_StringLiteral: begin
-    //    curstr:='string';
-    //  end;
-    //  CXCursor_IfStmt: begin         // Wert: 200
-    //      curstr := 'if-statement';
-    //  end;
-    //  CXCursor_BinaryOperator: begin // Wert: 114
-    //      curstr := 'operator';
-    //  end;
-    //  else begin
-    //    curstr:='(unknow)';
-    //  end;
-    //end;
-
-    curstr:='';;
-    WriteLn(curstr,'   ', name);
+    Write(StringOfChar(' ', stack.Count * 2));
+    WriteLn('-> ', name);
 
     clang_disposeString(spelling);
-    if cx_file <> nil then begin
-      clang_disposeString(cx_filename_str);
-    end;
 
-    if clang_Location_isInSystemHeader(location) <> 0 then begin
-      Exit(CXChildVisit_Continue);
+    if stack.Count < 512 then begin
+      stack.Cursors[stack.Count] := cursor;
+      Inc(stack.Count);
     end;
 
     Result := CXChildVisit_Recurse;
@@ -88,13 +73,11 @@ const
     tu: TCXTranslationUnit;
     root_cursor: TCXCursor;
   const
-    arg: array of pchar = (
-      '-I/usr/include');
+    arg: array of pchar = ('-I/usr/include');
 
   begin
     index := clang_createIndex(0, 1);
     tu := clang_parseTranslationUnit(index, sourcePath, PPChar(arg), Length(arg), nil, 0, CXTranslationUnit_None);
-    //    tu := clang_parseTranslationUnit(index, sourcePath, nil, 0, nil, 0, CXTranslationUnit_None);
 
     if tu = nil then begin
       WriteLn('Fehler beim Parsen.');
@@ -102,6 +85,7 @@ const
     end;
 
     root_cursor := clang_getTranslationUnitCursor(tu);
+
     clang_visitChildren(root_cursor, @inspect_ast, nil);
 
     clang_disposeTranslationUnit(tu);

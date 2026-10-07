@@ -10,7 +10,7 @@ uses
   fp_llvm;
 
 const
-  sourcePath = 'test.c';
+  sourcePath = '../test_file.c';
 
 type
   TAppData = record
@@ -36,7 +36,7 @@ type
     clang_getSpellingLocation(location, @cx_file, @line, @column, nil);
 
     if clang_Location_isInSystemHeader(location) <> 0 then begin
-      Exit(longint(CXChildVisit_Continue));
+      Exit(CXChildVisit_Continue);
     end;
 
     kind := clang_getCursorKind(cursor);
@@ -76,7 +76,7 @@ type
     clang_visitChildren(cursor, appData^.AstVisitor, appData);
     Dec(appData^.depth);
 
-    Result := longint(CXChildVisit_Continue);
+    Result := CXChildVisit_Continue;
   end;
 
   procedure main;
