@@ -11,10 +11,11 @@ type
     tv_sec: Int64;
     tv_usec: Int64;
   end;
+  PTimeVal = ^TTimeVal;
 
   {$asmmode intel}
 
-function ManualGetTimeOfDay(var tv: TTimeVal): Int64; assembler; nostackframe;
+function ManualGetTimeOfDay(tv: PTimeVal): Int64; assembler; nostackframe;
 asm
   mov rax, 96      // Syscall-Nummer 96 (sys_gettimeofday)
   mov rdi, tv      // Erster Parameter: Zeiger auf die Struktur
@@ -39,19 +40,17 @@ var
 
     GOMP_critical_name_start(@lock_stdout);
     writeln('thread ', omp_get_thread_num: 5, ' / ', omp_get_num_threads: 5);
-    WriteLn('r: ', r);
+    WriteLn('r: ', r:4:2);
     GOMP_critical_name_end(@lock_stdout);
   end;
 
   procedure main;
   var
     num_proc: longint;
-//    start, ende: TDateTime;
     start, ende: TTimeVal;
     maxt: integer;
   begin
-//    start := now;
-    ManualGetTimeOfDay(start);
+    ManualGetTimeOfDay(@start);
 
     num_proc := omp_get_num_procs;
     maxt := num_proc;;
@@ -65,11 +64,8 @@ var
     WriteLn('Hauptprozess');
     GOMP_critical_name_end(@lock_stdout);
     GOMP_parallel_end;
-//    ende := now;
-    ManualGetTimeOfDay(ende);
+    ManualGetTimeOfDay(@ende);
 
-
-//    WriteLn('Rechenzeit: ', TimeToStr(ende - start));
     WriteLn('Rechenzeit: ', ende.tv_sec - start.tv_sec);
   end;
 
