@@ -8,40 +8,41 @@ uses
 
 type
   TTimeVal = record
-    tv_sec: Int64;
-    tv_usec: Int64;
+    tv_sec: int64;
+    tv_usec: int64;
   end;
   PTimeVal = ^TTimeVal;
 
   {$asmmode intel}
 
-function ManualGetTimeOfDay(tv: PTimeVal): Int64; assembler; nostackframe;
-asm
-  mov rax, 96      // Syscall-Nummer 96 (sys_gettimeofday)
-  mov rdi, tv      // Erster Parameter: Zeiger auf die Struktur
-  xor rsi, rsi     // Zweiter Parameter: Zeitzone (NULL/0)
-  syscall          // Den Kernel aufrufen
-end;
-
-
-
-var
-  lock_stdout: Pointer = nil;
+  function ManualGetTimeOfDay(tv: PTimeVal): int64; assembler; nostackframe;
+  asm
+           Mov     Rax, 96      // Syscall-Nummer 96 (sys_gettimeofday)
+           Mov     Rdi, tv      // Erster Parameter: Zeiger auf die Struktur
+           Xor     Rsi, Rsi     // Zweiter Parameter: Zeitzone (NULL/0)
+           Syscall          // Den Kernel aufrufen
+  end;
 
   procedure worker(para1: pointer); cdecl;
   var
     r: double;
     i: int64;
+    counter:int64=0;
+    y: Integer;
   begin
     r := omp_get_thread_num;
     for i := 0 to 1000000000 do begin
-      r := sin(r * i);
+      for y := 0 to 10 do begin
+//      r := sin(r * i);
+      inc(counter);
+      end;
     end;
 
-    GOMP_critical_name_start(@lock_stdout);
+    GOMP_critical_start;
+    WriteLn('counter: ',counter);
     writeln('thread ', omp_get_thread_num: 5, ' / ', omp_get_num_threads: 5);
-    WriteLn('r: ', r:4:2);
-    GOMP_critical_name_end(@lock_stdout);
+    WriteLn('r: ', r: 4: 2);
+    GOMP_critical_end;
   end;
 
   procedure main;
@@ -53,16 +54,16 @@ var
     ManualGetTimeOfDay(@start);
 
     num_proc := omp_get_num_procs;
-    maxt := num_proc;;
-    maxt := 4;
+    maxt := num_proc;
     omp_set_num_threads(maxt);
     WriteLn('Kerne: ', num_proc);
     WriteLn('Threads gesamt: ', omp_get_max_threads);
 
     GOMP_parallel_start(@worker, nil, maxt);
-    GOMP_critical_name_start(@lock_stdout);
+    worker(nil);
+    GOMP_critical_start;
     WriteLn('Hauptprozess');
-    GOMP_critical_name_end(@lock_stdout);
+    GOMP_critical_end;
     GOMP_parallel_end;
     ManualGetTimeOfDay(@ende);
 

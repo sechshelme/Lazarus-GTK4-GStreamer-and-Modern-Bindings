@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2024 Free Software Foundation, Inc.
    Contributed by Richard Henderson <rth@redhat.com>.
 
    This file is part of the GNU Offloading and Multi Processing Library
@@ -27,15 +27,25 @@
 #define _OMP_H 1
 
 
- typedef struct
+
+#ifndef _LIBGOMP_OMP_LOCK_DEFINED
+#define _LIBGOMP_OMP_LOCK_DEFINED 1
+/* These two structures get edited by the libgomp build process to 
+   reflect the shape of the two types.  Their internals are private
+   to the library.  */
+
+typedef struct
 {
   unsigned char _x[4] 
-  
+  //  __attribute__((__aligned__(4)))
+;
 } omp_lock_t;
 
 typedef struct
 {
-  unsigned char _x[8 + sizeof (void *)] 
+  unsigned char _x[16] 
+//    __attribute__((__aligned__(8)))
+;
 } omp_nest_lock_t;
 
 typedef enum omp_sched_t
@@ -52,6 +62,8 @@ typedef enum omp_proc_bind_t
   omp_proc_bind_false = 0,
   omp_proc_bind_true = 1,
   omp_proc_bind_primary = 2,
+  omp_proc_bind_master 
+    = omp_proc_bind_primary,
   omp_proc_bind_close = 3,
   omp_proc_bind_spread = 4
 } omp_proc_bind_t;
@@ -59,35 +71,41 @@ typedef enum omp_proc_bind_t
 typedef enum omp_sync_hint_t
 {
   omp_sync_hint_none = 0,
+  omp_lock_hint_none  = omp_sync_hint_none,
   omp_sync_hint_uncontended = 1,
+  omp_lock_hint_uncontended  = omp_sync_hint_uncontended,
   omp_sync_hint_contended = 2,
+  omp_lock_hint_contended  = omp_sync_hint_contended,
   omp_sync_hint_nonspeculative = 4,
+  omp_lock_hint_nonspeculative 
+    = omp_sync_hint_nonspeculative,
   omp_sync_hint_speculative = 8,
+  omp_lock_hint_speculative  = omp_sync_hint_speculative
 } omp_sync_hint_t;
 
 typedef  omp_sync_hint_t omp_lock_hint_t;
 
-typedef struct  omp_depend_t
-{
-  char __omp_depend_t__[2 * sizeof (void *)];
-} omp_depend_t;
+//typedef struct __attribute__((__aligned__ (sizeof (void *)))) omp_depend_t
+//{
+//  char [2 * sizeof (void *)];
+//} omp_depend_t;
 
 typedef enum omp_pause_resource_t
 {
   omp_pause_soft = 1,
-  omp_pause_hard = 2,
+  omp_pause_hard = 2
 } omp_pause_resource_t;
 
 typedef __UINTPTR_TYPE__ omp_uintptr_t;
 
-
-typedef enum omp_memspace_handle_t
+typedef enum omp_memspace_handle_t 
 {
   omp_default_mem_space = 0,
   omp_large_cap_mem_space = 1,
   omp_const_mem_space = 2,
   omp_high_bw_mem_space = 3,
   omp_low_lat_mem_space = 4,
+  __omp_memspace_handle_t_max__ = __UINTPTR_MAX__
 } omp_memspace_handle_t;
 
 typedef enum omp_allocator_handle_t 
@@ -101,6 +119,7 @@ typedef enum omp_allocator_handle_t
   omp_cgroup_mem_alloc = 6,
   omp_pteam_mem_alloc = 7,
   omp_thread_mem_alloc = 8,
+  __omp_allocator_handle_t_max__ = __UINTPTR_MAX__
 } omp_allocator_handle_t;
 
 typedef enum omp_alloctrait_key_t
@@ -123,6 +142,7 @@ typedef enum omp_alloctrait_value_t
   omp_atv_contended = 3,
   omp_atv_uncontended = 4,
   omp_atv_serialized = 5,
+  omp_atv_sequential  = omp_atv_serialized,
   omp_atv_private = 6,
   omp_atv_all = 7,
   omp_atv_thread = 8,
@@ -146,10 +166,10 @@ typedef struct omp_alloctrait_t
 
 typedef enum omp_event_handle_t 
 {
-xxxxxxxxxxxxxx
+  __omp_event_handle_t_max__ = __UINTPTR_MAX__
 } omp_event_handle_t;
 
-enum xxxxxxxxx
+enum xxxxxx
 {
   omp_initial_device = -1,
   omp_invalid_device = -4
@@ -230,72 +250,69 @@ extern int omp_get_max_teams (void) ;
 extern void omp_set_teams_thread_limit (int) ;
 extern int omp_get_teams_thread_limit (void) ;
 
-extern void *omp_target_alloc (size_t, int) ;
+extern void *omp_target_alloc (__SIZE_TYPE__, int) ;
 extern void omp_target_free (void *, int) ;
 extern int omp_target_is_present (const void *, int) ;
-extern int omp_target_memcpy (void *, const void *, size_t,
-			      size_t, size_t, int, int)
+extern int omp_target_memcpy (void *, const void *, __SIZE_TYPE__,
+			      __SIZE_TYPE__, __SIZE_TYPE__, int, int)
   ;
-extern int omp_target_memcpy_async (void *, const void *, size_t,
-				    size_t, size_t, int, int,
+extern int omp_target_memcpy_async (void *, const void *, __SIZE_TYPE__,
+				    __SIZE_TYPE__, __SIZE_TYPE__, int, int,
 				    int, omp_depend_t *)
   ;
-extern int omp_target_memcpy_rect (void *, const void *, size_t, int,
-				   const size_t *,
-				   const size_t *,
-				   const size_t *,
-				   const size_t *,
-				   const size_t *, int, int)
+extern int omp_target_memcpy_rect (void *, const void *, __SIZE_TYPE__, int,
+				   const __SIZE_TYPE__ *,
+				   const __SIZE_TYPE__ *,
+				   const __SIZE_TYPE__ *,
+				   const __SIZE_TYPE__ *,
+				   const __SIZE_TYPE__ *, int, int)
   ;
-extern int omp_target_memcpy_rect_async (void *, const void *, size_t,
-					 int, const size_t *,
-					 const size_t *,
-					 const size_t *,
-					 const size_t *,
-					 const size_t *, int, int, int,
+extern int omp_target_memcpy_rect_async (void *, const void *, __SIZE_TYPE__,
+					 int, const __SIZE_TYPE__ *,
+					 const __SIZE_TYPE__ *,
+					 const __SIZE_TYPE__ *,
+					 const __SIZE_TYPE__ *,
+					 const __SIZE_TYPE__ *, int, int, int,
 					 omp_depend_t *)
   ;
-extern int omp_target_associate_ptr (const void *, const void *, size_t,
-				     size_t, int) ;
+extern int omp_target_associate_ptr (const void *, const void *, __SIZE_TYPE__,
+				     __SIZE_TYPE__, int) ;
 extern int omp_target_disassociate_ptr (const void *, int) ;
 extern void *omp_get_mapped_ptr (const void *, int) ;
-extern int omp_target_is_accessible (const void *, size_t, int)
+extern int omp_target_is_accessible (const void *, __SIZE_TYPE__, int)
   ;
 
 extern void omp_set_affinity_format (const char *) ;
-extern size_t omp_get_affinity_format (char *, size_t)
+extern __SIZE_TYPE__ omp_get_affinity_format (char *, __SIZE_TYPE__)
   ;
 extern void omp_display_affinity (const char *) ;
-extern size_t omp_capture_affinity (char *, size_t, const char *)
+extern __SIZE_TYPE__ omp_capture_affinity (char *, __SIZE_TYPE__, const char *)
   ;
 
 extern int omp_pause_resource (omp_pause_resource_t, int) ;
 extern int omp_pause_resource_all (omp_pause_resource_t) ;
 
-extern omp_allocator_handle_t omp_init_allocator (omp_memspace_handle_t,
-						  int,
-						  const omp_alloctrait_t *)
-  ;
+//xxxxx extern omp_allocator_handle_t omp_init_allocator (omp_memspace_handle_t, int, const omp_alloctrait_t [])  ;
 extern void omp_destroy_allocator (omp_allocator_handle_t) ;
 extern void omp_set_default_allocator (omp_allocator_handle_t) ;
 extern omp_allocator_handle_t omp_get_default_allocator (void) ;
 extern void omp_free (void *,
 		      omp_allocator_handle_t )
   ;
-
-
-extern void *omp_alloc (size_t,
+extern void *omp_alloc (__SIZE_TYPE__,
 			omp_allocator_handle_t );
-extern void *omp_aligned_alloc (size_t, size_t,
+extern void *omp_aligned_alloc (__SIZE_TYPE__, __SIZE_TYPE__,
 				omp_allocator_handle_t
-				);
-extern void *omp_calloc (size_t, size_t,
+				)
+;
+extern void *omp_calloc (__SIZE_TYPE__, __SIZE_TYPE__,
 			 omp_allocator_handle_t )
 ;
-extern void *omp_aligned_calloc (size_t, size_t, size_t,
+extern void *omp_aligned_calloc (__SIZE_TYPE__, __SIZE_TYPE__, __SIZE_TYPE__,
 				 omp_allocator_handle_t
-				 );
-extern void *omp_realloc (void *, size_t,
+				 )
+;
+extern void *omp_realloc (void *, __SIZE_TYPE__,
 			  omp_allocator_handle_t ,
 			  omp_allocator_handle_t )
 ;
