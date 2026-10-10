@@ -1,13 +1,4 @@
-unit asan_interface;
-
-interface
-
-uses
-  fp_gcc_common, fp_asan;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 procedure __asan_poison_memory_region(addr: pointer; size: Tsize_t); cdecl; external libasan;
 procedure __asan_unpoison_memory_region(addr: pointer; size: Tsize_t); cdecl; external libasan;
@@ -40,8 +31,11 @@ function __asan_update_allocation_context(addr: pointer): longint; cdecl; extern
 // === Konventiert am: 10-10-26 14:05:35 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

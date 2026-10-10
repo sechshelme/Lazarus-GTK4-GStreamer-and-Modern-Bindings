@@ -1,15 +1,11 @@
 {$IFDEF read_interface}
 
-type
-  T1Pointer_func = procedure(para1: pointer); cdecl;
-  T2Pointer_func = procedure(para1: pointer; para2: pointer); cdecl;
-
 const
   LIBGOMP_G_H = 1;
 
 { barrier.c  }
 procedure GOMP_barrier; cdecl; external libgomp;
-function GOMP_barrier_cancel: Tbool; cdecl; external libgomp;
+function GOMP_barrier_cancel: Boolean; cdecl; external libgomp;
 
 { critical.c  }
 procedure GOMP_critical_start; cdecl; external libgomp;
@@ -21,47 +17,47 @@ procedure GOMP_atomic_end; cdecl; external libgomp;
 
 { loop.c  }
 function GOMP_loop_static_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_dynamic_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_guided_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_nonmonotonic_dynamic_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_nonmonotonic_guided_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_nonmonotonic_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_maybe_nonmonotonic_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_nonmonotonic_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_maybe_nonmonotonic_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: longint;
-  para6: Plongint; para7: Plongint; para8: Puintptr_t; para9: Ppointer): Tbool; cdecl; external libgomp;
+  para6: Plongint; para7: Plongint; para8: Puintptr_t; para9: Ppointer): Boolean; cdecl; external libgomp;
 function GOMP_loop_ordered_static_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_ordered_dynamic_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_ordered_guided_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_ordered_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_ordered_runtime_start(para1: longint; para2: longint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_ordered_start(para1: longint; para2: longint; para3: longint; para4: longint; para5: longint;
-  para6: Plongint; para7: Plongint; para8: Puintptr_t; para9: Ppointer): Tbool; cdecl; external libgomp;
-function GOMP_loop_static_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_dynamic_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_guided_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_runtime_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_nonmonotonic_dynamic_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_nonmonotonic_guided_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_nonmonotonic_runtime_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_maybe_nonmonotonic_runtime_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_ordered_static_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_ordered_dynamic_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_ordered_guided_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_ordered_runtime_next(para1: Plongint; para2: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_doacross_static_start(para1: dword; para2: Plongint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_doacross_dynamic_start(para1: dword; para2: Plongint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_doacross_guided_start(para1: dword; para2: Plongint; para3: longint; para4: Plongint; para5: Plongint): Tbool; cdecl; external libgomp;
-function GOMP_loop_doacross_runtime_start(para1: dword; para2: Plongint; para3: Plongint; para4: Plongint): Tbool; cdecl; external libgomp;
+  para6: Plongint; para7: Plongint; para8: Puintptr_t; para9: Ppointer): Boolean; cdecl; external libgomp;
+function GOMP_loop_static_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_dynamic_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_guided_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_runtime_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_nonmonotonic_dynamic_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_nonmonotonic_guided_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_nonmonotonic_runtime_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_maybe_nonmonotonic_runtime_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_ordered_static_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_ordered_dynamic_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_ordered_guided_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_ordered_runtime_next(para1: Plongint; para2: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_doacross_static_start(para1: dword; para2: Plongint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_doacross_dynamic_start(para1: dword; para2: Plongint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_doacross_guided_start(para1: dword; para2: Plongint; para3: longint; para4: Plongint; para5: Plongint): Boolean; cdecl; external libgomp;
+function GOMP_loop_doacross_runtime_start(para1: dword; para2: Plongint; para3: Plongint; para4: Plongint): Boolean; cdecl; external libgomp;
 function GOMP_loop_doacross_start(para1: dword; para2: Plongint; para3: longint; para4: longint; para5: Plongint;
-  para6: Plongint; para7: Puintptr_t; para8: Ppointer): Tbool; cdecl; external libgomp;
+  para6: Plongint; para7: Puintptr_t; para8: Ppointer): Boolean; cdecl; external libgomp;
 procedure GOMP_parallel_loop_static_start(para1: T1Pointer_func; para2: pointer; para3: dword; para4: longint; para5: longint;
   para6: longint; para7: longint); cdecl; external libgomp;
 procedure GOMP_parallel_loop_dynamic_start(para1: T1Pointer_func; para2: pointer; para3: dword; para4: longint; para5: longint;
@@ -88,55 +84,55 @@ procedure GOMP_parallel_loop_maybe_nonmonotonic_runtime(para1: T1Pointer_func; p
   para6: longint; para7: dword); cdecl; external libgomp;
 procedure GOMP_loop_end; cdecl; external libgomp;
 procedure GOMP_loop_end_nowait; cdecl; external libgomp;
-function GOMP_loop_end_cancel: Tbool; cdecl; external libgomp;
+function GOMP_loop_end_cancel: Boolean; cdecl; external libgomp;
 
 { loop_ull.c  }
-function GOMP_loop_ull_static_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_dynamic_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_guided_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_runtime_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: Pqword;
-  para6: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_nonmonotonic_dynamic_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_nonmonotonic_guided_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_nonmonotonic_runtime_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: Pqword;
-  para6: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_maybe_nonmonotonic_runtime_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: Pqword;
-  para6: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: longint;
-  para6: qword; para7: Pqword; para8: Pqword; para9: Puintptr_t; para10: Ppointer): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_static_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_dynamic_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_guided_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: qword;
-  para6: Pqword; para7: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_runtime_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: Pqword;
-  para6: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_start(para1: Tbool; para2: qword; para3: qword; para4: qword; para5: longint;
-  para6: qword; para7: Pqword; para8: Pqword; para9: Puintptr_t; para10: Ppointer): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_static_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_dynamic_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_guided_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_runtime_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_nonmonotonic_dynamic_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_nonmonotonic_guided_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_nonmonotonic_runtime_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_maybe_nonmonotonic_runtime_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_static_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_dynamic_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_guided_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_ordered_runtime_next(para1: Pqword; para2: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_doacross_static_start(para1: dword; para2: Pqword; para3: qword; para4: Pqword; para5: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_doacross_dynamic_start(para1: dword; para2: Pqword; para3: qword; para4: Pqword; para5: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_doacross_guided_start(para1: dword; para2: Pqword; para3: qword; para4: Pqword; para5: Pqword): Tbool; cdecl; external libgomp;
-function GOMP_loop_ull_doacross_runtime_start(para1: dword; para2: Pqword; para3: Pqword; para4: Pqword): Tbool; cdecl; external libgomp;
+function GOMP_loop_ull_static_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_dynamic_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_guided_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_runtime_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: Pqword;
+  para6: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_nonmonotonic_dynamic_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_nonmonotonic_guided_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_nonmonotonic_runtime_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: Pqword;
+  para6: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_maybe_nonmonotonic_runtime_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: Pqword;
+  para6: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: longint;
+  para6: qword; para7: Pqword; para8: Pqword; para9: Puintptr_t; para10: Ppointer): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_static_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_dynamic_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_guided_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: qword;
+  para6: Pqword; para7: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_runtime_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: Pqword;
+  para6: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_start(para1: Boolean; para2: qword; para3: qword; para4: qword; para5: longint;
+  para6: qword; para7: Pqword; para8: Pqword; para9: Puintptr_t; para10: Ppointer): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_static_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_dynamic_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_guided_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_runtime_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_nonmonotonic_dynamic_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_nonmonotonic_guided_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_nonmonotonic_runtime_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_maybe_nonmonotonic_runtime_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_static_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_dynamic_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_guided_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_ordered_runtime_next(para1: Pqword; para2: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_doacross_static_start(para1: dword; para2: Pqword; para3: qword; para4: Pqword; para5: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_doacross_dynamic_start(para1: dword; para2: Pqword; para3: qword; para4: Pqword; para5: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_doacross_guided_start(para1: dword; para2: Pqword; para3: qword; para4: Pqword; para5: Pqword): Boolean; cdecl; external libgomp;
+function GOMP_loop_ull_doacross_runtime_start(para1: dword; para2: Pqword; para3: Pqword; para4: Pqword): Boolean; cdecl; external libgomp;
 function GOMP_loop_ull_doacross_start(para1: dword; para2: Pqword; para3: longint; para4: qword; para5: Pqword;
-  para6: Pqword; para7: Puintptr_t; para8: Ppointer): Tbool; cdecl; external libgomp;
+  para6: Pqword; para7: Puintptr_t; para8: Ppointer): Boolean; cdecl; external libgomp;
 
 { ordered.c  }
 procedure GOMP_ordered_start; cdecl; external libgomp;
@@ -153,12 +149,12 @@ procedure GOMP_parallel_start(para1: T1Pointer_func; para2: pointer; para3: dwor
 procedure GOMP_parallel_end; cdecl; external libgomp;
 procedure GOMP_parallel(para1: T1Pointer_func; para2: pointer; para3: dword; para4: dword); cdecl; external libgomp;
 function GOMP_parallel_reductions(para1: T1Pointer_func; para2: pointer; para3: dword; para4: dword): dword; cdecl; external libgomp;
-function GOMP_cancel(para1: longint; para2: Tbool): Tbool; cdecl; external libgomp;
-function GOMP_cancellation_point(para1: longint): Tbool; cdecl; external libgomp;
+function GOMP_cancel(para1: longint; para2: Boolean): Boolean; cdecl; external libgomp;
+function GOMP_cancellation_point(para1: longint): Boolean; cdecl; external libgomp;
 
 { task.c  }
 procedure GOMP_task(para1: T1Pointer_func; para2: pointer; para3: T2Pointer_func; para4: longint; para5: longint;
-  para6: Tbool; para7: dword; para8: Ppointer; para9: longint; para10: pointer); cdecl; external libgomp;
+  para6: Boolean; para7: dword; para8: Ppointer; para9: longint; para10: pointer); cdecl; external libgomp;
 procedure GOMP_taskloop(para1: T1Pointer_func; para2: pointer; para3: T2Pointer_func; para4: longint; para5: longint;
   para6: dword; para7: dword; para8: longint; para9: longint; para10: longint;
   para11: longint); cdecl; external libgomp;
@@ -174,7 +170,7 @@ procedure GOMP_taskgroup_end; cdecl; external libgomp;
 procedure GOMP_taskgroup_reduction_register(para1: Puintptr_t); cdecl; external libgomp;
 procedure GOMP_taskgroup_reduction_unregister(para1: Puintptr_t); cdecl; external libgomp;
 procedure GOMP_task_reduction_remap(para1: Tsize_t; para2: Tsize_t; para3: Ppointer); cdecl; external libgomp;
-procedure GOMP_workshare_task_reduction_unregister(para1: Tbool); cdecl; external libgomp;
+procedure GOMP_workshare_task_reduction_unregister(para1: Boolean); cdecl; external libgomp;
 
 { sections.c  }
 function GOMP_sections_start(para1: dword): dword; cdecl; external libgomp;
@@ -184,10 +180,10 @@ procedure GOMP_parallel_sections_start(para1: T1Pointer_func; para2: pointer; pa
 procedure GOMP_parallel_sections(para1: T1Pointer_func; para2: pointer; para3: dword; para4: dword; para5: dword); cdecl; external libgomp;
 procedure GOMP_sections_end; cdecl; external libgomp;
 procedure GOMP_sections_end_nowait; cdecl; external libgomp;
-function GOMP_sections_end_cancel: Tbool; cdecl; external libgomp;
+function GOMP_sections_end_cancel: Boolean; cdecl; external libgomp;
 
 { single.c  }
-function GOMP_single_start: Tbool; cdecl; external libgomp;
+function GOMP_single_start: Boolean; cdecl; external libgomp;
 function GOMP_single_copy_start: pointer; cdecl; external libgomp;
 procedure GOMP_single_copy_end(para1: pointer); cdecl; external libgomp;
 
@@ -210,7 +206,7 @@ procedure GOMP_target_update_ext(para1: longint; para2: Tsize_t; para3: Ppointer
 procedure GOMP_target_enter_exit_data(para1: longint; para2: Tsize_t; para3: Ppointer; para4: Psize_t; para5: Pword;
   para6: dword; para7: Ppointer); cdecl; external libgomp;
 procedure GOMP_teams(para1: dword; para2: dword); cdecl; external libgomp;
-function GOMP_teams4(para1: dword; para2: dword; para3: dword; para4: Tbool): Tbool; cdecl; external libgomp;
+function GOMP_teams4(para1: dword; para2: dword; para3: dword; para4: Boolean): Boolean; cdecl; external libgomp;
 function GOMP_target_map_indirect_ptr(para1: pointer): pointer; cdecl; external libgomp;
 
 { teams.c  }
@@ -218,7 +214,7 @@ procedure GOMP_teams_reg(para1: T1Pointer_func; para2: pointer; para3: dword; pa
 
 { allocator.c  }
 procedure GOMP_add_alloc(para1: pointer); cdecl; external libgomp;
-function GOMP_is_alloc(para1: pointer): Tbool; cdecl; external libgomp;
+function GOMP_is_alloc(para1: pointer): Boolean; cdecl; external libgomp;
 function GOMP_alloc(para1: Tsize_t; para2: Tsize_t; para3: Tuintptr_t): pointer; cdecl; external libgomp;
 procedure GOMP_free(para1: pointer; para2: Tuintptr_t); cdecl; external libgomp;
 

@@ -1,13 +1,4 @@
-unit tsan_interface;
-
-interface
-
-uses
-  fp_gcc_common, fp_asan;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 
@@ -76,8 +67,11 @@ function __tsan_get_current_report: pointer; cdecl; external libasan;
 // === Konventiert am: 10-10-26 14:05:26 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

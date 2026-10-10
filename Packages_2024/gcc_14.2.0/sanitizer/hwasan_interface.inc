@@ -1,13 +1,4 @@
-unit hwasan_interface;
-
-interface
-
-uses
-  fp_gcc_common, fp_asan;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 procedure __hwasan_init_static; cdecl; external libasan;
@@ -44,8 +35,11 @@ function __sanitizer_malloc(size: Tsize_t): pointer; cdecl; external libasan;
 // === Konventiert am: 10-10-26 14:05:29 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

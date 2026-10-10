@@ -8,7 +8,7 @@ unit fp_gcc_package;
 interface
 
 uses
-  fp_objc, fp_omp, LazarusPackageIntf;
+  fp_objc, fp_omp, fp_asan, fp_gcc_common, LazarusPackageIntf;
 
 implementation
 

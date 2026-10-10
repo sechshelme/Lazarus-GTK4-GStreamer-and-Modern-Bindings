@@ -1,13 +1,4 @@
-unit lsan_interface;
-
-interface
-
-uses
-  fp_gcc_common, fp_asan;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 procedure __lsan_disable; cdecl; external libasan;
@@ -24,8 +15,11 @@ function __lsan_default_suppressions: pchar; cdecl; external libasan;
 // === Konventiert am: 10-10-26 14:05:23 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

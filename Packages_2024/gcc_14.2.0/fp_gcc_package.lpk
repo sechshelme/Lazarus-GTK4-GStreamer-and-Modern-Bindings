@@ -18,6 +18,14 @@
         <Filename Value="fp_omp.pas"/>
         <UnitName Value="fp_omp"/>
       </Item>
+      <Item>
+        <Filename Value="fp_asan.pas"/>
+        <UnitName Value="fp_asan"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_gcc_common.pas"/>
+        <UnitName Value="fp_gcc_common"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>

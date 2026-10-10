@@ -1,13 +1,4 @@
-unit common_interface_defs;
-
-interface
-
-uses
-  fp_gcc_common, fp_asan;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 type
   Psanitizer_sandbox_arguments = ^Tsanitizer_sandbox_arguments;
@@ -58,11 +49,14 @@ function __sanitizer_get_module_and_offset_for_pc(pc: pointer; module_path: pcha
 
 function __sanitizer_return_address: Pointer;
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 function __sanitizer_return_address: Pointer; inline;
 begin
   Result := get_caller_addr(get_frame);
 end;
 
-end.
+{$ENDIF read_implementation}

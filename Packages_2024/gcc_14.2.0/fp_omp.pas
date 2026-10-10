@@ -2,6 +2,9 @@ unit fp_omp;
 
 interface
 
+uses
+  fp_gcc_common;
+
 const
   {$IFDEF Linux}
   libgomp = 'gomp';
@@ -10,27 +13,6 @@ const
   {$IFDEF Windows}
   libgomp = 'libgomp-1.dll';
   {$ENDIF}
-
-type
-  Tbool = boolean;
-
-  Tuintptr_t = PtrUInt;
-  Puintptr_t = ^Tuintptr_t;
-
-  Tsize_t = SizeUInt;
-  Psize_t = ^Tsize_t;
-
-type
-  {$IFDEF Linux}
-  Tculong = uint64;
-  Tclong = int64;
-  {$ENDIF}
-  {$IFDEF windows}
-  Tculong = uint32;
-  Tclong = int32;
-  {$ENDIF}
-  Pculong = ^Tculong;
-  Pclong = ^Tclong;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

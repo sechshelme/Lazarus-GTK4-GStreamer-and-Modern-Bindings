@@ -2,6 +2,9 @@ unit fp_objc;
 
 interface
 
+uses
+  fp_gcc_common;
+
 const
   {$IFDEF Linux}
   libobjc = 'objc';
@@ -10,10 +13,6 @@ const
   {$IFDEF Windows}
   libobjc = 'libobjc-4.dll';
   {$ENDIF}
-
-type
-  Tsize_t = SizeUInt;
-  Tptrdiff_t = PtrInt;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

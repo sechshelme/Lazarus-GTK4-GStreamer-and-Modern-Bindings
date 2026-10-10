@@ -45,6 +45,9 @@
         <DebugInfoType Value="dsDwarf3"/>
       </Debugging>
     </Linking>
+    <Other>
+      <CustomOptions Value="-a -al -Rintel"/>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions>
