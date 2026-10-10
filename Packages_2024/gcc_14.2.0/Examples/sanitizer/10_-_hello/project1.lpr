@@ -1,30 +1,33 @@
 program project1;
 
 uses
+  Crt,
   fp_asan;
 
   procedure main;
+  const
+    ARRAY_SIZE = 100;
+    TEST_START = 20;
+    TEST_LEN = 50;
   var
     arr: PInteger;
-    ziel_adresse: PLongInt;
+    addr: PLongInt;
+    i: integer;
   begin
-    arr :=Getmem(100 * sizeof(Integer));
+    arr := Getmem(ARRAY_SIZE * sizeof(integer));
 
-    __asan_poison_memory_region(@arr[15], 15 * SizeOf(Integer));
+    __asan_poison_memory_region(@arr[TEST_START], TEST_LEN * SizeOf(integer));
 
-    ziel_adresse := @arr[7];
-
-    if __asan_address_is_poisoned(ziel_adresse)<>0 then begin
-        WriteLn('7   [Manuell] Alarm! Adresse %p ist vergiftet! Programm wird beendet.',PtrUInt( ziel_adresse));
+    for i := 0 to ARRAY_SIZE - 1 do begin
+      addr := @arr[i];
+      if __asan_address_is_poisoned(addr) <> 0 then begin
+        TextAttr := 12;
+      end;
+      Write(i: 4);
+      TextAttr := 7;
     end;
 
-    ziel_adresse := @arr[27];
-
-    if __asan_address_is_poisoned(ziel_adresse)<>0 then begin
-        WriteLn('27   [Manuell] Alarm! Adresse %p ist vergiftet! Programm wird beendet.',PtrUInt( ziel_adresse));
-    end;
-
-    WriteLn('Wert: ', arr[7]);
+    WriteLn(#10);
 
     Freemem(arr);
   end;
