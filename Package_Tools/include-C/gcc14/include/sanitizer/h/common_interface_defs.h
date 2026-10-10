@@ -15,13 +15,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// Windows allows a user to set their default calling convention, but we always
-// use __cdecl
-#ifdef _WIN32
-#define SANITIZER_CDECL __cdecl
-#else
-#define SANITIZER_CDECL
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,24 +35,24 @@ typedef struct {
 } __sanitizer_sandbox_arguments;
 
 // Tell the tools to write their reports to "path.<pid>" instead of stderr.
-void SANITIZER_CDECL __sanitizer_set_report_path(const char *path);
+void  __sanitizer_set_report_path(const char *path);
 // Tell the tools to write their reports to the provided file descriptor
 // (casted to void *).
-void SANITIZER_CDECL __sanitizer_set_report_fd(void *fd);
+void  __sanitizer_set_report_fd(void *fd);
 // Get the current full report file path, if a path was specified by
 // an earlier call to __sanitizer_set_report_path. Returns null otherwise.
-const char *SANITIZER_CDECL __sanitizer_get_report_path();
+const char * __sanitizer_get_report_path();
 
 // Notify the tools that the sandbox is going to be turned on. The reserved
 // parameter will be used in the future to hold a structure with functions
 // that the tools may call to bypass the sandbox.
-void SANITIZER_CDECL
+void 
 __sanitizer_sandbox_on_notify(__sanitizer_sandbox_arguments *args);
 
 // This function is called by the tool when it has just finished reporting
 // an error. 'error_summary' is a one-line string that summarizes
 // the error message. This function can be overridden by the client.
-void SANITIZER_CDECL
+void 
 __sanitizer_report_error_summary(const char *error_summary);
 
 // Some of the sanitizers (for example ASan/TSan) could miss bugs that happen
@@ -71,44 +64,44 @@ __sanitizer_report_error_summary(const char *error_summary);
 /// \param p Pointer to unaligned memory.
 ///
 /// \returns Loaded value.
-uint16_t SANITIZER_CDECL __sanitizer_unaligned_load16(const void *p);
+uint16_t  __sanitizer_unaligned_load16(const void *p);
 
 /// Loads a 32-bit unaligned value.
 ///
 /// \param p Pointer to unaligned memory.
 ///
 /// \returns Loaded value.
-uint32_t SANITIZER_CDECL __sanitizer_unaligned_load32(const void *p);
+uint32_t  __sanitizer_unaligned_load32(const void *p);
 
 /// Loads a 64-bit unaligned value.
 ///
 /// \param p Pointer to unaligned memory.
 ///
 /// \returns Loaded value.
-uint64_t SANITIZER_CDECL __sanitizer_unaligned_load64(const void *p);
+uint64_t  __sanitizer_unaligned_load64(const void *p);
 
 /// Stores a 16-bit unaligned value.
 ///
 /// \param p Pointer to unaligned memory.
 /// \param x 16-bit value to store.
-void SANITIZER_CDECL __sanitizer_unaligned_store16(void *p, uint16_t x);
+void  __sanitizer_unaligned_store16(void *p, uint16_t x);
 
 /// Stores a 32-bit unaligned value.
 ///
 /// \param p Pointer to unaligned memory.
 /// \param x 32-bit value to store.
-void SANITIZER_CDECL __sanitizer_unaligned_store32(void *p, uint32_t x);
+void  __sanitizer_unaligned_store32(void *p, uint32_t x);
 
 /// Stores a 64-bit unaligned value.
 ///
 /// \param p Pointer to unaligned memory.
 /// \param x 64-bit value to store.
-void SANITIZER_CDECL __sanitizer_unaligned_store64(void *p, uint64_t x);
+void  __sanitizer_unaligned_store64(void *p, uint64_t x);
 
 // Returns 1 on the first call, then returns 0 thereafter.  Called by the tool
 // to ensure only one report is printed when multiple errors occur
 // simultaneously.
-int SANITIZER_CDECL __sanitizer_acquire_crash_state();
+int  __sanitizer_acquire_crash_state();
 
 /// Annotates the current state of a contiguous container, such as
 /// <c>std::vector</c>, <c>std::string</c>, or similar.
@@ -156,7 +149,7 @@ int SANITIZER_CDECL __sanitizer_acquire_crash_state();
 /// \param end End of memory region.
 /// \param old_mid Old middle of memory region.
 /// \param new_mid New middle of memory region.
-void SANITIZER_CDECL __sanitizer_annotate_contiguous_container(
+void  __sanitizer_annotate_contiguous_container(
     const void *beg, const void *end, const void *old_mid, const void *new_mid);
 
 /// Similar to <c>__sanitizer_annotate_contiguous_container</c>.
@@ -188,7 +181,7 @@ void SANITIZER_CDECL __sanitizer_annotate_contiguous_container(
 /// \param old_container_end End of used region.
 /// \param new_container_beg New beginning of used region.
 /// \param new_container_end New end of used region.
-void SANITIZER_CDECL __sanitizer_annotate_double_ended_contiguous_container(
+void  __sanitizer_annotate_double_ended_contiguous_container(
     const void *storage_beg, const void *storage_end,
     const void *old_container_beg, const void *old_container_end,
     const void *new_container_beg, const void *new_container_end);
@@ -209,7 +202,7 @@ void SANITIZER_CDECL __sanitizer_annotate_double_ended_contiguous_container(
 ///
 /// \returns True if the contiguous container <c>[beg, end)</c> is properly
 ///  poisoned.
-int SANITIZER_CDECL __sanitizer_verify_contiguous_container(const void *beg,
+int  __sanitizer_verify_contiguous_container(const void *beg,
                                                             const void *mid,
                                                             const void *end);
 
@@ -234,7 +227,7 @@ int SANITIZER_CDECL __sanitizer_verify_contiguous_container(const void *beg,
 /// \returns True if the double-ended contiguous container <c>[storage_beg,
 /// container_beg, container_end, end)</c> is properly poisoned - only
 /// [container_beg; container_end) is addressable.
-int SANITIZER_CDECL __sanitizer_verify_double_ended_contiguous_container(
+int  __sanitizer_verify_double_ended_contiguous_container(
     const void *storage_beg, const void *container_beg,
     const void *container_end, const void *storage_end);
 
@@ -248,7 +241,7 @@ int SANITIZER_CDECL __sanitizer_verify_double_ended_contiguous_container(
 /// \param end Old end of memory region.
 ///
 /// \returns The bad address or NULL.
-const void *SANITIZER_CDECL __sanitizer_contiguous_container_find_bad_address(
+const void * __sanitizer_contiguous_container_find_bad_address(
     const void *beg, const void *mid, const void *end);
 
 /// returns the address of the first improperly poisoned byte.
@@ -261,14 +254,14 @@ const void *SANITIZER_CDECL __sanitizer_contiguous_container_find_bad_address(
 /// \param storage_end End of memory region.
 ///
 /// \returns The bad address or NULL.
-const void *SANITIZER_CDECL
+const void *
 __sanitizer_double_ended_contiguous_container_find_bad_address(
     const void *storage_beg, const void *container_beg,
     const void *container_end, const void *storage_end);
 
 /// Prints the stack trace leading to this call (useful for calling from the
 /// debugger).
-void SANITIZER_CDECL __sanitizer_print_stack_trace(void);
+void  __sanitizer_print_stack_trace(void);
 
 // Symbolizes the supplied 'pc' using the format string 'fmt'.
 // Outputs at most 'out_buf_size' bytes into 'out_buf'.
@@ -280,11 +273,11 @@ void SANITIZER_CDECL __sanitizer_print_stack_trace(void);
 // Inlined frames can be removed with 'symbolize_inline_frames=0'.
 // The format syntax is described in
 // lib/sanitizer_common/sanitizer_stacktrace_printer.h.
-void SANITIZER_CDECL __sanitizer_symbolize_pc(void *pc, const char *fmt,
+void  __sanitizer_symbolize_pc(void *pc, const char *fmt,
                                               char *out_buf,
                                               size_t out_buf_size);
 // Same as __sanitizer_symbolize_pc, but for data section (i.e. globals).
-void SANITIZER_CDECL __sanitizer_symbolize_global(void *data_ptr,
+void  __sanitizer_symbolize_global(void *data_ptr,
                                                   const char *fmt,
                                                   char *out_buf,
                                                   size_t out_buf_size);
@@ -293,7 +286,7 @@ void SANITIZER_CDECL __sanitizer_symbolize_global(void *data_ptr,
 #define __sanitizer_return_address()                                           \
   __builtin_extract_return_addr(__builtin_return_address(0))
 #else
-void *SANITIZER_CDECL _ReturnAddress(void);
+void * _ReturnAddress(void);
 #pragma intrinsic(_ReturnAddress)
 #define __sanitizer_return_address() _ReturnAddress()
 #endif
@@ -303,7 +296,7 @@ void *SANITIZER_CDECL _ReturnAddress(void);
 /// Passing 0 will unset the callback.
 ///
 /// \param callback User-provided callback.
-void SANITIZER_CDECL __sanitizer_set_death_callback(void (*callback)(void));
+void  __sanitizer_set_death_callback(void (*callback)(void));
 
 // Interceptor hooks.
 // Whenever a libc function interceptor is called, it checks if the
@@ -319,7 +312,7 @@ void SANITIZER_CDECL __sanitizer_set_death_callback(void (*callback)(void));
 /// \param s2 Pointer to block of memory.
 /// \param n Number of bytes to compare.
 /// \param result Value returned by the intercepted function.
-void SANITIZER_CDECL __sanitizer_weak_hook_memcmp(void *called_pc,
+void  __sanitizer_weak_hook_memcmp(void *called_pc,
                                                   const void *s1,
                                                   const void *s2, size_t n,
                                                   int result);
@@ -331,7 +324,7 @@ void SANITIZER_CDECL __sanitizer_weak_hook_memcmp(void *called_pc,
 /// \param s2 Pointer to block of memory.
 /// \param n Number of bytes to compare.
 /// \param result Value returned by the intercepted function.
-void SANITIZER_CDECL __sanitizer_weak_hook_strncmp(void *called_pc,
+void  __sanitizer_weak_hook_strncmp(void *called_pc,
                                                    const char *s1,
                                                    const char *s2, size_t n,
                                                    int result);
@@ -343,7 +336,7 @@ void SANITIZER_CDECL __sanitizer_weak_hook_strncmp(void *called_pc,
 /// \param s2 Pointer to block of memory.
 /// \param n Number of bytes to compare.
 /// \param result Value returned by the intercepted function.
-void SANITIZER_CDECL __sanitizer_weak_hook_strncasecmp(void *called_pc,
+void  __sanitizer_weak_hook_strncasecmp(void *called_pc,
                                                        const char *s1,
                                                        const char *s2, size_t n,
                                                        int result);
@@ -354,7 +347,7 @@ void SANITIZER_CDECL __sanitizer_weak_hook_strncasecmp(void *called_pc,
 /// \param s1 Pointer to block of memory.
 /// \param s2 Pointer to block of memory.
 /// \param result Value returned by the intercepted function.
-void SANITIZER_CDECL __sanitizer_weak_hook_strcmp(void *called_pc,
+void  __sanitizer_weak_hook_strcmp(void *called_pc,
                                                   const char *s1,
                                                   const char *s2, int result);
 
@@ -364,7 +357,7 @@ void SANITIZER_CDECL __sanitizer_weak_hook_strcmp(void *called_pc,
 /// \param s1 Pointer to block of memory.
 /// \param s2 Pointer to block of memory.
 /// \param result Value returned by the intercepted function.
-void SANITIZER_CDECL __sanitizer_weak_hook_strcasecmp(void *called_pc,
+void  __sanitizer_weak_hook_strcasecmp(void *called_pc,
                                                       const char *s1,
                                                       const char *s2,
                                                       int result);
@@ -375,16 +368,16 @@ void SANITIZER_CDECL __sanitizer_weak_hook_strcasecmp(void *called_pc,
 /// \param s1 Pointer to block of memory.
 /// \param s2 Pointer to block of memory.
 /// \param result Value returned by the intercepted function.
-void SANITIZER_CDECL __sanitizer_weak_hook_strstr(void *called_pc,
+void  __sanitizer_weak_hook_strstr(void *called_pc,
                                                   const char *s1,
                                                   const char *s2, char *result);
 
-void SANITIZER_CDECL __sanitizer_weak_hook_strcasestr(void *called_pc,
+void  __sanitizer_weak_hook_strcasestr(void *called_pc,
                                                       const char *s1,
                                                       const char *s2,
                                                       char *result);
 
-void SANITIZER_CDECL __sanitizer_weak_hook_memmem(void *called_pc,
+void  __sanitizer_weak_hook_memmem(void *called_pc,
                                                   const void *s1, size_t len1,
                                                   const void *s2, size_t len2,
                                                   void *result);
@@ -394,7 +387,7 @@ void SANITIZER_CDECL __sanitizer_weak_hook_memmem(void *called_pc,
 // should be between 1 and 100. At most max_number_of_contexts contexts
 // (stack traces) are printed.
 // Experimental feature currently available only with ASan on Linux/x86_64.
-void SANITIZER_CDECL __sanitizer_print_memory_profile(
+void  __sanitizer_print_memory_profile(
     size_t top_percent, size_t max_number_of_contexts);
 
 /// Notify ASan that a fiber switch has started (required only if implementing
@@ -424,7 +417,7 @@ void SANITIZER_CDECL __sanitizer_print_memory_profile(
 /// \param[out] fake_stack_save Fake stack save location.
 /// \param bottom Bottom address of stack.
 /// \param size Size of stack in bytes.
-void SANITIZER_CDECL __sanitizer_start_switch_fiber(void **fake_stack_save,
+void  __sanitizer_start_switch_fiber(void **fake_stack_save,
                                                     const void *bottom,
                                                     size_t size);
 
@@ -439,13 +432,13 @@ void SANITIZER_CDECL __sanitizer_start_switch_fiber(void **fake_stack_save,
 /// \param fake_stack_save Fake stack save location.
 /// \param[out] bottom_old Bottom address of old stack.
 /// \param[out] size_old Size of old stack in bytes.
-void SANITIZER_CDECL __sanitizer_finish_switch_fiber(void *fake_stack_save,
+void  __sanitizer_finish_switch_fiber(void *fake_stack_save,
                                                      const void **bottom_old,
                                                      size_t *size_old);
 
 // Get full module name and calculate pc offset within it.
 // Returns 1 if pc belongs to some module, 0 if module was not found.
-int SANITIZER_CDECL __sanitizer_get_module_and_offset_for_pc(
+int  __sanitizer_get_module_and_offset_for_pc(
     void *pc, char *module_path, size_t module_path_len, void **pc_offset);
 
 #ifdef __cplusplus

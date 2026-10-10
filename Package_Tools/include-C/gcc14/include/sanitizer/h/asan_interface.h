@@ -31,7 +31,7 @@ extern "C" {
 ///
 /// \param addr Start of memory region.
 /// \param size Size of memory region.
-void SANITIZER_CDECL __asan_poison_memory_region(void const volatile *addr,
+void  __asan_poison_memory_region(void const  *addr,
                                                  size_t size);
 
 /// Marks a memory region (<c>[addr, addr+size)</c>) as addressable.
@@ -46,7 +46,7 @@ void SANITIZER_CDECL __asan_poison_memory_region(void const volatile *addr,
 ///
 /// \param addr Start of memory region.
 /// \param size Size of memory region.
-void SANITIZER_CDECL __asan_unpoison_memory_region(void const volatile *addr,
+void  __asan_unpoison_memory_region(void const  *addr,
                                                    size_t size);
 
 // Macros provided for convenience.
@@ -66,23 +66,6 @@ void SANITIZER_CDECL __asan_unpoison_memory_region(void const volatile *addr,
 ///
 /// \param addr Start of memory region.
 /// \param size Size of memory region.
-#define ASAN_POISON_MEMORY_REGION(addr, size)                                  \
-  __asan_poison_memory_region((addr), (size))
-
-/// Marks a memory region as addressable.
-///
-/// \note Macro provided for convenience; defined as a no-op if ASan is not
-/// enabled.
-///
-/// \param addr Start of memory region.
-/// \param size Size of memory region.
-#define ASAN_UNPOISON_MEMORY_REGION(addr, size)                                \
-  __asan_unpoison_memory_region((addr), (size))
-#else
-#define ASAN_POISON_MEMORY_REGION(addr, size) ((void)(addr), (void)(size))
-#define ASAN_UNPOISON_MEMORY_REGION(addr, size) ((void)(addr), (void)(size))
-#endif
-#undef ASAN_DEFINE_REGION_MACROS
 
 /// Checks if an address is poisoned.
 ///
@@ -94,7 +77,7 @@ void SANITIZER_CDECL __asan_unpoison_memory_region(void const volatile *addr,
 ///
 /// \retval 1 Address is poisoned.
 /// \retval 0 Address is not poisoned.
-int SANITIZER_CDECL __asan_address_is_poisoned(void const volatile *addr);
+int  __asan_address_is_poisoned(void const  *addr);
 
 /// Checks if a region is poisoned.
 ///
@@ -104,14 +87,14 @@ int SANITIZER_CDECL __asan_address_is_poisoned(void const volatile *addr);
 /// \param beg Start of memory region.
 /// \param size Start of memory region.
 /// \returns Address of first poisoned byte.
-void *SANITIZER_CDECL __asan_region_is_poisoned(void *beg, size_t size);
+void * __asan_region_is_poisoned(void *beg, size_t size);
 
 /// Describes an address (useful for calling from the debugger).
 ///
 /// Prints the description of <c><i>addr</i></c>.
 ///
 /// \param addr Address to describe.
-void SANITIZER_CDECL __asan_describe_address(void *addr);
+void  __asan_describe_address(void *addr);
 
 /// Checks if an error has been or is being reported (useful for calling from
 /// the debugger to get information about an ASan error).
@@ -120,7 +103,7 @@ void SANITIZER_CDECL __asan_describe_address(void *addr);
 ///
 /// \returns 1 if an error has been (or is being) reported. Otherwise returns
 /// 0.
-int SANITIZER_CDECL __asan_report_present(void);
+int  __asan_report_present(void);
 
 /// Gets the PC (program counter) register value of an ASan error (useful for
 /// calling from the debugger).
@@ -129,7 +112,7 @@ int SANITIZER_CDECL __asan_report_present(void);
 /// Otherwise returns 0.
 ///
 /// \returns PC value.
-void *SANITIZER_CDECL __asan_get_report_pc(void);
+void * __asan_get_report_pc(void);
 
 /// Gets the BP (base pointer) register value of an ASan error (useful for
 /// calling from the debugger).
@@ -138,7 +121,7 @@ void *SANITIZER_CDECL __asan_get_report_pc(void);
 /// Otherwise returns 0.
 ///
 /// \returns BP value.
-void *SANITIZER_CDECL __asan_get_report_bp(void);
+void * __asan_get_report_bp(void);
 
 /// Gets the SP (stack pointer) register value of an ASan error (useful for
 /// calling from the debugger).
@@ -147,7 +130,7 @@ void *SANITIZER_CDECL __asan_get_report_bp(void);
 /// Otherwise returns 0.
 ///
 /// \returns SP value.
-void *SANITIZER_CDECL __asan_get_report_sp(void);
+void * __asan_get_report_sp(void);
 
 /// Gets the address of the report buffer of an ASan error (useful for calling
 /// from the debugger).
@@ -156,7 +139,7 @@ void *SANITIZER_CDECL __asan_get_report_sp(void);
 /// reported. Otherwise returns 0.
 ///
 /// \returns Address of report buffer.
-void *SANITIZER_CDECL __asan_get_report_address(void);
+void * __asan_get_report_address(void);
 
 /// Gets access type of an ASan error (useful for calling from the debugger).
 ///
@@ -164,7 +147,7 @@ void *SANITIZER_CDECL __asan_get_report_address(void);
 /// reported. Otherwise returns 0.
 ///
 /// \returns Access type (0 = read, 1 = write).
-int SANITIZER_CDECL __asan_get_report_access_type(void);
+int  __asan_get_report_access_type(void);
 
 /// Gets access size of an ASan error (useful for calling from the debugger).
 ///
@@ -172,7 +155,7 @@ int SANITIZER_CDECL __asan_get_report_access_type(void);
 /// returns 0.
 ///
 /// \returns Access size in bytes.
-size_t SANITIZER_CDECL __asan_get_report_access_size(void);
+size_t  __asan_get_report_access_size(void);
 
 /// Gets the bug description of an ASan error (useful for calling from a
 /// debugger).
@@ -180,7 +163,7 @@ size_t SANITIZER_CDECL __asan_get_report_access_size(void);
 /// \returns Returns a bug description if an error has been (or is being)
 /// reported - for example, "heap-use-after-free". Otherwise returns an empty
 /// string.
-const char *SANITIZER_CDECL __asan_get_report_description(void);
+const char * __asan_get_report_description(void);
 
 /// Gets information about a pointer (useful for calling from the debugger).
 ///
@@ -201,7 +184,7 @@ const char *SANITIZER_CDECL __asan_get_report_description(void);
 /// \param[out] region_size Size of the region in bytes.
 ///
 /// \returns Returns the category of the given pointer as a constant string.
-const char *SANITIZER_CDECL __asan_locate_address(void *addr, char *name,
+const char * __asan_locate_address(void *addr, char *name,
                                                   size_t name_size,
                                                   void **region_address,
                                                   size_t *region_size);
@@ -218,7 +201,7 @@ const char *SANITIZER_CDECL __asan_locate_address(void *addr, char *name,
 /// \param[out] thread_id The thread ID of the address.
 ///
 /// \returns Returns the number of stored frames or 0 on error.
-size_t SANITIZER_CDECL __asan_get_alloc_stack(void *addr, void **trace,
+size_t  __asan_get_alloc_stack(void *addr, void **trace,
                                               size_t size, int *thread_id);
 
 /// Gets the free stack trace and thread ID for a heap address (useful for
@@ -233,7 +216,7 @@ size_t SANITIZER_CDECL __asan_get_alloc_stack(void *addr, void **trace,
 /// \param[out] thread_id The thread ID of the address.
 ///
 /// \returns Returns the number of stored frames or 0 on error.
-size_t SANITIZER_CDECL __asan_get_free_stack(void *addr, void **trace,
+size_t  __asan_get_free_stack(void *addr, void **trace,
                                              size_t size, int *thread_id);
 
 /// Gets the current shadow memory mapping (useful for calling from the
@@ -241,7 +224,7 @@ size_t SANITIZER_CDECL __asan_get_free_stack(void *addr, void **trace,
 ///
 /// \param[out] shadow_scale Shadow scale value.
 /// \param[out] shadow_offset Offset value.
-void SANITIZER_CDECL __asan_get_shadow_mapping(size_t *shadow_scale,
+void  __asan_get_shadow_mapping(size_t *shadow_scale,
                                                size_t *shadow_offset);
 
 /// This is an internal function that is called to report an error. However,
@@ -254,19 +237,19 @@ void SANITIZER_CDECL __asan_get_shadow_mapping(size_t *shadow_scale,
 /// \param addr Address of the ASan error.
 /// \param is_write True if the error is a write error; false otherwise.
 /// \param access_size Size of the memory access of the ASan error.
-void SANITIZER_CDECL __asan_report_error(void *pc, void *bp, void *sp,
+void  __asan_report_error(void *pc, void *bp, void *sp,
                                          void *addr, int is_write,
                                          size_t access_size);
 
 // Deprecated. Call __sanitizer_set_death_callback instead.
-void SANITIZER_CDECL __asan_set_death_callback(void (*callback)(void));
+void  __asan_set_death_callback(void (*callback)(void));
 
 /// Sets the callback function to be called during ASan error reporting.
 ///
 /// The callback provides a string pointer to the report.
 ///
 /// \param callback User-provided function.
-void SANITIZER_CDECL
+void 
 __asan_set_error_report_callback(void (*callback)(const char *));
 
 /// User-provided callback on ASan errors.
@@ -274,11 +257,11 @@ __asan_set_error_report_callback(void (*callback)(const char *));
 /// You can provide a function that would be called immediately when ASan
 /// detects an error. This is useful in cases when ASan detects an error but
 /// your program crashes before the ASan report is printed.
-void SANITIZER_CDECL __asan_on_error(void);
+void  __asan_on_error(void);
 
 /// Prints accumulated statistics to <c>stderr</c> (useful for calling from the
 /// debugger).
-void SANITIZER_CDECL __asan_print_accumulated_stats(void);
+void  __asan_print_accumulated_stats(void);
 
 /// User-provided default option settings.
 ///
@@ -287,7 +270,7 @@ void SANITIZER_CDECL __asan_print_accumulated_stats(void);
 /// <c>verbosity=1:halt_on_error=0</c>).
 ///
 /// \returns Default options string.
-const char *SANITIZER_CDECL __asan_default_options(void);
+const char * __asan_default_options(void);
 
 // The following two functions facilitate garbage collection in presence of
 // ASan's fake stack.
@@ -299,7 +282,7 @@ const char *SANITIZER_CDECL __asan_default_options(void);
 /// does not have a fake stack.
 ///
 /// \returns An opaque handler to the fake stack or NULL.
-void *SANITIZER_CDECL __asan_get_current_fake_stack(void);
+void * __asan_get_current_fake_stack(void);
 
 /// Checks if an address belongs to a given fake stack.
 ///
@@ -319,7 +302,7 @@ void *SANITIZER_CDECL __asan_get_current_fake_stack(void);
 /// \param[out] beg Beginning of fake frame.
 /// \param[out] end End of fake frame.
 /// \returns Stack address or NULL.
-void *SANITIZER_CDECL __asan_addr_is_in_fake_stack(void *fake_stack, void *addr,
+void * __asan_addr_is_in_fake_stack(void *fake_stack, void *addr,
                                                    void **beg, void **end);
 
 /// Performs shadow memory cleanup of the current thread's stack before a
@@ -327,11 +310,11 @@ void *SANITIZER_CDECL __asan_addr_is_in_fake_stack(void *fake_stack, void *addr,
 ///
 /// To avoid false positives on the stack, must be called before no-return
 /// functions like <c>_exit()</c> and <c>execl()</c>.
-void SANITIZER_CDECL __asan_handle_no_return(void);
+void  __asan_handle_no_return(void);
 
 /// Update allocation stack trace for the given allocation to the current stack
 /// trace. Returns 1 if successful, 0 if not.
-int SANITIZER_CDECL __asan_update_allocation_context(void *addr);
+int  __asan_update_allocation_context(void *addr);
 
 #ifdef __cplusplus
 } // extern "C"

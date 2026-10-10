@@ -377,6 +377,7 @@ const
     (libs: 'libmlt'; units: 'fp_mlt'),
     (libs: 'libgdal'; units: 'fp_gdal'),
     (libs: 'libgclang'; units: 'fp_clang'),
+    (libs: 'libasan'; units: 'fp_asan'),
 
 
 
