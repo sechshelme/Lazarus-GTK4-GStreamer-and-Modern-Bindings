@@ -18,8 +18,7 @@ const
 type
   Tmd_html_func = procedure(s: PMD_CHAR; l: TMD_SIZE; userdata: pointer); cdecl;
 
-function md_html(input: PMD_CHAR; input_size: TMD_SIZE; process_output: Tmd_html_func; userdata: pointer; parser_flags: dword;
-  renderer_flags: dword): longint; cdecl; external libmd4c_html;
+function md_html(input: PMD_CHAR; input_size: TMD_SIZE; process_output: Tmd_html_func; userdata: pointer; parser_flags: dword; renderer_flags: dword): longint; cdecl; external libmd4c_html;
 
 // === Konventiert am: 11-10-26 13:31:49 ===
 
