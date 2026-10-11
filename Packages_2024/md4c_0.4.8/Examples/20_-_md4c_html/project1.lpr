@@ -27,10 +27,6 @@ const
   var
     res: integer;
   begin
-    WriteLn( markdown_input);
-    halt;
-
-//    res := md_html(pchar(markdown_input), Length(markdown_input), @process_output, nil, MD_DIALECT_COMMONMARK, 0);
     res := md_html(markdown_input, Length(markdown_input), @process_output, nil, MD_DIALECT_GITHUB, 0);
     if res <> 0 then  begin
       WriteLn(StdErr, 'Fehler beim Parsen von Markdown.');
