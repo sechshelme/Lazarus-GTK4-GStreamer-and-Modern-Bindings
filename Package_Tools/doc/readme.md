@@ -56,9 +56,6 @@ grep -r "long" . | grep -v "long long"
 ```
 
 
-
-
-
 # lib und bin aktualisieren
 ```bash
 sudo ldconfig
@@ -73,9 +70,6 @@ hash -r
 
 ## Ganze History eines Paketes
 `apt changelog libsdl3-dev`
-
-
-
 
 
 # Programm Zeilen auswerten.

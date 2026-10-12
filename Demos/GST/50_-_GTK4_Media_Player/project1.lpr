@@ -4,7 +4,8 @@ uses
   fp_glib2,
   fp_GTK4,
   fp_gst,
-  MPMainWindow, MPIdleSongLoader;
+  MPMainWindow,
+  MPIdleSongLoader;
 
   procedure app_activate(app: PGtkApplication; {%H-}user_data: Tgpointer); cdecl;
   var

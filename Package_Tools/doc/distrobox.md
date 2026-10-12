@@ -7,7 +7,6 @@
 
 ## ARM64
 `distrobox create -a "--platform=linux/arm64" -i docker.io/library/ubuntu:25.04 -n ubuntu-25-arm64`
-
 `distrobox create -a "--platform=linux/arm64" -i debian -n debian-arm64`
 
 ## RISC-V
@@ -39,14 +38,26 @@ pkg-config --modversion glib-2.0
 
 # Distrobox Tips
 
-
 ## {TAB} für Packetauswahl
+```bash
 sudo apt install bash-completion
 sudo rm /etc/apt/apt.conf.d/docker-clean
 sudo apt update
+```
+
+## Language auf CH stellen
+```bash
+sudo apt install -y locales language-pack-de language-pack-gnome-de
+sudo locale-gen de_CH.UTF-8
+sudo update-locale LANG=de_CH.UTF-8
+sudo update-locale LC_NUMERIC=de_CH.UTF-8 LC_TIME=de_CH.UTF-8 LC_MONETARY=de_CH.UTF-8 LC_PAPER=de_CH.UTF-8 LC_MEASUREMENT=de_CH.UTF-8
+sudo localectl set-x11-keymap ch
+```
 
 ## NAS verbinden
+```bash
 sudo ln var/run/host/n4800/ n4800 -s
+```
 
 
 ## OS abfragen
