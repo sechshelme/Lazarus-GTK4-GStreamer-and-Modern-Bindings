@@ -8,7 +8,7 @@ unit fp_histedit_package;
 interface
 
 uses
-  LazarusPackageIntf;
+  fp_histedit, LazarusPackageIntf;
 
 implementation
 

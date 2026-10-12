@@ -25,7 +25,7 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="fp_llvm_package"/>
+        <PackageName Value="fp_llvm_project_package"/>
       </Item>
     </RequiredPackages>
     <Units>

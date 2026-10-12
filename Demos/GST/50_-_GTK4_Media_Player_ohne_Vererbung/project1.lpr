@@ -5,7 +5,6 @@ uses
   fp_cairo,
   fp_GTK4,
   fp_gst,
-   //  fp_GLIBTools,
 
   Common,
   Streamer,

@@ -6,9 +6,15 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
-        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)/"/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="fp_histedit.pas"/>
+        <UnitName Value="fp_histedit"/>
+      </Item>
+    </Files>
     <RequiredPkgs>
       <Item>
         <PackageName Value="FCL"/>
