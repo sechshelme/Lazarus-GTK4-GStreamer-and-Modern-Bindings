@@ -37,15 +37,12 @@ type
 
   Tsize_t = SizeUInt;
   Psize_t = ^Tsize_t;
+  Tssize_t = SizeInt;
+  Pssize_t = ^Tssize_t;
 
   Tptrdiff_t = PtrInt;
 
-type
-  T0Pointer_func = procedure; cdecl;
-  T1Pointer_func = procedure(para1: pointer); cdecl;
-  T2Pointer_func = procedure(para1: pointer; para2: pointer); cdecl;
-
-  T1PChar_func = procedure(para1: pchar); cdecl;
+  PFILE=type Pointer;
 
 type
   {$IFDEF Linux}
@@ -73,6 +70,12 @@ type   // /usr/include/malloc.h
     keepcost: longint;
   end;
 
+type
+  T0Pointer_func = procedure; cdecl;
+  T1Pointer_func = procedure(para1: pointer); cdecl;
+  T2Pointer_func = procedure(para1: pointer; para2: pointer); cdecl;
+
+  T1PChar_func = procedure(para1: pchar); cdecl;
 
 implementation
 

@@ -23,6 +23,10 @@
         <UnitName Value="fp_asan"/>
       </Item>
       <Item>
+        <Filename Value="fp_gccjit.pas"/>
+        <UnitName Value="fp_gccjit"/>
+      </Item>
+      <Item>
         <Filename Value="fp_gcc_common.pas"/>
         <UnitName Value="fp_gcc_common"/>
       </Item>
