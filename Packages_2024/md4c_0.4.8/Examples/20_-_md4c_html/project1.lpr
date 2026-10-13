@@ -4,86 +4,100 @@ uses
   fp_md4c,
   fp_md4c_html;
 
+type
+  TAppdata = record
+    f: text;
+  end;
+  PAppdata = ^TAppdata;
+
 const
   markdown_input =
     '# Mein Markdown-Viewer'#10 +
     '| Produkt | Kategorie | Preis |'#10 +
     '| :--- | :--- | :--- |'#10 +
     '| Apfel | Lebensmittel | 0,50 € |'#10 +
-    '| Buch | Medien | 12,99 € |'#10 +
+    '| Buch | Medien | 12,95 € |'#10 +
     '| Kaffeetasse | Haushalt | 8,50 € |'#10 +
     ''#10 +
+
     '```c'#10 +
     '#include <stdio.h>'#10 +
     ''#10 +
     'int main() {'#10 +
     '    // Die Schleife läuft von i = 0 bis i = 4 (insgesamt 5 Mal)'#10 +
-    '    for (int i = 0; i < 5; i++) {' + #10 +
+    '    for (int i = 0; i < 5; i++) {'#10 +
     '        printf("Hello World (Durchlauf %d)\n", i + 1);'#10 +
     '    }'#10 +
     ''#10 +
     '    return 0; // Signalisiert, dass das Programm erfolgreich lief'#10 +
     '}'#10 +
     '```'#10 +
+
+    '```pascal'#10 +
+    'program test'#10 +
+    ''#10 +
+    'begin'#10 +
+    '    // Die Schleife läuft von i = 0 bis i = 4 (insgesamt 5 Mal)'#10 +
+    '    Writeln(''Hello World !'');'#10 +
+    'end;'#10 +
+    '```'#10 +
+
     'Das ist **fetter Text** und eine [Website](https://example.com).'#10 +
     '* Punkt 1'#10 +
     '* Punkt 2'#10 +
     '* Punkt 3'#10;
 
   procedure process_output(s: PMD_CHAR; l: TMD_SIZE; userdata: pointer); cdecl;
+  var
+    AppData: PAppdata absolute userdata;
   begin
-    Write(copy(s, 0, l));
+    Write(AppData^.f, copy(s, 0, l));
   end;
 
-procedure main;
-var
-  res: integer;
-  cdn_host, url_css_dark, url_js: string;
-begin
-  cdn_host     := 'cdnjs.' + 'cloudflare.' + 'com';
-  // Jetzt laden wir das offizielle "github-dark" Stylesheet
-  url_css_dark := 'https://' + cdn_host + '/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
-  url_js       := 'https://' + cdn_host + '/ajax/libs/highlight.js/11.9.0/highlight.min.js';
+const
+  CDN_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/';
+  CSS_GITHUB_MD = CDN_BASE + 'github-markdown-css/5.8.1/github-markdown-light.min.css';
+  CSS_CODE_THEME = CDN_BASE + 'highlight.js/11.9.0/styles/github.min.css';
+  URL_JS = CDN_BASE + 'highlight.js/11.9.0/highlight.min.js';
+  URL_JS_PASCAL = CDN_BASE + 'highlight.js/11.9.0/languages/delphi.min.js';
 
-  // 1. HTML-Header ausgeben
-  WriteLn('<!DOCTYPE html>');
-  WriteLn('<html>');
-  WriteLn('<head>');
-  WriteLn('  <meta charset="utf-8">');
-  WriteLn('  <title>Markdown Viewer (Dark Mode)</title>');
+  HEAD =
+    '<!DOCTYPE html><html><head>'#10 +
+    '  <meta charset="utf-8">'#10 +
+    '  <title>Markdown Viewer</title>'#10 +
+    '  <link rel="stylesheet" href="' + CSS_GITHUB_MD + '">'#10 +
+    '  <link rel="stylesheet" href="' + CSS_CODE_THEME + '">'#10 +
+    '</head>'#10 +
+    '<body class="markdown-body">';
 
-  // Bindet das dunkle Code-Theme ein
-  WriteLn('  <link rel="stylesheet" href="' + url_css_dark + '">');
+  FOOD =
+    '  <script src="' + URL_JS + '"></script>'#10 +
+    '  <script src="' + URL_JS_PASCAL + '"></script>'#10 + // HIER NEU: Das Pascal-Modul einbinden
+    '  <script>hljs.highlightAll();</script>'#10 +
+    '</body></html>';
 
-  // Unser angepasstes CSS für den globalen Dark Mode
-  WriteLn('  <style>');
-  WriteLn('    body { font-family: sans-serif; margin: 30px; line-height: 1.5; background-color: #0d1117; color: #c9d1d9; }');
-  WriteLn('    h1 { color: #f0f6fc; border-bottom: 1px solid #21262d; padding-bottom: 10px; }');
-  WriteLn('    table { border-collapse: collapse; margin: 15px 0; font-size: 14px; background-color: #161b22; width: 100%; }');
-  WriteLn('    th, td { border: 1px solid #30363d; padding: 6px 12px; text-align: left; }');
-  WriteLn('    th { background-color: #21262d; color: #f0f6fc; }');
-  WriteLn('    pre { background: #161b22; padding: 12px; border-radius: 6px; border: 1px solid #30363d; }');
-  WriteLn('    a { color: #58a6ff; }');
-  WriteLn('  </style>');
-  WriteLn('</head>');
-  WriteLn('<body>');
+  procedure main;
+  var
+    res: integer;
+    appData: TAppdata;
+  begin
+    Assign(AppData.f, 'test.html');
+    Rewrite(AppData.f);
 
-  // 2. Den Markdown-Body über MD4C parsen
-  res := md_html(markdown_input, Length(markdown_input), @process_output, nil, MD_DIALECT_GITHUB, 0);
+    WriteLn(appData.f, HEAD);
 
-  if res <> 0 then begin
-    WriteLn(StdErr, 'Fehler beim Parsen von Markdown.');
-    ExitCode := 1;
-    Exit;
+    res := md_html(markdown_input, Length(markdown_input), @process_output, @appData, MD_DIALECT_GITHUB, 0);
+
+    if res <> 0 then begin
+      WriteLn(StdErr, 'Fehler beim Parsen von Markdown.');
+      ExitCode := 1;
+      Exit;
+    end;
+
+    WriteLn(appData.f, FOOD);
+
+    Close(appData.f);
   end;
-
-  // 3. HTML-Footer ausgeben und Highlighting aktivieren
-  WriteLn('');
-  WriteLn('  <script src="' + url_js + '"></script>');
-  WriteLn('  <script>hljs.highlightAll();</script>');
-  WriteLn('</body>');
-  WriteLn('</html>');
-end;
 
 begin
   main;

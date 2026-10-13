@@ -1,0 +1,62 @@
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  <title>Markdown Viewer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown-light.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+</head>
+<body class="markdown-body">
+<h1>Mein Markdown-Viewer</h1>
+<table>
+<thead>
+<tr>
+<th align="left">Produkt</th>
+<th align="left">Kategorie</th>
+<th align="left">Preis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Apfel</td>
+<td align="left">Lebensmittel</td>
+<td align="left">0,50 €</td>
+</tr>
+<tr>
+<td align="left">Buch</td>
+<td align="left">Medien</td>
+<td align="left">12,95 €</td>
+</tr>
+<tr>
+<td align="left">Kaffeetasse</td>
+<td align="left">Haushalt</td>
+<td align="left">8,50 €</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    // Die Schleife läuft von i = 0 bis i = 4 (insgesamt 5 Mal)
+    for (int i = 0; i &lt; 5; i++) {
+        printf(&quot;Hello World (Durchlauf %d)\n&quot;, i + 1);
+    }
+
+    return 0; // Signalisiert, dass das Programm erfolgreich lief
+}
+</code></pre>
+<pre><code class="language-pascal">program test
+
+begin
+    // Die Schleife läuft von i = 0 bis i = 4 (insgesamt 5 Mal)
+    Writeln('Hello World !');
+end;
+</code></pre>
+<p>Das ist <strong>fetter Text</strong> und eine <a href="https://example.com">Website</a>.</p>
+<ul>
+<li>Punkt 1</li>
+<li>Punkt 2</li>
+<li>Punkt 3</li>
+</ul>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/delphi.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body></html>
