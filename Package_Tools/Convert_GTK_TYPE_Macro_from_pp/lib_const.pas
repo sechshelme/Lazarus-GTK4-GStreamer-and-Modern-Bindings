@@ -378,6 +378,7 @@ const
     (libs: 'libgdal'; units: 'fp_gdal'),
     (libs: 'libgclang'; units: 'fp_clang'),
     (libs: 'libasan'; units: 'fp_asan'),
+    (libs: 'libvirt'; units: 'fp_virt'),
 
 
 
