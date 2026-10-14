@@ -1,7 +1,6 @@
 program project1;
 
 uses
-  ctypes,
   fp_poppler_glib,
   fp_cairo,
   fp_glib2,
@@ -116,10 +115,9 @@ var
     end;
   end;
 
-  function main(argc: cint; argv: PPChar): cint;
+  procedure main;
   var
     app: PGtkApplication;
-    status: longint;
     path_uri: Pgchar;
     err: PGError = nil;
   begin
@@ -146,18 +144,15 @@ var
 
     PDFData.Count := poppler_document_get_n_pages(PDFData.Document);
 
-
     app := gtk_application_new('org.gtk.example', G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, 'activate', G_CALLBACK(@activate), nil);
-    status := g_application_run(G_APPLICATION(app), argc, argv);
+    g_application_run(G_APPLICATION(app), argc, argv);
 
     g_object_unref(PDFData.Page);
     g_object_unref(PDFData.Document);
     g_object_unref(app);
-
-    Exit(status);
   end;
 
 begin
-  main(argc, argv);
+  main;
 end.

@@ -47,8 +47,6 @@ uses
     g_object_unref(out_);
 
     vips_shutdown;
-
-    WriteLn('ende');
   end;
 
 begin
