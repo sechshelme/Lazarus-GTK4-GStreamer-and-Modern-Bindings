@@ -3,83 +3,18 @@ unit libvirt_domain;
 interface
 
 uses
-  fp_virt;
+  fp_virt, libvirt_common, libvirt_host;
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
 
-{
- * libvirt-domain.h
- * Summary: APIs for management of domains
- * Description: Provides APIs for the management of domains
- *
- * Copyright (C) 2006-2015 Red Hat, Inc.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
-  }
-{$ifndef LIBVIRT_DOMAIN_H}
-{$define LIBVIRT_DOMAIN_H}
-{$ifndef __VIR_LIBVIRT_H_INCLUDES__}
-{$error "Don't include this file directly, only use libvirt/libvirt.h"}
-{$endif}
-{*
- * virDomain:
- *
- * a virDomain is a private structure representing a domain.
- *
- * Since: 0.0.1
-  }
 type
-{*
- * virDomainPtr:
- *
- * a virDomainPtr is pointer to a virDomain private structure, this is the
- * type used to reference a domain in the API.
- *
- * Since: 0.0.1
-  }
-
+  PPvirDomainPtr = ^PvirDomainPtr;
   PvirDomainPtr = ^TvirDomainPtr;
-  TvirDomainPtr = PvirDomain;
-{*
- * virDomainState:
- *
- * A domain may be in different states at a given point in time
- *
- * Since: 0.0.1
-  }
-{ no state (Since: 0.0.1)  }
-{ the domain is running (Since: 0.0.1)  }
-{ the domain is blocked on resource (Since: 0.0.1)  }
-{ the domain is paused by user (Since: 0.0.1)  }
-{ the domain is being shut down (Since: 0.0.1)  }
-{ the domain is shut off (Since: 0.0.1)  }
-{ the domain is crashed (Since: 0.0.2)  }
-{ the domain is suspended by guest
-                                   power management (Since: 0.9.11)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{
-     * NB: this enum value will increase over time as new states are
-     * added to the libvirt API. It reflects the last state supported
-     * by this version of the libvirt API.
-     *
-     * Since: 0.9.5
-      }
-{$endif}
+  TvirDomainPtr = type Pointer;
+
 type
   PvirDomainState = ^TvirDomainState;
   TvirDomainState =  Longint;
@@ -93,45 +28,15 @@ type
     VIR_DOMAIN_CRASHED = 6;
     VIR_DOMAIN_PMSUSPENDED = 7;
     VIR_DOMAIN_LAST = 8;
-;
-{*
- * virDomainNostateReason:
- *
- * Since: 0.9.2
-  }
-{ (Since: 0.9.2)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainNostateReason = ^TvirDomainNostateReason;
   TvirDomainNostateReason =  Longint;
   Const
     VIR_DOMAIN_NOSTATE_UNKNOWN = 0;
     VIR_DOMAIN_NOSTATE_LAST = 1;
-;
-{*
- * virDomainRunningReason:
- *
- * Since: 0.9.2
-  }
-{ (Since: 0.9.2)  }
-{ normal startup from boot (Since: 0.9.2)  }
-{ migrated from another host (Since: 0.9.2)  }
-{ restored from a state file (Since: 0.9.2)  }
-{ restored from snapshot (Since: 0.9.2)  }
-{ returned from paused state (Since: 0.9.2)  }
-{ returned from migration (Since: 0.9.2)  }
-{ returned from failed save process (Since: 0.9.2)  }
-{ returned from pmsuspended due to
-                                               wakeup event (Since: 0.9.11)  }
-{ resumed from crashed (Since: 1.1.1)  }
-{ running in post-copy migration mode (Since: 1.3.3)  }
-{ running in failed post-copy migration (Since: 8.5.0)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainRunningReason = ^TvirDomainRunningReason;
   TvirDomainRunningReason =  Longint;
   Const
@@ -148,47 +53,15 @@ type
     VIR_DOMAIN_RUNNING_POSTCOPY = 10;
     VIR_DOMAIN_RUNNING_POSTCOPY_FAILED = 11;
     VIR_DOMAIN_RUNNING_LAST = 12;
-;
-{*
- * virDomainBlockedReason:
- *
- * Since: 0.9.2
-  }
-{ the reason is unknown (Since: 0.9.2)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainBlockedReason = ^TvirDomainBlockedReason;
   TvirDomainBlockedReason =  Longint;
   Const
     VIR_DOMAIN_BLOCKED_UNKNOWN = 0;
     VIR_DOMAIN_BLOCKED_LAST = 1;
-;
-{*
- * virDomainPausedReason:
- *
- * Since: 0.9.2
-  }
-{ the reason is unknown (Since: 0.9.2)  }
-{ paused on user request (Since: 0.9.2)  }
-{ paused for offline migration (Since: 0.9.2)  }
-{ paused for save (Since: 0.9.2)  }
-{ paused for offline core dump (Since: 0.9.2)  }
-{ paused due to a disk I/O error (Since: 0.9.2)  }
-{ paused due to a watchdog event (Since: 0.9.2)  }
-{ paused after restoring from snapshot (Since: 0.9.2)  }
-{ paused during shutdown process (Since: 0.9.5)  }
-{ paused while creating a snapshot (Since: 1.0.1)  }
-{ paused due to a guest crash (Since: 1.1.1)  }
-{ the domain is being started (Since: 1.2.14)  }
-{ paused for post-copy migration (Since: 1.3.3)  }
-{ paused after failed post-copy (Since: 1.3.3)  }
-{ Some APIs (e.g., migration, snapshot) internally need to suspend a domain. This paused state reason is used when resume operation at the end of such API fails. (Since: 9.2.0)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainPausedReason = ^TvirDomainPausedReason;
   TvirDomainPausedReason =  Longint;
   Const
@@ -208,45 +81,16 @@ type
     VIR_DOMAIN_PAUSED_POSTCOPY_FAILED = 13;
     VIR_DOMAIN_PAUSED_API_ERROR = 14;
     VIR_DOMAIN_PAUSED_LAST = 15;
-;
-{*
- * virDomainShutdownReason:
- *
- * Since: 0.9.2
-  }
-{ the reason is unknown (Since: 0.9.2)  }
-{ shutting down on user request (Since: 0.9.2)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainShutdownReason = ^TvirDomainShutdownReason;
   TvirDomainShutdownReason =  Longint;
   Const
     VIR_DOMAIN_SHUTDOWN_UNKNOWN = 0;
     VIR_DOMAIN_SHUTDOWN_USER = 1;
     VIR_DOMAIN_SHUTDOWN_LAST = 2;
-;
-{*
- * virDomainShutoffReason:
- *
- * Since: 0.9.2
-  }
-{ the reason is unknown (Since: 0.9.2)  }
-{ normal shutdown (Since: 0.9.2)  }
-{ forced poweroff (Since: 0.9.2)  }
-{ domain crashed (Since: 0.9.2)  }
-{ migrated to another host (Since: 0.9.2)  }
-{ saved to a file (Since: 0.9.2)  }
-{ domain failed to start (Since: 0.9.2)  }
-{ restored from a snapshot which was
-                                           * taken while domain was shutoff (Since: 0.9.2)  }
-{ daemon decides to kill domain
-                                           during reconnection processing (Since: 4.10.0)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainShutoffReason = ^TvirDomainShutoffReason;
   TvirDomainShutoffReason =  Longint;
   Const
@@ -260,76 +104,30 @@ type
     VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT = 7;
     VIR_DOMAIN_SHUTOFF_DAEMON = 8;
     VIR_DOMAIN_SHUTOFF_LAST = 9;
-;
-{*
- * virDomainCrashedReason:
- *
- * Since: 0.9.2
-  }
-{ crashed for unknown reason (Since: 0.9.2)  }
-{ domain panicked (Since: 1.1.1)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainCrashedReason = ^TvirDomainCrashedReason;
   TvirDomainCrashedReason =  Longint;
   Const
     VIR_DOMAIN_CRASHED_UNKNOWN = 0;
     VIR_DOMAIN_CRASHED_PANICKED = 1;
     VIR_DOMAIN_CRASHED_LAST = 2;
-;
-{*
- * virDomainPMSuspendedReason:
- *
- * Since: 0.9.11
-  }
-{ (Since: 0.9.11)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.11)  }
-{$endif}
-type
+
+  type
   PvirDomainPMSuspendedReason = ^TvirDomainPMSuspendedReason;
   TvirDomainPMSuspendedReason =  Longint;
   Const
     VIR_DOMAIN_PMSUSPENDED_UNKNOWN = 0;
     VIR_DOMAIN_PMSUSPENDED_LAST = 1;
-;
-{*
- * virDomainPMSuspendedDiskReason:
- *
- * Since: 1.0.0
-  }
-{ (Since: 1.0.0)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 1.0.0)  }
-{$endif}
-type
+
+  type
   PvirDomainPMSuspendedDiskReason = ^TvirDomainPMSuspendedDiskReason;
   TvirDomainPMSuspendedDiskReason =  Longint;
   Const
     VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN = 0;
     VIR_DOMAIN_PMSUSPENDED_DISK_LAST = 1;
-;
-{*
- * virDomainControlState:
- *
- * Current state of a control interface to the domain.
- *
- * Since: 0.9.3
-  }
-{ operational, ready to accept commands (Since: 0.9.3)  }
-{ background job is running (can be
-                                        monitored by virDomainGetJobInfo); only
-                                        limited set of commands may be allowed (Since: 0.9.3)  }
-{ occupied by a running command (Since: 0.9.3)  }
-{ unusable, domain cannot be fully
-                                        operated, possible reason is provided
-                                        in the details field (Since: 0.9.3)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
-type
+
+  type
   PvirDomainControlState = ^TvirDomainControlState;
   TvirDomainControlState =  Longint;
   Const
@@ -338,27 +136,8 @@ type
     VIR_DOMAIN_CONTROL_OCCUPIED = 2;
     VIR_DOMAIN_CONTROL_ERROR = 3;
     VIR_DOMAIN_CONTROL_LAST = 4;
-;
-{*
- * virDomainControlErrorReason:
- *
- * Reason for the error state.
- *
- * Since: 1.2.14
-  }
-{ server didn't provide a
-                                                     reason (Since: 1.2.14)  }
-{ unknown reason for the
-                                                     error (Since: 1.2.14)  }
-{ monitor connection is
-                                                     broken (Since: 1.2.14)  }
-{ error caused due to
-                                                     internal failure in libvirt (Since: 1.2.14)
-                                                   }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 1.2.14)  }
-{$endif}
-type
+
+  type
   PvirDomainControlErrorReason = ^TvirDomainControlErrorReason;
   TvirDomainControlErrorReason =  Longint;
   Const
@@ -367,85 +146,26 @@ type
     VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR = 2;
     VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL = 3;
     VIR_DOMAIN_CONTROL_ERROR_REASON_LAST = 4;
-;
-{*
- * virDomainControlInfo:
- *
- * Structure filled in by virDomainGetControlInfo and providing details about
- * current state of control interface to a domain.
- *
- * Since: 0.9.3
-  }
-type
-{ control state, one of virDomainControlState  }
-{ state details, currently 0 except for ERROR
-                               state (one of virDomainControlErrorReason)  }
-{ for how long (in msec) control interface
-                                     has been in current state (except for OK
-                                     and ERROR states)  }
-  PvirDomainControlInfo = ^TvirDomainControlInfo;
+
+    type
+    PvirDomainControlInfo = ^TvirDomainControlInfo;
   TvirDomainControlInfo = record
       state : dword;
       details : dword;
-      stateTime : qword;
-    end;
-
-{*
- * virDomainControlInfoPtr:
- *
- * Pointer to virDomainControlInfo structure.
- *
- * Since: 0.9.3
-  }
+      stateTime : qword;       end;
 
   PvirDomainControlInfoPtr = ^TvirDomainControlInfoPtr;
   TvirDomainControlInfoPtr = PvirDomainControlInfo;
-{*
- * virDomainModificationImpact:
- *
- * Several modification APIs take flags to determine whether a change
- * to the domain affects just the running instance, just the
- * persistent definition, or both at the same time.  The counterpart
- * query APIs also take the same flags to determine whether to query
- * the running instance or persistent definition, although both cannot
- * be queried at once.
- *
- * The use of VIR_DOMAIN_AFFECT_CURRENT will resolve to either
- * VIR_DOMAIN_AFFECT_LIVE or VIR_DOMAIN_AFFECT_CONFIG according to
- * current domain state. VIR_DOMAIN_AFFECT_LIVE requires a running
- * domain, and VIR_DOMAIN_AFFECT_CONFIG requires a persistent domain
- * (whether or not it is running).
- *
- * These enums should not conflict with those of virTypedParameterFlags.
- *
- * Since: 0.9.2
-  }
-{ Affect current domain state. (Since: 0.9.2)   }
-{ Affect running domain state. (Since: 0.9.2)   }
-{ Affect persistent domain state. (Since: 0.9.2)  }
-{ 1 << 2 is reserved for virTypedParameterFlags  }
 
+  type
   PvirDomainModificationImpact = ^TvirDomainModificationImpact;
   TvirDomainModificationImpact =  Longint;
   Const
     VIR_DOMAIN_AFFECT_CURRENT = 0;
     VIR_DOMAIN_AFFECT_LIVE = 1 shl 0;
     VIR_DOMAIN_AFFECT_CONFIG = 1 shl 1;
-;
-{*
- * virDomainInfo:
- *
- * a virDomainInfo is a structure filled by virDomainGetInfo() and extracting
- * runtime information for a given active Domain
- *
- * Since: 0.0.1
-  }
-type
-{ the running state, one of virDomainState  }
-{ the maximum memory in KBytes allowed  }
-{ the memory in KBytes used by the domain  }
-{ the number of virtual CPUs for the domain  }
-{ the CPU time used in nanoseconds  }
+
+  type
   PvirDomainInfo = ^TvirDomainInfo;
   TvirDomainInfo = record
       state : byte;
@@ -454,33 +174,10 @@ type
       nrVirtCpu : word;
       cpuTime : qword;
     end;
-
-{*
- * virDomainInfoPtr:
- *
- * a virDomainInfoPtr is a pointer to a virDomainInfo structure.
- *
- * Since: 0.0.1
-  }
-
   PvirDomainInfoPtr = ^TvirDomainInfoPtr;
   TvirDomainInfoPtr = PvirDomainInfo;
-{*
- * virDomainCreateFlags:
- *
- * Flags OR'ed together to provide specific behaviour when creating a
- * Domain.
- *
- * Since: 0.0.1
-  }
-{ Default behavior (Since: 0.0.1)  }
-{ Launch guest in paused state (Since: 0.8.2)  }
-{ Automatically kill guest when virConnectPtr is closed (Since: 0.9.3)  }
-{ Avoid file system cache pollution (Since: 0.9.4)  }
-{ Boot, discarding any managed save (Since: 0.9.5)  }
-{ Validate the XML document against schema (Since: 1.2.12)  }
-{ Re-initialize NVRAM from template (Since: 8.1.0)  }
 
+  type
   PvirDomainCreateFlags = ^TvirDomainCreateFlags;
   TvirDomainCreateFlags =  Longint;
   Const
@@ -491,166 +188,30 @@ type
     VIR_DOMAIN_START_FORCE_BOOT = 1 shl 3;
     VIR_DOMAIN_START_VALIDATE = 1 shl 4;
     VIR_DOMAIN_START_RESET_NVRAM = 1 shl 5;
-;
-{ Management of scheduler parameters  }
-{*
- * VIR_DOMAIN_SCHEDULER_CPU_SHARES:
- *
- * Macro represents proportional weight of the scheduler used on the
- * host cpu, when using the posix scheduler, as a ullong.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_CPU_SHARES = 'cpu_shares';  
-{*
- * VIR_DOMAIN_SCHEDULER_GLOBAL_PERIOD:
- *
- * Macro represents the enforcement period for a quota, in microseconds,
- * for whole domain, when using the posix scheduler, as a ullong.
- *
- * Since: 1.3.3
-  }
-  VIR_DOMAIN_SCHEDULER_GLOBAL_PERIOD = 'global_period';  
-{*
- * VIR_DOMAIN_SCHEDULER_GLOBAL_QUOTA:
- *
- * Macro represents the maximum bandwidth to be used within a period for
- * whole domain, when using the posix scheduler, as an llong.
- *
- * Since: 1.3.3
-  }
-  VIR_DOMAIN_SCHEDULER_GLOBAL_QUOTA = 'global_quota';  
-{*
- * VIR_DOMAIN_SCHEDULER_VCPU_PERIOD:
- *
- * Macro represents the enforcement period for a quota, in microseconds,
- * for vcpus only, when using the posix scheduler, as a ullong.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_VCPU_PERIOD = 'vcpu_period';  
-{*
- * VIR_DOMAIN_SCHEDULER_VCPU_QUOTA:
- *
- * Macro represents the maximum bandwidth to be used within a period for
- * vcpus only, when using the posix scheduler, as an llong.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_VCPU_QUOTA = 'vcpu_quota';  
-{*
- * VIR_DOMAIN_SCHEDULER_EMULATOR_PERIOD:
- *
- * Macro represents the enforcement period for a quota in microseconds,
- * when using the posix scheduler, for all emulator activity not tied to
- * vcpus, as a ullong.
- *
- * Since: 0.10.0
-  }
-  VIR_DOMAIN_SCHEDULER_EMULATOR_PERIOD = 'emulator_period';  
-{*
- * VIR_DOMAIN_SCHEDULER_EMULATOR_QUOTA:
- *
- * Macro represents the maximum bandwidth to be used within a period for
- * all emulator activity not tied to vcpus, when using the posix scheduler,
- * as an llong.
- *
- * Since: 0.10.0
-  }
-  VIR_DOMAIN_SCHEDULER_EMULATOR_QUOTA = 'emulator_quota';  
-{*
- * VIR_DOMAIN_SCHEDULER_IOTHREAD_PERIOD:
- *
- * Macro represents the enforcement period for a quota, in microseconds,
- * for IOThreads only, when using the posix scheduler, as a ullong.
- *
- * Since: 2.2.0
-  }
-  VIR_DOMAIN_SCHEDULER_IOTHREAD_PERIOD = 'iothread_period';  
-{*
- * VIR_DOMAIN_SCHEDULER_IOTHREAD_QUOTA:
- *
- * Macro represents the maximum bandwidth to be used within a period for
- * IOThreads only, when using the posix scheduler, as an llong.
- *
- * Since: 2.2.0
-  }
-  VIR_DOMAIN_SCHEDULER_IOTHREAD_QUOTA = 'iothread_quota';  
-{*
- * VIR_DOMAIN_SCHEDULER_WEIGHT:
- *
- * Macro represents the relative weight,  when using the credit
- * scheduler, as a uint.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_WEIGHT = 'weight';  
-{*
- * VIR_DOMAIN_SCHEDULER_CAP:
- *
- * Macro represents the maximum scheduler cap, when using the credit
- * scheduler, as a uint.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_CAP = 'cap';  
-{*
- * VIR_DOMAIN_SCHEDULER_RESERVATION:
- *
- * Macro represents the scheduler reservation value, when using the
- * allocation scheduler, as an llong.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_RESERVATION = 'reservation';  
-{*
- * VIR_DOMAIN_SCHEDULER_LIMIT:
- *
- * Macro represents the scheduler limit value, when using the
- * allocation scheduler, as an llong.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_LIMIT = 'limit';  
-{*
- * VIR_DOMAIN_SCHEDULER_SHARES:
- *
- * Macro represents the scheduler shares value, when using the
- * allocation scheduler, as an int.
- *
- * Since: 0.9.7
-  }
-  VIR_DOMAIN_SCHEDULER_SHARES = 'shares';  
-{
- * Fetch scheduler parameters, caller allocates 'params' field of size 'nparams'
-  }
+
+    const
+    VIR_DOMAIN_SCHEDULER_CPU_SHARES = 'cpu_shares';
+  VIR_DOMAIN_SCHEDULER_GLOBAL_PERIOD = 'global_period';
+  VIR_DOMAIN_SCHEDULER_GLOBAL_QUOTA = 'global_quota';
+  VIR_DOMAIN_SCHEDULER_VCPU_PERIOD = 'vcpu_period';
+  VIR_DOMAIN_SCHEDULER_VCPU_QUOTA = 'vcpu_quota';
+  VIR_DOMAIN_SCHEDULER_EMULATOR_PERIOD = 'emulator_period';
+  VIR_DOMAIN_SCHEDULER_EMULATOR_QUOTA = 'emulator_quota';
+  VIR_DOMAIN_SCHEDULER_IOTHREAD_PERIOD = 'iothread_period';
+  VIR_DOMAIN_SCHEDULER_IOTHREAD_QUOTA = 'iothread_quota';
+  VIR_DOMAIN_SCHEDULER_WEIGHT = 'weight';
+  VIR_DOMAIN_SCHEDULER_CAP = 'cap';
+  VIR_DOMAIN_SCHEDULER_RESERVATION = 'reservation';
+  VIR_DOMAIN_SCHEDULER_LIMIT = 'limit';
+  VIR_DOMAIN_SCHEDULER_SHARES = 'shares';
 
 function virDomainGetSchedulerParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:Plongint):longint;cdecl;external libvirt;
 function virDomainGetSchedulerParametersFlags(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:Plongint; flags:dword):longint;cdecl;external libvirt;
-{
- * Change scheduler parameters
-  }
+
 function virDomainSetSchedulerParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:longint):longint;cdecl;external libvirt;
 function virDomainSetSchedulerParametersFlags(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainBlockStatsStruct:
- *
- * Block device stats for virDomainBlockStats.
- *
- * Hypervisors may return a field set to ((long long)-1) which indicates
- * that the hypervisor does not support that statistic.
- *
- * NB. Here 'long long' means 64 bit integer.
- *
- * Since: 0.3.3
-  }
+
 type
-  TvirDomainBlockStats = TvirDomainBlockStatsStruct;
-{ number of read requests  }
-{ number of read bytes  }
-{ number of write requests  }
-{ number of written bytes  }
-{ In Xen this returns the mysterious 'oo_req'.  }
   PvirDomainBlockStats = ^TvirDomainBlockStats;
   TvirDomainBlockStats = record
       rd_req : int64;
@@ -659,122 +220,22 @@ type
       wr_bytes : int64;
       errs : int64;
     end;
-
-{*
- * virDomainBlockStatsPtr:
- *
- * A pointer to a virDomainBlockStats structure
- *
- * Since: 0.3.2
-  }
-
   PvirDomainBlockStatsPtr = ^TvirDomainBlockStatsPtr;
-  TvirDomainBlockStatsPtr = PvirDomainBlockStatsStruct;
-{*
- * VIR_DOMAIN_BLOCK_STATS_FIELD_LENGTH:
- *
- * Macro providing the field length of parameter names when using
- * virDomainBlockStatsFlags().
- *
- * Since: 0.9.5
-  }
+  TvirDomainBlockStatsPtr = PvirDomainBlockStats;
 
 const
   VIR_DOMAIN_BLOCK_STATS_FIELD_LENGTH = VIR_TYPED_PARAM_FIELD_LENGTH;  
-{*
- * VIR_DOMAIN_BLOCK_STATS_READ_BYTES:
- *
- * Macro represents the total number of read bytes of the
- * block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_READ_BYTES = 'rd_bytes';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_READ_REQ:
- *
- * Macro represents the total read requests of the
- * block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_READ_REQ = 'rd_operations';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_READ_TOTAL_TIMES:
- *
- * Macro represents the total time spend on cache reads in
- * nano-seconds of the block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_READ_TOTAL_TIMES = 'rd_total_times';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_WRITE_BYTES:
- *
- * Macro represents the total number of write bytes of the
- * block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_WRITE_BYTES = 'wr_bytes';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_WRITE_REQ:
- *
- * Macro represents the total write requests of the
- * block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_WRITE_REQ = 'wr_operations';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_WRITE_TOTAL_TIMES:
- *
- * Macro represents the total time spend on cache writes in
- * nano-seconds of the block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_WRITE_TOTAL_TIMES = 'wr_total_times';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_FLUSH_REQ:
- *
- * Macro represents the total flush requests of the
- * block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_FLUSH_REQ = 'flush_operations';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_FLUSH_TOTAL_TIMES:
- *
- * Macro represents the total time spend on cache flushing in
- * nano-seconds of the block device, as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_FLUSH_TOTAL_TIMES = 'flush_total_times';  
-{*
- * VIR_DOMAIN_BLOCK_STATS_ERRS:
- *
- * In Xen this returns the mysterious 'oo_req', as an llong.
- *
- * Since: 0.9.5
-  }
-  VIR_DOMAIN_BLOCK_STATS_ERRS = 'errs';  
-{*
- * virDomainInterfaceStatsStruct:
- *
- * Network interface stats for virDomainInterfaceStats.
- *
- * Hypervisors may return a field set to ((long long)-1) which indicates
- * that the hypervisor does not support that statistic.
- *
- * NB. Here 'long long' means 64 bit integer.
- *
- * Since: 0.3.3
-  }
+  VIR_DOMAIN_BLOCK_STATS_READ_BYTES = 'rd_bytes';
+  VIR_DOMAIN_BLOCK_STATS_READ_REQ = 'rd_operations';
+  VIR_DOMAIN_BLOCK_STATS_READ_TOTAL_TIMES = 'rd_total_times';
+  VIR_DOMAIN_BLOCK_STATS_WRITE_BYTES = 'wr_bytes';
+  VIR_DOMAIN_BLOCK_STATS_WRITE_REQ = 'wr_operations';
+  VIR_DOMAIN_BLOCK_STATS_WRITE_TOTAL_TIMES = 'wr_total_times';
+  VIR_DOMAIN_BLOCK_STATS_FLUSH_REQ = 'flush_operations';
+  VIR_DOMAIN_BLOCK_STATS_FLUSH_TOTAL_TIMES = 'flush_total_times';
+  VIR_DOMAIN_BLOCK_STATS_ERRS = 'errs';
+
 type
-  TvirDomainInterfaceStats = TvirDomainInterfaceStatsStruct;
   PvirDomainInterfaceStats = ^TvirDomainInterfaceStats;
   TvirDomainInterfaceStats = record
       rx_bytes : int64;
@@ -786,102 +247,9 @@ type
       tx_errs : int64;
       tx_drop : int64;
     end;
-
-{*
- * virDomainInterfaceStatsPtr:
- *
- * A pointer to a virDomainInterfaceStats structure
- *
- * Since: 0.3.2
-  }
-
   PvirDomainInterfaceStatsPtr = ^TvirDomainInterfaceStatsPtr;
-  TvirDomainInterfaceStatsPtr = PvirDomainInterfaceStatsStruct;
-{*
- * virDomainMemoryStatTags:
- *
- * These represent values from inside of the guest (e.g. the same value would
- * be read from '/proc/meminfo' and/or other files from inside the guest).
- *
- * Since: 0.7.5
-  }
-{ The total amount of data read from swap space (in kB). (Since: 0.7.5)  }
-{ The total amount of memory written out to swap space (in kB). (Since: 0.7.5)  }
-{
-     * Page faults occur when a process makes a valid access to virtual memory
-     * that is not available.  When servicing the page fault, if disk IO is
-     * required, it is considered a major fault.  If not, it is a minor fault.
-     * These are expressed as the number of faults that have occurred.
-     *
-     * Since: 0.7.5
-      }
-{
-     * Since: 0.7.5
-      }
-{
-     * The amount of memory left completely unused by the system.  Memory that
-     * is available but used for reclaimable caches should NOT be reported as
-     * free.  This value is expressed in kB.
-     *
-     * Since: 0.7.5
-      }
-{
-     * The total amount of usable memory as seen by the domain.  This value
-     * may be less than the amount of memory assigned to the domain if a
-     * balloon driver is in use or if the guest OS does not initialize all
-     * assigned pages.  This value is expressed in kB.
-     *
-     * Since: 0.7.5
-      }
-{
-     * Current balloon value (in KB).
-     *
-     * Since: 0.9.3
-      }
-{ Resident Set Size of the process running the domain. This value
-     * is in kB
-     *
-     * Since: 0.9.10
-      }
-{
-     * How much the balloon can be inflated without pushing the guest system
-     * to swap, corresponds to 'Available' in /proc/meminfo
-     *
-     * Since: 2.1.0
-      }
-{
-     * Timestamp of the last update of statistics, in seconds.
-     *
-     * Since: 2.1.0
-      }
-{
-     * The amount of memory, that can be quickly reclaimed without
-     * additional I/O (in kB). Typically these pages are used for caching files
-     * from disk.
-     *
-     * Since: 4.6.0
-      }
-{
-     * The number of successful huge page allocations from inside the domain via
-     * virtio balloon.
-     *
-     * Since: 5.4.0
-      }
-{
-     * The number of failed huge page allocations from inside the domain via
-     * virtio balloon.
-     *
-     * Since: 5.4.0
-      }
-{
-     * The number of statistics supported by this version of the interface.
-     * To add new statistics, add them to the enum and increase this value.
-     *
-     * Since: 0.7.5
-      }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
+  TvirDomainInterfaceStatsPtr = PvirDomainInterfaceStats;
+
 type
   PvirDomainMemoryStatTags = ^TvirDomainMemoryStatTags;
   TvirDomainMemoryStatTags =  Longint;
@@ -901,41 +269,17 @@ type
     VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGFAIL = 12;
     VIR_DOMAIN_MEMORY_STAT_NR = 13;
     VIR_DOMAIN_MEMORY_STAT_LAST = VIR_DOMAIN_MEMORY_STAT_NR;
-;
-{*
- * virDomainMemoryStatStruct:
- *
- * Since: 0.7.5
-  }
-type
-  TvirDomainMemoryStat = TvirDomainMemoryStatStruct;
+
+  type
   PvirDomainMemoryStat = ^TvirDomainMemoryStat;
   TvirDomainMemoryStat = record
       tag : longint;
       val : qword;
     end;
-
-{*
- * virDomainMemoryStatPtr:
- *
- * Since: 0.7.5
-  }
-
   PvirDomainMemoryStatPtr = ^TvirDomainMemoryStatPtr;
-  TvirDomainMemoryStatPtr = PvirDomainMemoryStatStruct;
-{*
- * virDomainCoreDumpFlags:
- *
- * Domain core dump flags.
- *
- * Since: 0.7.5
-  }
-{ crash after dump (Since: 0.7.5)  }
-{ live dump (Since: 0.7.5)  }
-{ avoid file system cache pollution (Since: 0.9.4)  }
-{ reset domain after dump finishes (Since: 0.9.7)  }
-{ use dump-guest-memory (Since: 0.9.13)  }
+  TvirDomainMemoryStatPtr = PvirDomainMemoryStat;
 
+  type
   PvirDomainCoreDumpFlags = ^TvirDomainCoreDumpFlags;
   TvirDomainCoreDumpFlags =  Longint;
   Const
@@ -944,32 +288,8 @@ type
     VIR_DUMP_BYPASS_CACHE = 1 shl 2;
     VIR_DUMP_RESET = 1 shl 3;
     VIR_DUMP_MEMORY_ONLY = 1 shl 4;
-;
-{*
- * virDomainCoreDumpFormat:
- *
- * Values for specifying different formats of domain core dumps.
- *
- * Since: 1.2.3
-  }
-{ dump guest memory in raw format (Since: 1.2.3)  }
-{ kdump-compressed format, with
-                                               * zlib compression (Since: 1.2.3)  }
-{ kdump-compressed format, with
-                                               * lzo compression (Since: 1.2.3)  }
-{ kdump-compressed format, with
-                                               * snappy compression (Since: 1.2.3)  }
-{ Windows full crashdump format (Since: 7.4.0)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{
-     * NB: this enum value will increase over time as new formats are
-     * added to the libvirt API. It reflects the last format supported
-     * by this version of the libvirt API.
-     *
-     * Since: 1.2.3
-      }
-{$endif}
-type
+
+  type
   PvirDomainCoreDumpFormat = ^TvirDomainCoreDumpFormat;
   TvirDomainCoreDumpFormat =  Longint;
   Const
@@ -979,182 +299,8 @@ type
     VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY = 3;
     VIR_DOMAIN_CORE_DUMP_FORMAT_WIN_DMP = 4;
     VIR_DOMAIN_CORE_DUMP_FORMAT_LAST = 5;
-;
-{*
- * virDomainMigrateFlags:
- *
- * Domain migration flags.
- *
- * Since: 0.3.2
-  }
-{ Do not pause the domain during migration. The domain's memory will
-     * be transferred to the destination host while the domain is running.
-     * The migration may never converge if the domain is changing its memory
-     * faster then it can be transferred. The domain can be manually paused
-     * anytime during migration using virDomainSuspend.
-     *
-     * Since: 0.3.2
-      }
-{ Tell the source libvirtd to connect directly to the destination host.
-     * Without this flag the client (e.g., virsh) connects to both hosts and
-     * controls the migration process. In peer-to-peer mode, the source
-     * libvirtd controls the migration by calling the destination daemon
-     * directly.
-     *
-     * Since: 0.7.2
-      }
-{ Tunnel migration data over libvirtd connection. Without this flag the
-     * source hypervisor sends migration data directly to the destination
-     * hypervisor. This flag can only be used when VIR_MIGRATE_PEER2PEER is
-     * set as well.
-     *
-     * Note the less-common spelling that we're stuck with:
-     * VIR_MIGRATE_TUNNELLED should be VIR_MIGRATE_TUNNELED.
-     *
-     * Since: 0.7.2
-      }
-{ Define the domain as persistent on the destination host after successful
-     * migration. If the domain was persistent on the source host and
-     * VIR_MIGRATE_UNDEFINE_SOURCE is not used, it will end up persistent on
-     * both hosts.
-     *
-     * Since: 0.7.3
-      }
-{ Undefine the domain on the source host once migration successfully
-     * finishes.
-     *
-     * Since: 0.7.3
-      }
-{ Leave the domain suspended on the destination host. virDomainResume (on
-     * the virDomainPtr returned by the migration API) has to be called
-     * explicitly to resume domain's virtual CPUs.
-     *
-     * Since: 0.7.5
-      }
-{ Migrate full disk images in addition to domain's memory. By default
-     * only non-shared non-readonly disk images are transferred. The
-     * VIR_MIGRATE_PARAM_MIGRATE_DISKS parameter can be used to specify which
-     * disks should be migrated.
-     *
-     * This flag and VIR_MIGRATE_NON_SHARED_INC are mutually exclusive.
-     *
-     * Since: 0.8.2
-      }
-{ Migrate disk images in addition to domain's memory. This is similar to
-     * VIR_MIGRATE_NON_SHARED_DISK, but only the top level of each disk's
-     * backing chain is copied. That is, the rest of the backing chain is
-     * expected to be present on the destination and to be exactly the same as
-     * on the source host.
-     *
-     * This flag and VIR_MIGRATE_NON_SHARED_DISK are mutually exclusive.
-     *
-     * Since: 0.8.2
-      }
-{ Protect against domain configuration changes during the migration
-     * process. This flag is used automatically when both sides support it.
-     * Explicitly setting this flag will cause migration to fail if either the
-     * source or the destination does not support it.
-     *
-     * Since: 0.9.4
-      }
-{ Force migration even if it is considered unsafe. In some cases libvirt
-     * may refuse to migrate the domain because doing so may lead to potential
-     * problems such as data corruption, and thus the migration is considered
-     * unsafe. For a QEMU domain this may happen if the domain uses disks
-     * without explicitly setting cache mode to "none". Migrating such domains
-     * is unsafe unless the disk images are stored on coherent clustered
-     * filesystem, such as GFS2 or GPFS.
-     *
-     * Since: 0.9.11
-      }
-{ Migrate a domain definition without starting the domain on the
-     * destination and without stopping it on the source host. Offline
-     * migration requires VIR_MIGRATE_PERSIST_DEST to be set.
-     *
-     * Offline migration may not copy disk storage or any other file based
-     * storage (such as UEFI variables).
-     *
-     * Since: 1.0.1
-      }
-{ Compress migration data. The compression methods can be specified using
-     * VIR_MIGRATE_PARAM_COMPRESSION. A hypervisor default method will be used
-     * if this parameter is omitted. Individual compression methods can be
-     * tuned via their specific VIR_MIGRATE_PARAM_COMPRESSION_* parameters.
-     *
-     * Since: 1.0.3
-      }
-{ Cancel migration if a soft error (such as I/O error) happens during
-     * migration.
-     *
-     * Since: 1.1.0
-      }
-{ Enable algorithms that ensure a live migration will eventually converge.
-     * This usually means the domain will be slowed down to make sure it does
-     * not change its memory faster than a hypervisor can transfer the changed
-     * memory to the destination host. VIR_MIGRATE_PARAM_AUTO_CONVERGE_*
-     * parameters can be used to tune the algorithm.
-     *
-     * Since: 1.2.3
-      }
-{ This flag can be used with RDMA migration (i.e., when
-     * VIR_MIGRATE_PARAM_URI starts with "rdma://") to tell the hypervisor
-     * to pin all domain's memory at once before migration starts rather then
-     * letting it pin memory pages as needed. This means that all memory pages
-     * belonging to the domain will be locked in host's memory and the host
-     * will not be allowed to swap them out.
-     *
-     * For QEMU/KVM this requires hard_limit memory tuning element (in the
-     * domain XML) to be used and set to the maximum memory configured for the
-     * domain plus any memory consumed by the QEMU process itself. Beware of
-     * setting the memory limit too high (and thus allowing the domain to lock
-     * most of the host's memory). Doing so may be dangerous to both the
-     * domain and the host itself since the host's kernel may run out of
-     * memory.
-     *
-     * Since: 1.2.9
-      }
-{ Setting the VIR_MIGRATE_POSTCOPY flag tells libvirt to enable post-copy
-     * migration. However, the migration will start normally and
-     * virDomainMigrateStartPostCopy needs to be called to switch it into the
-     * post-copy mode. See virDomainMigrateStartPostCopy for more details.
-     *
-     * Since: 1.3.3
-      }
-{ Setting the VIR_MIGRATE_TLS flag will cause the migration to attempt
-     * to use the TLS environment configured by the hypervisor in order to
-     * perform the migration. If incorrectly configured on either source or
-     * destination, the migration will fail.
-     *
-     * Since: 3.2.0
-      }
-{ Send memory pages to the destination host through several network
-     * connections. See VIR_MIGRATE_PARAM_PARALLEL_* parameters for
-     * configuring the parallel migration.
-     *
-     * Since: 5.2.0
-      }
-{ Force the guest writes which happen when copying disk images for
-      * non-shared storage migration to be synchronously written to the
-      * destination. This ensures the storage migration converges for VMs
-      * doing heavy I/O on fast local storage and slow mirror.
-      *
-      * Requires one of VIR_MIGRATE_NON_SHARED_DISK, VIR_MIGRATE_NON_SHARED_INC
-      * to be present as well.
-      *
-      * Since: 8.0.0
-       }
-{ Resume migration which failed in post-copy phase.
-     *
-     * Since: 8.5.0
-      }
-{ Use zero-copy mechanism for migrating memory pages. For QEMU/KVM this
-     * means QEMU will be temporarily allowed to lock all guest pages in host's
-     * memory, although only those that are queued for transfer will be locked
-     * at the same time.
-     *
-     * Since: 8.5.0
-      }
-type
+
+  type
   PvirDomainMigrateFlags = ^TvirDomainMigrateFlags;
   TvirDomainMigrateFlags =  Longint;
   Const
@@ -1179,276 +325,30 @@ type
     VIR_MIGRATE_NON_SHARED_SYNCHRONOUS_WRITES = 1 shl 18;
     VIR_MIGRATE_POSTCOPY_RESUME = 1 shl 19;
     VIR_MIGRATE_ZEROCOPY = 1 shl 20;
-;
-{*
- * VIR_MIGRATE_PARAM_URI:
- *
- * virDomainMigrate* params field: URI to use for initiating domain migration
- * as VIR_TYPED_PARAM_STRING. It takes a hypervisor specific format. The
- * uri_transports element of the hypervisor capabilities XML includes details
- * of the supported URI schemes. When omitted libvirt will auto-generate
- * suitable default URI. It is typically only necessary to specify this URI if
- * the destination host has multiple interfaces and a specific interface is
- * required to transmit migration data.
- *
- * This field may not be used when VIR_MIGRATE_TUNNELLED flag is set.
- *
- * Since: 1.1.0
-  }
-  VIR_MIGRATE_PARAM_URI = 'migrate_uri';  
-{*
- * VIR_MIGRATE_PARAM_DEST_NAME:
- *
- * virDomainMigrate* params field: the name to be used for the domain on the
- * destination host as VIR_TYPED_PARAM_STRING. Omitting this parameter keeps
- * the domain name the same. This field is only allowed to be used with
- * hypervisors that support domain renaming during migration.
- *
- * Since: 1.1.0
-  }
-  VIR_MIGRATE_PARAM_DEST_NAME = 'destination_name';  
-{*
- * VIR_MIGRATE_PARAM_DEST_XML:
- *
- * virDomainMigrate* params field: the new configuration to be used for the
- * domain on the destination host as VIR_TYPED_PARAM_STRING. The configuration
- * must include an identical set of virtual devices, to ensure a stable guest
- * ABI across migration. Only parameters related to host side configuration
- * can be changed in the XML. Hypervisors which support this field will forbid
- * migration if the provided XML would cause a change in the guest ABI. This
- * field cannot be used to rename the domain during migration (use
- * VIR_MIGRATE_PARAM_DEST_NAME field for that purpose). Domain name in the
- * destination XML must match the original domain name.
- *
- * Omitting this parameter keeps the original domain configuration. Using this
- * field with hypervisors that do not support changing domain configuration
- * during migration will result in a failure.
- *
- * Since: 1.1.0
-  }
-  VIR_MIGRATE_PARAM_DEST_XML = 'destination_xml';  
-{*
- * VIR_MIGRATE_PARAM_PERSIST_XML:
- *
- * virDomainMigrate* params field: the new persistent configuration to be used
- * for the domain on the destination host as VIR_TYPED_PARAM_STRING.
- * This field cannot be used to rename the domain during migration (use
- * VIR_MIGRATE_PARAM_DEST_NAME field for that purpose). Domain name in the
- * destination XML must match the original domain name.
- *
- * Omitting this parameter keeps the original domain persistent configuration.
- * Using this field with hypervisors that do not support changing domain
- * configuration during migration will result in a failure.
- *
- * Since: 1.3.4
-  }
-  VIR_MIGRATE_PARAM_PERSIST_XML = 'persistent_xml';  
-{*
- * VIR_MIGRATE_PARAM_BANDWIDTH:
- *
- * virDomainMigrate* params field: the maximum bandwidth (in MiB/s) that will
- * be used for migration as VIR_TYPED_PARAM_ULLONG. If set to 0 or omitted,
- * libvirt will choose a suitable default. Some hypervisors do not support this
- * feature and will return an error if this field is used and is not 0.
- *
- * Since: 1.1.0
-  }
-  VIR_MIGRATE_PARAM_BANDWIDTH = 'bandwidth';  
-{*
- * VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY:
- *
- * virDomainMigrate* params field: the maximum bandwidth (in MiB/s) that will
- * be used for post-copy phase of a migration as VIR_TYPED_PARAM_ULLONG. If set
- * to 0 or omitted, post-copy migration speed will not be limited.
- *
- * Since: 5.1.0
-  }
-  VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY = 'bandwidth.postcopy';  
-{*
- * VIR_MIGRATE_PARAM_GRAPHICS_URI:
- *
- * virDomainMigrate* params field: URI to use for migrating client's connection
- * to domain's graphical console as VIR_TYPED_PARAM_STRING. If specified, the
- * client will be asked to automatically reconnect using these parameters
- * instead of the automatically computed ones. This can be useful if, e.g., the
- * client does not have a direct access to the network virtualization hosts are
- * connected to and needs to connect through a proxy. The URI is formed as
- * follows:
- *
- *      protocol://hostname[:port]/[?parameters]
- *
- * where protocol is either "spice" or "vnc" and parameters is a list of
- * protocol specific parameters separated by '&'. Currently recognized
- * parameters are "tlsPort" and "tlsSubject". For example,
- *
- *      spice://target.host.com:1234/?tlsPort=4567
- *
- * Since: 1.1.0
-  }
-  VIR_MIGRATE_PARAM_GRAPHICS_URI = 'graphics_uri';  
-{*
- * VIR_MIGRATE_PARAM_LISTEN_ADDRESS:
- *
- * virDomainMigrate* params field: The listen address that hypervisor on the
- * destination side should bind to for incoming migration. Both IPv4 and IPv6
- * addresses are accepted as well as hostnames (the resolving is done on
- * destination). Some hypervisors do not support this feature and will return
- * an error if this field is used.
- *
- * Since: 1.1.4
-  }
-  VIR_MIGRATE_PARAM_LISTEN_ADDRESS = 'listen_address';  
-{*
- * VIR_MIGRATE_PARAM_MIGRATE_DISKS:
- *
- * virDomainMigrate* params multiple field: The multiple values that list
- * the block devices to be migrated. At the moment this is only supported
- * by the QEMU driver but not for the tunnelled migration.
- *
- * Since: 1.2.17
-  }
-  VIR_MIGRATE_PARAM_MIGRATE_DISKS = 'migrate_disks';  
-{*
- * VIR_MIGRATE_PARAM_DISKS_PORT:
- *
- * virDomainMigrate* params field: port that destination server should use
- * for incoming disks migration. Type is VIR_TYPED_PARAM_INT. If set to 0 or
- * omitted, libvirt will choose a suitable default. At the moment this is only
- * supported by the QEMU driver.
- *
- * Since: 1.3.3
-  }
-  VIR_MIGRATE_PARAM_DISKS_PORT = 'disks_port';  
-{*
- * VIR_MIGRATE_PARAM_DISKS_URI:
- *
- * virDomainMigrate* params field: URI used for incoming disks migration. Type
- * is VIR_TYPED_PARAM_STRING. Only schemes "tcp" and "unix" are accepted. TCP
- * URI can currently only provide a server and port to listen on (and connect
- * to), UNIX URI may only provide a path component for a UNIX socket. This is
- * currently only supported by the QEMU driver.  UNIX URI is only usable if the
- * management application makes sure that socket created with this name on the
- * destination will be reachable from the source under the same exact path.
- *
- * Since: 6.8.0
-  }
-  VIR_MIGRATE_PARAM_DISKS_URI = 'disks_uri';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION:
- *
- * virDomainMigrate* params multiple field: name of the method used to
- * compress migration traffic. Supported compression methods: xbzrle, mt,
- * zlib, zstd. The parameter may be specified multiple times if more than
- * one method should be used. Not all combinations of compression methods
- * and migration options may be allowed. Parallel migration of QEMU domains
- * is only compatible with either zlib or zstd method.
- *
- * Since: 1.3.4
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION = 'compression';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION_MT_LEVEL:
- *
- * virDomainMigrate* params field: the level of compression for multithread
- * compression as VIR_TYPED_PARAM_INT. Accepted values are in range 0-9.
- * 0 is no compression, 1 is maximum speed and 9 is maximum compression.
- *
- * Since: 1.3.4
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION_MT_LEVEL = 'compression.mt.level';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION_MT_THREADS:
- *
- * virDomainMigrate* params field: the number of compression threads for
- * multithread compression as VIR_TYPED_PARAM_INT.
- *
- * Since: 1.3.4
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION_MT_THREADS = 'compression.mt.threads';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION_MT_DTHREADS:
- *
- * virDomainMigrate* params field: the number of decompression threads for
- * multithread compression as VIR_TYPED_PARAM_INT.
- *
- * Since: 1.3.4
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION_MT_DTHREADS = 'compression.mt.dthreads';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION_XBZRLE_CACHE:
- *
- * virDomainMigrate* params field: the size of page cache for xbzrle
- * compression as VIR_TYPED_PARAM_ULLONG.
- *
- * Since: 1.3.4
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION_XBZRLE_CACHE = 'compression.xbzrle.cache';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION_ZLIB_LEVEL:
- *
- * virDomainMigrate* params field: the level of compression for zlib as
- * VIR_TYPED_PARAM_INT. Accepted values are in range 0-9. 0 is no compression,
- * 1 is maximum speed and 9 is maximum compression.
- *
- * Since: 9.4.0
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION_ZLIB_LEVEL = 'compression.zlib.level';  
-{*
- * VIR_MIGRATE_PARAM_COMPRESSION_ZSTD_LEVEL:
- *
- * virDomainMigrate* params field: the level of compression for zstd as
- * VIR_TYPED_PARAM_INT. Accepted values are in range 0-20. 0 is no compression,
- * 1 is maximum speed and 20 is maximum compression.
- *
- * Since: 9.4.0
-  }
-  VIR_MIGRATE_PARAM_COMPRESSION_ZSTD_LEVEL = 'compression.zstd.level';  
-{*
- * VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL:
- *
- * virDomainMigrate* params field: the initial percentage guest CPUs are
- * throttled to when auto-convergence decides migration is not converging.
- * As VIR_TYPED_PARAM_INT.
- *
- * Since: 2.0.0
-  }
-  VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL = 'auto_converge.initial';  
-{*
- * VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT:
- *
- * virDomainMigrate* params field: the increment added to
- * VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL whenever the hypervisor decides
- * the current rate is not enough to ensure convergence of the migration.
- * As VIR_TYPED_PARAM_INT.
- *
- * Since: 2.0.0
-  }
-  VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT = 'auto_converge.increment';  
-{*
- * VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS:
- *
- * virDomainMigrate* params field: number of connections used during parallel
- * migration. As VIR_TYPED_PARAM_INT.
- *
- * Since: 5.2.0
-  }
-  VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS = 'parallel.connections';  
-{*
- * VIR_MIGRATE_PARAM_TLS_DESTINATION:
- *
- * virDomainMigrate* params field: override the destination host name used for
- * TLS verification. As VIR_TYPED_PARAM_STRING.
- *
- * Normally the TLS certificate from the destination host must match the host's
- * name for TLS verification to succeed. When the certificate does not match
- * the destination hostname and the expected certificate's hostname is known,
- * this parameter can be used to pass this expected hostname when starting
- * the migration.
- *
- * Since: 6.0.0
-  }
-  VIR_MIGRATE_PARAM_TLS_DESTINATION = 'tls.destination';  
-{ Domain migration.  }
+
+    const
+    VIR_MIGRATE_PARAM_URI = 'migrate_uri';
+  VIR_MIGRATE_PARAM_DEST_NAME = 'destination_name';
+  VIR_MIGRATE_PARAM_DEST_XML = 'destination_xml';
+  VIR_MIGRATE_PARAM_PERSIST_XML = 'persistent_xml';
+  VIR_MIGRATE_PARAM_BANDWIDTH = 'bandwidth';
+  VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY = 'bandwidth.postcopy';
+  VIR_MIGRATE_PARAM_GRAPHICS_URI = 'graphics_uri';
+  VIR_MIGRATE_PARAM_LISTEN_ADDRESS = 'listen_address';
+  VIR_MIGRATE_PARAM_MIGRATE_DISKS = 'migrate_disks';
+  VIR_MIGRATE_PARAM_DISKS_PORT = 'disks_port';
+  VIR_MIGRATE_PARAM_DISKS_URI = 'disks_uri';
+  VIR_MIGRATE_PARAM_COMPRESSION = 'compression';
+  VIR_MIGRATE_PARAM_COMPRESSION_MT_LEVEL = 'compression.mt.level';
+  VIR_MIGRATE_PARAM_COMPRESSION_MT_THREADS = 'compression.mt.threads';
+  VIR_MIGRATE_PARAM_COMPRESSION_MT_DTHREADS = 'compression.mt.dthreads';
+  VIR_MIGRATE_PARAM_COMPRESSION_XBZRLE_CACHE = 'compression.xbzrle.cache';
+  VIR_MIGRATE_PARAM_COMPRESSION_ZLIB_LEVEL = 'compression.zlib.level';
+  VIR_MIGRATE_PARAM_COMPRESSION_ZSTD_LEVEL = 'compression.zstd.level';
+  VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL = 'auto_converge.initial';
+  VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT = 'auto_converge.increment';
+  VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS = 'parallel.connections';
+  VIR_MIGRATE_PARAM_TLS_DESTINATION = 'tls.destination';
 
 function virDomainMigrate(domain:TvirDomainPtr; dconn:TvirConnectPtr; flags:dword; dname:Pchar; uri:Pchar; 
            bandwidth:dword):TvirDomainPtr;cdecl;external libvirt;
@@ -1463,58 +363,28 @@ function virDomainMigrateGetMaxDowntime(domain:TvirDomainPtr; downtime:Pqword; f
 function virDomainMigrateSetMaxDowntime(domain:TvirDomainPtr; downtime:qword; flags:dword):longint;cdecl;external libvirt;
 function virDomainMigrateGetCompressionCache(domain:TvirDomainPtr; cacheSize:Pqword; flags:dword):longint;cdecl;external libvirt;
 function virDomainMigrateSetCompressionCache(domain:TvirDomainPtr; cacheSize:qword; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainMigrateMaxSpeedFlags:
- *
- * Domain migration speed flags.
- *
- * Since: 5.1.0
-  }
-{ Set or get maximum speed of post-copy migration. (Since: 5.1.0)  }
+
 type
   PvirDomainMigrateMaxSpeedFlags = ^TvirDomainMigrateMaxSpeedFlags;
   TvirDomainMigrateMaxSpeedFlags =  Longint;
   Const
     VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY = 1 shl 0;
-;
 
 function virDomainMigrateSetMaxSpeed(domain:TvirDomainPtr; bandwidth:dword; flags:dword):longint;cdecl;external libvirt;
 function virDomainMigrateGetMaxSpeed(domain:TvirDomainPtr; bandwidth:Pdword; flags:dword):longint;cdecl;external libvirt;
 function virDomainMigrateStartPostCopy(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virConnectGetDomainCapabilities(conn:TvirConnectPtr; emulatorbin:Pchar; arch:Pchar; machine:Pchar; virttype:Pchar; 
            flags:dword):Pchar;cdecl;external libvirt;
-{
- * Gather list of running domains
-  }
 function virConnectListDomains(conn:TvirConnectPtr; ids:Plongint; maxids:longint):longint;cdecl;external libvirt;
-{
- * Number of domains
-  }
 function virConnectNumOfDomains(conn:TvirConnectPtr):longint;cdecl;external libvirt;
-{
- * Get connection from domain.
-  }
 function virDomainGetConnect(domain:TvirDomainPtr):TvirConnectPtr;cdecl;external libvirt;
-{
- * Domain creation and destruction
-  }
 function virDomainCreateXML(conn:TvirConnectPtr; xmlDesc:Pchar; flags:dword):TvirDomainPtr;cdecl;external libvirt;
 function virDomainCreateXMLWithFiles(conn:TvirConnectPtr; xmlDesc:Pchar; nfiles:dword; files:Plongint; flags:dword):TvirDomainPtr;cdecl;external libvirt;
 function virDomainLookupByName(conn:TvirConnectPtr; name:Pchar):TvirDomainPtr;cdecl;external libvirt;
 function virDomainLookupByID(conn:TvirConnectPtr; id:longint):TvirDomainPtr;cdecl;external libvirt;
 function virDomainLookupByUUID(conn:TvirConnectPtr; uuid:Pbyte):TvirDomainPtr;cdecl;external libvirt;
 function virDomainLookupByUUIDString(conn:TvirConnectPtr; uuid:Pchar):TvirDomainPtr;cdecl;external libvirt;
-{*
- * virDomainShutdownFlagValues:
- *
- * Since: 0.9.10
-  }
-{ hypervisor choice (Since: 0.9.10)  }
-{ Send ACPI event (Since: 0.9.10)  }
-{ Use guest agent (Since: 0.9.10)  }
-{ Use initctl (Since: 1.0.1)  }
-{ Send a signal (Since: 1.0.1)  }
-{ Use paravirt guest control (Since: 1.2.5)  }
+
 type
   PvirDomainShutdownFlagValues = ^TvirDomainShutdownFlagValues;
   TvirDomainShutdownFlagValues =  Longint;
@@ -1525,21 +395,10 @@ type
     VIR_DOMAIN_SHUTDOWN_INITCTL = 1 shl 2;
     VIR_DOMAIN_SHUTDOWN_SIGNAL = 1 shl 3;
     VIR_DOMAIN_SHUTDOWN_PARAVIRT = 1 shl 4;
-;
 
 function virDomainShutdown(domain:TvirDomainPtr):longint;cdecl;external libvirt;
 function virDomainShutdownFlags(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainRebootFlagValues:
- *
- * Since: 0.9.10
-  }
-{ hypervisor choice (Since: 0.9.10)  }
-{ Send ACPI event (Since: 0.9.10)  }
-{ Use guest agent (Since: 0.9.10)  }
-{ Use initctl (Since: 1.0.1)  }
-{ Send a signal (Since: 1.0.1)  }
-{ Use paravirt guest control (Since: 1.2.5)  }
+
 type
   PvirDomainRebootFlagValues = ^TvirDomainRebootFlagValues;
   TvirDomainRebootFlagValues =  Longint;
@@ -1550,22 +409,11 @@ type
     VIR_DOMAIN_REBOOT_INITCTL = 1 shl 2;
     VIR_DOMAIN_REBOOT_SIGNAL = 1 shl 3;
     VIR_DOMAIN_REBOOT_PARAVIRT = 1 shl 4;
-;
 
 function virDomainReboot(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainReset(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainDestroy(domain:TvirDomainPtr):longint;cdecl;external libvirt;
-{*
- * virDomainDestroyFlagsValues:
- *
- * Flags used to provide specific behaviour to the
- * virDomainDestroyFlags() function
- *
- * Since: 0.9.4
-  }
-{ Default behavior - could lead to data loss!! (Since: 0.9.10)  }
-{ only SIGTERM, no SIGKILL (Since: 0.9.10)  }
-{ remove VM logs on destroy (Since: 8.3.0)  }
+
 type
   PvirDomainDestroyFlagsValues = ^TvirDomainDestroyFlagsValues;
   TvirDomainDestroyFlagsValues =  Longint;
@@ -1573,35 +421,16 @@ type
     VIR_DOMAIN_DESTROY_DEFAULT = 0;
     VIR_DOMAIN_DESTROY_GRACEFUL = 1 shl 0;
     VIR_DOMAIN_DESTROY_REMOVE_LOGS = 1 shl 1;
-;
 
 function virDomainDestroyFlags(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainRef(domain:TvirDomainPtr):longint;cdecl;external libvirt;
 function virDomainFree(domain:TvirDomainPtr):longint;cdecl;external libvirt;
-{
- * Domain suspend/resume
-  }
+
 function virDomainSuspend(domain:TvirDomainPtr):longint;cdecl;external libvirt;
 function virDomainResume(domain:TvirDomainPtr):longint;cdecl;external libvirt;
 function virDomainPMSuspendForDuration(domain:TvirDomainPtr; target:dword; duration:qword; flags:dword):longint;cdecl;external libvirt;
 function virDomainPMWakeup(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
-{
- * Domain save/restore
-  }
-{*
- * virDomainSaveRestoreFlags:
- *
- * Flags for use in virDomainSaveFlags(), virDomainManagedSave(),
- * virDomainSaveParams(), virDomainRestoreParams(),
- * virDomainRestoreFlags(), and virDomainSaveImageDefineXML().  Not all
- * flags apply to all these functions.
- *
- * Since: 0.9.4
-  }
-{ Avoid file system cache pollution (Since: 0.9.4)  }
-{ Favor running over paused (Since: 0.9.5)  }
-{ Favor paused over running (Since: 0.9.5)  }
-{ Re-initialize NVRAM from template (Since: 8.1.0)  }
+
 type
   PvirDomainSaveRestoreFlags = ^TvirDomainSaveRestoreFlags;
   TvirDomainSaveRestoreFlags =  Longint;
@@ -1610,235 +439,64 @@ type
     VIR_DOMAIN_SAVE_RUNNING = 1 shl 1;
     VIR_DOMAIN_SAVE_PAUSED = 1 shl 2;
     VIR_DOMAIN_SAVE_RESET_NVRAM = 1 shl 3;
-;
 
-function virDomainSave(domain:TvirDomainPtr; to:Pchar):longint;cdecl;external libvirt;
-function virDomainSaveFlags(domain:TvirDomainPtr; to:Pchar; dxml:Pchar; flags:dword):longint;cdecl;external libvirt;
+function virDomainSave(domain:TvirDomainPtr; to_:Pchar):longint;cdecl;external libvirt;
+function virDomainSaveFlags(domain:TvirDomainPtr; to_:Pchar; dxml:Pchar; flags:dword):longint;cdecl;external libvirt;
 function virDomainSaveParams(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainRestore(conn:TvirConnectPtr; from:Pchar):longint;cdecl;external libvirt;
 function virDomainRestoreFlags(conn:TvirConnectPtr; from:Pchar; dxml:Pchar; flags:dword):longint;cdecl;external libvirt;
 function virDomainRestoreParams(conn:TvirConnectPtr; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
-{*
- * VIR_DOMAIN_SAVE_PARAM_FILE:
- *
- * the parameter used to specify the savestate file to save to or restore from.
- *
- * Since: 8.4.0
-  }
+
 const
   VIR_DOMAIN_SAVE_PARAM_FILE = 'file';  
-{*
- * VIR_DOMAIN_SAVE_PARAM_DXML:
- *
- * an optional parameter used to adjust guest xml on restore.
- * If the hypervisor supports it, it can be used to alter
- * host-specific portions of the domain XML that will be used when
- * restoring an image.  For example, it is possible to alter the
- * device while the domain is stopped.
- *
- * Since: 8.4.0
-  }
-  VIR_DOMAIN_SAVE_PARAM_DXML = 'dxml';  
-{ See below for virDomainSaveImageXMLFlags  }
+  VIR_DOMAIN_SAVE_PARAM_DXML = 'dxml';
 
-function virDomainSaveImageGetXMLDesc(conn:TvirConnectPtr; file:Pchar; flags:dword):Pchar;cdecl;external libvirt;
-function virDomainSaveImageDefineXML(conn:TvirConnectPtr; file:Pchar; dxml:Pchar; flags:dword):longint;cdecl;external libvirt;
-{
- * Managed domain save
-  }
+function virDomainSaveImageGetXMLDesc(conn:TvirConnectPtr; file_:Pchar; flags:dword):Pchar;cdecl;external libvirt;
+function virDomainSaveImageDefineXML(conn:TvirConnectPtr; file_:Pchar; dxml:Pchar; flags:dword):longint;cdecl;external libvirt;
 function virDomainManagedSave(dom:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainHasManagedSaveImage(dom:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainManagedSaveRemove(dom:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainManagedSaveGetXMLDesc(domain:TvirDomainPtr; flags:dword):Pchar;cdecl;external libvirt;
 function virDomainManagedSaveDefineXML(domain:TvirDomainPtr; dxml:Pchar; flags:dword):longint;cdecl;external libvirt;
-{
- * Domain core dump
-  }
-function virDomainCoreDump(domain:TvirDomainPtr; to:Pchar; flags:dword):longint;cdecl;external libvirt;
-{
- * Domain core dump with format specified
-  }
-function virDomainCoreDumpWithFormat(domain:TvirDomainPtr; to:Pchar; dumpformat:dword; flags:dword):longint;cdecl;external libvirt;
-{
- * Screenshot of current domain console
-  }
+function virDomainCoreDump(domain:TvirDomainPtr; to_:Pchar; flags:dword):longint;cdecl;external libvirt;
+function virDomainCoreDumpWithFormat(domain:TvirDomainPtr; to_:Pchar; dumpformat:dword; flags:dword):longint;cdecl;external libvirt;
 function virDomainScreenshot(domain:TvirDomainPtr; stream:TvirStreamPtr; screen:dword; flags:dword):Pchar;cdecl;external libvirt;
-{
- * Domain runtime information, and collecting CPU statistics
-  }
+
 function virDomainGetInfo(domain:TvirDomainPtr; info:TvirDomainInfoPtr):longint;cdecl;external libvirt;
 function virDomainGetState(domain:TvirDomainPtr; state:Plongint; reason:Plongint; flags:dword):longint;cdecl;external libvirt;
-{*
- * VIR_DOMAIN_CPU_STATS_CPUTIME:
- * cpu usage (sum of both vcpu and hypervisor usage) in nanoseconds,
- * as a ullong
- *
- * Since: 0.9.10
-  }
+
 const
   VIR_DOMAIN_CPU_STATS_CPUTIME = 'cpu_time';  
-{*
- * VIR_DOMAIN_CPU_STATS_USERTIME:
- * cpu time charged to user instructions in nanoseconds, as a ullong
- *
- * Since: 0.9.11
-  }
-  VIR_DOMAIN_CPU_STATS_USERTIME = 'user_time';  
-{*
- * VIR_DOMAIN_CPU_STATS_SYSTEMTIME:
- * cpu time charged to system instructions in nanoseconds, as a ullong
- *
- * Since: 0.9.11
-  }
-  VIR_DOMAIN_CPU_STATS_SYSTEMTIME = 'system_time';  
-{*
- * VIR_DOMAIN_CPU_STATS_VCPUTIME:
- * vcpu usage in nanoseconds (cpu_time excluding hypervisor time),
- * as a ullong
- *
- * Since: 0.9.13
-  }
-  VIR_DOMAIN_CPU_STATS_VCPUTIME = 'vcpu_time';  
+  VIR_DOMAIN_CPU_STATS_USERTIME = 'user_time';
+  VIR_DOMAIN_CPU_STATS_SYSTEMTIME = 'system_time';
+  VIR_DOMAIN_CPU_STATS_VCPUTIME = 'vcpu_time';
 
 function virDomainGetCPUStats(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:dword; start_cpu:longint; ncpus:dword; 
            flags:dword):longint;cdecl;external libvirt;
 function virDomainGetControlInfo(domain:TvirDomainPtr; info:TvirDomainControlInfoPtr; flags:dword):longint;cdecl;external libvirt;
-{
- * Return scheduler type in effect 'sedf', 'credit', 'linux'
-  }
 function virDomainGetSchedulerType(domain:TvirDomainPtr; nparams:Plongint):Pchar;cdecl;external libvirt;
-{ Manage blkio parameters.   }
-{*
- * VIR_DOMAIN_BLKIO_WEIGHT:
- *
- * Macro for the Blkio tunable weight: it represents the io weight
- * the guest can use, as a uint.
- *
- * Since: 0.9.0
-  }
+
 const
   VIR_DOMAIN_BLKIO_WEIGHT = 'weight';  
-{*
- * VIR_DOMAIN_BLKIO_DEVICE_WEIGHT:
- *
- * Macro for the blkio tunable weight_device: it represents the
- * per-device weight, as a string.  The string is parsed as a
- * series of /path/to/device,weight elements, separated by ','.
- *
- * Since: 0.9.8
-  }
-  VIR_DOMAIN_BLKIO_DEVICE_WEIGHT = 'device_weight';  
-{*
- * VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS:
- *
- * Macro for the blkio tunable throttle.read_iops_device: it represents
- * the number of reading the block device per second, as a string. The
- * string is parsed as a series of /path/to/device, read_iops elements,
- * separated by ','.
- *
- * Since: 1.2.2
-  }
-  VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS = 'device_read_iops_sec';  
-{*
- * VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS:
- *
- * Macro for the blkio tunable throttle.write_iops_device: it represents
- * the number of writing the block device per second, as a string. The
- * string is parsed as a series of /path/to/device, write_iops elements,
- * separated by ','.
- *
- * Since: 1.2.2
-  }
-  VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS = 'device_write_iops_sec';  
-{*
- * VIR_DOMAIN_BLKIO_DEVICE_READ_BPS:
- *
- * Macro for the blkio tunable throttle.read_iops_device: it represents
- * the bytes of reading the block device per second, as a string. The
- * string is parsed as a series of /path/to/device, read_bps elements,
- * separated by ','.
- *
- * Since: 1.2.2
-  }
-  VIR_DOMAIN_BLKIO_DEVICE_READ_BPS = 'device_read_bytes_sec';  
-{*
- * VIR_DOMAIN_BLKIO_DEVICE_WRITE_BPS:
- *
- * Macro for the blkio tunable throttle.read_iops_device: it represents
- * the number of reading the block device per second, as a string. The
- * string is parsed as a series of /path/to/device, write_bps elements,
- * separated by ','.
- *
- * Since: 1.2.2
-  }
-  VIR_DOMAIN_BLKIO_DEVICE_WRITE_BPS = 'device_write_bytes_sec';  
-{ Set Blkio tunables for the domain  }
+  VIR_DOMAIN_BLKIO_DEVICE_WEIGHT = 'device_weight';
+  VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS = 'device_read_iops_sec';
+  VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS = 'device_write_iops_sec';
+  VIR_DOMAIN_BLKIO_DEVICE_READ_BPS = 'device_read_bytes_sec';
+  VIR_DOMAIN_BLKIO_DEVICE_WRITE_BPS = 'device_write_bytes_sec';
 
 function virDomainSetBlkioParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetBlkioParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:Plongint; flags:dword):longint;cdecl;external libvirt;
-{ Manage memory parameters.  }
-{*
- * VIR_DOMAIN_MEMORY_PARAM_UNLIMITED:
- *
- * Macro providing the virMemoryParameter value that indicates "unlimited"
- *
- * Since: 0.8.8
-  }
-{ = INT64_MAX >> 10  }
+
 const
   VIR_DOMAIN_MEMORY_PARAM_UNLIMITED = 9007199254740991;  
-{*
- * VIR_DOMAIN_MEMORY_HARD_LIMIT:
- *
- * Macro for the memory tunable hard_limit: it represents the maximum memory
- * the guest can use, as a ullong.
- *
- * Since: 0.8.5
-  }
-  VIR_DOMAIN_MEMORY_HARD_LIMIT = 'hard_limit';  
-{*
- * VIR_DOMAIN_MEMORY_SOFT_LIMIT:
- *
- * Macro for the memory tunable soft_limit: it represents the memory upper
- * limit enforced during memory contention, as a ullong.
- *
- * Since: 0.8.5
-  }
-  VIR_DOMAIN_MEMORY_SOFT_LIMIT = 'soft_limit';  
-{*
- * VIR_DOMAIN_MEMORY_MIN_GUARANTEE:
- *
- * Macro for the memory tunable min_guarantee: it represents the minimum
- * memory guaranteed to be reserved for the guest, as a ullong.
- *
- * Since: 0.8.5
-  }
-  VIR_DOMAIN_MEMORY_MIN_GUARANTEE = 'min_guarantee';  
-{*
- * VIR_DOMAIN_MEMORY_SWAP_HARD_LIMIT:
- *
- * Macro for the swap tunable swap_hard_limit: it represents the maximum swap
- * plus memory the guest can use, as a ullong. This limit has to be more than
- * VIR_DOMAIN_MEMORY_HARD_LIMIT.
- *
- * Since: 0.8.5
-  }
-  VIR_DOMAIN_MEMORY_SWAP_HARD_LIMIT = 'swap_hard_limit';  
-{ Set memory tunables for the domain  }
+  VIR_DOMAIN_MEMORY_HARD_LIMIT = 'hard_limit';
+  VIR_DOMAIN_MEMORY_SOFT_LIMIT = 'soft_limit';
+  VIR_DOMAIN_MEMORY_MIN_GUARANTEE = 'min_guarantee';
+  VIR_DOMAIN_MEMORY_SWAP_HARD_LIMIT = 'swap_hard_limit';
 
 function virDomainSetMemoryParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetMemoryParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:Plongint; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainMemoryModFlags:
- *
- * Memory size modification flags.
- *
- * Since: 0.9.0
-  }
-{ See virDomainModificationImpact (Since: 0.9.1)  }
-{ See virDomainModificationImpact (Since: 0.9.0)  }
-{ See virDomainModificationImpact (Since: 0.9.0)  }
-{ affect Max rather than current (Since: 0.9.1)  }
+
 type
   PvirDomainMemoryModFlags = ^TvirDomainMemoryModFlags;
   TvirDomainMemoryModFlags =  Longint;
@@ -1847,23 +505,8 @@ type
     VIR_DOMAIN_MEM_LIVE = VIR_DOMAIN_AFFECT_LIVE;
     VIR_DOMAIN_MEM_CONFIG = VIR_DOMAIN_AFFECT_CONFIG;
     VIR_DOMAIN_MEM_MAXIMUM = 1 shl 2;
-;
-{ Manage numa parameters  }
-{*
- * virDomainNumatuneMemMode:
- * Representation of the various modes in the <numatune> element of
- * a domain.
- *
- * Since: 0.9.9
-  }
-{ (Since: 0.9.9)  }
-{ (Since: 0.9.9)  }
-{ (Since: 0.9.9)  }
-{ (Since: 7.3.0)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ This constant is subject to change (Since: 0.9.9)  }
-{$endif}
-type
+
+  type
   PvirDomainNumatuneMemMode = ^TvirDomainNumatuneMemMode;
   TvirDomainNumatuneMemMode =  Longint;
   Const
@@ -1872,31 +515,14 @@ type
     VIR_DOMAIN_NUMATUNE_MEM_INTERLEAVE = 2;
     VIR_DOMAIN_NUMATUNE_MEM_RESTRICTIVE = 3;
     VIR_DOMAIN_NUMATUNE_MEM_LAST = 4;
-;
-{*
- * VIR_DOMAIN_NUMA_NODESET:
- *
- * Macro for typed parameter name that lists the numa nodeset of a
- * domain, as a string.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_NUMA_NODESET = 'numa_nodeset';  
-{*
- * VIR_DOMAIN_NUMA_MODE:
- *
- * Macro for typed parameter name that lists the numa mode of a domain,
- * as an int containing a virDomainNumatuneMemMode value.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_NUMA_MODE = 'numa_mode';  
+
+    const
+    VIR_DOMAIN_NUMA_NODESET = 'numa_nodeset';
+  VIR_DOMAIN_NUMA_MODE = 'numa_mode';
 
 function virDomainSetNumaParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetNumaParameters(domain:TvirDomainPtr; params:TvirTypedParameterPtr; nparams:Plongint; flags:dword):longint;cdecl;external libvirt;
-{
- * Dynamic control of domains
-  }
+
 function virDomainGetName(domain:TvirDomainPtr):Pchar;cdecl;external libvirt;
 function virDomainGetID(domain:TvirDomainPtr):dword;cdecl;external libvirt;
 function virDomainGetUUID(domain:TvirDomainPtr; uuid:Pbyte):longint;cdecl;external libvirt;
@@ -1909,34 +535,17 @@ function virDomainSetMemoryFlags(domain:TvirDomainPtr; memory:dword; flags:dword
 function virDomainSetMemoryStatsPeriod(domain:TvirDomainPtr; period:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetMaxVcpus(domain:TvirDomainPtr):longint;cdecl;external libvirt;
 function virDomainGetSecurityLabel(domain:TvirDomainPtr; seclabel:TvirSecurityLabelPtr):longint;cdecl;external libvirt;
-{*
- * virDomainGetHostnameFlags:
- *
- * Since: 6.1.0
-  }
-{ Parse DHCP lease file (Since: 6.1.0)  }
-{ Query qemu guest agent (Since: 6.1.0)  }
+
 type
   PvirDomainGetHostnameFlags = ^TvirDomainGetHostnameFlags;
   TvirDomainGetHostnameFlags =  Longint;
   Const
     VIR_DOMAIN_GET_HOSTNAME_LEASE = 1 shl 0;
     VIR_DOMAIN_GET_HOSTNAME_AGENT = 1 shl 1;
-;
 
 function virDomainGetHostname(domain:TvirDomainPtr; flags:dword):Pchar;cdecl;external libvirt;
 function virDomainGetSecurityLabelList(domain:TvirDomainPtr; seclabels:PvirSecurityLabelPtr):longint;cdecl;external libvirt;
-{*
- * virDomainMetadataType:
- *
- * Since: 0.9.10
-  }
-{ Operate on <description> (Since: 0.9.10)  }
-{ Operate on <title> (Since: 0.9.10)  }
-{ Operate on <metadata> (Since: 0.9.10)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
+
 type
   PvirDomainMetadataType = ^TvirDomainMetadataType;
   TvirDomainMetadataType =  Longint;
@@ -1945,25 +554,11 @@ type
     VIR_DOMAIN_METADATA_TITLE = 1;
     VIR_DOMAIN_METADATA_ELEMENT = 2;
     VIR_DOMAIN_METADATA_LAST = 3;
-;
 
 function virDomainSetMetadata(domain:TvirDomainPtr; _type:longint; metadata:Pchar; key:Pchar; uri:Pchar; 
            flags:dword):longint;cdecl;external libvirt;
 function virDomainGetMetadata(domain:TvirDomainPtr; _type:longint; uri:Pchar; flags:dword):Pchar;cdecl;external libvirt;
-{
- * XML domain description
-  }
-{*
- * virDomainXMLFlags:
- *
- * Flags available for virDomainGetXMLDesc
- *
- * Since: 0.3.3
-  }
-{ dump security sensitive information too (Since: 0.3.3)  }
-{ dump inactive domain information (Since: 0.3.3)  }
-{ update guest CPU requirements according to host CPU (Since: 0.8.0)  }
-{ dump XML suitable for migration (Since: 1.0.0)  }
+
 type
   PvirDomainXMLFlags = ^TvirDomainXMLFlags;
   TvirDomainXMLFlags =  Longint;
@@ -1972,19 +567,12 @@ type
     VIR_DOMAIN_XML_INACTIVE = 1 shl 1;
     VIR_DOMAIN_XML_UPDATE_CPU = 1 shl 2;
     VIR_DOMAIN_XML_MIGRATABLE = 1 shl 3;
-;
-{*
- * virDomainSaveImageXMLFlags:
- *
- * Since: 5.1.0
-  }
-{ dump security sensitive information too (Since: 5.1.0)  }
-type
+
+  type
   PvirDomainSaveImageXMLFlags = ^TvirDomainSaveImageXMLFlags;
   TvirDomainSaveImageXMLFlags =  Longint;
   Const
     VIR_DOMAIN_SAVE_IMAGE_XML_SECURE = VIR_DOMAIN_XML_SECURE;
-;
 
 function virDomainGetXMLDesc(domain:TvirDomainPtr; flags:dword):Pchar;cdecl;external libvirt;
 function virConnectDomainXMLFromNative(conn:TvirConnectPtr; nativeFormat:Pchar; nativeConfig:Pchar; flags:dword):Pchar;cdecl;external libvirt;
@@ -1992,201 +580,62 @@ function virConnectDomainXMLToNative(conn:TvirConnectPtr; nativeFormat:Pchar; do
 function virDomainBlockStats(dom:TvirDomainPtr; disk:Pchar; stats:TvirDomainBlockStatsPtr; size:Tsize_t):longint;cdecl;external libvirt;
 function virDomainBlockStatsFlags(dom:TvirDomainPtr; disk:Pchar; params:TvirTypedParameterPtr; nparams:Plongint; flags:dword):longint;cdecl;external libvirt;
 function virDomainInterfaceStats(dom:TvirDomainPtr; device:Pchar; stats:TvirDomainInterfaceStatsPtr; size:Tsize_t):longint;cdecl;external libvirt;
-{ Management of interface parameters  }
-{*
- * VIR_DOMAIN_BANDWIDTH_IN_AVERAGE:
- *
- * Macro represents the inbound average of NIC bandwidth, as a uint.
- *
- * Since: 0.9.9
-  }
+
 const
   VIR_DOMAIN_BANDWIDTH_IN_AVERAGE = 'inbound.average';  
-{*
- * VIR_DOMAIN_BANDWIDTH_IN_PEAK:
- *
- * Macro represents the inbound peak of NIC bandwidth, as a uint.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_BANDWIDTH_IN_PEAK = 'inbound.peak';  
-{*
- * VIR_DOMAIN_BANDWIDTH_IN_BURST:
- *
- * Macro represents the inbound burst of NIC bandwidth, as a uint.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_BANDWIDTH_IN_BURST = 'inbound.burst';  
-{*
- * VIR_DOMAIN_BANDWIDTH_IN_FLOOR:
- *
- * Macro represents the inbound floor of NIC bandwidth, as a uint.
- *
- * Since: 1.2.19
-  }
-  VIR_DOMAIN_BANDWIDTH_IN_FLOOR = 'inbound.floor';  
-{*
- * VIR_DOMAIN_BANDWIDTH_OUT_AVERAGE:
- *
- * Macro represents the outbound average of NIC bandwidth, as a uint.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_BANDWIDTH_OUT_AVERAGE = 'outbound.average';  
-{*
- * VIR_DOMAIN_BANDWIDTH_OUT_PEAK:
- *
- * Macro represents the outbound peak of NIC bandwidth, as a uint.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_BANDWIDTH_OUT_PEAK = 'outbound.peak';  
-{*
- * VIR_DOMAIN_BANDWIDTH_OUT_BURST:
- *
- * Macro represents the outbound burst of NIC bandwidth, as a uint.
- *
- * Since: 0.9.9
-  }
-  VIR_DOMAIN_BANDWIDTH_OUT_BURST = 'outbound.burst';  
+  VIR_DOMAIN_BANDWIDTH_IN_PEAK = 'inbound.peak';
+  VIR_DOMAIN_BANDWIDTH_IN_BURST = 'inbound.burst';
+  VIR_DOMAIN_BANDWIDTH_IN_FLOOR = 'inbound.floor';
+  VIR_DOMAIN_BANDWIDTH_OUT_AVERAGE = 'outbound.average';
+  VIR_DOMAIN_BANDWIDTH_OUT_PEAK = 'outbound.peak';
+  VIR_DOMAIN_BANDWIDTH_OUT_BURST = 'outbound.burst';
 
 function virDomainSetInterfaceParameters(dom:TvirDomainPtr; device:Pchar; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetInterfaceParameters(dom:TvirDomainPtr; device:Pchar; params:TvirTypedParameterPtr; nparams:Plongint; flags:dword):longint;cdecl;external libvirt;
-{ Management of domain block devices  }
-function virDomainBlockPeek(dom:TvirDomainPtr; disk:Pchar; offset:qword; size:Tsize_t; buffer:pointer; 
+function virDomainBlockPeek(dom:TvirDomainPtr; disk:Pchar; offset:qword; size:Tsize_t; buffer:pointer;
            flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainBlockResizeFlags:
- *
- * Flags available for virDomainBlockResize().
- *
- * Since: 0.9.11
-  }
-{ size in bytes instead of KiB (Since: 0.9.11)  }
-{ resize to full the capacity of the source (Since: 10.0.0)  }
+
 type
   PvirDomainBlockResizeFlags = ^TvirDomainBlockResizeFlags;
   TvirDomainBlockResizeFlags =  Longint;
   Const
     VIR_DOMAIN_BLOCK_RESIZE_BYTES = 1 shl 0;
     VIR_DOMAIN_BLOCK_RESIZE_CAPACITY = 1 shl 1;
-;
 
 function virDomainBlockResize(dom:TvirDomainPtr; disk:Pchar; size:qword; flags:dword):longint;cdecl;external libvirt;
-{* virDomainBlockInfo:
- *
- * This struct provides information about the size of a block device
- * backing store.
- *
- * Examples:
- *
- *  - Fully allocated raw file in filesystem:
- *       * capacity, allocation, physical: All the same
- *
- *  - Sparse raw file in filesystem:
- *       * capacity, size: logical size of the file
- *       * allocation: disk space occupied by file
- *
- *  - qcow2 file in filesystem
- *       * capacity: logical size from qcow2 header
- *       * allocation: disk space occupied by file
- *       * physical: reported size of qcow2 file
- *
- *  - qcow2 file in a block device
- *       * capacity: logical size from qcow2 header
- *       * allocation: highest qcow extent written for an active domain
- *       * physical: size of the block device container
- *
- * Since: 0.8.1
-  }
-type
-{*
- * virDomainBlockInfoPtr:
- *
- * Since: 0.8.1
-  }
 
-  PvirDomainBlockInfoPtr = ^TvirDomainBlockInfoPtr;
-  TvirDomainBlockInfoPtr = PvirDomainBlockInfo;
-{ logical size in bytes of the
-                                    * image (how much storage the
-                                    * guest will see)  }
-{ host storage in bytes occupied
-                                    * by the image (such as highest
-                                    * allocated extent if there are no
-                                    * holes, similar to 'du')  }
-{ host physical size in bytes of
-                                    * the image container (last
-                                    * offset, similar to 'ls')  }
+type
   PvirDomainBlockInfo = ^TvirDomainBlockInfo;
   TvirDomainBlockInfo = record
       capacity : qword;
       allocation : qword;
       physical : qword;
     end;
-
+  PvirDomainBlockInfoPtr = ^TvirDomainBlockInfoPtr;
+  TvirDomainBlockInfoPtr = PvirDomainBlockInfo;
 
 function virDomainGetBlockInfo(dom:TvirDomainPtr; disk:Pchar; info:TvirDomainBlockInfoPtr; flags:dword):longint;cdecl;external libvirt;
-{ Management of domain memory  }
 function virDomainMemoryStats(dom:TvirDomainPtr; stats:TvirDomainMemoryStatPtr; nr_stats:dword; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainMemoryFlags:
- *
- * Memory peeking flags.
- *
- * Since: 0.4.4
-  }
-{ addresses are virtual addresses (Since: 0.4.4)  }
-{ addresses are physical addresses (Since: 0.7.0)  }
+
 type
   PvirDomainMemoryFlags = ^TvirDomainMemoryFlags;
   TvirDomainMemoryFlags =  Longint;
   Const
     VIR_MEMORY_VIRTUAL = 1 shl 0;
     VIR_MEMORY_PHYSICAL = 1 shl 1;
-;
 
 function virDomainMemoryPeek(dom:TvirDomainPtr; start:qword; size:Tsize_t; buffer:pointer; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainDefineFlags:
- *
- * Since: 1.2.12
-  }
-{ Validate the XML document against schema (Since: 1.2.12)  }
+
 type
   PvirDomainDefineFlags = ^TvirDomainDefineFlags;
   TvirDomainDefineFlags =  Longint;
   Const
     VIR_DOMAIN_DEFINE_VALIDATE = 1 shl 0;
-;
-{
- * defined but not running domains
-  }
 
 function virDomainDefineXML(conn:TvirConnectPtr; xml:Pchar):TvirDomainPtr;cdecl;external libvirt;
 function virDomainDefineXMLFlags(conn:TvirConnectPtr; xml:Pchar; flags:dword):TvirDomainPtr;cdecl;external libvirt;
 function virDomainUndefine(domain:TvirDomainPtr):longint;cdecl;external libvirt;
-{*
- * virDomainUndefineFlagsValues:
- *
- * Since: 0.9.4
-  }
-{ Also remove any
-                                                          managed save (Since: 0.9.4)  }
-{ If last use of domain,
-                                                          then also remove any
-                                                          snapshot metadata (Since: 0.9.5)  }
-{ Also remove any
-                                                          nvram file (Since: 1.2.9)  }
-{ Keep nvram file (Since: 2.3.0)  }
-{ If last use of domain,
-                                                            then also remove any
-                                                            checkpoint metadata (Since: 5.6.0)  }
-{ Also remove any
-                                                          TPM state (Since: 8.9.0)  }
-{ Keep TPM state (Since: 8.9.0)  }
-{ Future undefine control flags should come here.  }
+
 type
   PvirDomainUndefineFlagsValues = ^TvirDomainUndefineFlagsValues;
   TvirDomainUndefineFlagsValues =  Longint;
@@ -2198,36 +647,11 @@ type
     VIR_DOMAIN_UNDEFINE_CHECKPOINTS_METADATA = 1 shl 4;
     VIR_DOMAIN_UNDEFINE_TPM = 1 shl 5;
     VIR_DOMAIN_UNDEFINE_KEEP_TPM = 1 shl 6;
-;
 
 function virDomainUndefineFlags(domain:TvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virConnectNumOfDefinedDomains(conn:TvirConnectPtr):longint;cdecl;external libvirt;
 function virConnectListDefinedDomains(conn:TvirConnectPtr; names:PPchar; maxnames:longint):longint;cdecl;external libvirt;
-{*
- * virConnectListAllDomainsFlags:
- *
- * Flags used to tune which domains are listed by virConnectListAllDomains().
- * Note that these flags come in groups; if all bits from a group are 0,
- * then that group is not used to filter results.
- *
- * Since: 0.9.13
-  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 0.9.13)  }
-{ (Since: 5.6.0)  }
-{ (Since: 5.6.0)  }
+
 type
   PvirConnectListAllDomainsFlags = ^TvirConnectListAllDomainsFlags;
   TvirConnectListAllDomainsFlags =  Longint;
@@ -2248,7 +672,6 @@ type
     VIR_CONNECT_LIST_DOMAINS_NO_SNAPSHOT = 1 shl 13;
     VIR_CONNECT_LIST_DOMAINS_HAS_CHECKPOINT = 1 shl 14;
     VIR_CONNECT_LIST_DOMAINS_NO_CHECKPOINT = 1 shl 15;
-;
 
 function virConnectListAllDomains(conn:TvirConnectPtr; domains:PPvirDomainPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainCreate(domain:TvirDomainPtr):longint;cdecl;external libvirt;
@@ -2256,19 +679,7 @@ function virDomainCreateWithFlags(domain:TvirDomainPtr; flags:dword):longint;cde
 function virDomainCreateWithFiles(domain:TvirDomainPtr; nfiles:dword; files:Plongint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetAutostart(domain:TvirDomainPtr; autostart:Plongint):longint;cdecl;external libvirt;
 function virDomainSetAutostart(domain:TvirDomainPtr; autostart:longint):longint;cdecl;external libvirt;
-{*
- * virVcpuState:
- *
- * structure for information about a virtual CPU in a domain.
- *
- * Since: 0.1.4
-  }
-{ the virtual CPU is offline (Since: 0.1.4)  }
-{ the virtual CPU is running (Since: 0.1.4)  }
-{ the virtual CPU is blocked on resource (Since: 0.1.4)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
+
 type
   PvirVcpuState = ^TvirVcpuState;
   TvirVcpuState =  Longint;
@@ -2277,31 +688,15 @@ type
     VIR_VCPU_RUNNING = 1;
     VIR_VCPU_BLOCKED = 2;
     VIR_VCPU_LAST = 3;
-;
-{*
- * virVcpuHostCpuState:
- *
- * Since: 6.10.0
-  }
-{ the vCPU is offline (Since: 6.10.0)  }
-{ the hypervisor does not expose real CPU information (Since: 6.10.0)  }
-type
+
+  type
   PvirVcpuHostCpuState = ^TvirVcpuHostCpuState;
   TvirVcpuHostCpuState =  Longint;
   Const
     VIR_VCPU_INFO_CPU_OFFLINE = -(1);
     VIR_VCPU_INFO_CPU_UNAVAILABLE = -(2);
-;
-{*
- * virVcpuInfo:
- *
- * Since: 0.1.4
-  }
-type
-{ virtual CPU number  }
-{ value from virVcpuState  }
-{ CPU time used, in nanoseconds  }
-{ real CPU number, or one of the values from virVcpuHostCpuState  }
+
+  type
   PvirVcpuInfo = ^TvirVcpuInfo;
   TvirVcpuInfo = record
       number : dword;
@@ -2309,29 +704,10 @@ type
       cpuTime : qword;
       cpu : longint;
     end;
-
-{*
- * virVcpuInfoPtr:
- *
- * Since: 0.1.4
-  }
-
   PvirVcpuInfoPtr = ^TvirVcpuInfoPtr;
   TvirVcpuInfoPtr = PvirVcpuInfo;
-{*
- * virDomainVcpuFlags:
- *
- * Flags for controlling virtual CPU hot-plugging.
- *
- * Since: 0.8.5
-  }
-{ See virDomainModificationImpact (Since: 0.9.4)  }
-{ See virDomainModificationImpact (Since: 0.8.5)  }
-{ See virDomainModificationImpact (Since: 0.8.5)  }
-{ Max rather than current count (Since: 0.8.5)  }
-{ Modify state of the cpu in the guest (Since: 1.1.0)  }
-{ Make vcpus added hot(un)pluggable (Since: 2.4.0)  }
 
+  type
   PvirDomainVcpuFlags = ^TvirDomainVcpuFlags;
   TvirDomainVcpuFlags =  Longint;
   Const
@@ -2341,7 +717,6 @@ type
     VIR_DOMAIN_VCPU_MAXIMUM = 1 shl 2;
     VIR_DOMAIN_VCPU_GUEST = 1 shl 3;
     VIR_DOMAIN_VCPU_HOTPLUGGABLE = 1 shl 4;
-;
 
 function virDomainSetVcpus(domain:TvirDomainPtr; nvcpus:dword):longint;cdecl;external libvirt;
 function virDomainSetVcpusFlags(domain:TvirDomainPtr; nvcpus:dword; flags:dword):longint;cdecl;external libvirt;
@@ -2351,104 +726,31 @@ function virDomainPinVcpuFlags(domain:TvirDomainPtr; vcpu:dword; cpumap:Pbyte; m
 function virDomainGetVcpuPinInfo(domain:TvirDomainPtr; ncpumaps:longint; cpumaps:Pbyte; maplen:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainPinEmulator(domain:TvirDomainPtr; cpumap:Pbyte; maplen:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainGetEmulatorPinInfo(domain:TvirDomainPtr; cpumaps:Pbyte; maplen:longint; flags:dword):longint;cdecl;external libvirt;
-{*
- * virDomainIOThreadInfo:
- *
- * The data structure for information about all IOThreads in a domain
- *
- * Since: 1.2.14
-  }
-type
-{*
- * virDomainIOThreadInfoPtr:
- *
- * Since: 1.2.14
-  }
 
-  PvirDomainIOThreadInfoPtr = ^TvirDomainIOThreadInfoPtr;
-  TvirDomainIOThreadInfoPtr = PvirDomainIOThreadInfo;
-{ IOThread ID  }
-{ CPU map for thread. A pointer to an  }
-{ array of real CPUs (in 8-bit bytes)  }
-{ cpumap size  }
+type
   PvirDomainIOThreadInfo = ^TvirDomainIOThreadInfo;
   TvirDomainIOThreadInfo = record
       iothread_id : dword;
       cpumap : Pbyte;
       cpumaplen : longint;
     end;
-
+  PPvirDomainIOThreadInfoPtr = ^PvirDomainIOThreadInfoPtr;
+  PvirDomainIOThreadInfoPtr = ^TvirDomainIOThreadInfoPtr;
+  TvirDomainIOThreadInfoPtr = PvirDomainIOThreadInfo;
 
 procedure virDomainIOThreadInfoFree(info:TvirDomainIOThreadInfoPtr);cdecl;external libvirt;
 function virDomainGetIOThreadInfo(domain:TvirDomainPtr; info:PPvirDomainIOThreadInfoPtr; flags:dword):longint;cdecl;external libvirt;
 function virDomainPinIOThread(domain:TvirDomainPtr; iothread_id:dword; cpumap:Pbyte; maplen:longint; flags:dword):longint;cdecl;external libvirt;
 function virDomainAddIOThread(domain:TvirDomainPtr; iothread_id:dword; flags:dword):longint;cdecl;external libvirt;
 function virDomainDelIOThread(domain:TvirDomainPtr; iothread_id:dword; flags:dword):longint;cdecl;external libvirt;
-{ IOThread set parameters  }
-{*
- * VIR_DOMAIN_IOTHREAD_POLL_MAX_NS:
- *
- * The maximum polling time that can be used by polling algorithm in ns.
- * The polling time starts at 0 (zero) and is the time spent by the guest
- * to process IOThread data before returning the CPU to the host. The
- * polling time will be dynamically modified over time based on the
- * poll_grow and poll_shrink parameters provided. A value set too large
- * will cause more CPU time to be allocated the guest. A value set too
- * small will not provide enough cycles for the guest to process data.
- * Accepted type is VIR_TYPED_PARAM_ULLONG.
- *
- * Since: 4.10.0
-  }
+
 const
   VIR_DOMAIN_IOTHREAD_POLL_MAX_NS = 'poll_max_ns';  
-{*
- * VIR_DOMAIN_IOTHREAD_POLL_GROW:
- *
- * This provides a value for the dynamic polling adjustment algorithm to
- * use to grow its polling interval up to the poll_max_ns value. A value
- * of 0 (zero) allows the hypervisor to choose its own value. The algorithm
- * to use for adjustment is hypervisor specific.
- * Accepted type is VIR_TYPED_PARAM_UINT or since 9.3.0 VIR_TYPED_PARAM_ULLONG.
- *
- * Since: 4.10.0
-  }
-  VIR_DOMAIN_IOTHREAD_POLL_GROW = 'poll_grow';  
-{*
- * VIR_DOMAIN_IOTHREAD_POLL_SHRINK:
- *
- * This provides a value for the dynamic polling adjustment algorithm to
- * use to shrink its polling interval when the polling interval exceeds
- * the poll_max_ns value. A value of 0 (zero) allows the hypervisor to
- * choose its own value. The algorithm to use for adjustment is hypervisor
- * specific.
- * Accepted type is VIR_TYPED_PARAM_UINT or since 9.3.0 VIR_TYPED_PARAM_ULLONG.
- *
- * Since: 4.10.0
-  }
-  VIR_DOMAIN_IOTHREAD_POLL_SHRINK = 'poll_shrink';  
-{*
- * VIR_DOMAIN_IOTHREAD_THREAD_POOL_MIN:
- *
- * Sets the lower bound for thread pool size. A value of -1 disables this bound
- * leaving hypervisor use its default value, though this value is not accepted
- * for running domains. Accepted type is VIR_TYPED_PARAM_INT.
- *
- * Since: 8.5.0
-  }
-  VIR_DOMAIN_IOTHREAD_THREAD_POOL_MIN = 'thread_pool_min';  
-{*
- * VIR_DOMAIN_IOTHREAD_THREAD_POOL_MAX:
- *
- * Sets the upper bound for thread pool size. A value of -1 disables this bound
- * leaving hypervisor use its default value, though this value is not accepted
- * for running domains. Since the upper band has to be equal to or greater than
- * lower bound value of 0 is not accepted. Accepted type is
- * VIR_TYPED_PARAM_INT.
- *
- * Since: 8.5.0
-  }
-  VIR_DOMAIN_IOTHREAD_THREAD_POOL_MAX = 'thread_pool_max';  
-
+  VIR_DOMAIN_IOTHREAD_POLL_GROW = 'poll_grow';
+  VIR_DOMAIN_IOTHREAD_POLL_SHRINK = 'poll_shrink';
+  VIR_DOMAIN_IOTHREAD_THREAD_POOL_MIN = 'thread_pool_min';
+  VIR_DOMAIN_IOTHREAD_THREAD_POOL_MAX = 'thread_pool_max';
+  f
 function virDomainSetIOThreadParams(domain:TvirDomainPtr; iothread_id:dword; params:TvirTypedParameterPtr; nparams:longint; flags:dword):longint;cdecl;external libvirt;
 {* xxxxx
 # define VIR_USE_CPU(cpumap, cpu) ((cpumap)[(cpu) / 8] |= (1 << ((cpu) % 8)))
@@ -2458,19 +760,6 @@ function virDomainSetIOThreadParams(domain:TvirDomainPtr; iothread_id:dword; par
 
  }
 function virDomainGetVcpus(domain:TvirDomainPtr; info:TvirVcpuInfoPtr; maxinfo:longint; cpumaps:Pbyte; maplen:longint):longint;cdecl;external libvirt;
-{*
- * VIR_CPU_USABLE:
- * @cpumaps: pointer to an array of cpumap (in 8-bit bytes) (IN)
- * @maplen: the length (in bytes) of one cpumap
- * @vcpu: the virtual CPU number
- * @cpu: the physical CPU number
- *
- * This macro is to be used in conjunction with virDomainGetVcpus() API.
- * VIR_CPU_USABLE macro returns a non-zero value (true) if the cpu
- * is usable by the vcpu, and 0 otherwise.
- *
- * Since: 0.1.4
-  }
 { was #define dname(params) para_def_expr }
 { argument types are unknown }
 { return type might be wrong }   

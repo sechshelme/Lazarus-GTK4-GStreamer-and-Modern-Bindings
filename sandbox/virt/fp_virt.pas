@@ -12,6 +12,9 @@ const
   {$ENDIF}
 
 
+  type
+  Tsize_t=SizeUInt;
+
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
