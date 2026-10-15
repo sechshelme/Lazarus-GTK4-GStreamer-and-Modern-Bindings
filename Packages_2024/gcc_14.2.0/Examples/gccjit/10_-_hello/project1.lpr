@@ -59,6 +59,7 @@ uses
     CreateMul(ctxt);
 
 
+    gcc_jit_context_set_bool_option(ctxt, GCC_JIT_BOOL_OPTION_DUMP_INITIAL_GIMPLE, 1);
     res := gcc_jit_context_compile(ctxt);
     if res = nil then begin
       WriteLn('Kompilierung fehlgeschlagen');
@@ -77,6 +78,11 @@ uses
     i2 := 4;
     o := TFunction2(fn_ptr_mul)(i1, i2);
     WriteLn('JIT-Ergebnis: ', i1, 'x', i2, '=', o);
+
+
+    // Schreibt die aktuelle Struktur als Pseudo-C in die Datei 'mein_code.c'
+//    gcc_jit_context_dump_to_file(ctxt, 'main.c', 1);
+
 
     gcc_jit_result_release(res);
     gcc_jit_context_release(ctxt);
