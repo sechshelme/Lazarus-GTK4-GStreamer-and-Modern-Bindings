@@ -14,6 +14,7 @@ const
 
   type
   Tsize_t=SizeUInt;
+  Psize_t=^Tsize_t;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

@@ -10,64 +10,10 @@ uses
 {$ENDIF}
 
 
-{
- * libvirt-storage.h
- * Summary: APIs for management of storage pools and volumes
- * Description: Provides APIs for the management of storage pools and volumes
- *
- * Copyright (C) 2006-2016 Red Hat, Inc.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
-  }
-{$ifndef LIBVIRT_STORAGE_H}
-{$define LIBVIRT_STORAGE_H}
-{$ifndef __VIR_LIBVIRT_H_INCLUDES__}
-{$error "Don't include this file directly, only use libvirt/libvirt.h"}
-{$endif}
-{*
- * virStoragePool:
- *
- * a virStoragePool is a private structure representing a storage pool
- *
- * Since: 0.4.1
-  }
 type
-{*
- * virStoragePoolPtr:
- *
- * a virStoragePoolPtr is pointer to a virStoragePool private structure, this is the
- * type used to reference a storage pool in the API.
- *
- * Since: 0.4.1
-  }
-
   PvirStoragePoolPtr = ^TvirStoragePoolPtr;
   TvirStoragePoolPtr = PvirStoragePool;
-{*
- * virStoragePoolState:
- *
- * Since: 0.4.1
-  }
-{ Not running (Since: 0.4.1)  }
-{ Initializing pool, not available (Since: 0.4.1)  }
-{ Running normally (Since: 0.4.1)  }
-{ Running degraded (Since: 0.4.1)  }
-{ Running, but not accessible (Since: 0.8.2)  }
-{$ifdef VIR_ENUM_SENTINELS}
-{ (Since: 0.9.10)  }
-{$endif}
+
 type
   PvirStoragePoolState = ^TvirStoragePoolState;
   TvirStoragePoolState =  Longint;
