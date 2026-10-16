@@ -60,6 +60,7 @@ uses
 
 
     gcc_jit_context_set_bool_option(ctxt, GCC_JIT_BOOL_OPTION_DUMP_INITIAL_GIMPLE, 1);
+    gcc_jit_context_set_bool_option(ctxt, GCC_JIT_BOOL_OPTION_DUMP_SUMMARY, 1);
     res := gcc_jit_context_compile(ctxt);
     if res = nil then begin
       WriteLn('Kompilierung fehlgeschlagen');
