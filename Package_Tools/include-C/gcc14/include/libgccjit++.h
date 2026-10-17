@@ -357,7 +357,7 @@ namespace gccjit
 
     type get_pointer ();
     type get_const ();
-    type get_volatile ();
+    type get_ ();
     type get_aligned (size_t alignment_in_bytes);
     type get_vector (size_t num_units);
     type get_restrict ();
@@ -1418,9 +1418,9 @@ type::get_restrict ()
 }
 
 inline type
-type::get_volatile ()
+type::get_ ()
 {
-  return type (gcc_jit_type_get_volatile (get_inner_type ()));
+  return type (gcc_jit_type_get_ (get_inner_type ()));
 }
 
 inline type

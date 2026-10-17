@@ -626,9 +626,9 @@ gcc_jit_type_get_pointer (gcc_jit_type *type);
 extern gcc_jit_type *
 gcc_jit_type_get_const (gcc_jit_type *type);
 
-/* Given type "T", get type "volatile T".  */
+/* Given type "T", get type " T".  */
 extern gcc_jit_type *
-gcc_jit_type_get_volatile (gcc_jit_type *type);
+gcc_jit_type_get_ (gcc_jit_type *type);
 
 #define LIBGCCJIT_HAVE_gcc_jit_type_get_restrict
 

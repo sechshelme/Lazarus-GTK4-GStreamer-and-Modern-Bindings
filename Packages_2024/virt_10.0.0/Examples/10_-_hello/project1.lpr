@@ -1,15 +1,21 @@
 program project1;
 
 uses
-  BaseUnix,
   fp_virt;
 
 (*
 virt-viewer -c qemu:///session RetroPC
+
+qemu-system-x86_64 -enable-kvm -m 2G -smp 2 -cpu host -cdrom noble-mini-iso-amd64.iso
 *)
 
-  // qemu-system-x86_64 -enable-kvm -m 2G -smp 2 -cpu host -cdrom noble-mini-iso-amd64.iso
 
+type
+  Tpid_t = uint32;
+
+  function c_fork: Tpid_t; cdecl; external libc name 'fork';
+  function c_execvp(f: pchar; argv: PPchar): longint; cdecl; external libc name 'execvp';
+  procedure c_exit(__status: longint); cdecl; external libc name 'exit';
 
 const
   RetroPC = 'RetroPC';
@@ -26,14 +32,14 @@ const
       WriteLn(' -> [LÄUFT] Name: ', virDomainGetName(running_domains[i]));
       virDomainFree(running_domains[i]);
     end;
-    free(running_domains);
+    c_free(running_domains);
   end;
 
   procedure main;
   var
     conn: TvirConnectPtr;
     alte_vm, mein_retro_pc: TvirDomainPtr;
-    pid: TPid;
+    pid: Tpid_t;
   const
     vm_xml =
       '<domain type=''qemu''>'#10 +
@@ -61,30 +67,30 @@ const
       '  </devices>'#10 +
       '</domain>';
 
-        v_args:array of PChar= ('virt-viewer', '-c', 'qemu:///session', 'RetroPC', nil);
+    v_args: array of pchar = ('virt-viewer', '-c', 'qemu:///session', 'RetroPC', nil);
 
   begin
     conn := virConnectOpen('qemu:///session');
     if conn = nil then begin
-      WriteLn('Fehler beim Verbinden mit qemu:///session');
+      WriteLn('Fehler beim Verbinden');
       Exit;
     end;
     list(conn);
 
     alte_vm := virDomainLookupByName(conn, RetroPC);
     if alte_vm <> nil then begin
-      WriteLn('Alte Instanz von ''' + RetroPC + ''' gefunden. Bereinige...');
+      WriteLn('Alte Instanz gefunden. Bereinige...');
       if virDomainIsActive(alte_vm) = 1 then begin
-        WriteLn(' -> Stoppe laufende VM (destroy)...');
+        WriteLn('Stoppe laufende VM (destroy)...');
         virDomainDestroy(alte_vm);
       end;
-      WriteLn(' -> Lösche VM-Registrierung (undefine)...');
+      WriteLn('Lösche VM-Registrierung (undefine)...');
       virDomainUndefineFlags(alte_vm, VIR_DOMAIN_UNDEFINE_MANAGED_SAVE or VIR_DOMAIN_UNDEFINE_NVRAM);
       virDomainFree(alte_vm);
       WriteLn('Bereinigung abgeschlossen.'#10);
     end;
 
-    WriteLn('Registriere VM ''' + RetroPC + ''' neu...');
+    WriteLn('Registriere VM neu...');
     mein_retro_pc := virDomainDefineXML(conn, pchar(vm_xml));
     if mein_retro_pc = nil then begin
       WriteLn('Fehler: VM konnte nicht definiert werden.');
@@ -92,15 +98,14 @@ const
       Exit;
     end;
 
-    WriteLn('Starte ''' + RetroPC + '''...');
+    WriteLn('Starte VM...');
     if virDomainCreate(mein_retro_pc) = 0 then begin
       WriteLn('Erfolg: ''' + RetroPC + ''' läuft frisch im Hintergrund!'#10);
       WriteLn('Öffne virt-viewer...');
-      pid := FpFork();
-      WriteLn('fork pid:', pid);
+      pid := c_fork;
       if pid = 0 then begin
-        FpExecv('/usr/bin/virt-viewer',PPChar( v_args));
-        FpExit(1);
+        c_execvp('virt-viewer', PPChar(v_args));
+        c_exit(1);
       end;
     end else begin
       WriteLn('Fehler beim Starten der VM.');
@@ -108,7 +113,6 @@ const
 
     virDomainFree(mein_retro_pc);
     virConnectClose(conn);
-    WriteLn('programm beedet');
   end;
 
 begin

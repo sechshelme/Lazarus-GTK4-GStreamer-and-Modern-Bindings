@@ -235,17 +235,17 @@ typedef _Atomic struct
 #define ATOMIC_FLAG_INIT	{ 0 }
 
 
-extern _Bool atomic_flag_test_and_set (volatile atomic_flag *);
+extern _Bool atomic_flag_test_and_set ( atomic_flag *);
 #define atomic_flag_test_and_set(PTR) 					\
 			__atomic_test_and_set ((PTR), __ATOMIC_SEQ_CST)
-extern _Bool atomic_flag_test_and_set_explicit (volatile atomic_flag *,
+extern _Bool atomic_flag_test_and_set_explicit ( atomic_flag *,
 						memory_order);
 #define atomic_flag_test_and_set_explicit(PTR, MO)			\
 			__atomic_test_and_set ((PTR), (MO))
 
-extern void atomic_flag_clear (volatile atomic_flag *);
+extern void atomic_flag_clear ( atomic_flag *);
 #define atomic_flag_clear(PTR)	__atomic_clear ((PTR), __ATOMIC_SEQ_CST)
-extern void atomic_flag_clear_explicit (volatile atomic_flag *, memory_order);
+extern void atomic_flag_clear_explicit ( atomic_flag *, memory_order);
 #define atomic_flag_clear_explicit(PTR, MO)   __atomic_clear ((PTR), (MO))
 
 #if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L

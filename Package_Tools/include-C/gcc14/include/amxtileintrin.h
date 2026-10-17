@@ -53,7 +53,7 @@ extern __inline void
 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _tile_release (void)
 {
-  __asm__ volatile ("tilerelease" ::);
+  __asm__  ("tilerelease" ::);
 }
 
 #define _tile_loadd(dst,base,stride)		\

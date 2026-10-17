@@ -30,7 +30,7 @@
 
 #if defined(__x86_64__)
 #define _tile_dpfp16ps_internal(dst,src1,src2)			\
-  __asm__ volatile \
+  __asm__  \
   ("{tdpfp16ps\t%%tmm"#src2", %%tmm"#src1", %%tmm"#dst"|tdpfp16ps\t%%tmm"#dst", %%tmm"#src1", %%tmm"#src2"}" ::)
 
 #define _tile_dpfp16ps(dst,src1,src2)				\

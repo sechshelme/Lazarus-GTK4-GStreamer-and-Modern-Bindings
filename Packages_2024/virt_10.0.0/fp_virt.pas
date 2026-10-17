@@ -5,13 +5,13 @@ interface
 const
   {$IFDEF Linux}
   libvirt = 'virt';
-  libc='c';
+  libc = 'c';
   {$ENDIF}
 
   {$IFDEF Windows}
   libvirt = 'virt.dll';
   libc = 'msvcrt.dll';
-    {$ENDIF}
+  {$ENDIF}
 
 
 type
@@ -22,14 +22,12 @@ type
   {$PACKRECORDS C}
   {$ENDIF}
 
-procedure free(p: Pointer); cdecl; external libc;
-function execvp(f: pchar; argv: PPchar): longint; cdecl; external libc;
+procedure c_free(p: Pointer); cdecl; external libc name 'free';
 
 
-
-  {$DEFINE read_interface}
-  {$include fp_virt_includes.inc}
-  {$UNDEF read_interface}
+{$DEFINE read_interface}
+{$include fp_virt_includes.inc}
+{$UNDEF read_interface}
 
 implementation
 
