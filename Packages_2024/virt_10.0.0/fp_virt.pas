@@ -5,11 +5,13 @@ interface
 const
   {$IFDEF Linux}
   libvirt = 'virt';
+  libc='c';
   {$ENDIF}
 
   {$IFDEF Windows}
   libvirt = 'virt.dll';
-  {$ENDIF}
+  libc = 'msvcrt.dll';
+    {$ENDIF}
 
 
 type
@@ -19,6 +21,11 @@ type
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
+
+procedure free(p: Pointer); cdecl; external libc;
+function execvp(f: pchar; argv: PPchar): longint; cdecl; external libc;
+
+
 
   {$DEFINE read_interface}
   {$include fp_virt_includes.inc}
