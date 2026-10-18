@@ -101,7 +101,6 @@ type
   {$include fp_gio2_includes.inc}
   {$UNDEF read_interface}
 
-
 implementation
 
 {$DEFINE read_implementation}

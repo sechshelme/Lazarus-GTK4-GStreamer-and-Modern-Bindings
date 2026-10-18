@@ -379,7 +379,9 @@ const
     (libs: 'libgclang'; units: 'fp_clang'),
     (libs: 'libasan'; units: 'fp_asan'),
     (libs: 'libvirt'; units: 'fp_virt'),
-    (libs: 'libvirtgconfig'; units: 'fp_glib2, fp_virtgconfig'),
+    (libs: 'libvirtgconfig'; units: 'fp_glib2, fp_virt_glib'),
+    (libs: 'libvirtglib'; units: 'fp_glib2, fp_virt_glib'),
+    (libs: 'libvirtgobject'; units: 'fp_glib2, fp_virt_glib'),
 
 
 
