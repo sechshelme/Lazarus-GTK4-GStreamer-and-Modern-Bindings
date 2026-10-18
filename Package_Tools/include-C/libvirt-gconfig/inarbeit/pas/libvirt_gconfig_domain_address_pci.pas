@@ -3,41 +3,16 @@ unit libvirt_gconfig_domain_address_pci;
 interface
 
 uses
-  fp_glib2, fp_virtgconfig;
+  fp_glib2, fp_virtgconfig, libvirt_gconfig_object, libvirt_gconfig_domain_address;
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
 
-{
- * libvirt-gconfig-domain-address-pci.h: libvirt PCI device address configuration
- *
- * Copyright (C) 2012 Red Hat, Inc.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library. If not, see
- * <http://www.gnu.org/licenses/>.
- *
- * Author: Christophe Fergeau <cfergeau@redhat.com>
-  }
-{$if !defined(__LIBVIRT_GCONFIG_H__) && !defined(LIBVIRT_GCONFIG_BUILD)}
-{$error "Only <libvirt-gconfig/libvirt-gconfig.h> can be included directly."}
-{$endif}
-(** unsupported pragma#pragma once*)
-
 type
-{ Do not add fields to this struct  }
+  PGVirConfigDomainAddressPciPrivate=type Pointer;
+
   PGVirConfigDomainAddressPci = ^TGVirConfigDomainAddressPci;
   TGVirConfigDomainAddressPci = record
       parent : TGVirConfigDomainAddress;
@@ -49,7 +24,6 @@ type
       parent_class : TGVirConfigDomainAddressClass;
       padding : array[0..19] of Tgpointer;
     end;
-
 
 function gvir_config_domain_address_pci_get_type:TGType;cdecl;external libvirtgconfig;
 function gvir_config_domain_address_pci_new:PGVirConfigDomainAddressPci;cdecl;external libvirtgconfig;

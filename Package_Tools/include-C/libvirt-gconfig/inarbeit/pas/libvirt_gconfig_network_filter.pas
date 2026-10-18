@@ -1,0 +1,101 @@
+unit libvirt_gconfig_network_filter;
+
+interface
+
+uses
+  fp_glib2, fp_virtgconfig;
+
+{$IFDEF FPC}
+{$PACKRECORDS C}
+{$ENDIF}
+
+
+{
+ * libvirt-gconfig-network-filter.h: libvirt network filter configuration
+ *
+ * Copyright (C) 2010-2011 Red Hat, Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ * Author: Daniel P. Berrange <berrange@redhat.com>
+  }
+{$if !defined(__LIBVIRT_GCONFIG_H__) && !defined(LIBVIRT_GCONFIG_BUILD)}
+{$error "Only <libvirt-gconfig/libvirt-gconfig.h> can be included directly."}
+{$endif}
+(** unsupported pragma#pragma once*)
+
+type
+{ Do not add fields to this struct  }
+  PGVirConfigNetworkFilter = ^TGVirConfigNetworkFilter;
+  TGVirConfigNetworkFilter = record
+      parent : TGVirConfigObject;
+      priv : PGVirConfigNetworkFilterPrivate;
+    end;
+
+  PGVirConfigNetworkFilterClass = ^TGVirConfigNetworkFilterClass;
+  TGVirConfigNetworkFilterClass = record
+      parent_class : TGVirConfigObjectClass;
+      padding : array[0..19] of Tgpointer;
+    end;
+
+
+function gvir_config_network_filter_get_type:TGType;cdecl;external libvirtgconfig;
+function gvir_config_network_filter_new:PGVirConfigNetworkFilter;cdecl;external libvirtgconfig;
+function gvir_config_network_filter_new_from_xml(xml:Pgchar; error:PPGError):PGVirConfigNetworkFilter;cdecl;external libvirtgconfig;
+
+// === Konventiert am: 18-10-26 12:53:11 ===
+
+function GVIR_CONFIG_TYPE_NETWORK_FILTER : TGType;
+function GVIR_CONFIG_NETWORK_FILTER(obj : Pointer) : PGVirConfigNetworkFilter;
+function GVIR_CONFIG_NETWORK_FILTER_CLASS(klass : Pointer) : PGVirConfigNetworkFilterClass;
+function GVIR_CONFIG_IS_NETWORK_FILTER(obj : Pointer) : Tgboolean;
+function GVIR_CONFIG_IS_NETWORK_FILTER_CLASS(klass : Pointer) : Tgboolean;
+function GVIR_CONFIG_NETWORK_FILTER_GET_CLASS(obj : Pointer) : PGVirConfigNetworkFilterClass;
+
+implementation
+
+function GVIR_CONFIG_TYPE_NETWORK_FILTER : TGType;
+  begin
+    GVIR_CONFIG_TYPE_NETWORK_FILTER:=gvir_config_network_filter_get_type;
+  end;
+
+function GVIR_CONFIG_NETWORK_FILTER(obj : Pointer) : PGVirConfigNetworkFilter;
+begin
+  Result := PGVirConfigNetworkFilter(g_type_check_instance_cast(obj, GVIR_CONFIG_TYPE_NETWORK_FILTER));
+end;
+
+function GVIR_CONFIG_NETWORK_FILTER_CLASS(klass : Pointer) : PGVirConfigNetworkFilterClass;
+begin
+  Result := PGVirConfigNetworkFilterClass(g_type_check_class_cast(klass, GVIR_CONFIG_TYPE_NETWORK_FILTER));
+end;
+
+function GVIR_CONFIG_IS_NETWORK_FILTER(obj : Pointer) : Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj,  GVIR_CONFIG_TYPE_NETWORK_FILTER);
+end;
+
+function GVIR_CONFIG_IS_NETWORK_FILTER_CLASS(klass : Pointer) : Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass,  GVIR_CONFIG_TYPE_NETWORK_FILTER);
+end;
+
+function GVIR_CONFIG_NETWORK_FILTER_GET_CLASS(obj : Pointer) : PGVirConfigNetworkFilterClass;
+begin
+  Result := PGVirConfigNetworkFilterClass(PGTypeInstance(obj)^.g_class);
+end;
+
+
+
+end.
