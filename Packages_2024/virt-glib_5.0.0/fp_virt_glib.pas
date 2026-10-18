@@ -3,15 +3,21 @@ unit fp_virt_glib;
 interface
 
 uses
-fp_glib2;
+  fp_virt,
+  fp_glib2;
 
 const
   {$IFDEF Linux}
   libvirtgconfig = 'libvirt-gconfig-1.0';
+  libvirtglib = 'libvirt-glib-1.0';
+  libvirtgobject = 'libvirt-gobject-1.0';
+
   {$ENDIF}
 
   {$IFDEF Windows}
   libvirtgconfig = 'libvirt-gconfig-1.0.dll';
+  libvirtglib = 'libvirt-glib-1.0.dll';
+  libvirtgobject = 'libvirt-gobject-1.0.dll';
   {$ENDIF}
 
   {$IFDEF FPC}
@@ -30,4 +36,3 @@ implementation
 {$UNDEF read_implementation}
 
 end.
-

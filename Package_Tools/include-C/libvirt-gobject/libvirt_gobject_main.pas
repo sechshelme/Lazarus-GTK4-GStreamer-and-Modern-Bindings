@@ -1,4 +1,4 @@
-unit libvirt_glib_main;
+unit libvirt_gobject_main;
 
 interface
 
@@ -11,7 +11,7 @@ uses
 
 
 {
- * libvirt-glib-main.c: libvirt glib integration
+ * libvirt-gobject-main.c: libvirt gobject integration
  *
  * Copyright (C) 2008 Daniel P. Berrange
  * Copyright (C) 2010-2011 Red Hat, Inc.
@@ -32,16 +32,15 @@ uses
  *
  * Author: Daniel P. Berrange <berrange@redhat.com>
   }
-{$if !defined(__LIBVIRT_GLIB_H__) && !defined(LIBVIRT_GLIB_BUILD)}
-{$error "Only <libvirt-glib/libvirt-glib.h> can be included directly."}
+{$if !defined(__LIBVIRT_GOBJECT_H__) && !defined(LIBVIRT_GOBJECT_BUILD)}
+{$error "Only <libvirt-gobject/libvirt-gobject.h> can be included directly."}
 {$endif}
 (** unsupported pragma#pragma once*)
-{$include <glib.h>}
 
-procedure gvir_init(argc:Plongint; argv:PPPchar);cdecl;external libvirtglib;
-function gvir_init_check(argc:Plongint; argv:PPPchar; err:PPGError):Tgboolean;cdecl;external libvirtglib;
+procedure gvir_init_object(argc:Plongint; argv:PPPchar);cdecl;external libvirtgobject;
+function gvir_init_object_check(argc:Plongint; argv:PPPchar; err:PPGError):Tgboolean;cdecl;external libvirtgobject;
 
-// === Konventiert am: 18-10-26 17:33:06 ===
+// === Konventiert am: 18-10-26 19:32:54 ===
 
 
 implementation

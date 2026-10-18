@@ -1,17 +1,38 @@
-unit libvirt_glib_event;
 
+unit libvirt_gobject_main;
 interface
 
-uses
-  fp_glib2, fp_virt_glib;
+{
+  Automatically converted by H2Pas 1.0.0 from libvirt_gobject_main.h
+  The following command line parameters were used:
+    -p
+    -T
+    -d
+    -c
+    -e
+    libvirt_gobject_main.h
+}
 
+{ Pointers to basic pascal types, inserted by h2pas conversion program.}
+Type
+  PLongint  = ^Longint;
+  PSmallInt = ^SmallInt;
+  PByte     = ^Byte;
+  PWord     = ^Word;
+  PDWord    = ^DWord;
+  PDouble   = ^Double;
+
+Type
+Pchar  = ^char;
+PGError  = ^GError;
+Plongint  = ^longint;
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
 
 {
- * libvirt-glib-event.h: libvirt glib integration
+ * libvirt-gobject-main.c: libvirt gobject integration
  *
  * Copyright (C) 2008 Daniel P. Berrange
  * Copyright (C) 2010-2011 Red Hat, Inc.
@@ -32,16 +53,15 @@ uses
  *
  * Author: Daniel P. Berrange <berrange@redhat.com>
   }
+{$if !defined(__LIBVIRT_GOBJECT_H__) && !defined(LIBVIRT_GOBJECT_BUILD)}
+{$error "Only <libvirt-gobject/libvirt-gobject.h> can be included directly."}
+{$endif}
 (** unsupported pragma#pragma once*)
-{$include <glib.h>}
 
-procedure gvir_event_register;cdecl;external libvirtglib;
-
-// === Konventiert am: 18-10-26 17:33:02 ===
-
+procedure gvir_init_object(argc:Plongint; argv:PPPchar);cdecl;external;
+function gvir_init_object_check(argc:Plongint; argv:PPPchar; err:PPGError):Tgboolean;cdecl;external;
 
 implementation
-
 
 
 end.

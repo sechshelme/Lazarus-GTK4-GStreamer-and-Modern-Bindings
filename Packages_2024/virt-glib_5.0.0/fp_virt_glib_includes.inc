@@ -88,3 +88,7 @@
 {$include virt_glib_gconfig/libvirt_gconfig_storage_vol_target.inc}
 {$include virt_glib_gconfig/libvirt_gconfig_storage_vol.inc}
 
+{$include virt_glib_glib/libvirt_glib_error.inc}
+{$include virt_glib_glib/libvirt_glib_event.inc}
+{$include virt_glib_glib/libvirt_glib_main.inc}
+
