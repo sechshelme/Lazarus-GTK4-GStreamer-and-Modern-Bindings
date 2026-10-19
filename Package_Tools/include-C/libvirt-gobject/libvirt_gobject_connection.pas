@@ -3,7 +3,7 @@ unit libvirt_gobject_connection;
 interface
 
 uses
-  fp_glib2, fp_virt_glib, libvirt_gobject_stream, libvirt_gobject_domain, libvirt_gobject_interface;
+  fp_glib2, fp_virt_glib, libvirt_gobject_stream, libvirt_gobject_domain, libvirt_gobject_interface, libvirt_gobject_network, libvirt_gobject_storage_pool;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

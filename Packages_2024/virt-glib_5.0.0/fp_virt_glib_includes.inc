@@ -92,3 +92,23 @@
 {$include virt_glib_glib/libvirt_glib_event.inc}
 {$include virt_glib_glib/libvirt_glib_main.inc}
 
+{$include virt_glib_gobject/libvirt_gobject_enums.inc}
+{$include virt_glib_gobject/libvirt_gobject_stream.inc}
+{$include virt_glib_gobject/libvirt_gobject_domain_snapshot.inc}
+{$include virt_glib_gobject/libvirt_gobject_domain.inc}
+{$include virt_glib_gobject/libvirt_gobject_domain_device.inc}
+{$include virt_glib_gobject/libvirt_gobject_domain_disk.inc}
+{$include virt_glib_gobject/libvirt_gobject_domain_interface.inc}
+{$include virt_glib_gobject/libvirt_gobject_interface.inc}
+{$include virt_glib_gobject/libvirt_gobject_network.inc}
+{$include virt_glib_gobject/libvirt_gobject_network_dhcp_lease.inc}
+{$include virt_glib_gobject/libvirt_gobject_network_filter.inc}
+{$include virt_glib_gobject/libvirt_gobject_storage_vol.inc}
+{$include virt_glib_gobject/libvirt_gobject_storage_pool.inc}
+{$include virt_glib_gobject/libvirt_gobject_connection.inc}
+{$include virt_glib_gobject/libvirt_gobject_main.inc}
+{$include virt_glib_gobject/libvirt_gobject_manager.inc}
+{$include virt_glib_gobject/libvirt_gobject_node_device.inc}
+{$include virt_glib_gobject/libvirt_gobject_secret.inc}
+
+
