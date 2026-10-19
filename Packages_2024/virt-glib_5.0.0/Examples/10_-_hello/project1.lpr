@@ -2,7 +2,6 @@ program project1;
 
 uses
   fp_glib2,
-  fp_virt,
   fp_virt_glib;
 
 const
@@ -44,7 +43,7 @@ const
     g_object_unref(input_cfg);
 
     disk_cfg := gvir_config_domain_disk_new;
-    gvir_config_domain_disk_set_source(disk_cfg, '/n4800/ISO/linuxmint-22-cinnamon-64bit.iso');
+    gvir_config_domain_disk_set_source(disk_cfg, '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso');
     gvir_config_domain_disk_set_target_dev(disk_cfg, 'sdb');
     gvir_config_domain_add_device(dom_cfg, GVIR_CONFIG_DOMAIN_DEVICE(disk_cfg));
     g_object_unref(disk_cfg);
@@ -62,64 +61,86 @@ const
     Result := dom_cfg;
   end;
 
-  procedure main;
-  var
-    conn: TvirConnectPtr;
-    alte_vm, mein_retro_pc: TvirDomainPtr;
-    dom_cfg: PGVirConfigDomain;
-    generated_xml: Pgchar;
-  begin
-    conn := virConnectOpen('qemu:///session');
-    if conn = nil then begin
-      WriteLn('Fehler beim Verbinden');
-      Exit;
-    end;
 
-    alte_vm := virDomainLookupByName(conn, RetroPC);
-    if alte_vm <> nil then begin
-      WriteLn('Alte Instanz gefunden. Bereinige...');
-      if virDomainIsActive(alte_vm) = 1 then begin
-        WriteLn('Stoppe laufende VM (destroy)...');
-        virDomainDestroy(alte_vm);
-      end;
-      WriteLn('Lösche VM-Registrierung (undefine)...');
-      virDomainUndefineFlags(alte_vm, VIR_DOMAIN_UNDEFINE_MANAGED_SAVE or VIR_DOMAIN_UNDEFINE_NVRAM);
-      virDomainFree(alte_vm);
-      WriteLn('Bereinigung abgeschlossen.'#10);
-    end;
-
-    WriteLn('Erstelle VM-Konfiguration programmatisch...');
-    dom_cfg := create_vm_config;
-
-    generated_xml := gvir_config_object_to_xml(GVIR_CONFIG_OBJECT(dom_cfg));
-    g_object_unref(dom_cfg);
-
-    WriteLn('Registriere VM neu...');
-    mein_retro_pc := virDomainDefineXML(conn, generated_xml);
-    g_free(generated_xml);
-
-    if mein_retro_pc = nil then begin
-      WriteLn('Fehler: VM konnte nicht definiert werden.');
-      virConnectClose(conn);
-      Exit;
-    end;
-
-    WriteLn('Starte VM...');
-    if virDomainCreate(mein_retro_pc) = 0 then begin
-      WriteLn('Erfolg: ''' + RetroPC + ''' läuft frisch im Hintergrund!'#10);
-      WriteLn('Öffne virt-viewer...');
-
-      if not g_spawn_command_line_async('virt-viewer -c qemu:///session RetroPC', nil) then begin
-        WriteLn('Fehler: virt-viewer konnte nicht gestartet werden.');
-      end;
-
-    end else begin
-      WriteLn('Fehler beim Starten der VM.');
-    end;
-
-    virDomainFree(mein_retro_pc);
-    virConnectClose(conn);
+procedure main;
+var
+  conn: PGVirConnection;
+  alte_vm, mein_retro_pc: PGVirDomain;
+  dom_cfg: PGVirConfigDomain;
+  err: PGError = nil;
+  info: PGVirDomainInfo;
+begin
+  conn := gvir_connection_new('qemu:///session');
+  if not gvir_connection_open(conn, nil, @err) then begin
+    if err <> nil then g_print('Fehler beim Verbinden: %s'#10, err^.message)
+    else g_print('Fehler beim Verbinden.'#10);
+    g_clear_error(@err);
+    g_object_unref(conn);
+    Exit;
   end;
+
+  g_print('Synchronisiere VM-Cache...'#10);
+  err := nil;
+  if not gvir_connection_fetch_domains(conn, nil, @err) then begin
+    if err <> nil then begin
+      g_print('Warnung beim Cache-Laden: %s'#10, err^.message);
+      g_clear_error(@err);
+    end;
+  end;
+
+  alte_vm := gvir_connection_find_domain_by_name(conn, RetroPC);
+  if alte_vm <> nil then begin
+    g_print('Alte Instanz gefunden. Bereinige...'#10);
+
+    info := gvir_domain_get_info(alte_vm, @err);
+    if info <> nil then begin
+      if info^.state = GVIR_DOMAIN_STATE_RUNNING then begin
+        g_print('Stoppe laufende VM (stop)...'#10);
+        gvir_domain_stop(alte_vm, 0, nil);
+      end;
+      g_free(info);
+    end;
+
+    g_print('Lösche VM-Registrierung (delete)...'#10);
+    gvir_domain_delete(alte_vm, 0, nil);
+    g_object_unref(alte_vm);
+    g_print('Bereinigung abgeschlossen.'#10#10);
+  end else begin
+    g_print('Keine alte Instanz im Cache gefunden.'#10);
+  end;
+
+  g_print('Erstelle VM-Konfiguration programmatisch...'#10);
+  dom_cfg := create_vm_config;
+
+  g_print('Registriere VM neu...'#10);
+  mein_retro_pc := gvir_connection_create_domain(conn, dom_cfg, @err);
+  g_object_unref(dom_cfg);
+
+  if mein_retro_pc = nil then begin
+    if err <> nil then g_print('Fehler: VM konnte nicht definiert werden. Grund: %s'#10, err^.message)
+    else g_print('Fehler: VM konnte nicht definiert werden.'#10);
+    g_clear_error(@err);
+    g_object_unref(conn);
+    Exit;
+  end;
+
+  g_print('Starte VM...'#10);
+  if gvir_domain_start(mein_retro_pc, 0, @err) then begin
+    g_print('Erfolg: ''%s'' läuft frisch im Hintergrund!'#10#10, RetroPC);
+    g_print('Öffne virt-viewer...'#10);
+
+    if not g_spawn_command_line_async('virt-viewer -c qemu:///session RetroPC', nil) then begin
+      g_print('Fehler: virt-viewer konnte nicht gestartet werden.'#10);
+    end;
+  end else begin
+    if err <> nil then g_print('Fehler beim Starten der VM: %s'#10, err^.message)
+    else g_print('Fehler beim Starten der VM.'#10);
+    g_clear_error(@err);
+  end;
+
+  g_object_unref(mein_retro_pc);
+  g_object_unref(conn);
+end;
 
 begin
   main;
