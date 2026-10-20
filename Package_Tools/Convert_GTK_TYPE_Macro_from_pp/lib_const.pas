@@ -382,6 +382,7 @@ const
     (libs: 'libvirtgconfig'; units: 'fp_glib2, fp_virt_glib'),
     (libs: 'libvirtglib'; units: 'fp_glib2, fp_virt_glib'),
     (libs: 'libvirtgobject'; units: 'fp_glib2, fp_virt_glib'),
+    (libs: 'libgvnc'; units: 'fp_glib2, fp_gvnc'),
 
 
 

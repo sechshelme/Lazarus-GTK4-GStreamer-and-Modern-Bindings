@@ -6,8 +6,8 @@ uses
 
 const
   RetroPC = 'RetroPC';
-  iso=     '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
-//  iso=     '/n4800/ISO/ubuntu-26.04.1-desktop-amd64.iso';
+  iso = '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
+  //  iso=     '/n4800/ISO/ubuntu-26.04.1-desktop-amd64.iso';
 
 
   function create_vm_config: PGVirConfigDomain;
@@ -64,19 +64,6 @@ const
     Result := dom_cfg;
   end;
 
-
-procedure printPlatforms(conn:PGVirConnection);
-var
-  err: PGError=nil;
-  xml_str: Pgchar;
-  caps: PGVirConfigCapabilities;
-begin
-  caps := gvir_connection_get_capabilities(conn, @err);
-  xml_str := gvir_config_object_to_xml(GVIR_CONFIG_OBJECT(caps));
-  WriteLn(xml_str);
-  g_free(xml_str);
-  end;
-
   procedure main;
   var
     conn: PGVirConnection;
@@ -84,6 +71,7 @@ begin
     dom_cfg: PGVirConfigDomain;
     err: PGError = nil;
     info: PGVirDomainInfo;
+    eingabe: String = '';
   begin
     conn := gvir_connection_new('qemu:///session');
     if not gvir_connection_open(conn, nil, @err) then begin
@@ -97,8 +85,6 @@ begin
       Exit;
     end;
 
-    printPlatforms(conn);
-
     g_print('Synchronisiere VM-Cache...'#10);
     if not gvir_connection_fetch_domains(conn, nil, @err) then begin
       if err <> nil then begin
@@ -109,21 +95,36 @@ begin
 
     old_vm := gvir_connection_find_domain_by_name(conn, RetroPC);
     if old_vm <> nil then begin
-      g_print('Alte Instanz gefunden. Bereinige...'#10);
-
       info := gvir_domain_get_info(old_vm, @err);
-      if info <> nil then begin
-        if info^.state = GVIR_DOMAIN_STATE_RUNNING then begin
-          g_print('Stoppe laufende VM (stop)...'#10);
-          gvir_domain_stop(old_vm, 0, nil);
+
+      if (info <> nil) and (info^.state = GVIR_DOMAIN_STATE_RUNNING) then begin
+        repeat
+          Write('Die VM läuft bereits. Abwürgen und neu starten? (j/n): ');
+          ReadLn(eingabe);
+          eingabe := LowerCase(eingabe);
+        until (eingabe = 'j') or(eingabe = 'n');
+
+        if (eingabe = 'n') or (eingabe = 'nein') then begin
+          g_print('Bestehende VM wird beibehalten. Öffne virt-viewer...'#10);
+          if not g_spawn_command_line_async('virt-viewer -c qemu:///session RetroPC', nil) then begin
+            g_print('Fehler: virt-viewer konnte nicht gestartet werden.'#10);
+          end;
+
+          g_free(info);
+          g_object_unref(old_vm);
+          g_object_unref(conn);
+          Exit;
         end;
-        g_free(info);
-      end;
-      if err <> nil then begin
-        g_clear_error(@err);
+
+        g_print('Stoppe laufende VM (stop)...'#10);
+        gvir_domain_stop(old_vm, 0, nil);
       end;
 
-      g_print('Lösche VM-Registrierung inklusive Speicherständen...'#10);
+      if info <> nil then g_free(info);
+      if err <> nil then g_clear_error(@err);
+
+      // Löscht die alte VM nur, wenn "ja" gewählt wurde ODER wenn sie eh aus war
+      g_print('Lösche alte VM-Registrierung inklusive Speicherständen...'#10);
       if not gvir_domain_delete(old_vm, GVIR_DOMAIN_DELETE_SAVED_STATE, @err) then begin
         if err <> nil then begin
           g_print('Löschfehler: %s'#10, err^.message);
@@ -134,6 +135,8 @@ begin
       g_object_unref(old_vm);
       g_print('Bereinigung abgeschlossen.'#10#10);
     end;
+
+    // =================
 
     g_print('Erstelle VM-Konfiguration programmatisch...'#10);
     dom_cfg := create_vm_config;
