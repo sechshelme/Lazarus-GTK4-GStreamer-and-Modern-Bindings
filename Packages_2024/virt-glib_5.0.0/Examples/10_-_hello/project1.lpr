@@ -6,8 +6,9 @@ uses
 
 const
   RetroPC = 'RetroPC';
-  iso = '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
+  //  iso = '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
   //  iso=     '/n4800/ISO/ubuntu-26.04.1-desktop-amd64.iso';
+  iso = '/n4800/ISO/ubuntu-26.04.1-live-server-amd64.iso';
 
 
   function create_vm_config: PGVirConfigDomain;
@@ -71,7 +72,7 @@ const
     dom_cfg: PGVirConfigDomain;
     err: PGError = nil;
     info: PGVirDomainInfo;
-    eingabe: String = '';
+    eingabe: string = '';
   begin
     conn := gvir_connection_new('qemu:///session');
     if not gvir_connection_open(conn, nil, @err) then begin
@@ -102,7 +103,7 @@ const
           Write('Die VM läuft bereits. Abwürgen und neu starten? (j/n): ');
           ReadLn(eingabe);
           eingabe := LowerCase(eingabe);
-        until (eingabe = 'j') or(eingabe = 'n');
+        until (eingabe = 'j') or (eingabe = 'n');
 
         if (eingabe = 'n') or (eingabe = 'nein') then begin
           g_print('Bestehende VM wird beibehalten. Öffne virt-viewer...'#10);
@@ -120,8 +121,8 @@ const
         gvir_domain_stop(old_vm, 0, nil);
       end;
 
-      if info <> nil then g_free(info);
-      if err <> nil then g_clear_error(@err);
+      if info <> nil then begin g_free(info); end;
+      if err <> nil then begin g_clear_error(@err); end;
 
       // Löscht die alte VM nur, wenn "ja" gewählt wurde ODER wenn sie eh aus war
       g_print('Lösche alte VM-Registrierung inklusive Speicherständen...'#10);

@@ -25,6 +25,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="fp_gvnc_package"/>
+      </Item>
+      <Item>
         <PackageName Value="fp_virt_glib_package"/>
       </Item>
       <Item>
@@ -34,9 +37,6 @@
     <Units>
       <Unit>
         <Filename Value="project1.lpr"/>
-      </Unit>
-      <Unit>
-        <Filename Value="fp_gvnc.pas"/>
       </Unit>
     </Units>
   </ProjectOptions>
