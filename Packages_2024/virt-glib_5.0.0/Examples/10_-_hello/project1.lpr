@@ -162,9 +162,14 @@ const
       g_print('Erfolg: ''%s'' läuft frisch im Hintergrund!'#10#10, RetroPC);
       g_print('Öffne virt-viewer...'#10);
 
-      if not g_spawn_command_line_async('virt-viewer -c qemu:///session RetroPC', nil) then begin
-        g_print('Fehler: virt-viewer konnte nicht gestartet werden.'#10);
+//      if not g_spawn_command_line_async('virt-viewer -c qemu:///session RetroPC', nil) then begin
+//        g_print('Fehler: virt-viewer konnte nicht gestartet werden.'#10);
+//      end;
+      if not g_spawn_command_line_async('remote-viewer vnc://127.0.0.1:5901', nil) then begin
+        g_print('Fehler: remote-viewer konnte nicht gestartet werden.'#10);
       end;
+
+
     end else begin
       if err <> nil then begin
         g_print('Fehler beim Starten der VM: %s'#10, err^.message);
