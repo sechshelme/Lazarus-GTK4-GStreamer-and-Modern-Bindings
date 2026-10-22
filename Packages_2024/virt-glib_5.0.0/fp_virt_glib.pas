@@ -8,9 +8,9 @@ uses
 
 const
   {$IFDEF Linux}
-  libvirtgconfig = 'libvirt-gconfig-1.0';
-  libvirtglib = 'libvirt-glib-1.0';
-  libvirtgobject = 'libvirt-gobject-1.0';
+  libvirtgconfig = 'virt-gconfig-1.0';
+  libvirtglib = 'virt-glib-1.0';
+  libvirtgobject = 'virt-gobject-1.0';
 
   {$ENDIF}
 

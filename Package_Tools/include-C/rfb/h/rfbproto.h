@@ -111,13 +111,6 @@ typedef int8_t rfbBool;
 #undef TRUE
 #define TRUE -1
 #endif
-#define rfbCloseSocket(s)			\
-    {						\
-	if (s != RFB_INVALID_SOCKET) {		\
-	    _rfbCloseSocket(s);		\
-	    s = RFB_INVALID_SOCKET;		\
-	}					\
-    }
 
 typedef uint32_t rfbKeySym;
 typedef uint32_t rfbPixel;

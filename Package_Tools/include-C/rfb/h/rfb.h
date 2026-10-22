@@ -33,10 +33,6 @@
  *  USA.
  */
 
-#if(defined __cplusplus)
-extern "C"
-{
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -270,9 +266,6 @@ typedef struct _rfbScreenInfo
     /** this is the amount of milliseconds to wait at least before sending
      * an update. */
     int deferUpdateTime;
-#ifdef TODELETE
-    char* screen;
-#endif
     rfbBool alwaysShared;
     rfbBool neverShared;
     rfbBool dontDisconnect;
@@ -310,10 +303,8 @@ typedef struct _rfbScreenInfo
     /** These hooks are called to pass keyboard state back to the client */
     rfbGetKeyboardLedStateHookPtr getKeyboardLedStateHook;
 
-#if defined(LIBVNCSERVER_HAVE_LIBPTHREAD) || defined(LIBVNCSERVER_HAVE_WIN32THREADS)
     MUTEX(cursorMutex);
     rfbBool backgroundLoop;
-#endif
 
     /** if TRUE, an ignoring signal handler is installed for SIGPIPE */
     rfbBool ignoreSIGPIPE;
@@ -363,15 +354,9 @@ typedef struct _rfbScreenInfo
 	of file descriptors LibVNCServer uses before denying new client connections.
 	It is set to 0.5 per default. */
     float fdQuota;
-#ifdef LIBVNCSERVER_HAVE_LIBPTHREAD
     pthread_t listener_thread;
     int pipe_notify_listener_thread[2];
-#elif defined(LIBVNCSERVER_HAVE_WIN32THREADS)
-    uintptr_t listener_thread;
-#endif
-#ifdef LIBVNCSERVER_HAVE_LIBZ
     rfbSetXCutTextUTF8ProcPtr setXCutTextUTF8;
-#endif
 } rfbScreenInfo, *rfbScreenInfoPtr;
 
 
@@ -422,6 +407,8 @@ typedef struct _rfbStatList {
 typedef struct _rfbSslCtx rfbSslCtx;
 typedef struct _wsCtx wsCtx;
 
+#define UPDATE_BUF_SIZE 32768
+
 typedef struct _rfbClientRec {
 
     /** back pointer to the screen */
@@ -449,36 +436,7 @@ typedef struct _rfbClientRec {
     int protocolMajorVersion;
     int protocolMinorVersion;
 
-#ifdef LIBVNCSERVER_HAVE_LIBPTHREAD
     pthread_t client_thread;
-#elif defined(LIBVNCSERVER_HAVE_WIN32THREADS)
-    uintptr_t client_thread;
-#endif
-
-    /* Note that the RFB_INITIALISATION_SHARED state is provided to support
-       clients that under some circumstances do not send a ClientInit message.
-       In particular the Mac OS X built-in VNC client (with protocolMinorVersion
-       == 889) is one of those.  However, it only requires this support under
-       special circumstances that can only be determined during the initial
-       authentication.  If the right conditions are met this state will be
-       set (see the auth.c file) when rfbProcessClientInitMessage is called.
-
-       If the state is RFB_INITIALISATION_SHARED we should not expect to receive
-       any ClientInit message, but instead should proceed to the next stage
-       of initialisation as though an implicit ClientInit message was received
-       with a shared-flag of true.  (There is currently no corresponding
-       RFB_INITIALISATION_NOTSHARED state to represent an implicit ClientInit
-       message with a shared-flag of false because no known existing client
-       requires such support at this time.)
-
-       Note that software using LibVNCServer to provide a VNC server will only
-       ever have a chance to see the state field set to
-       RFB_INITIALISATION_SHARED if the software is multi-threaded and manages
-       to examine the state field during the extremely brief window after the
-       'None' authentication type selection has been received from the built-in
-       OS X VNC client and before the rfbProcessClientInitMessage function is
-       called -- control cannot return to the caller during this brief window
-       while the state field is set to RFB_INITIALISATION_SHARED. */
 
                                 /** Possible client states: */
     enum {
@@ -567,7 +525,6 @@ typedef struct _rfbClientRec {
      * means 8K minimum.
      */
 
-#define UPDATE_BUF_SIZE 32768
 
     char updateBuf[UPDATE_BUF_SIZE];
     int ublen;
@@ -578,25 +535,17 @@ typedef struct _rfbClientRec {
     int rawBytesEquivalent;
     int bytesSent;
 
-#ifdef LIBVNCSERVER_HAVE_LIBZ
-    /* zlib encoding -- necessary compression state info per client */
-
     struct z_stream_s compStream;
     rfbBool compStreamInited;
     uint32_t zlibCompressLevel;
-#endif
-#if defined(LIBVNCSERVER_HAVE_LIBZ) || defined(LIBVNCSERVER_HAVE_LIBPNG)
     /** the quality level is also used by ZYWRLE and TightPng */
     int tightQualityLevel;
 
-#ifdef LIBVNCSERVER_HAVE_LIBJPEG
     /* tight encoding -- preserve zlib streams' state for each client */
     z_stream zsStruct[4];
     rfbBool zsActive[4];
     int zsLevel[4];
     int tightCompressLevel;
-#endif
-#endif
 
     /* Ultra Encoding support */
     rfbBool compStreamInitedLZO;
@@ -624,7 +573,6 @@ typedef struct _rfbClientRec {
     struct _rfbClientRec *prev;
     struct _rfbClientRec *next;
 
-#if defined(LIBVNCSERVER_HAVE_LIBPTHREAD) || defined(LIBVNCSERVER_HAVE_WIN32THREADS)
     /** whenever a client is referenced, the refCount has to be incremented
        and afterwards decremented, so that the client is not cleaned up
        while being referenced.
@@ -637,13 +585,10 @@ typedef struct _rfbClientRec {
     MUTEX(outputMutex);
     MUTEX(updateMutex);
     COND(updateCond);
-#endif
 
-#ifdef LIBVNCSERVER_HAVE_LIBZ
     void* zrleData;
     int zywrleLevel;
     int zywrleBuf[rfbZRLETileWidth * rfbZRLETileHeight];
-#endif
 
     /** if progressive updating is on, this variable holds the current
      * y coordinate of the progressive slice. */
@@ -656,10 +601,7 @@ typedef struct _rfbClientRec {
     void *paletteHelper;
 
     /** for thread safety for rfbSendFBUpdate() */
-#if defined(LIBVNCSERVER_HAVE_LIBPTHREAD) || defined(LIBVNCSERVER_HAVE_WIN32THREADS)
-#define LIBVNCSERVER_SEND_MUTEX
     MUTEX(sendMutex);
-#endif
 
   /* buffers to hold pixel data before and after encoding.
      per-client for thread safety */
@@ -668,45 +610,29 @@ typedef struct _rfbClientRec {
   char *afterEncBuf;
   int afterEncBufSize;
   int afterEncBufLen;
-#if defined(LIBVNCSERVER_HAVE_LIBZ) || defined(LIBVNCSERVER_HAVE_LIBPNG)
     uint32_t tightEncoding;  /* rfbEncodingTight or rfbEncodingTightPng */
-#ifdef LIBVNCSERVER_HAVE_LIBJPEG
     /* TurboVNC Encoding support (extends TightVNC) */
     int turboSubsampLevel;
     int turboQualityLevel;  /* 1-100 scale */
-#endif
-#endif
     rfbSslCtx *sslctx;
     wsCtx     *wsctx;
     char *wspath;                          /* Requests path component */
-#ifdef LIBVNCSERVER_HAVE_LIBPTHREAD
     int pipe_notify_client_thread[2];
-#endif
-
-    /**
-     * clientFramebufferUpdateRequestHook is called when a client requests a frame
-     * buffer update.
-     */
     ClientFramebufferUpdateRequestHookPtr clientFramebufferUpdateRequestHook;
 
     rfbBool useExtDesktopSize;
     int requestedDesktopSizeChange;
     int lastDesktopSizeChangeError;
 
-#ifdef LIBVNCSERVER_HAVE_LIBZ
     rfbBool enableExtendedClipboard;
     uint32_t extClipboardUserCap;
     uint32_t extClipboardMaxUnsolicitedSize;
     char *extClipboardData;
     int extClipboardDataSize;
 
-#ifdef LIBVNCSERVER_HAVE_LIBJPEG
-    /* Tight encoding internal variables, stored per-client for thread safety */
     rfbBool tightUsePixelFormat24;
     void *tightTJ;
     int tightPngDstDataLen;
-#endif
-#endif
 } rfbClientRec, *rfbClientPtr;
 
 /**
@@ -714,40 +640,11 @@ typedef struct _rfbClientRec {
  * be sent to the client.
  */
 
-#define FB_UPDATE_PENDING(cl)                                              \
-     (((cl)->enableCursorShapeUpdates && (cl)->cursorWasChanged) ||        \
-     (((cl)->enableCursorShapeUpdates == FALSE &&                          \
-       ((cl)->cursorX != (cl)->screen->cursorX ||                          \
-	(cl)->cursorY != (cl)->screen->cursorY))) ||                       \
-     ((cl)->useNewFBSize && (cl)->newFBSizePending) ||                     \
-     ((cl)->enableCursorPosUpdates && (cl)->cursorWasMoved) ||             \
-     !sraRgnEmpty((cl)->copyRegion) || !sraRgnEmpty((cl)->modifiedRegion))
 
 /*
  * Macros for endian swapping.
  */
 
-#define Swap16(s) ((((s) & 0xff) << 8) | (((s) >> 8) & 0xff))
-
-#define Swap24(l) ((((l) & 0xff) << 16) | (((l) >> 16) & 0xff) | \
-                   (((l) & 0x00ff00)))
-
-#define Swap32(l) ((((l) >> 24) & 0x000000ff)| \
-                   (((l) & 0x00ff0000) >> 8)  | \
-                   (((l) & 0x0000ff00) << 8)  | \
-                   (((l) & 0x000000ff) << 24))
-
-
-extern char rfbEndianTest;
-
-#define Swap16IfLE(s) (rfbEndianTest ? Swap16(s) : (s))
-#define Swap24IfLE(l) (rfbEndianTest ? Swap24(l) : (l))
-#define Swap32IfLE(l) (rfbEndianTest ? Swap32(l) : (l))
-
-/* UltraVNC uses some windows structures unmodified, so the viewer expects LittleEndian Data */
-#define Swap16IfBE(s) (rfbEndianTest ? (s) : Swap16(s))
-#define Swap24IfBE(l) (rfbEndianTest ? (l) : Swap24(l))
-#define Swap32IfBE(l) (rfbEndianTest ? (l) : Swap32(l))
 
 /* sockets.c */
 
@@ -875,8 +772,6 @@ extern rfbBool rfbSendRectEncodingHextile(rfbClientPtr cl, int x, int y, int w,
  * two scan lines.
  */
 #define ULTRA_MAX_RECT_SIZE (128*256)
-#define ULTRA_MAX_SIZE(min) ((( min * 2 ) > ULTRA_MAX_RECT_SIZE ) ? \
-                            ( min * 2 ) : ULTRA_MAX_RECT_SIZE )
 
 extern rfbBool rfbSendRectEncodingUltra(rfbClientPtr cl, int x,int y,int w,int h);
 
@@ -893,8 +788,6 @@ extern rfbBool rfbSendRectEncodingUltra(rfbClientPtr cl, int x,int y,int w,int h
  * two scan lines.
  */
 #define ZLIB_MAX_RECT_SIZE (128*256)
-#define ZLIB_MAX_SIZE(min) ((( min * 2 ) > ZLIB_MAX_RECT_SIZE ) ? \
-			    ( min * 2 ) : ZLIB_MAX_RECT_SIZE )
 
 extern rfbBool rfbSendRectEncodingZlib(rfbClientPtr cl, int x, int y, int w,
 				    int h);
@@ -1029,10 +922,10 @@ void rfbDoCopyRegion(rfbScreenInfoPtr rfbScreen,sraRegionPtr copyRegion,int dx,i
 void rfbMarkRectAsModified(rfbScreenInfoPtr rfbScreen,int x1,int y1,int x2,int y2);
 void rfbMarkRegionAsModified(rfbScreenInfoPtr rfbScreen,sraRegionPtr modRegion);
 void rfbDoNothingWithClient(rfbClientPtr cl);
-enum rfbNewClientAction defaultNewClientHook(rfbClientPtr cl);
+rfbNewClientAction defaultNewClientHook(rfbClientPtr cl);
 void rfbRegisterProtocolExtension(rfbProtocolExtension* extension);
 void rfbUnregisterProtocolExtension(rfbProtocolExtension* extension);
-struct _rfbProtocolExtension* rfbGetExtensionIterator(void);
+ _rfbProtocolExtension* rfbGetExtensionIterator(void);
 void rfbReleaseExtensionIterator(void);
 rfbBool rfbEnableExtension(rfbClientPtr cl, rfbProtocolExtension* extension,
 	void* data);
@@ -1123,9 +1016,6 @@ rfbBool rfbProcessNewConnection(rfbScreenInfoPtr rfbScreen);
 rfbBool rfbUpdateClient(rfbClientPtr cl);
 
 
-#if(defined __cplusplus)
-}
-#endif
 
 /**
  * @}

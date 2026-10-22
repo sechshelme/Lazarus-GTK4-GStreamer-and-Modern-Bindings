@@ -384,6 +384,8 @@ const
     (libs: 'libvirtgobject'; units: 'fp_glib2, fp_virt_glib'),
     (libs: 'libgvnc'; units: 'fp_glib2, fp_gvnc'),
 
+    (libs: 'libvncclient'; units: 'fp_vnc'),
+    (libs: 'libvncserver'; units: 'fp_vnc'),
 
 
 

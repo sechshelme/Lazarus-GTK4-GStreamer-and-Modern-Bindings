@@ -61,24 +61,6 @@
 #include <sasl/sasl.h>
 #endif /* LIBVNCSERVER_HAVE_SASL */
 
-#define rfbClientSwap16IfLE(s) \
-    (*(char *)&client->endianTest ? ((((s) & 0xff) << 8) | (((s) >> 8) & 0xff)) : (s))
-
-#define rfbClientSwap32IfLE(l) \
-    (*(char *)&client->endianTest ? ((((l) >> 24) & 0x000000ff) | \
-			     (((l) & 0x00ff0000) >> 8)  | \
-			     (((l) & 0x0000ff00) << 8)  | \
-			     (((l) & 0x000000ff) << 24))  : (l))
-
-#define rfbClientSwap64IfLE(l) \
-    (*(char *)&client->endianTest ? ((((l) >> 56 ) & 0x00000000000000ffULL) | \
-			     (((l) & 0x00ff000000000000ULL) >> 40)  | \
-			     (((l) & 0x0000ff0000000000ULL) >> 24)  | \
-			     (((l) & 0x000000ff00000000ULL) >> 8)  | \
-			     (((l) & 0x00000000ff000000ULL) << 8)  | \
-			     (((l) & 0x0000000000ff0000ULL) << 24)  | \
-			     (((l) & 0x000000000000ff00ULL) << 40)  | \
-			     (((l) & 0x00000000000000ffULL) << 56))  : (l))
 
 #define FLASH_PORT_OFFSET 5400
 #define LISTEN_PORT_OFFSET 5500
@@ -90,14 +72,10 @@
 
 #define DEFAULT_SSH_CMD "/usr/bin/ssh"
 #define DEFAULT_TUNNEL_CMD  \
-  (DEFAULT_SSH_CMD " -f -L %L:localhost:%R %H sleep 20")
+  (DEFAULT_SSH_CMD +" -f -L %L:localhost:%R %H sleep 20")
 #define DEFAULT_VIA_CMD     \
-  (DEFAULT_SSH_CMD " -f -L %L:%H:%R %G sleep 20")
+  (DEFAULT_SSH_CMD+ " -f -L %L:%H:%R %G sleep 20")
 
-#if(defined __cplusplus)
-extern "C"
-{
-#endif
 
 /** vncrec */
 
@@ -238,205 +216,93 @@ typedef char* (*GetUserProc)(struct _rfbClient* client);
 typedef char* (*GetSASLMechanismProc)(struct _rfbClient* client, char* mechlist);
 #endif /* LIBVNCSERVER_HAVE_SASL */
 
+#define RFB_BUFFER_SIZE (640*480)
+#define RFB_BUF_SIZE 8192
+#define ZLIB_BUFFER_SIZE 30000
+#define TIGHT_GRADIENT_MAX_WIDTH 2048
+
+
+/// xxxxxx LIBVNCSERVER_HAVE_SASL bwi win raus
+
 typedef struct _rfbClient {
 	uint8_t* frameBuffer;
 	int width, height;
-
 	int endianTest;
-
 	AppData appData;
-
 	const char* programName;
 	char* serverHost;
-	int serverPort; /**< if -1, then use file recorded by vncrec */
+	int serverPort;
 	rfbBool listenSpecified;
 	int listenPort, flashPort;
-
 	struct {
 		int x, y, w, h;
 	} updateRect;
-
-	/** Note that the CoRRE encoding uses this buffer and assumes it is big enough
-	   to hold 255 * 255 * 32 bits -> 260100 bytes.  640*480 = 307200 bytes.
-	   Hextile also assumes it is big enough to hold 16 * 16 * 32 bits.
-	   Tight encoding assumes BUFFER_SIZE is at least 16384 bytes. */
-
-#define RFB_BUFFER_SIZE (640*480)
 	char buffer[RFB_BUFFER_SIZE];
-
-	/* rfbproto.c */
-
 	rfbSocket sock;
 	rfbBool canUseCoRRE;
 	rfbBool canUseHextile;
 	char *desktopName;
 	rfbPixelFormat format;
 	rfbServerInitMsg si;
-
-	/* sockets.c */
-#define RFB_BUF_SIZE 8192
 	char buf[RFB_BUF_SIZE];
 	char *bufoutptr;
 	unsigned int buffered;
-
-	/* The zlib encoding requires expansion/decompression/deflation of the
-	   compressed data in the "buffer" above into another, result buffer.
-	   However, the size of the result buffer can be determined precisely
-	   based on the bitsPerPixel, height and width of the rectangle.  We
-	   allocate this buffer one time to be the full size of the buffer. */
-
-	/* Ultra Encoding uses this buffer too */
-	
 	int ultra_buffer_size;
 	char *ultra_buffer;
-
 	int raw_buffer_size;
 	char *raw_buffer;
-
-#ifdef LIBVNCSERVER_HAVE_LIBZ
 	z_stream decompStream;
 	rfbBool decompStreamInited;
-#endif
-
-
-#ifdef LIBVNCSERVER_HAVE_LIBZ
-	/*
-	 * Variables for the ``tight'' encoding implementation.
-	 */
-
-	/** Separate buffer for compressed data. */
-#define ZLIB_BUFFER_SIZE 30000
 	char zlib_buffer[ZLIB_BUFFER_SIZE];
-
-	/* Four independent compression streams for zlib library. */
 	z_stream zlibStream[4];
 	rfbBool zlibStreamActive[4];
-
-	/* Filter stuff. Should be initialized by filter initialization code. */
-#define TIGHT_GRADIENT_MAX_WIDTH 2048
 	rfbBool cutZeros;
 	int rectWidth, rectColors;
 	char tightPalette[256*4];
 	uint8_t tightPrevRow[TIGHT_GRADIENT_MAX_WIDTH*3*sizeof(uint16_t)];
-
-#ifdef LIBVNCSERVER_HAVE_LIBJPEG
-	/** JPEG decoder state (obsolete-- do not use). */
 	rfbBool jpegError;
-
 	struct jpeg_source_mgr* jpegSrcManager;
 	void* jpegBufferPtr;
 	size_t jpegBufferLen;
-
-#endif
-#endif
-
-
-	/* cursor.c */
-	/** Holds cursor shape data when received from server. */
 	uint8_t *rcSource, *rcMask;
-
-	/** private data pointer */
 	rfbClientData* clientData;
-
 	rfbVNCRec* vncRec;
-
-	/* Keyboard State support (is 'Caps Lock' set on the remote display???) */
 	int KeyboardLedStateEnabled;
 	int CurrentKeyboardLedState;
-
 	int canHandleNewFBSize;
-
-	/* hooks */
 	HandleTextChatProc         HandleTextChat;
 	HandleKeyboardLedStateProc HandleKeyboardLedState;
 	HandleCursorPosProc HandleCursorPos;
 	SoftCursorLockAreaProc SoftCursorLockArea;
 	SoftCursorUnlockScreenProc SoftCursorUnlockScreen;
 	GotFrameBufferUpdateProc GotFrameBufferUpdate;
-	/** the pointer returned by GetPassword will be freed after use! */
 	GetPasswordProc GetPassword;
 	MallocFrameBufferProc MallocFrameBuffer;
 	GotXCutTextProc GotXCutText;
 	BellProc Bell;
-
 	GotCursorShapeProc GotCursorShape;
 	GotCopyRectProc GotCopyRect;
-
-	/** Which messages are supported by the server
-	 * This is a *guess* for most servers.
-	 * (If we can even detect the type of server)
-	 *
-	 * If the server supports the "rfbEncodingSupportedMessages"
-	 * then this will be updated when the encoding is received to
-	 * accurately reflect the servers capabilities.
-	 */
 	rfbSupportedMessages supportedMessages;
-
-	/** negotiated protocol version */
 	int major, minor;
-
-	/** The selected security types */
 	uint32_t authScheme, subAuthScheme;
-
-	/** The TLS session for Anonymous TLS and VeNCrypt */
 	void* tlsSession;
-
-	/** To support security types that requires user input (except VNC password
-	 * authentication), for example VeNCrypt and MSLogon, this callback function
-	 * must be set before the authentication. Otherwise, it implicates that the
-	 * caller application does not support it and related security types should
-	 * be bypassed.
-	 */
 	GetCredentialProc GetCredential;
-
-	/** The 0-terminated security types supported by the client.
-	 * Set by function SetClientAuthSchemes() */
 	uint32_t *clientAuthSchemes;
-
-	/** When the server is a repeater, this specifies the final destination */
 	char *destHost;
 	int destPort;
-
-        /** the QoS IP DSCP for this client */
         int QoS_DSCP;
-
-        /** hook to handle xvp server messages */
 	HandleXvpMsgProc           HandleXvpMsg;
-
-	/* listen.c */
         rfbSocket listenSock;
-
 	FinishedFrameBufferUpdateProc FinishedFrameBufferUpdate;
-
 	char *listenAddress;
-        /* IPv6 listen socket, address and port*/
         rfbSocket listen6Sock;
         char* listen6Address;
         int listen6Port;
-
-        /* Output Window ID. When set, client application enables libvncclient to perform direct rendering in its window */
         unsigned long outputWindow;
-
-	/** 
-	 * These lock/unlock hooks are not used anymore. LibVNCClient will now use 
-	 * platform-specific synchronization library to protect concurrent TLS R/W.
-	 *  
-	 * @deprecated
-	 */
 	LockWriteToTLSProc LockWriteToTLS;
 	UnlockWriteToTLSProc UnlockWriteToTLS;
-
-        /** Hooks for custom rendering
-         *
-         * VNC rendering boils down to 3 activities:
-         * - GotCopyRect: copy an area of the framebuffer
-         * - GotFillRect: fill an area of the framebuffer with a solid color
-         * - GotBitmap: copy the bitmap in the buffer into the framebuffer
-         * The client application should either set all three of these or none!
-         */
         GotFillRectProc GotFillRect;
         GotBitmapProc GotBitmap;
-        /** Hook for custom JPEG decoding and rendering */
         GotJpegProc GotJpeg;
 
 #ifdef LIBVNCSERVER_HAVE_SASL
@@ -445,38 +311,17 @@ typedef struct _rfbClient {
         unsigned int saslDecodedLength;
         unsigned int saslDecodedOffset;
         sasl_secret_t *saslSecret;
-
-        /* Callback to allow the client to choose a preferred mechanism. The string returned will
-           be freed once no longer required. */
         GetSASLMechanismProc GetSASLMechanism;
         GetUserProc GetUser;
+#endif
 
-#endif /* LIBVNCSERVER_HAVE_SASL */
-
-#ifdef LIBVNCSERVER_HAVE_LIBZ
-#ifdef LIBVNCSERVER_HAVE_LIBJPEG
-	/** JPEG decoder state. */
 	void *tjhnd;
-
-#endif
-#endif
-	/* timeout in seconds for select() after connect() */
 	unsigned int connectTimeout;
-
-	/* timeout in seconds when reading from half-open connections in
-	 * ReadFromRFBServer() - keep at 0 to disable timeout detection and handling */
 	unsigned int readTimeout;
 
-	/**
-	 * Mutex to protect concurrent TLS read/write.
-	 * For internal use only.
-	 */
 	MUTEX(tlsRwMutex);
 
 	rfbBool requestedResize;
-        /**
-         * Used for intended dimensions, rfbClient.width and rfbClient.height are used to manage the real framebuffer dimensions.
-	 */
 	rfbExtDesktopScreen screen;
 } rfbClient;
 
@@ -830,10 +675,6 @@ rfbBool rfbInitClient(rfbClient* client,int* argc,char** argv);
  * @param client The client to clean up
  */
 void rfbClientCleanup(rfbClient* client);
-
-#if(defined __cplusplus)
-}
-#endif
 
 /**
  * @}

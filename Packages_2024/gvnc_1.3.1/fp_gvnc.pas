@@ -8,8 +8,8 @@ uses
 
 const
   {$IFDEF Linux}
-  libgvnc = 'libgvnc-1.0';
-  libgvncpulse = 'libgvncpulse-1.0';
+  libgvnc = 'gvnc-1.0';
+  libgvncpulse = 'gvncpulse-1.0';
   {$ENDIF}
 
   {$IFDEF Windows}
