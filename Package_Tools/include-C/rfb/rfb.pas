@@ -3,63 +3,13 @@ unit rfb;
 interface
 
 uses
-  fp_vnc;
+  fp_vnc, rfbproto;
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
 
-{$include <stdio.h>}
-{$include <stdlib.h>}
-{$include <string.h>}
-{$include <rfb/rfbproto.h>}
-{$if defined(ANDROID) || defined(LIBVNCSERVER_HAVE_ANDROID)}
-{$include <arpa/inet.h>}
-{$include <sys/select.h>}
-{$endif}
-{$ifdef LIBVNCSERVER_HAVE_SYS_TYPES_H}
-{$include <sys/types.h>}
-{$endif}
-{$ifdef WIN32}
-type
-  Pin_addr_t = ^Tin_addr_t;
-  Tin_addr_t = TUINT32;
-{$include <winsock2.h>}
-{$ifdef LIBVNCSERVER_HAVE_WS2TCPIP_H}
-{$undef socklen_t}
-{$include <ws2tcpip.h>}
-{$endif}
-{$ifdef _MSC_VER}
-(** unsupported pragma#pragma warning(disable:4996)*)
-{$endif}
-{$endif}
-{$include <rfb/threading.h>}
-{ if you use pthreads, but don't define LIBVNCSERVER_HAVE_LIBPTHREAD, the structs
-   get all mixed up. So this gives a linker error reminding you to compile
-   the library and your application (at least the parts including rfb.h)
-   with the same support for pthreads.  }
-{$ifdef LIBVNCSERVER_HAVE_LIBPTHREAD}
-{$ifdef LIBVNCSERVER_HAVE_LIBZ}
-
-const
-  rfbInitServer = rfbInitServerWithPthreadsAndZRLE;  
-{$else}
-
-const
-  rfbInitServer = rfbInitServerWithPthreadsButWithoutZRLE;  
-{$endif}
-{$else}
-{$ifdef LIBVNCSERVER_HAVE_LIBZ}
-
-const
-  rfbInitServer = rfbInitServerWithoutPthreadsButWithZRLE;  
-{$else}
-
-const
-  rfbInitServer = rfbInitServerWithoutPthreadsAndZRLE;  
-{$endif}
-{$endif}
 type
   PrfbClientRec = ^TrfbClientRec;
   TrfbClientRec = record

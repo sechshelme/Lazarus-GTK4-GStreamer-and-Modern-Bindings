@@ -4,13 +4,17 @@ uses
 keysym,
 rfbconfig,
 rfbproto,
-rfb,
 rfbclient,
-rfbregion, fp_vnc;
+//rfb,
+//rfbregion,
+
+
+fp_vnc;
 
 
 procedure main;
 begin
+  WriteLn('TrfbClient size: ',SizeOf(TrfbClient));
 end;
 
 begin

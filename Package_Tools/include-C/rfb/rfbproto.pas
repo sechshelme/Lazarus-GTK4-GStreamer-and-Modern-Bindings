@@ -19,7 +19,7 @@ const
   LIBVNCSERVER_WORDS_BIGENDIAN = 1;
 
 type
-  rfbSocket = longint;
+  TrfbSocket = longint;
 
 const
   RFB_INVALID_SOCKET = -(1);

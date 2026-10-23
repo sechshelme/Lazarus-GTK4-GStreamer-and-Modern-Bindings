@@ -9,9 +9,8 @@ const
   {$ENDIF}
 
   {$IFDEF Windows}
-  libvncserver = 'vncserver.dll';
-  libvncclient = 'vncclient.dll';
-  {$ENDIF}
+  {$FATAL This binding only supports 64-bit Linux. Due to terrible C structure layouts (nested mutexes and zlib arrays), the Windows memory offsets differ. Use a C wrapper for Windows support!}
+     {$ENDIF}
 
 type
   Tuint8_t = uint8;
@@ -39,6 +38,27 @@ type
   Tint64_t = int64;
   Pint64_t = ^Tint64_t;
   PPint64_t = ^Pint64_t;
+
+  Tsize_t=SizeUInt;
+
+  PFILE=type Pointer;
+
+  Ttime_t=Int64;
+  Tsuseconds_t=Int32;
+
+  Ttimeval=record
+    tv_sec:Ttime_t;
+   tv_usec:Tsuseconds_t;
+    end;
+
+
+  Tz_stream=array[0..79] of Byte;
+  TMUTEX_tlsRwMutex=array[0..39] of Byte;
+
+  Pjpeg_source_mgr=Pointer;
+  Psasl_conn_t=Pointer;
+  Psasl_secret_t=Pointer;
+
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
