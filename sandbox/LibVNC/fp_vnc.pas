@@ -52,8 +52,26 @@ type
     end;
 
 
-  Tz_stream=array[0..79] of Byte;
-  TMUTEX_tlsRwMutex=array[0..39] of Byte;
+  Tz_stream=array[0..111] of Byte;
+  TMUTEX=array[0..39] of Byte;
+  TCOND=array[0..47] of Byte;
+
+
+
+  Tfd_set = record
+    fds_bits: array[0..31] of LongInt;
+  end;
+
+  Tpthread_t = UInt64;
+
+type
+  Tsockaddr_in = record
+    sin_family: Int16;
+    sin_port: Int16;
+    sin_addr: Int32;
+    sin_zero: array [0..7] of Byte;
+  end;
+
 
   Pjpeg_source_mgr=Pointer;
   Psasl_conn_t=Pointer;

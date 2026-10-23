@@ -86,6 +86,7 @@ const
 
 type
   PrfbClient = ^TrfbClient;
+  PrfbClientRec = PrfbClient;
 
   THandleTextChatProc = procedure(client: PrfbClient; value: longint; text: pchar); cdecl;
   THandleXvpMsgProc = procedure(client: PrfbClient; version: Tuint8_t; opcode: Tuint8_t); cdecl;
@@ -110,6 +111,7 @@ type
   TGetUserProc = function(client: PrfbClient): pchar; cdecl;
   TGetSASLMechanismProc = function(client: PrfbClient; mechlist: pchar): pchar; cdecl;
 
+  // Pads eingefügt
   TrfbClient = record
     frameBuffer: Puint8_t;
     width: longint;
@@ -145,6 +147,7 @@ type
     decompStream: Tz_stream;
     decompStreamInited: TrfbBool;
     zlib_buffer: array[0..(ZLIB_BUFFER_SIZE) - 1] of char;
+    pad1___: array[0..6] of byte;
     zlibStream: array[0..3] of Tz_stream;
     zlibStreamActive: array[0..3] of TrfbBool;
     cutZeros: TrfbBool;
@@ -193,6 +196,7 @@ type
     listen6Sock: TrfbSocket;
     listen6Address: pchar;
     listen6Port: longint;
+    pad2___: array[0..2] of byte;
     outputWindow: dword;
     LockWriteToTLS: TLockWriteToTLSProc;
     UnlockWriteToTLS: TUnlockWriteToTLSProc;
@@ -209,7 +213,7 @@ type
     tjhnd: pointer;
     connectTimeout: dword;
     readTimeout: dword;
-    tlsRwMutex: TMUTEX_tlsRwMutex;
+    tlsRwMutex: TMUTEX;
     requestedResize: TrfbBool;
     screen: TrfbExtDesktopScreen;
   end;
