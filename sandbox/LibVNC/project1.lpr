@@ -19,17 +19,11 @@ begin
 end;
 
 
+
+procedure main_rfbClient;
 var
-  // Instanzvariablen werden benötigt, um die Feldadressen zur Laufzeit zu ermitteln
-//  gz: Tgz_header;
-//  mutex: Tpthread_mutex_t;
   client: TrfbClient;
-
-
-procedure main;
 begin
-//  Writeln(Format('gz_header %d', [SizeOf(gz_header)]));
-//  Writeln(Format('pthread_mutex_t size: %d', [SizeOf(pthread_mutex_t)]));
   Writeln;
   Writeln;
   Writeln;
@@ -127,11 +121,233 @@ begin
   Writeln(Format('saslDecodedLength: %d', [OffsetOf(client.saslDecodedLength, client)]));
   Writeln(Format('saslDecodedOffset: %d', [OffsetOf(client.saslDecodedOffset, client)]));
   Writeln(Format('saslSecret: %d', [OffsetOf(client.saslSecret, client)]));
+end;
 
-  // Verhindert das sofortige Schliessen des Konsolenfensters unter Windows
-  Readln; end;
+
+procedure main_rfbScreenInfo;
+var
+  scr: TrfbScreenInfo;
 
 begin
-  main;
+  Writeln(Format('rfbScreenInfo Gesamtgroesse: %d', [SizeOf(TrfbScreenInfo)]));
+  Writeln;
+  Writeln('=== Offsets fuer Struktur _rfbScreenInfo ===');
+
+  Writeln(Format('scaledScreenNext: %d', [OffsetOf(scr.scaledScreenNext, scr)]));
+  Writeln(Format('scaledScreenRefCount: %d', [OffsetOf(scr.scaledScreenRefCount, scr)]));
+  Writeln(Format('width: %d', [OffsetOf(scr.width, scr)]));
+  Writeln(Format('paddedWidthInBytes: %d', [OffsetOf(scr.paddedWidthInBytes, scr)]));
+  Writeln(Format('height: %d', [OffsetOf(scr.height, scr)]));
+  Writeln(Format('depth: %d', [OffsetOf(scr.depth, scr)]));
+  Writeln(Format('bitsPerPixel: %d', [OffsetOf(scr.bitsPerPixel, scr)]));
+  Writeln(Format('sizeInBytes: %d', [OffsetOf(scr.sizeInBytes, scr)]));
+  Writeln(Format('blackPixel: %d', [OffsetOf(scr.blackPixel, scr)]));
+  Writeln(Format('whitePixel: %d', [OffsetOf(scr.whitePixel, scr)]));
+  Writeln(Format('screenData: %d', [OffsetOf(scr.screenData, scr)]));
+  Writeln(Format('serverFormat: %d', [OffsetOf(scr.serverFormat, scr)]));
+  Writeln(Format('colourMap: %d', [OffsetOf(scr.colourMap, scr)]));
+  Writeln(Format('desktopName: %d', [OffsetOf(scr.desktopName, scr)]));
+  Writeln(Format('thisHost: %d', [OffsetOf(scr.thisHost, scr)]));
+  Writeln(Format('autoPort: %d', [OffsetOf(scr.autoPort, scr)]));
+  Writeln(Format('port: %d', [OffsetOf(scr.port, scr)]));
+  Writeln(Format('listenSock: %d', [OffsetOf(scr.listenSock, scr)]));
+  Writeln(Format('maxSock: %d', [OffsetOf(scr.maxSock, scr)]));
+  Writeln(Format('maxFd: %d', [OffsetOf(scr.maxFd, scr)]));
+  Writeln(Format('allFds: %d', [OffsetOf(scr.allFds, scr)]));
+  Writeln(Format('socketState: %d', [OffsetOf(scr.socketState, scr)]));
+  Writeln(Format('inetdSock: %d', [OffsetOf(scr.inetdSock, scr)]));
+  Writeln(Format('inetdInitDone: %d', [OffsetOf(scr.inetdInitDone, scr)]));
+  Writeln(Format('udpPort: %d', [OffsetOf(scr.udpPort, scr)]));
+  Writeln(Format('udpSock: %d', [OffsetOf(scr.udpSock, scr)]));
+  Writeln(Format('udpClient: %d', [OffsetOf(scr.udpClient, scr)]));
+  Writeln(Format('udpSockConnected: %d', [OffsetOf(scr.udpSockConnected, scr)]));
+  Writeln(Format('udpRemoteAddr: %d', [OffsetOf(scr.udpRemoteAddr, scr)]));
+  Writeln(Format('maxClientWait: %d', [OffsetOf(scr.maxClientWait, scr)]));
+  Writeln(Format('httpInitDone: %d', [OffsetOf(scr.httpInitDone, scr)]));
+  Writeln(Format('httpEnableProxyConnect: %d', [OffsetOf(scr.httpEnableProxyConnect, scr)]));
+  Writeln(Format('httpPort: %d', [OffsetOf(scr.httpPort, scr)]));
+  Writeln(Format('httpDir: %d', [OffsetOf(scr.httpDir, scr)]));
+  Writeln(Format('httpListenSock: %d', [OffsetOf(scr.httpListenSock, scr)]));
+  Writeln(Format('httpSock: %d', [OffsetOf(scr.httpSock, scr)]));
+  Writeln(Format('passwordCheck: %d', [OffsetOf(scr.passwordCheck, scr)]));
+  Writeln(Format('authPasswdData: %d', [OffsetOf(scr.authPasswdData, scr)]));
+  Writeln(Format('authPasswdFirstViewOnly: %d', [OffsetOf(scr.authPasswdFirstViewOnly, scr)]));
+  Writeln(Format('maxRectsPerUpdate: %d', [OffsetOf(scr.maxRectsPerUpdate, scr)]));
+  Writeln(Format('deferUpdateTime: %d', [OffsetOf(scr.deferUpdateTime, scr)]));
+  Writeln(Format('alwaysShared: %d', [OffsetOf(scr.alwaysShared, scr)]));
+  Writeln(Format('neverShared: %d', [OffsetOf(scr.neverShared, scr)]));
+  Writeln(Format('dontDisconnect: %d', [OffsetOf(scr.dontDisconnect, scr)]));
+  Writeln(Format('clientHead: %d', [OffsetOf(scr.clientHead, scr)]));
+  Writeln(Format('pointerClient: %d', [OffsetOf(scr.pointerClient, scr)]));
+  Writeln(Format('cursorX: %d', [OffsetOf(scr.cursorX, scr)]));
+  Writeln(Format('cursorY: %d', [OffsetOf(scr.cursorY, scr)]));
+  Writeln(Format('underCursorBufferLen: %d', [OffsetOf(scr.underCursorBufferLen, scr)]));
+  Writeln(Format('underCursorBuffer: %d', [OffsetOf(scr.underCursorBuffer, scr)]));
+  Writeln(Format('dontConvertRichCursorToXCursor: %d', [OffsetOf(scr.dontConvertRichCursorToXCursor, scr)]));
+  Writeln(Format('cursor: %d', [OffsetOf(scr.cursor, scr)]));
+  Writeln(Format('frameBuffer: %d', [OffsetOf(scr.frameBuffer, scr)]));
+  Writeln(Format('kbdAddEvent: %d', [OffsetOf(scr.kbdAddEvent, scr)]));
+  Writeln(Format('kbdReleaseAllKeys: %d', [OffsetOf(scr.kbdReleaseAllKeys, scr)]));
+  Writeln(Format('ptrAddEvent: %d', [OffsetOf(scr.ptrAddEvent, scr)]));
+  Writeln(Format('setXCutText: %d', [OffsetOf(scr.setXCutText, scr)]));
+  Writeln(Format('getCursorPtr: %d', [OffsetOf(scr.getCursorPtr, scr)]));
+  Writeln(Format('setTranslateFunction: %d', [OffsetOf(scr.setTranslateFunction, scr)]));
+  Writeln(Format('setSingleWindow: %d', [OffsetOf(scr.setSingleWindow, scr)]));
+  Writeln(Format('setServerInput: %d', [OffsetOf(scr.setServerInput, scr)]));
+  Writeln(Format('getFileTransferPermission: %d', [OffsetOf(scr.getFileTransferPermission, scr)]));
+  Writeln(Format('setTextChat: %d', [OffsetOf(scr.setTextChat, scr)]));
+  Writeln(Format('newClientHook: %d', [OffsetOf(scr.newClientHook, scr)]));
+  Writeln(Format('displayHook: %d', [OffsetOf(scr.displayHook, scr)]));
+  Writeln(Format('getKeyboardLedStateHook: %d', [OffsetOf(scr.getKeyboardLedStateHook, scr)]));
+  Writeln(Format('cursorMutex: %d', [OffsetOf(scr.cursorMutex, scr)]));
+  Writeln(Format('backgroundLoop: %d', [OffsetOf(scr.backgroundLoop, scr)]));
+  Writeln(Format('ignoreSIGPIPE: %d', [OffsetOf(scr.ignoreSIGPIPE, scr)]));
+  Writeln(Format('progressiveSliceHeight: %d', [OffsetOf(scr.progressiveSliceHeight, scr)]));
+  Writeln(Format('listenInterface: %d', [OffsetOf(scr.listenInterface, scr)]));
+  Writeln(Format('deferPtrUpdateTime: %d', [OffsetOf(scr.deferPtrUpdateTime, scr)]));
+  Writeln(Format('handleEventsEagerly: %d', [OffsetOf(scr.handleEventsEagerly, scr)]));
+  Writeln(Format('versionString: %d', [OffsetOf(scr.versionString, scr)]));
+  Writeln(Format('protocolMajorVersion: %d', [OffsetOf(scr.protocolMajorVersion, scr)]));
+  Writeln(Format('protocolMinorVersion: %d', [OffsetOf(scr.protocolMinorVersion, scr)]));
+Writeln(Format('protocolMinorVersion: %d', [OffsetOf(scr.protocolMinorVersion, scr)]));
+Writeln(Format('permitFileTransfer: %d', [OffsetOf(scr.permitFileTransfer, scr)]));
+Writeln(Format('displayFinishedHook: %d', [OffsetOf(scr.displayFinishedHook, scr)]));
+Writeln(Format('xvpHook: %d', [OffsetOf(scr.xvpHook, scr)]));
+Writeln(Format('sslkeyfile: %d', [OffsetOf(scr.sslkeyfile, scr)]));
+Writeln(Format('sslcertfile: %d', [OffsetOf(scr.sslcertfile, scr)]));
+Writeln(Format('ipv6port: %d', [OffsetOf(scr.ipv6port, scr)]));
+Writeln(Format('listen6Interface: %d', [OffsetOf(scr.listen6Interface, scr)]));
+Writeln(Format('listen6Sock: %d', [OffsetOf(scr.listen6Sock, scr)]));
+Writeln(Format('http6Port: %d', [OffsetOf(scr.http6Port, scr)]));
+Writeln(Format('httpListen6Sock: %d', [OffsetOf(scr.httpListen6Sock, scr)]));
+Writeln(Format('setDesktopSizeHook: %d', [OffsetOf(scr.setDesktopSizeHook, scr)]));
+Writeln(Format('numberOfExtDesktopScreensHook: %d', [OffsetOf(scr.numberOfExtDesktopScreensHook, scr)]));
+Writeln(Format('getExtDesktopScreenHook: %d', [OffsetOf(scr.getExtDesktopScreenHook, scr)]));
+Writeln(Format('fdQuota: %d', [OffsetOf(scr.fdQuota, scr)]));
+Writeln(Format('listener_thread: %d', [OffsetOf(scr.listener_thread, scr)]));
+Writeln(Format('pipe_notify_listener_thread: %d', [OffsetOf(scr.pipe_notify_listener_thread, scr)]));
+Writeln(Format('setXCutTextUTF8: %d', [OffsetOf(scr.setXCutTextUTF8, scr)]));end;
+
+procedure main_rfbClientRec;
+var
+  cl: TrfbClientRec;
+
+begin
+  Writeln(Format('rfbClientRec Gesamtgroesse: %d', [SizeOf(TrfbClientRec)]));
+  Writeln;
+  Writeln('=== Offsets fuer Struktur _rfbClientRec ===');
+
+  Writeln(Format('screen: %d', [OffsetOf(cl.screen, cl)]));
+  Writeln(Format('scaledScreen: %d', [OffsetOf(cl.scaledScreen, cl)]));
+  Writeln(Format('PalmVNC: %d', [OffsetOf(cl.PalmVNC, cl)]));
+  Writeln(Format('clientData: %d', [OffsetOf(cl.clientData, cl)]));
+  Writeln(Format('clientGoneHook: %d', [OffsetOf(cl.clientGoneHook, cl)]));
+  Writeln(Format('sock: %d', [OffsetOf(cl.sock, cl)]));
+  Writeln(Format('host: %d', [OffsetOf(cl.host, cl)]));
+  Writeln(Format('protocolMajorVersion: %d', [OffsetOf(cl.protocolMajorVersion, cl)]));
+  Writeln(Format('protocolMinorVersion: %d', [OffsetOf(cl.protocolMinorVersion, cl)]));
+  Writeln(Format('client_thread: %d', [OffsetOf(cl.client_thread, cl)]));
+  Writeln(Format('state: %d', [OffsetOf(cl.state, cl)]));
+  Writeln(Format('reverseConnection: %d', [OffsetOf(cl.reverseConnection, cl)]));
+  Writeln(Format('onHold: %d', [OffsetOf(cl.onHold, cl)]));
+  Writeln(Format('readyForSetColourMapEntries: %d', [OffsetOf(cl.readyForSetColourMapEntries, cl)]));
+  Writeln(Format('useCopyRect: %d', [OffsetOf(cl.useCopyRect, cl)]));
+  Writeln(Format('preferredEncoding: %d', [OffsetOf(cl.preferredEncoding, cl)]));
+  Writeln(Format('correMaxWidth: %d', [OffsetOf(cl.correMaxWidth, cl)]));
+  Writeln(Format('correMaxHeight: %d', [OffsetOf(cl.correMaxHeight, cl)]));
+  Writeln(Format('viewOnly: %d', [OffsetOf(cl.viewOnly, cl)]));
+  Writeln(Format('authChallenge: %d', [OffsetOf(cl.authChallenge, cl)]));
+  Writeln(Format('copyRegion: %d', [OffsetOf(cl.copyRegion, cl)]));
+  Writeln(Format('copyDX: %d', [OffsetOf(cl.copyDX, cl)]));
+  Writeln(Format('copyDY: %d', [OffsetOf(cl.copyDY, cl)]));
+  Writeln(Format('modifiedRegion: %d', [OffsetOf(cl.modifiedRegion, cl)]));
+  Writeln(Format('requestedRegion: %d', [OffsetOf(cl.requestedRegion, cl)]));
+  Writeln(Format('startDeferring: %d', [OffsetOf(cl.startDeferring, cl)]));
+  Writeln(Format('startPtrDeferring: %d', [OffsetOf(cl.startPtrDeferring, cl)]));
+  Writeln(Format('lastPtrX: %d', [OffsetOf(cl.lastPtrX, cl)]));
+  Writeln(Format('lastPtrY: %d', [OffsetOf(cl.lastPtrY, cl)]));
+  Writeln(Format('lastPtrButtons: %d', [OffsetOf(cl.lastPtrButtons, cl)]));
+  Writeln(Format('translateFn: %d', [OffsetOf(cl.translateFn, cl)]));
+  Writeln(Format('translateLookupTable: %d', [OffsetOf(cl.translateLookupTable, cl)]));
+  Writeln(Format('format: %d', [OffsetOf(cl.format, cl)]));
+  Writeln(Format('updateBuf: %d', [OffsetOf(cl.updateBuf, cl)]));
+  Writeln(Format('ublen: %d', [OffsetOf(cl.ublen, cl)]));
+  Writeln(Format('statEncList: %d', [OffsetOf(cl.statEncList, cl)]));
+  Writeln(Format('statMsgList: %d', [OffsetOf(cl.statMsgList, cl)]));
+  Writeln(Format('rawBytesEquivalent: %d', [OffsetOf(cl.rawBytesEquivalent, cl)]));
+  Writeln(Format('bytesSent: %d', [OffsetOf(cl.bytesSent, cl)]));
+  Writeln(Format('compStream: %d', [OffsetOf(cl.compStream, cl)]));
+  Writeln(Format('compStreamInited: %d', [OffsetOf(cl.compStreamInited, cl)]));
+  Writeln(Format('zlibCompressLevel: %d', [OffsetOf(cl.zlibCompressLevel, cl)]));
+  Writeln(Format('tightQualityLevel: %d', [OffsetOf(cl.tightQualityLevel, cl)]));
+  Writeln(Format('zsStruct: %d', [OffsetOf(cl.zsStruct, cl)]));
+  Writeln(Format('zsActive: %d', [OffsetOf(cl.zsActive, cl)]));
+  Writeln(Format('zsLevel: %d', [OffsetOf(cl.zsLevel, cl)]));
+  Writeln(Format('tightCompressLevel: %d', [OffsetOf(cl.tightCompressLevel, cl)]));
+  Writeln(Format('compStreamInitedLZO: %d', [OffsetOf(cl.compStreamInitedLZO, cl)]));
+  Writeln(Format('lzoWrkMem: %d', [OffsetOf(cl.lzoWrkMem, cl)]));
+  Writeln(Format('fileTransfer: %d', [OffsetOf(cl.fileTransfer, cl)]));
+  Writeln(Format('lastKeyboardLedState: %d', [OffsetOf(cl.lastKeyboardLedState, cl)]));
+  Writeln(Format('enableSupportedMessages: %d', [OffsetOf(cl.enableSupportedMessages, cl)]));
+  Writeln(Format('enableSupportedEncodings: %d', [OffsetOf(cl.enableSupportedEncodings, cl)]));
+  Writeln(Format('enableServerIdentity: %d', [OffsetOf(cl.enableServerIdentity, cl)]));
+  Writeln(Format('enableKeyboardLedState: %d', [OffsetOf(cl.enableKeyboardLedState, cl)]));
+  Writeln(Format('enableLastRectEncoding: %d', [OffsetOf(cl.enableLastRectEncoding, cl)]));
+  Writeln(Format('enableCursorShapeUpdates: %d', [OffsetOf(cl.enableCursorShapeUpdates, cl)]));
+  Writeln(Format('enableCursorPosUpdates: %d', [OffsetOf(cl.enableCursorPosUpdates, cl)]));
+  Writeln(Format('useRichCursorEncoding: %d', [OffsetOf(cl.useRichCursorEncoding, cl)]));
+  Writeln(Format('cursorWasChanged: %d', [OffsetOf(cl.cursorWasChanged, cl)]));
+  Writeln(Format('cursorWasMoved: %d', [OffsetOf(cl.cursorWasMoved, cl)]));
+  Writeln(Format('cursorX: %d', [OffsetOf(cl.cursorX, cl)]));
+  Writeln(Format('cursorY: %d', [OffsetOf(cl.cursorY, cl)]));
+Writeln(Format('useNewFBSize: %d', [OffsetOf(cl.useNewFBSize, cl)]));
+Writeln(Format('newFBSizePending: %d', [OffsetOf(cl.newFBSizePending, cl)]));
+Writeln(Format('prev: %d', [OffsetOf(cl.prev, cl)]));
+Writeln(Format('next: %d', [OffsetOf(cl.next, cl)]));
+Writeln(Format('refCount: %d', [OffsetOf(cl.refCount, cl)]));
+Writeln(Format('refCountMutex: %d', [OffsetOf(cl.refCountMutex, cl)]));
+Writeln(Format('deleteCond: %d', [OffsetOf(cl.deleteCond, cl)]));
+Writeln(Format('outputMutex: %d', [OffsetOf(cl.outputMutex, cl)]));
+Writeln(Format('updateMutex: %d', [OffsetOf(cl.updateMutex, cl)]));
+Writeln(Format('updateCond: %d', [OffsetOf(cl.updateCond, cl)]));
+Writeln(Format('zrleData: %d', [OffsetOf(cl.zrleData, cl)]));
+Writeln(Format('zywrleLevel: %d', [OffsetOf(cl.zywrleLevel, cl)]));
+Writeln(Format('zywrleBuf: %d', [OffsetOf(cl.zywrleBuf, cl)]));
+Writeln(Format('progressiveSliceY: %d', [OffsetOf(cl.progressiveSliceY, cl)]));
+Writeln(Format('extensions: %d', [OffsetOf(cl.extensions, cl)]));
+Writeln(Format('zrleBeforeBuf: %d', [OffsetOf(cl.zrleBeforeBuf, cl)]));
+Writeln(Format('paletteHelper: %d', [OffsetOf(cl.paletteHelper, cl)]));
+Writeln(Format('sendMutex: %d', [OffsetOf(cl.sendMutex, cl)]));
+Writeln(Format('beforeEncBuf: %d', [OffsetOf(cl.beforeEncBuf, cl)]));
+Writeln(Format('beforeEncBufSize: %d', [OffsetOf(cl.beforeEncBufSize, cl)]));
+Writeln(Format('afterEncBuf: %d', [OffsetOf(cl.afterEncBuf, cl)]));
+Writeln(Format('afterEncBufSize: %d', [OffsetOf(cl.afterEncBufSize, cl)]));
+Writeln(Format('afterEncBufLen: %d', [OffsetOf(cl.afterEncBufLen, cl)]));
+Writeln(Format('tightEncoding: %d', [OffsetOf(cl.tightEncoding, cl)]));
+Writeln(Format('turboSubsampLevel: %d', [OffsetOf(cl.turboSubsampLevel, cl)]));
+Writeln(Format('turboQualityLevel: %d', [OffsetOf(cl.turboQualityLevel, cl)]));
+Writeln(Format('sslctx: %d', [OffsetOf(cl.sslctx, cl)]));
+Writeln(Format('wsctx: %d', [OffsetOf(cl.wsctx, cl)]));
+Writeln(Format('wspath: %d', [OffsetOf(cl.wspath, cl)]));
+Writeln(Format('pipe_notify_client_thread: %d', [OffsetOf(cl.pipe_notify_client_thread, cl)]));
+Writeln(Format('clientFramebufferUpdateRequestHook: %d', [OffsetOf(cl.clientFramebufferUpdateRequestHook, cl)]));
+Writeln(Format('useExtDesktopSize: %d', [OffsetOf(cl.useExtDesktopSize, cl)]));
+Writeln(Format('requestedDesktopSizeChange: %d', [OffsetOf(cl.requestedDesktopSizeChange, cl)]));
+Writeln(Format('lastDesktopSizeChangeError: %d', [OffsetOf(cl.lastDesktopSizeChangeError, cl)]));
+Writeln(Format('enableExtendedClipboard: %d', [OffsetOf(cl.enableExtendedClipboard, cl)]));
+Writeln(Format('extClipboardUserCap: %d', [OffsetOf(cl.extClipboardUserCap, cl)]));
+Writeln(Format('extClipboardMaxUnsolicitedSize: %d', [OffsetOf(cl.extClipboardMaxUnsolicitedSize, cl)]));
+Writeln(Format('extClipboardData: %d', [OffsetOf(cl.extClipboardData, cl)]));
+Writeln(Format('extClipboardDataSize: %d', [OffsetOf(cl.extClipboardDataSize, cl)]));
+Writeln(Format('tightUsePixelFormat24: %d', [OffsetOf(cl.tightUsePixelFormat24, cl)]));
+Writeln(Format('tightTJ: %d', [OffsetOf(cl.tightTJ, cl)]));
+Writeln(Format('tightPngDstDataLen: %d', [OffsetOf(cl.tightPngDstDataLen, cl)]));
+end;
+
+
+begin
+//  main_rfbClient;
+  main_rfbScreenInfo;
+//  main_rfbClientRec;
 end.
 

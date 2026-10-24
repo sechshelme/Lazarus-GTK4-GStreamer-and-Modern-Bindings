@@ -125,10 +125,7 @@ type
     listenPort: longint;
     flashPort: longint;
     updateRect: record
-      x: longint;
-      y: longint;
-      w: longint;
-      h: longint;
+      x, y, w, h: longint;
       end;
     buffer: array[0..(RFB_BUFFER_SIZE) - 1] of char;
     sock: TrfbSocket;
