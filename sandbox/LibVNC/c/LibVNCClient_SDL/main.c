@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
 
     rfbClient* client = rfbGetClient(8, 3, 4);
     client->serverHost = "127.0.0.1";
-    client->serverPort = 5901; 
+    client->serverPort = 5900; 
     
     client->MallocFrameBuffer = update_screen_size;
     client->GotFrameBufferUpdate = handle_update;

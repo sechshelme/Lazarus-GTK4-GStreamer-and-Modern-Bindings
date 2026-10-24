@@ -4,6 +4,12 @@ uses
   fp_glib2,
   fp_virt_glib;
 
+(*
+
+sudo ss -tulpn | grep :5
+
+*)
+
 const
   RetroPC = 'RetroPC';
   //  iso = '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
@@ -165,7 +171,7 @@ const
 //      if not g_spawn_command_line_async('virt-viewer -c qemu:///session RetroPC', nil) then begin
 //        g_print('Fehler: virt-viewer konnte nicht gestartet werden.'#10);
 //      end;
-      if not g_spawn_command_line_async('remote-viewer vnc://127.0.0.1:5901', nil) then begin
+      if not g_spawn_command_line_async('remote-viewer vnc://127.0.0.1:5900', nil) then begin
         g_print('Fehler: remote-viewer konnte nicht gestartet werden.'#10);
       end;
 
