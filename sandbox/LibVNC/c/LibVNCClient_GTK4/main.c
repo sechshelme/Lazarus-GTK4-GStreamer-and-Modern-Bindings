@@ -1,10 +1,6 @@
 
 
 
-// gcc main.c -o main `pkg-config --cflags --libs sdl2` -lvncclient
-// gcc main.c -o main `pkg-config --cflags --libs sdl2` -lvncclient -lvncserver
-
-
 // gcc main.c -o main `pkg-config --cflags --libs gtk4` -lvncclient -lvncserver
 
 #include <gtk/gtk.h>
@@ -163,6 +159,8 @@ static void handle_update(rfbClient* client, int x, int y, int w, int h) {
         // GTK signalisieren, dass der Bildschirm neu gezeichnet werden muss
         gtk_widget_queue_draw(drawing_area);
     }
+printf("handle_update\n");
+
 }
 
 // Render-Funktion für GTK4 DrawingArea
@@ -171,6 +169,7 @@ static void draw_func(GtkDrawingArea* area, cairo_t* cr, int width, int height, 
         cairo_set_source_surface(cr, cairo_surface, 0, 0);
         cairo_paint(cr);
     }
+printf("draw_func\n");
 }
 
 // Regelmäßiges Abfragen der Netzwerk-Sockets im GTK Main Loop (Non-blocking)
@@ -180,27 +179,33 @@ static gboolean vnc_loop_step(gpointer data) {
         return G_SOURCE_REMOVE;
     }
 
-    struct timeval tv = {0, 0}; 
     int fd = vnc_client->sock;
     
     // Sicherstellen, dass die Socket-ID gültig ist
     if (fd < 0) return G_SOURCE_REMOVE;
 
-    fd_set fds;
-    FD_ZERO(&fds);
-    FD_SET(fd, &fds);
+    // GLib-Struktur für die Socket-Abfrage vorbereiten
+    GPollFD pfd;
+    pfd.fd = fd;
+    pfd.events = G_IO_IN | G_IO_HUP | G_IO_ERR; // Auf Daten, Trennung oder Fehler prüfen
+    pfd.revents = 0;
 
-    if (select(fd + 1, &fds, NULL, NULL, &tv) > 0) {
-        if (!HandleRFBServerMessage(vnc_client)) {
-            printf("VNC: Verbindung vom Server getrennt.\n");
-            vnc_client = NULL; // Verhindert weitere Zugriffe
-            GtkApplication* app = GTK_APPLICATION(data);
-            g_application_quit(G_APPLICATION(app));
-            return G_SOURCE_REMOVE;
+    // g_poll mit einem Timeout von 0 Millisekunden (reines Abfragen ohne Blockieren)
+    if (g_poll(&pfd, 1, 0) > 0) {
+        // Prüfen, ob wirklich Daten bereitstehen oder ein Fehler vorliegt
+        if (pfd.revents & (G_IO_IN | G_IO_HUP | G_IO_ERR)) {
+            if (!HandleRFBServerMessage(vnc_client)) {
+                printf("VNC: Verbindung vom Server getrennt.\n");
+                vnc_client = NULL; // Verhindert weitere Zugriffe
+                GtkApplication* app = GTK_APPLICATION(data);
+                g_application_quit(G_APPLICATION(app));
+                return G_SOURCE_REMOVE;
+            }
         }
     }
     return G_SOURCE_CONTINUE;
 }
+
 
 // --- INPUT HANDLERS (GTK4 Event Controllers) ---
 
@@ -254,7 +259,7 @@ static void activate(GtkApplication* app, gpointer user_data) {
     // VNC-Initialisierung
     vnc_client = rfbGetClient(8, 3, 4);
     vnc_client->serverHost = "127.0.0.1";
-    vnc_client->serverPort = 5902;
+    vnc_client->serverPort = 5900;
     vnc_client->MallocFrameBuffer = update_screen_size;
     vnc_client->GotFrameBufferUpdate = handle_update;
 
@@ -304,7 +309,7 @@ find_active_vnc_port() ;
     int status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
 
-g_printf("vor bummmmm"\n);
+printf("vor bummmmm\n");
 
    // --- ABSICHERUNG BEIM BEENDEN ---
     
@@ -325,10 +330,10 @@ g_printf("vor bummmmm"\n);
     }
 
     // 3. Jetzt geben wir den Speicher zu 100% sicher und genau EINMAL frei
-    if (local_framebuffer) {
-        free(local_framebuffer);
-        local_framebuffer = NULL;
-    }
+//    if (local_framebuffer) {
+//        free(local_framebuffer);
+//        local_framebuffer = NULL;
+//    }
 
     printf("Programm sauber beendet.\n");
     return status;
