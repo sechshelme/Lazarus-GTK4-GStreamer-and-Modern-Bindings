@@ -2,16 +2,19 @@
 {$IFDEF read_interface}
 
 type
+  PGPollFD = ^TGPollFD;
+
+  TGPollFunc = function(ufds: PGPollFD; nfsd: Tguint; timeout_: Tgint): Tgint; cdecl;
+
   TGPollFD = record
+    {$IFDEF windows}
     fd: Tgint64;
-//     fd: Tgint;  32bit OS
+    {$ELSE}
+    fd: Tgint;
+    {$ENDIF}
     events: Tgushort;
     revents: Tgushort;
   end;
-  PGPollFD = ^TGPollFD;
-
-type
-  TGPollFunc = function(ufds: PGPollFD; nfsd: Tguint; timeout_: Tgint): Tgint; cdecl;
 
 function g_poll(fds: PGPollFD; nfds: Tguint; timeout: Tgint): Tgint; cdecl; external libglib2;
 

@@ -62,9 +62,13 @@ var
 
   // === GTK
 
+  function gtk_key_to_vnc(keyval: Tguint): Tguint32;
+  begin
+    Result := keyval;
+  end;
+
   procedure draw_func(drawing_area: PGtkDrawingArea; cr: Pcairo_t; Width: longint; Height: longint; user_data: Tgpointer); cdecl;
   begin
-    WriteLn('draw_func()');
     if cairo_surface <> nil then begin
       cairo_set_source_surface(cr, cairo_surface, 0, 0);
       cairo_paint(cr);
@@ -80,8 +84,6 @@ var
     if (drawing_area = nil) or (not GTK_IS_WIDGET(drawing_area)) or (vnc_client = nil) then begin
       Exit(G_SOURCE_REMOVE_);
     end;
-    WriteLn('vnc_loop_step()');
-
 
     fd := vnc_client^.sock;
 
@@ -106,6 +108,89 @@ var
     end;
     Result := G_SOURCE_CONTINUE;
   end;
+
+  procedure on_motion(controller: PGtkEventControllerMotion; x: Tgdouble; y: Tgdouble; data: Tgpointer); cdecl;
+  begin
+    if vnc_client <> nil then begin
+      SendPointerEvent(vnc_client, Trunc(x), Trunc(y), mouse_mask);
+    end;
+  end;
+
+  procedure on_pressed(gesture: PGtkGestureClick; n_press: tgint; x: Tgdouble; y: Tgdouble; data: Tgpointer); cdecl;
+  var
+    button: Tguint;
+    button_bit: integer;
+  begin
+    button := gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
+    button_bit := 0;
+
+    case button of
+      GDK_BUTTON_PRIMARY: begin
+        button_bit := rfbButton1Mask;
+      end;
+      GDK_BUTTON_MIDDLE: begin
+        button_bit := rfbButton2Mask;
+      end;
+      GDK_BUTTON_SECONDARY: begin
+        button_bit := rfbButton3Mask;
+      end;
+    end;
+
+    mouse_mask := mouse_mask or button_bit;
+
+    if vnc_client <> nil then begin
+      SendPointerEvent(vnc_client, Trunc(x), Trunc(y), mouse_mask);
+    end;
+  end;
+
+  procedure on_released(gesture: PGtkGestureClick; n_press: tgint; x: Tgdouble; y: Tgdouble; data: Tgpointer); cdecl;
+  var
+    button: Tguint;
+    button_bit: integer;
+  begin
+    button := gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
+    button_bit := 0;
+
+    case button of
+      GDK_BUTTON_PRIMARY: begin
+        button_bit := rfbButton1Mask;
+      end;
+      GDK_BUTTON_MIDDLE: begin
+        button_bit := rfbButton2Mask;
+      end;
+      GDK_BUTTON_SECONDARY: begin
+        button_bit := rfbButton3Mask;
+      end;
+    end;
+
+    mouse_mask := mouse_mask and (not button_bit);
+
+    if vnc_client <> nil then begin
+      SendPointerEvent(vnc_client, Trunc(x), Trunc(y), mouse_mask);
+    end;
+  end;
+
+  function on_key_pressed(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; data: Tgpointer): Tgboolean; cdecl;
+  var
+    vnc_key: Tguint32;
+  begin
+    if vnc_client <> nil then begin
+      vnc_key := gtk_key_to_vnc(keyval);
+      SendKeyEvent(vnc_client, vnc_key, True);
+    end;
+    Result := True;
+  end;
+
+  procedure on_key_released(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; data: Tgpointer); cdecl;
+  var
+    vnc_key: Tuint32_t;
+  begin
+    if vnc_client <> nil then begin
+      vnc_key := gtk_key_to_vnc(keyval);
+      SendKeyEvent(vnc_client, vnc_key, False);
+    end;
+  end;
+
 
   procedure activate(app: PGtkApplication; user_data: Tgpointer); cdecl;
   var
@@ -138,21 +223,19 @@ var
     gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(drawing_area), vnc_client^.height);
     SendFramebufferUpdateRequest(vnc_client, 0, 0, vnc_client^.width, vnc_client^.height, False);
 
-    // --- Event Controller in GTK4 registrieren ---
-
     motion_ctrl := gtk_event_controller_motion_new;
-   //g_signal_connect(motion_ctrl, "motion", G_CALLBACK(on_motion), nil);
+    g_signal_connect(motion_ctrl, 'motion', G_CALLBACK(@on_motion), nil);
     gtk_widget_add_controller(drawing_area, motion_ctrl);
-    //
+
     click_gesture := gtk_gesture_click_new;
-    //gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
-    //g_signal_connect(click_gesture, "pressed", G_CALLBACK(on_pressed), nil);
-    //g_signal_connect(click_gesture, "released", G_CALLBACK(on_released), nil);
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
+    g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@on_pressed), nil);
+    g_signal_connect(click_gesture, 'released', G_CALLBACK(@on_released), nil);
     gtk_widget_add_controller(drawing_area, GTK_EVENT_CONTROLLER(click_gesture));
-    //
+
     key_ctrl := gtk_event_controller_key_new;
-    //g_signal_connect(key_ctrl, "key-pressed", G_CALLBACK(on_key_pressed), nil);
-    //g_signal_connect(key_ctrl, "key-released", G_CALLBACK(on_key_released), nil);
+    g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@on_key_pressed), nil);
+    g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@on_key_released), nil);
     gtk_widget_add_controller(window, key_ctrl);
 
     g_idle_add(@vnc_loop_step, app);
