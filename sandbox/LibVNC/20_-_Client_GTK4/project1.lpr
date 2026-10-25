@@ -52,6 +52,7 @@ var
 
   procedure handle_update(client: PrfbClient; x: longint; y: longint; w: longint; h: longint); cdecl;
   begin
+    WriteLn('handle_update()');
     if drawing_area <> nil then begin
       gtk_widget_queue_draw(drawing_area);
     end;
@@ -59,11 +60,11 @@ var
 
 
 
-
   // === GTK
 
   procedure draw_func(drawing_area: PGtkDrawingArea; cr: Pcairo_t; Width: longint; Height: longint; user_data: Tgpointer); cdecl;
   begin
+    WriteLn('draw_func()');
     if cairo_surface <> nil then begin
       cairo_set_source_surface(cr, cairo_surface, 0, 0);
       cairo_paint(cr);
@@ -79,6 +80,8 @@ var
     if (drawing_area = nil) or (not GTK_IS_WIDGET(drawing_area)) or (vnc_client = nil) then begin
       Exit(G_SOURCE_REMOVE_);
     end;
+    WriteLn('vnc_loop_step()');
+
 
     fd := vnc_client^.sock;
 
@@ -101,14 +104,14 @@ var
         end;
       end;
     end;
-
     Result := G_SOURCE_CONTINUE;
   end;
 
   procedure activate(app: PGtkApplication; user_data: Tgpointer); cdecl;
   var
     window: PGtkWidget;
-    motion_ctrl: PGtkEventController;
+    motion_ctrl, key_ctrl: PGtkEventController;
+    click_gesture: PGtkGesture;
   begin
     g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
 
@@ -137,20 +140,20 @@ var
 
     // --- Event Controller in GTK4 registrieren ---
 
-    //motion_ctrl := gtk_event_controller_motion_new;
-    //g_signal_connect(motion_ctrl, "motion", G_CALLBACK(on_motion), nil);
-    //gtk_widget_add_controller(drawing_area, motion_ctrl);
+    motion_ctrl := gtk_event_controller_motion_new;
+   //g_signal_connect(motion_ctrl, "motion", G_CALLBACK(on_motion), nil);
+    gtk_widget_add_controller(drawing_area, motion_ctrl);
     //
-    //GtkGesture* click_gesture = gtk_gesture_click_new();
+    click_gesture := gtk_gesture_click_new;
     //gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
     //g_signal_connect(click_gesture, "pressed", G_CALLBACK(on_pressed), nil);
     //g_signal_connect(click_gesture, "released", G_CALLBACK(on_released), nil);
-    //gtk_widget_add_controller(drawing_area, GTK_EVENT_CONTROLLER(click_gesture));
+    gtk_widget_add_controller(drawing_area, GTK_EVENT_CONTROLLER(click_gesture));
     //
-    //GtkEventController* key_ctrl = gtk_event_controller_key_new();
+    key_ctrl := gtk_event_controller_key_new;
     //g_signal_connect(key_ctrl, "key-pressed", G_CALLBACK(on_key_pressed), nil);
     //g_signal_connect(key_ctrl, "key-released", G_CALLBACK(on_key_released), nil);
-    //gtk_widget_add_controller(window, key_ctrl);
+    gtk_widget_add_controller(window, key_ctrl);
 
     g_idle_add(@vnc_loop_step, app);
 

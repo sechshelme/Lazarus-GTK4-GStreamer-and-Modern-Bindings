@@ -123,7 +123,7 @@ static rfbBool update_screen_size(rfbClient* client) {
         cairo_surface_destroy(cairo_surface);
     }
 
-    client->frameBuffer = realloc(client->frameBuffer, width * height * 4);
+    client->frameBuffer = g_try_realloc(client->frameBuffer, width * height * 4);
     
     // Pixelformat für Cairo (GDK_MEMORY_DEFAULT / CAIRO_FORMAT_ARGB32) setzen
     client->format.bitsPerPixel = 32;

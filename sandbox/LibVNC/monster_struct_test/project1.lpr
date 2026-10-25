@@ -74,7 +74,9 @@ begin
   Writeln(Format('HandleCursorPos: %d', [OffsetOf(client.HandleCursorPos, client)]));
   Writeln(Format('SoftCursorLockArea: %d', [OffsetOf(client.SoftCursorLockArea, client)]));
   Writeln(Format('SoftCursorUnlockScreen: %d', [OffsetOf(client.SoftCursorUnlockScreen, client)]));
+  WriteLn();
   Writeln(Format('GotFrameBufferUpdate: %d', [OffsetOf(client.GotFrameBufferUpdate, client)]));
+  WriteLn();
   Writeln(Format('GetPassword: %d', [OffsetOf(client.GetPassword, client)]));
   Writeln(Format('MallocFrameBuffer: %d', [OffsetOf(client.MallocFrameBuffer, client)]));
   Writeln(Format('GotXCutText: %d', [OffsetOf(client.GotXCutText, client)]));
@@ -98,7 +100,6 @@ begin
   Writeln(Format('listenAddress: %d', [OffsetOf(client.listenAddress, client)]));
   Writeln(Format('listen6Sock: %d', [OffsetOf(client.listen6Sock, client)]));
   Writeln(Format('listen6Address: %d', [OffsetOf(client.listen6Address, client)]));
-  WriteLn();
   Writeln(Format('listen6Port: %d', [OffsetOf(client.listen6Port, client)]));
   Writeln(Format('outputWindow: %d', [OffsetOf(client.outputWindow, client)]));
   Writeln(Format('LockWriteToTLS: %d', [OffsetOf(client.LockWriteToTLS, client)]));
@@ -336,8 +337,8 @@ end;
 
 
 begin
-//  main_rfbClient;
-  main_rfbScreenInfo;
+  main_rfbClient;
+//  main_rfbScreenInfo;
 //  main_rfbClientRec;
 end.
 
