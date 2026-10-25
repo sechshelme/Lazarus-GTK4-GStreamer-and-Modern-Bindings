@@ -33,6 +33,10 @@
  *  USA.
  */
 
+#if(defined __cplusplus)
+extern "C"
+{
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -266,6 +270,9 @@ typedef struct _rfbScreenInfo
     /** this is the amount of milliseconds to wait at least before sending
      * an update. */
     int deferUpdateTime;
+#ifdef TODELETE
+    char* screen;
+#endif
     rfbBool alwaysShared;
     rfbBool neverShared;
     rfbBool dontDisconnect;
@@ -303,8 +310,10 @@ typedef struct _rfbScreenInfo
     /** These hooks are called to pass keyboard state back to the client */
     rfbGetKeyboardLedStateHookPtr getKeyboardLedStateHook;
 
+#if defined(LIBVNCSERVER_HAVE_LIBPTHREAD) || defined(LIBVNCSERVER_HAVE_WIN32THREADS)
     MUTEX(cursorMutex);
     rfbBool backgroundLoop;
+#endif
 
     /** if TRUE, an ignoring signal handler is installed for SIGPIPE */
     rfbBool ignoreSIGPIPE;
@@ -354,9 +363,15 @@ typedef struct _rfbScreenInfo
 	of file descriptors LibVNCServer uses before denying new client connections.
 	It is set to 0.5 per default. */
     float fdQuota;
+#ifdef LIBVNCSERVER_HAVE_LIBPTHREAD
     pthread_t listener_thread;
     int pipe_notify_listener_thread[2];
+#elif defined(LIBVNCSERVER_HAVE_WIN32THREADS)
+    uintptr_t listener_thread;
+#endif
+#ifdef LIBVNCSERVER_HAVE_LIBZ
     rfbSetXCutTextUTF8ProcPtr setXCutTextUTF8;
+#endif
 } rfbScreenInfo, *rfbScreenInfoPtr;
 
 
@@ -407,31 +422,77 @@ typedef struct _rfbStatList {
 typedef struct _rfbSslCtx rfbSslCtx;
 typedef struct _wsCtx wsCtx;
 
-#define UPDATE_BUF_SIZE 32768
-
 typedef struct _rfbClientRec {
+
+    /** back pointer to the screen */
     rfbScreenInfoPtr screen;
+
+     /** points to a scaled version of the screen buffer in cl->scaledScreenList */
      rfbScreenInfoPtr scaledScreen;
+     /** how did the client tell us it wanted the screen changed?  Ultra style or palm style? */
      rfbBool PalmVNC;
+
+
+    /** private data. You should put any application client specific data
+     * into a struct and let clientData point to it. Don't forget to
+     * free the struct via clientGoneHook!
+     *
+     * This is useful if the IO functions have to behave client specific.
+     */
     void* clientData;
     ClientGoneHookPtr clientGoneHook;
 
     rfbSocket sock;
     char *host;
 
+    /* RFB protocol minor version number */
     int protocolMajorVersion;
     int protocolMinorVersion;
 
+#ifdef LIBVNCSERVER_HAVE_LIBPTHREAD
     pthread_t client_thread;
+#elif defined(LIBVNCSERVER_HAVE_WIN32THREADS)
+    uintptr_t client_thread;
+#endif
 
+    /* Note that the RFB_INITIALISATION_SHARED state is provided to support
+       clients that under some circumstances do not send a ClientInit message.
+       In particular the Mac OS X built-in VNC client (with protocolMinorVersion
+       == 889) is one of those.  However, it only requires this support under
+       special circumstances that can only be determined during the initial
+       authentication.  If the right conditions are met this state will be
+       set (see the auth.c file) when rfbProcessClientInitMessage is called.
+
+       If the state is RFB_INITIALISATION_SHARED we should not expect to receive
+       any ClientInit message, but instead should proceed to the next stage
+       of initialisation as though an implicit ClientInit message was received
+       with a shared-flag of true.  (There is currently no corresponding
+       RFB_INITIALISATION_NOTSHARED state to represent an implicit ClientInit
+       message with a shared-flag of false because no known existing client
+       requires such support at this time.)
+
+       Note that software using LibVNCServer to provide a VNC server will only
+       ever have a chance to see the state field set to
+       RFB_INITIALISATION_SHARED if the software is multi-threaded and manages
+       to examine the state field during the extremely brief window after the
+       'None' authentication type selection has been received from the built-in
+       OS X VNC client and before the rfbProcessClientInitMessage function is
+       called -- control cannot return to the caller during this brief window
+       while the state field is set to RFB_INITIALISATION_SHARED. */
+
+                                /** Possible client states: */
     enum {
-        RFB_PROTOCOL_VERSION,  
-	RFB_SECURITY_TYPE,     
-        RFB_AUTHENTICATION,  
-        RFB_INITIALISATION,  
-        RFB_NORMAL,          
-        RFB_INITIALISATION_SHARED, 
-        RFB_SHUTDOWN          
+        RFB_PROTOCOL_VERSION,   /**< establishing protocol version */
+	RFB_SECURITY_TYPE,      /**< negotiating security (RFB v.3.7) */
+        RFB_AUTHENTICATION,     /**< authenticating */
+        RFB_INITIALISATION,     /**< sending initialisation messages */
+        RFB_NORMAL,             /**< normal protocol messages */
+
+        /* Ephemeral internal-use states that will never be seen by software
+         * using LibVNCServer to provide services: */
+
+        RFB_INITIALISATION_SHARED, /**< sending initialisation messages with implicit shared-flag already true */
+        RFB_SHUTDOWN            /**< Client is shutting down */
     } state;
 
     rfbBool reverseConnection;
@@ -443,63 +504,132 @@ typedef struct _rfbClientRec {
 
     rfbBool viewOnly;
 
+    /* The following member is only used during VNC authentication */
     uint8_t authChallenge[CHALLENGESIZE];
 
-    sraRegionPtr copyRegion;	
-    int copyDX, copyDY;	
+    /* The following members represent the update needed to get the client's
+       framebuffer from its present state to the current state of our
+       framebuffer.
+
+       If the client does not accept CopyRect encoding then the update is
+       simply represented as the region of the screen which has been modified
+       (modifiedRegion).
+
+       If the client does accept CopyRect encoding, then the update consists of
+       two parts.  First we have a single copy from one region of the screen to
+       another (the destination of the copy is copyRegion), and second we have
+       the region of the screen which has been modified in some other way
+       (modifiedRegion).
+
+       Although the copy is of a single region, this region may have many
+       rectangles.  When sending an update, the copyRegion is always sent
+       before the modifiedRegion.  This is because the modifiedRegion may
+       overlap parts of the screen which are in the source of the copy.
+
+       In fact during normal processing, the modifiedRegion may even overlap
+       the destination copyRegion.  Just before an update is sent we remove
+       from the copyRegion anything in the modifiedRegion. */
+
+    sraRegionPtr copyRegion;	/**< the destination region of the copy */
+    int copyDX, copyDY;		/**< the translation by which the copy happens */
 
     sraRegionPtr modifiedRegion;
+
+    /** As part of the FramebufferUpdateRequest, a client can express interest
+       in a subrectangle of the whole framebuffer.  This is stored in the
+       requestedRegion member.  In the normal case this is the whole
+       framebuffer if the client is ready, empty if it's not. */
+
     sraRegionPtr requestedRegion;
+
+    /** The following member represents the state of the "deferred update" timer
+       - when the framebuffer is modified and the client is ready, in most
+       cases it is more efficient to defer sending the update by a few
+       milliseconds so that several changes to the framebuffer can be combined
+       into a single update. */
+
       struct timeval startDeferring;
       struct timeval startPtrDeferring;
       int lastPtrX;
       int lastPtrY;
       int lastPtrButtons;
+
+    /** translateFn points to the translation function which is used to copy
+       and translate a rectangle from the framebuffer to an output buffer. */
+
     rfbTranslateFnType translateFn;
     char *translateLookupTable;
     rfbPixelFormat format;
+
+    /**
+     * UPDATE_BUF_SIZE must be big enough to send at least one whole line of the
+     * framebuffer.  So for a max screen width of say 2K with 32-bit pixels this
+     * means 8K minimum.
+     */
+
+#define UPDATE_BUF_SIZE 32768
+
     char updateBuf[UPDATE_BUF_SIZE];
     int ublen;
 
+    /* statistics */
     struct _rfbStatList *statEncList;
     struct _rfbStatList *statMsgList;
     int rawBytesEquivalent;
     int bytesSent;
 
+#ifdef LIBVNCSERVER_HAVE_LIBZ
+    /* zlib encoding -- necessary compression state info per client */
+
     struct z_stream_s compStream;
     rfbBool compStreamInited;
     uint32_t zlibCompressLevel;
+#endif
+#if defined(LIBVNCSERVER_HAVE_LIBZ) || defined(LIBVNCSERVER_HAVE_LIBPNG)
+    /** the quality level is also used by ZYWRLE and TightPng */
     int tightQualityLevel;
 
+#ifdef LIBVNCSERVER_HAVE_LIBJPEG
+    /* tight encoding -- preserve zlib streams' state for each client */
     z_stream zsStruct[4];
     rfbBool zsActive[4];
     int zsLevel[4];
     int tightCompressLevel;
+#endif
+#endif
 
+    /* Ultra Encoding support */
     rfbBool compStreamInitedLZO;
     char *lzoWrkMem;
 
     rfbFileTransferData fileTransfer;
 
-    int     lastKeyboardLedState;     
-    rfbBool enableSupportedMessages;  
-    rfbBool enableSupportedEncodings; 
-    rfbBool enableServerIdentity;     
-    rfbBool enableKeyboardLedState;   
-    rfbBool enableLastRectEncoding;   
-    rfbBool enableCursorShapeUpdates; 
-    rfbBool enableCursorPosUpdates;   
-    rfbBool useRichCursorEncoding;    
-    rfbBool cursorWasChanged;         
-    rfbBool cursorWasMoved;           
-    int cursorX,cursorY;	   
+    int     lastKeyboardLedState;     /**< keep track of last value so we can send *change* events */
+    rfbBool enableSupportedMessages;  /**< client supports SupportedMessages encoding */
+    rfbBool enableSupportedEncodings; /**< client supports SupportedEncodings encoding */
+    rfbBool enableServerIdentity;     /**< client supports ServerIdentity encoding */
+    rfbBool enableKeyboardLedState;   /**< client supports KeyboardState encoding */
+    rfbBool enableLastRectEncoding;   /**< client supports LastRect encoding */
+    rfbBool enableCursorShapeUpdates; /**< client supports cursor shape updates */
+    rfbBool enableCursorPosUpdates;   /**< client supports cursor position updates */
+    rfbBool useRichCursorEncoding;    /**< rfbEncodingRichCursor is preferred */
+    rfbBool cursorWasChanged;         /**< cursor shape update should be sent */
+    rfbBool cursorWasMoved;           /**< cursor position update should be sent */
+    int cursorX,cursorY;	      /**< the coordinates of the cursor,
+					 if enableCursorShapeUpdates = FALSE */
 
-    rfbBool useNewFBSize;       
-    rfbBool newFBSizePending;   
+    rfbBool useNewFBSize;             /**< client supports NewFBSize encoding */
+    rfbBool newFBSizePending;         /**< framebuffer size was changed */
 
     struct _rfbClientRec *prev;
     struct _rfbClientRec *next;
 
+#if defined(LIBVNCSERVER_HAVE_LIBPTHREAD) || defined(LIBVNCSERVER_HAVE_WIN32THREADS)
+    /** whenever a client is referenced, the refCount has to be incremented
+       and afterwards decremented, so that the client is not cleaned up
+       while being referenced.
+       Use the functions rfbIncrClientRef(cl) and rfbDecrClientRef(cl);
+    */
     int refCount;
     MUTEX(refCountMutex);
     COND(deleteCond);
@@ -507,47 +637,76 @@ typedef struct _rfbClientRec {
     MUTEX(outputMutex);
     MUTEX(updateMutex);
     COND(updateCond);
+#endif
 
+#ifdef LIBVNCSERVER_HAVE_LIBZ
     void* zrleData;
     int zywrleLevel;
     int zywrleBuf[rfbZRLETileWidth * rfbZRLETileHeight];
+#endif
 
+    /** if progressive updating is on, this variable holds the current
+     * y coordinate of the progressive slice. */
     int progressiveSliceY;
 
     rfbExtensionData* extensions;
 
+    /** for threaded zrle */
     char *zrleBeforeBuf;
     void *paletteHelper;
 
+    /** for thread safety for rfbSendFBUpdate() */
+#if defined(LIBVNCSERVER_HAVE_LIBPTHREAD) || defined(LIBVNCSERVER_HAVE_WIN32THREADS)
+#define LIBVNCSERVER_SEND_MUTEX
     MUTEX(sendMutex);
+#endif
 
+  /* buffers to hold pixel data before and after encoding.
+     per-client for thread safety */
   char *beforeEncBuf;
   int beforeEncBufSize;
   char *afterEncBuf;
   int afterEncBufSize;
   int afterEncBufLen;
-    uint32_t tightEncoding;  
+#if defined(LIBVNCSERVER_HAVE_LIBZ) || defined(LIBVNCSERVER_HAVE_LIBPNG)
+    uint32_t tightEncoding;  /* rfbEncodingTight or rfbEncodingTightPng */
+#ifdef LIBVNCSERVER_HAVE_LIBJPEG
+    /* TurboVNC Encoding support (extends TightVNC) */
     int turboSubsampLevel;
-    int turboQualityLevel;
+    int turboQualityLevel;  /* 1-100 scale */
+#endif
+#endif
     rfbSslCtx *sslctx;
     wsCtx     *wsctx;
-    char *wspath;         
+    char *wspath;                          /* Requests path component */
+#ifdef LIBVNCSERVER_HAVE_LIBPTHREAD
     int pipe_notify_client_thread[2];
+#endif
+
+    /**
+     * clientFramebufferUpdateRequestHook is called when a client requests a frame
+     * buffer update.
+     */
     ClientFramebufferUpdateRequestHookPtr clientFramebufferUpdateRequestHook;
 
     rfbBool useExtDesktopSize;
     int requestedDesktopSizeChange;
     int lastDesktopSizeChangeError;
 
+#ifdef LIBVNCSERVER_HAVE_LIBZ
     rfbBool enableExtendedClipboard;
     uint32_t extClipboardUserCap;
     uint32_t extClipboardMaxUnsolicitedSize;
     char *extClipboardData;
     int extClipboardDataSize;
 
+#ifdef LIBVNCSERVER_HAVE_LIBJPEG
+    /* Tight encoding internal variables, stored per-client for thread safety */
     rfbBool tightUsePixelFormat24;
     void *tightTJ;
     int tightPngDstDataLen;
+#endif
+#endif
 } rfbClientRec, *rfbClientPtr;
 
 /**
@@ -555,11 +714,40 @@ typedef struct _rfbClientRec {
  * be sent to the client.
  */
 
+#define FB_UPDATE_PENDING(cl)                                              \
+     (((cl)->enableCursorShapeUpdates && (cl)->cursorWasChanged) ||        \
+     (((cl)->enableCursorShapeUpdates == FALSE &&                          \
+       ((cl)->cursorX != (cl)->screen->cursorX ||                          \
+	(cl)->cursorY != (cl)->screen->cursorY))) ||                       \
+     ((cl)->useNewFBSize && (cl)->newFBSizePending) ||                     \
+     ((cl)->enableCursorPosUpdates && (cl)->cursorWasMoved) ||             \
+     !sraRgnEmpty((cl)->copyRegion) || !sraRgnEmpty((cl)->modifiedRegion))
 
 /*
  * Macros for endian swapping.
  */
 
+#define Swap16(s) ((((s) & 0xff) << 8) | (((s) >> 8) & 0xff))
+
+#define Swap24(l) ((((l) & 0xff) << 16) | (((l) >> 16) & 0xff) | \
+                   (((l) & 0x00ff00)))
+
+#define Swap32(l) ((((l) >> 24) & 0x000000ff)| \
+                   (((l) & 0x00ff0000) >> 8)  | \
+                   (((l) & 0x0000ff00) << 8)  | \
+                   (((l) & 0x000000ff) << 24))
+
+
+extern char rfbEndianTest;
+
+#define Swap16IfLE(s) (rfbEndianTest ? Swap16(s) : (s))
+#define Swap24IfLE(l) (rfbEndianTest ? Swap24(l) : (l))
+#define Swap32IfLE(l) (rfbEndianTest ? Swap32(l) : (l))
+
+/* UltraVNC uses some windows structures unmodified, so the viewer expects LittleEndian Data */
+#define Swap16IfBE(s) (rfbEndianTest ? (s) : Swap16(s))
+#define Swap24IfBE(l) (rfbEndianTest ? (l) : Swap24(l))
+#define Swap32IfBE(l) (rfbEndianTest ? (l) : Swap32(l))
 
 /* sockets.c */
 
@@ -687,6 +875,8 @@ extern rfbBool rfbSendRectEncodingHextile(rfbClientPtr cl, int x, int y, int w,
  * two scan lines.
  */
 #define ULTRA_MAX_RECT_SIZE (128*256)
+#define ULTRA_MAX_SIZE(min) ((( min * 2 ) > ULTRA_MAX_RECT_SIZE ) ? \
+                            ( min * 2 ) : ULTRA_MAX_RECT_SIZE )
 
 extern rfbBool rfbSendRectEncodingUltra(rfbClientPtr cl, int x,int y,int w,int h);
 
@@ -703,6 +893,8 @@ extern rfbBool rfbSendRectEncodingUltra(rfbClientPtr cl, int x,int y,int w,int h
  * two scan lines.
  */
 #define ZLIB_MAX_RECT_SIZE (128*256)
+#define ZLIB_MAX_SIZE(min) ((( min * 2 ) > ZLIB_MAX_RECT_SIZE ) ? \
+			    ( min * 2 ) : ZLIB_MAX_RECT_SIZE )
 
 extern rfbBool rfbSendRectEncodingZlib(rfbClientPtr cl, int x, int y, int w,
 				    int h);
@@ -837,10 +1029,10 @@ void rfbDoCopyRegion(rfbScreenInfoPtr rfbScreen,sraRegionPtr copyRegion,int dx,i
 void rfbMarkRectAsModified(rfbScreenInfoPtr rfbScreen,int x1,int y1,int x2,int y2);
 void rfbMarkRegionAsModified(rfbScreenInfoPtr rfbScreen,sraRegionPtr modRegion);
 void rfbDoNothingWithClient(rfbClientPtr cl);
-rfbNewClientAction defaultNewClientHook(rfbClientPtr cl);
+enum rfbNewClientAction defaultNewClientHook(rfbClientPtr cl);
 void rfbRegisterProtocolExtension(rfbProtocolExtension* extension);
 void rfbUnregisterProtocolExtension(rfbProtocolExtension* extension);
- _rfbProtocolExtension* rfbGetExtensionIterator(void);
+struct _rfbProtocolExtension* rfbGetExtensionIterator(void);
 void rfbReleaseExtensionIterator(void);
 rfbBool rfbEnableExtension(rfbClientPtr cl, rfbProtocolExtension* extension,
 	void* data);
@@ -931,5 +1123,182 @@ rfbBool rfbProcessNewConnection(rfbScreenInfoPtr rfbScreen);
 rfbBool rfbUpdateClient(rfbClientPtr cl);
 
 
+#if(defined __cplusplus)
+}
+#endif
+
+/**
+ * @}
+ */
 
 
+/**
+ @page libvncserver_doc LibVNCServer Documentation
+ @tableofcontents
+ @section create_server Creating a server instance
+ To make a server, you just have to initialise a server structure using the
+ function rfbGetScreen(), like
+ @code
+   rfbScreenInfoPtr screen =
+     rfbGetScreen(argc,argv,screenwidth,screenheight,8,3,bpp);
+ @endcode
+ where byte per pixel should be 1, 2 or 4. If performance doesn't matter,
+ you may try bpp=3 (internally one cannot use native data types in this
+ case; if you want to use this, look at pnmshow24.c).
+
+ You then can set hooks and io functions (see @ref making_it_interactive) or other
+ options (see @ref server_options).
+
+ And you allocate the frame buffer like this:
+ @code
+     screen->frameBuffer = (char*)malloc(screenwidth*screenheight*bpp);
+ @endcode
+ After that, you initialize the server, like
+ @code
+   rfbInitServer(screen);
+ @endcode
+ You can use a blocking event loop, a background (pthread based) event loop,
+ or implement your own using the rfbProcessEvents() function.
+
+ @subsection server_options Optional Server Features
+
+ These options have to be set between rfbGetScreen() and rfbInitServer().
+
+ If you already have a socket to talk to, just set rfbScreenInfo::inetdSock
+ (originally this is for inetd handling, but why not use it for your purpose?).
+
+ To also start an HTTP server (running on port 5800+display_number), you have
+ to set rfbScreenInfo::httpDir to a directory containing vncviewer.jar and
+ index.vnc (like the included "webclients" directory).
+
+ @section making_it_interactive Making it interactive
+
+ Whenever you draw something, you have to call
+ @code
+  rfbMarkRectAsModified(screen,x1,y1,x2,y2).
+ @endcode
+ This tells LibVNCServer to send updates to all connected clients.
+
+ There exist the following IO functions as members of rfbScreen:
+ rfbScreenInfo::kbdAddEvent(), rfbScreenInfo::kbdReleaseAllKeys(), rfbScreenInfo::ptrAddEvent(),
+ rfbScreenInfo::setXCutText() and rfbScreenInfo::setXCutTextUTF8()
+
+ rfbScreenInfo::kbdAddEvent()
+   is called when a key is pressed.
+ rfbScreenInfo::kbdReleaseAllKeys()
+   is not called at all (maybe in the future).
+ rfbScreenInfo::ptrAddEvent()
+   is called when the mouse moves or a button is pressed.
+   WARNING: if you want to have proper cursor handling, call
+	rfbDefaultPtrAddEvent()
+   in your own function. This sets the coordinates of the cursor.
+ rfbScreenInfo::setXCutText()
+   is called when the selection changes.
+ rfbScreenInfo::setXCutTextUTF8()
+   is called when the selection changes and the ExtendedClipboard extension is enabled.
+
+ There are only two hooks:
+ rfbScreenInfo::newClientHook()
+   is called when a new client has connected.
+ rfbScreenInfo::displayHook()
+   is called just before a frame buffer update is sent.
+
+ You can also override the following methods:
+ rfbScreenInfo::getCursorPtr()
+   This could be used to make an animated cursor (if you really want ...)
+ rfbScreenInfo::setTranslateFunction()
+   If you insist on colour maps or something more obscure, you have to
+   implement this. Default is a trueColour mapping.
+
+ @section cursor_handling Cursor handling
+
+ The screen holds a pointer
+  rfbScreenInfo::cursor
+ to the current cursor. Whenever you set it, remember that any dynamically
+ created cursor (like return value from rfbMakeXCursor()) is not free'd!
+
+ The rfbCursor structure consists mainly of a mask and a source. The rfbCursor::mask
+ describes, which pixels are drawn for the cursor (a cursor needn't be
+ rectangular). The rfbCursor::source describes, which colour those pixels should have.
+
+ The standard is an XCursor: a cursor with a foreground and a background
+ colour (stored in backRed,backGreen,backBlue and the same for foreground
+ in a range from 0-0xffff). Therefore, the arrays "mask" and "source"
+ contain pixels as single bits stored in bytes in MSB order. The rows are
+ padded, such that each row begins with a new byte (i.e. a 10x4
+ cursor's mask has 2x4 bytes, because 2 bytes are needed to hold 10 bits).
+
+ It is however very easy to make a cursor like this:
+ @code
+ char* cur="    "
+           " xx "
+	   " x  "
+	   "    ";
+ char* mask="xxxx"
+            "xxxx"
+            "xxxx"
+            "xxx ";
+ rfbCursorPtr c=rfbMakeXCursor(4,4,cur,mask);
+ @endcode
+ You can even set rfbCursor::mask to NULL in this call and LibVNCServer will calculate
+ a mask for you (dynamically, so you have to free it yourself).
+
+ There is also an array named rfbCursor::richSource for colourful cursors. They have
+ the same format as the frameBuffer (i.e. if the server is 32 bit,
+ a 10x4 cursor has 4x10x4 bytes).
+
+ @section screen_client_difference What is the difference between rfbScreenInfoPtr and rfbClientPtr?
+
+ The rfbScreenInfoPtr is a pointer to a rfbScreenInfo structure, which
+ holds information about the server, like pixel format, io functions,
+ frame buffer etc. The rfbClientPtr is a pointer to an rfbClientRec structure, which holds
+ information about a client, like pixel format, socket of the
+ connection, etc. A server can have several clients, but needn't have any. So, if you
+ have a server and three clients are connected, you have one instance
+ of a rfbScreenInfo and three instances of rfbClientRec's.
+
+ The rfbClientRec structure holds a member rfbClientRec::screen which points to the server.
+ So, to access the server from the client structure, you use client->screen.
+
+ To access all clients from a server be sure to use the provided iterator
+  rfbGetClientIterator()
+ with
+  rfbClientIteratorNext()
+ and
+  rfbReleaseClientIterator()
+ to prevent thread clashes.
+
+ @section example_code Example Code
+
+ There are two documented examples included:
+  - example.c, a shared scribble sheet
+  - pnmshow.c, a program to show PNMs (pictures) over the net.
+
+ The examples are not too well documented, but easy straight forward and a
+ good starting point.
+
+ Try example.c: it outputs on which port it listens (default: 5900), so it is
+ display 0. To view, call @code	vncviewer :0 @endcode
+ You should see a sheet with a gradient and "Hello World!" written on it. Try
+ to paint something. Note that every time you click, there is some bigger blot,
+ whereas when you drag the mouse while clicked you draw a line. The size of the
+ blot depends on the mouse button you click. Open a second vncviewer with
+ the same parameters and watch it as you paint in the other window. This also
+ works over internet. You just have to know either the name or the IP of your
+ machine. Then it is @code vncviewer machine.where.example.runs.com:0 @endcode
+ or similar for the remote client. Now you are ready to type something. Be sure
+ that your mouse sits still, because every time the mouse moves, the cursor is
+ reset to the position of the pointer! If you are done with that demo, press
+ the down or up arrows. If your viewer supports it, then the dimensions of the
+ sheet change. Just press Escape in the viewer. Note that the server still
+ runs, even if you closed both windows. When you reconnect now, everything you
+ painted and wrote is still there. You can press "Page Up" for a blank page.
+
+ The demo pnmshow.c is much simpler: you either provide a filename as argument
+ or pipe a file through stdin. Note that the file has to be a raw pnm/ppm file,
+ i.e. a truecolour graphics. Only the Escape key is implemented. This may be
+ the best starting point if you want to learn how to use LibVNCServer. You
+ are confronted with the fact that the bytes per pixel can only be 8, 16 or 32.
+*/
+
+#endif

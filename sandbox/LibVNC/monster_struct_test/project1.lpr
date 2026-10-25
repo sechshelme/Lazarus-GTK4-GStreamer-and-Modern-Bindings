@@ -1,23 +1,13 @@
 program project1;
 
 uses
-sysutils,
-
-keysym,
-rfbconfig,
-rfbproto,
-rfbclient,
-rfb,
-//rfbregion,
-
-
-fp_vnc;
+fp_vnc,
+sysutils;
 
 function OffsetOf(const TargetField; const RecordStart): PtrInt;
 begin
   Result := PByte(@TargetField) - PByte(@RecordStart);
 end;
-
 
 
 procedure main_rfbClient;

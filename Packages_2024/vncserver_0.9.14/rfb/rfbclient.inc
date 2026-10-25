@@ -1,13 +1,4 @@
-unit rfbclient;
-
-interface
-
-uses
-  fp_vnc, rfbproto;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 const
@@ -86,7 +77,6 @@ const
 
 type
   PrfbClient = ^TrfbClient;
-  PrfbClientRec = PrfbClient;
 
   THandleTextChatProc = procedure(client: PrfbClient; value: longint; text: pchar); cdecl;
   THandleXvpMsgProc = procedure(client: PrfbClient; version: Tuint8_t; opcode: Tuint8_t); cdecl;
@@ -296,8 +286,11 @@ procedure rfbClientCleanup(client: PrfbClient); cdecl; external libvncclient;
 // === Konventiert am: 22-10-26 19:42:53 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

@@ -1,13 +1,4 @@
-unit rfbproto;
-
-interface
-
-uses
-  fp_vnc;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 type
@@ -786,7 +777,10 @@ procedure rfbEncryptBytes(bytes: pbyte; passwd: pchar); cdecl; external libvncse
 // === Konventiert am: 23-10-26 15:24:34 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 function rfbHextilePackXY(x, y: byte): byte;
 begin
@@ -819,4 +813,4 @@ begin
 end;
 
 
-end.
+{$ENDIF read_implementation}

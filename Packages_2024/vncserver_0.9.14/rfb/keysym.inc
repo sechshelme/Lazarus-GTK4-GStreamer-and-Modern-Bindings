@@ -1,13 +1,4 @@
-unit keysym;
-
-interface
-
-uses
-  fp_vnc;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 const
@@ -1373,8 +1364,11 @@ const
   // === Konventiert am: 22-10-26 19:42:41 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

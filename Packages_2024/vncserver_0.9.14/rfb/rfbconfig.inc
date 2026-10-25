@@ -1,13 +1,4 @@
-unit rfbconfig;
-
-interface
-
-uses
-  fp_vnc;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 const
   LIBVNCSERVER_ALLOW24BPP = 1;
@@ -80,8 +71,11 @@ type
   // === Konventiert am: 22-10-26 19:43:01 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}

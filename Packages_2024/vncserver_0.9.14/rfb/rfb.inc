@@ -1,13 +1,4 @@
-unit rfb;
-
-interface
-
-uses
-  fp_vnc, rfbproto, rfbclient;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 type
@@ -50,8 +41,21 @@ type
   TrfbCursorPtr = PrfbCursor;
   PrfbCursorPtr = ^TrfbCursorPtr;
 
+const
+  UPDATE_BUF_SIZE = 32768;
+
+const
+  RFB_PROTOCOL_VERSION = 0;
+  RFB_SECURITY_TYPE = 1;
+  RFB_AUTHENTICATION = 2;
+  RFB_INITIALISATION = 3;
+  RFB_NORMAL = 4;
+  RFB_INITIALISATION_SHARED = 5;
+  RFB_SHUTDOWN = 6;
+
 type
   PrfbScreenInfo = ^TrfbScreenInfo;
+  PrfbClientRec = ^TrfbClientRec;
 
   TrfbKbdAddEventProcPtr = procedure(down: TrfbBool; keySym: TrfbKeySym; cl: PrfbClientRec); cdecl;
   TrfbKbdReleaseAllKeysProcPtr = procedure(cl: PrfbClientRec); cdecl;
@@ -243,24 +247,10 @@ type
     Next: PrfbStatList;
   end;
 
-const
-  UPDATE_BUF_SIZE = 32768;
-
-const
-  RFB_PROTOCOL_VERSION = 0;
-  RFB_SECURITY_TYPE = 1;
-  RFB_AUTHENTICATION = 2;
-  RFB_INITIALISATION = 3;
-  RFB_NORMAL = 4;
-  RFB_INITIALISATION_SHARED = 5;
-  RFB_SHUTDOWN = 6;
-
-type
   PrfbSslCtx = type Pointer;
   PwsCtx = type Pointer;
 
   // Pads eingefügt
-  PrfbClientRec = ^TrfbClientRec;
   TrfbClientRec = record
     screen: TrfbScreenInfoPtr;
     scaledScreen: TrfbScreenInfoPtr;
@@ -370,7 +360,6 @@ type
     tightPngDstDataLen: longint;
   end;
   TrfbClientPtr = PrfbClientRec;
-  PrfbClientPtr = ^TrfbClientPtr;
 
 var
   rfbMaxClientWait: longint; cvar;external libvncserver;
@@ -610,8 +599,11 @@ function rfbUpdateClient(cl: TrfbClientPtr): TrfbBool; cdecl; external libvncser
 // === Konventiert am: 22-10-26 19:42:47 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}
