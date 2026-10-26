@@ -12,9 +12,9 @@ sudo ss -tulpn | grep :5
 
 const
   RetroPC = 'RetroPC';
-  //  iso = '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
+    iso = '/n4800/ISO/linuxmint-22.3-cinnamon-64bit.iso';
   //  iso=     '/n4800/ISO/ubuntu-26.04.1-desktop-amd64.iso';
-  iso = '/n4800/ISO/ubuntu-26.04.1-live-server-amd64.iso';
+  //iso = '/n4800/ISO/ubuntu-26.04.1-live-server-amd64.iso';
 
 
   function create_vm_config: PGVirConfigDomain;

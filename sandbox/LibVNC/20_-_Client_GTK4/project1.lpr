@@ -1,36 +1,33 @@
 program project1;
 
 uses
-  fp_cairo,
   fp_glib2,
   fp_GTK4,
-  fp_vnc,
-
-  VNCWidget  ;
+  VNCWidget;
 
 
-procedure activate(app: PGtkApplication; user_data: Tgpointer); cdecl;
-var
-  window, main_box, widget: PGtkWidget;
-  motion_ctrl, key_ctrl: PGtkEventController;
-  click_gesture: PGtkGesture;
-begin
-  g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
+  procedure activate(app: PGtkApplication; user_data: Tgpointer); cdecl;
+  var
+    window, main_box, widget: PGtkWidget;
+  begin
+    g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
 
-  window := gtk_application_window_new(app);
-  gtk_window_set_title(GTK_WINDOW(window), 'VNC Client (GTK4)');
+    window := gtk_application_window_new(app);
+    gtk_window_set_title(GTK_WINDOW(window), 'VNC Client (GTK4)');
 
-  main_box := gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
-  gtk_window_set_child(GTK_WINDOW(window), main_box);
+    main_box := gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+    gtk_window_set_child(GTK_WINDOW(window), main_box);
 
+    widget := my_widget_new(5902);
+    gtk_widget_set_size_request(widget, 600, 400);
+    gtk_box_append(GTK_BOX(main_box), widget);
 
-widget:=  my_widget_new;
-gtk_widget_set_size_request(widget, 600, 400);
-gtk_box_append(GTK_BOX(main_box), widget);
+    widget := my_widget_new(5901);
+    gtk_widget_set_size_request(widget, 600, 400);
+    gtk_box_append(GTK_BOX(main_box), widget);
 
-
-  gtk_window_present(GTK_WINDOW(window));
-end;
+    gtk_window_present(GTK_WINDOW(window));
+  end;
 
 
   procedure main;
