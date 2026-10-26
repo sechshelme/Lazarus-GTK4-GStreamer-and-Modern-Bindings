@@ -40,6 +40,7 @@ uses
     WriteLn('handle_update x: ',x,'  y: ',y,'  w: ',w,'  h: ',h);
   end;
 
+
   procedure main;
   var
     vnc_client: PrfbClient;
@@ -49,6 +50,8 @@ uses
     vnc_client^.serverPort := 5900;
     vnc_client^.MallocFrameBuffer := @update_screen_size;
     vnc_client^.GotFrameBufferUpdate := @handle_update;
+
+    WriteLn('vnc_client^.clientData: ' ,PtrUInt( vnc_client^.clientData));
 
     WriteLn('Verbinde zu VNC');
     if not rfbInitClient(vnc_client, @argc, argv) then begin
