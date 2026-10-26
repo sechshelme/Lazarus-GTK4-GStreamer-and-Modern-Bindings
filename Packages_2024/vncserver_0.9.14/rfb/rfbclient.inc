@@ -214,10 +214,12 @@ var
   rfbEnableClientLogging: TrfbBool; cvar;external libvncclient;
 
 type
-  TrfbClientLogProc = procedure(format: pchar; args: array of const); cdecl;
+//  TrfbClientLogProc = procedure(format: pchar); varargs; cdecl;
+  TrfbClientLogProc = procedure(format: pchar); cdecl;
 
 var
   rfbClientLog: TrfbClientLogProc; cvar;external libvncclient;
+  rfbClientErr: TrfbClientLogProc; cvar;external libvncclient;
 
 function ConnectToRFBServer(client: PrfbClient; hostname: pchar; port: longint): TrfbBool; cdecl; external libvncclient;
 function ConnectToRFBRepeater(client: PrfbClient; repeaterHost: pchar; repeaterPort: longint; destHost: pchar; destPort: longint): TrfbBool; cdecl; external libvncclient;
