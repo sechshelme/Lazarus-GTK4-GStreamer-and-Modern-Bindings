@@ -5,15 +5,16 @@ interface
 uses
   fp_vnc,
   fp_cairo,
-  fp_glib2, fp_GTK4, fp_graphene;
+  fp_glib2,
+  fp_GTK4;
 
 type
   TMyWidget = record
     parent_instance: TGtkBox;
-    port:Integer;
-    vnc_client: PrfbClient ;
+    vnc_client: PrfbClient;
     drawing_area: PGtkWidget;
     cairo_surface: Pcairo_surface_t;
+    connect_io:Boolean;
     mouse_mask: integer;
   end;
   PMyWidget = ^TMyWidget;
@@ -24,7 +25,7 @@ type
   PMyWidgetClass = ^TMyWidgetClass;
 
 function my_widget_get_type: TGType;
-function my_widget_new(aport:Integer): PGTKWidget;
+function my_widget_new(ip:Pgchar; port: Tguint16): PGTKWidget;
 
 implementation
 
@@ -36,13 +37,13 @@ var
 
   // === VNC
 
-  function update_screen_size(client: PrfbClient): TrfbBool; cdecl;
-  var
-    self:PMyWidget;
-    width, height: longint;
-  begin
-    self:=    rfbClientGetClientData(client,PChar( 'user_data'));
-    with self^ do begin
+function update_screen_size(client: PrfbClient): TrfbBool; cdecl;
+var
+  self: PMyWidget;
+  width, height: longint;
+begin
+  self := rfbClientGetClientData(client, pchar('user_data'));
+  with self^ do begin
 
     width := client^.width;
     height := client^.height;
@@ -74,52 +75,52 @@ var
     end;
 
     Result := True;
-    end;
   end;
+end;
 
-  procedure handle_update(client: PrfbClient; x: longint; y: longint; w: longint; h: longint); cdecl;
-  var
-    self:PMyWidget;
-    width, height: longint;
-  begin
-    self:=    rfbClientGetClientData(client,PChar( 'user_data'));
-    with self^ do begin
-    WriteLn('handle_update()');
+procedure handle_update(client: PrfbClient; x: longint; y: longint; w: longint; h: longint); cdecl;
+var
+  self: PMyWidget;
+  width, height: longint;
+begin
+  self := rfbClientGetClientData(client, pchar('user_data'));
+  with self^ do begin
+//    WriteLn('handle_update()');
     if drawing_area <> nil then begin
       gtk_widget_queue_draw(drawing_area);
     end;
-    end;
   end;
+end;
 
 
-  // === GTK
+// === GTK
 
-  function gtk_key_to_vnc(keyval: Tguint): Tguint32;
-  begin
-    Result := keyval;
-  end;
+function gtk_key_to_vnc(keyval: Tguint): Tguint32;
+begin
+  Result := keyval;
+end;
 
-  procedure draw_func(drawing_area: PGtkDrawingArea; cr: Pcairo_t; Width: longint; Height: longint; user_data: Tgpointer); cdecl;
-  var
-    self:PMyWidget absolute user_data;
-  begin
-    with self^ do begin
-    WriteLn('draw_func()');
+procedure draw_func(drawing_area: PGtkDrawingArea; cr: Pcairo_t; Width: longint; Height: longint; user_data: Tgpointer); cdecl;
+var
+  self: PMyWidget absolute user_data;
+begin
+  with self^ do begin
+//    WriteLn('draw_func()');
     if cairo_surface <> nil then begin
       cairo_set_source_surface(cr, cairo_surface, 0, 0);
       cairo_paint(cr);
     end;
-    end;
   end;
+end;
 
-  function vnc_loop_step(widget: PGtkWidget; frame_clock: PGdkFrameClock;    user_data: Tgpointer): Tgboolean; cdecl;
-  var
-    self:PMyWidget absolute user_data;
-    fd: TrfbSocket;
-    pfd: TGPollFD;
-    app: PGtkApplication;
-  begin
-    with self^ do begin
+function vnc_loop_step(widget: PGtkWidget; frame_clock: PGdkFrameClock; user_data: Tgpointer): Tgboolean; cdecl;
+var
+  self: PMyWidget absolute user_data;
+  fd: TrfbSocket;
+  pfd: TGPollFD;
+  app: PGtkApplication;
+begin
+  with self^ do begin
     if (drawing_area = nil) or (not GTK_IS_WIDGET(drawing_area)) or (vnc_client = nil) then begin
       Exit(G_SOURCE_REMOVE_);
     end;
@@ -135,94 +136,97 @@ var
     pfd.revents := 0;
 
     if g_poll(@pfd, 1, 0) > 0 then begin
-      WriteLn('vnc_loop_step()');
+//      WriteLn('vnc_loop_step()');
       if (pfd.revents and (G_IO_IN or G_IO_HUP or G_IO_ERR)) <> 0 then begin
         if not HandleRFBServerMessage(vnc_client) then begin
           g_printf('VNC: Verbindung vom Server getrennt.'#10);
           vnc_client := nil;
-//          app := GTK_APPLICATION(user_data);
-//          g_application_quit(G_APPLICATION(app));
+          //          app := GTK_APPLICATION(user_data);
+          //          g_application_quit(G_APPLICATION(app));
           Exit(G_SOURCE_REMOVE_);
         end;
       end;
     end;
     Result := G_SOURCE_CONTINUE;
-    end;
   end;
+end;
 
-  procedure on_motion(controller: PGtkEventControllerMotion; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
-  var
-    self:PMyWidget absolute user_data;
-  begin
-    with self^ do begin
+procedure on_motion(controller: PGtkEventControllerMotion; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
+var
+  self: PMyWidget absolute user_data;
+begin
+  with self^ do begin
     if vnc_client <> nil then begin
       SendPointerEvent(vnc_client, Trunc(x), Trunc(y), mouse_mask);
     end;
-    end;
   end;
+end;
 
-  procedure on_mouse_action(gesture: PGtkGestureClick; n_press: tgint; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
-  var
-    self: PMyWidget;
-    button: Tguint;
-    button_bit: integer;
-    is_pressed: Boolean;
-  begin
-    // Da wir das Widget und den Zustand zusammen übergeben müssen,
-    // holen wir uns "self" direkt aus der Gesture oder dem VNC-Client.
-    // Am einfachsten über die verknüpfte Drawing Area:
-    self := PMyWidget(gtk_widget_get_ancestor(gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture)), my_widget_get_type));
+procedure on_mouse_action(gesture: PGtkGestureClick; n_press: tgint; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
+var
+  self: PMyWidget;
+  button: Tguint;
+  button_bit: integer;
+  is_pressed: boolean;
+begin
+  self := PMyWidget(gtk_widget_get_ancestor(gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture)), my_widget_get_type));
 
-    // user_data enthält jetzt direkt die Information, ob gedrückt (1) oder losgelassen (0) wurde
-    is_pressed := (PtrUInt(user_data) = 1);
+  is_pressed := (PtrUInt(user_data) = 1);
 
-    with self^ do begin
-      button := gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
-      button_bit := 0;
+  with self^ do begin
+    button := gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
+    button_bit := 0;
 
-      case button of
-        GDK_BUTTON_PRIMARY:   button_bit := rfbButton1Mask;
-        GDK_BUTTON_MIDDLE:    button_bit := rfbButton2Mask;
-        GDK_BUTTON_SECONDARY: button_bit := rfbButton3Mask;
+    case button of
+      GDK_BUTTON_PRIMARY: begin
+        button_bit := rfbButton1Mask;
       end;
-
-      if is_pressed then
-        mouse_mask := mouse_mask or button_bit
-      else
-        mouse_mask := mouse_mask and (not button_bit);
-
-      if vnc_client <> nil then begin
-        SendPointerEvent(vnc_client, Trunc(x), Trunc(y), mouse_mask);
+      GDK_BUTTON_MIDDLE: begin
+        button_bit := rfbButton2Mask;
+      end;
+      GDK_BUTTON_SECONDARY: begin
+        button_bit := rfbButton3Mask;
       end;
     end;
-  end;
 
-  function on_key_pressed(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer): Tgboolean; cdecl;
-  var
-    self:PMyWidget absolute user_data;
-    vnc_key: Tguint32;
-  begin
-    with self^ do begin
+    if is_pressed then begin
+      mouse_mask := mouse_mask or button_bit;
+    end else begin
+      mouse_mask := mouse_mask and (not button_bit);
+    end;
+
+    if vnc_client <> nil then begin
+      SendPointerEvent(vnc_client, Trunc(x), Trunc(y), mouse_mask);
+    end;
+  end;
+end;
+
+function on_key_pressed(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer): Tgboolean; cdecl;
+var
+  self: PMyWidget absolute user_data;
+  vnc_key: Tguint32;
+begin
+  with self^ do begin
     if vnc_client <> nil then begin
       vnc_key := gtk_key_to_vnc(keyval);
       SendKeyEvent(vnc_client, vnc_key, True);
     end;
     Result := True;
-    end;
   end;
+end;
 
-  procedure on_key_released(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer); cdecl;
-  var
-    self:PMyWidget absolute user_data;
-    vnc_key: Tuint32_t;
-  begin
-    with self^ do begin
+procedure on_key_released(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer); cdecl;
+var
+  self: PMyWidget absolute user_data;
+  vnc_key: Tuint32_t;
+begin
+  with self^ do begin
     if vnc_client <> nil then begin
       vnc_key := gtk_key_to_vnc(keyval);
       SendKeyEvent(vnc_client, vnc_key, False);
     end;
-    end;
   end;
+end;
 
 
 
@@ -269,7 +273,7 @@ end;
 procedure class_init(g_class: Tgpointer; class_data: Tgpointer); cdecl;
 begin
   G_OBJECT_CLASS(g_class)^.finalize := @finalize_cp;
-//  GTK_WIDGET_CLASS(g_class)^.snapshot := @snapshoot_cp;
+  //  GTK_WIDGET_CLASS(g_class)^.snapshot := @snapshoot_cp;
   parent_class := g_type_class_peek_parent(g_class);
 end;
 
@@ -282,7 +286,6 @@ begin
 end;
 
 // ===========
-
 
 
 
@@ -302,65 +305,84 @@ begin
   Result := type_id;
 end;
 
-function my_widget_new(aport: Integer): PGTKWidget;
+function check_ip_and_port(ip: Pgchar; port: Tguint16):Boolean;
 var
-  self:PMyWidget absolute Result;
+  client: PGSocketClient;
+  connection: PGSocketConnection;
+  err: PGError=nil;
+begin
+  client := g_socket_client_new;
+  connection := g_socket_client_connect_to_host(      client,     ip,port,      nil,      @err  );
+  if err <> nil then begin
+      g_printerr('Verbindungsfehler: '#10, err^.message);
+      g_clear_error(@err);
+      Result:=False;
+  end else begin
+    Result:=True;
+  end;
+  g_object_unref(connection);
+  g_object_unref(client);
+end;
+
+function my_widget_new(ip: Pgchar; port: Tguint16): PGTKWidget;
+var
+  self: PMyWidget absolute Result;
   motion_ctrl, key_ctrl: PGtkEventController;
   click_gesture: PGtkGesture;
 begin
   Result := g_object_new(my_widget_get_type, nil);
   with self^ do begin
-  port:=aport;;
+    connect_io:=check_ip_and_port(ip,port);
+    if connect_io then WriteLn('connection io!')else WriteLn('connection failure!');
 
-  vnc_client := rfbGetClient(8, 3, 4);
-  rfbClientSetClientData(vnc_client, PChar('user_data'), self);
-  vnc_client^.serverHost := '127.0.0.1';
-  WriteLn(port);
-  vnc_client^.serverPort := port;
-  vnc_client^.MallocFrameBuffer := @update_screen_size;
-  vnc_client^.GotFrameBufferUpdate := @handle_update;
+    vnc_client := rfbGetClient(8, 3, 4);
+    rfbClientSetClientData(vnc_client, pchar('user_data'), self);
+    vnc_client^.serverHost := ip;
+    vnc_client^.serverPort := port;
+    vnc_client^.MallocFrameBuffer := @update_screen_size;
+    vnc_client^.GotFrameBufferUpdate := @handle_update;
 
-  g_printf('Verbinde zu VNC auf %s:%d...'#10, vnc_client^.serverHost, vnc_client^.serverPort);
-  if not rfbInitClient(vnc_client, nil, nil) then begin
-    g_printerr('VNC: Verbindung fehlgeschlagen!'#10);
-    Exit;
-  end;
-  SendFramebufferUpdateRequest(vnc_client, 0, 0, vnc_client^.width, vnc_client^.height, False);
+    g_printf('Verbinde zu VNC auf %s:%d...'#10, vnc_client^.serverHost, vnc_client^.serverPort);
+    if not rfbInitClient(vnc_client, nil, nil) then begin
+      g_printerr('VNC: Verbindung fehlgeschlagen!'#10);
+      Exit;
+    end;
+    SendFramebufferUpdateRequest(vnc_client, 0, 0, vnc_client^.width, vnc_client^.height, False);
 
-  mouse_mask:= 0;
+    mouse_mask := 0;
 
-  gtk_orientable_set_orientation(GTK_ORIENTABLE(self), GTK_ORIENTATION_VERTICAL);
-  gtk_widget_set_hexpand(GTK_WIDGET(self), gTrue);
-  gtk_widget_set_vexpand(GTK_WIDGET(self), gTrue);
+    gtk_orientable_set_orientation(GTK_ORIENTABLE(self), GTK_ORIENTATION_VERTICAL);
+    gtk_widget_set_hexpand(GTK_WIDGET(self), gTrue);
+    gtk_widget_set_vexpand(GTK_WIDGET(self), gTrue);
 
-  drawing_area := gtk_drawing_area_new;
-  gtk_widget_set_hexpand(drawing_area, gTrue);
-  gtk_widget_set_vexpand(drawing_area, gTrue);
-gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(drawing_area), @draw_func, self, nil);
-  gtk_box_append(GTK_BOX(self), drawing_area);
+    drawing_area := gtk_drawing_area_new;
+    gtk_widget_set_hexpand(drawing_area, gTrue);
+    gtk_widget_set_vexpand(drawing_area, gTrue);
+    gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(drawing_area), @draw_func, self, nil);
+    gtk_box_append(GTK_BOX(self), drawing_area);
 
-   gtk_widget_set_focusable(drawing_area, gTrue);
+    gtk_widget_set_focusable(drawing_area, gTrue);
 
 
-  gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(drawing_area), vnc_client^.width);
-  gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(drawing_area), vnc_client^.height);
+    gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(drawing_area), vnc_client^.width);
+    gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(drawing_area), vnc_client^.height);
 
-  motion_ctrl := gtk_event_controller_motion_new;
-  g_signal_connect(motion_ctrl, 'motion', G_CALLBACK(@on_motion), self);
-  gtk_widget_add_controller(drawing_area, motion_ctrl);
+    motion_ctrl := gtk_event_controller_motion_new;
+    g_signal_connect(motion_ctrl, 'motion', G_CALLBACK(@on_motion), self);
+    gtk_widget_add_controller(drawing_area, motion_ctrl);
 
-  click_gesture := gtk_gesture_click_new;
-  gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
-  g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@on_mouse_action), Pointer(1));
-   g_signal_connect(click_gesture, 'released', G_CALLBACK(@on_mouse_action), Pointer(0));
-  gtk_widget_add_controller(drawing_area, GTK_EVENT_CONTROLLER(click_gesture));
+    click_gesture := gtk_gesture_click_new;
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
+    g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@on_mouse_action), Pointer(1));
+    g_signal_connect(click_gesture, 'released', G_CALLBACK(@on_mouse_action), Pointer(0));
+    gtk_widget_add_controller(drawing_area, GTK_EVENT_CONTROLLER(click_gesture));
 
-  key_ctrl := gtk_event_controller_key_new;
-  g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@on_key_pressed), self);
-  g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@on_key_released), self);
-  gtk_widget_add_controller(GTK_WIDGET( self), key_ctrl);
+    key_ctrl := gtk_event_controller_key_new;
+    g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@on_key_pressed), self);
+    g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@on_key_released), self);
+    gtk_widget_add_controller(GTK_WIDGET(self), key_ctrl);
 
-  gtk_widget_add_tick_callback(drawing_area, @vnc_loop_step, self, nil);
+    gtk_widget_add_tick_callback(drawing_area, @vnc_loop_step, self, nil);
   end;
 end;
 

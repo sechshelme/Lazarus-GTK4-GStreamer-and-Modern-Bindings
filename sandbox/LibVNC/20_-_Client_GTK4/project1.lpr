@@ -18,11 +18,7 @@ uses
     main_box := gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
     gtk_window_set_child(GTK_WINDOW(window), main_box);
 
-    widget := my_widget_new(5902);
-    gtk_widget_set_size_request(widget, 600, 400);
-    gtk_box_append(GTK_BOX(main_box), widget);
-
-    widget := my_widget_new(5901);
+    widget := my_widget_new('127.0.0.1', 17600);
     gtk_widget_set_size_request(widget, 600, 400);
     gtk_box_append(GTK_BOX(main_box), widget);
 
