@@ -4,23 +4,22 @@ interface
 
 uses
   fp_vnc,
-  fp_cairo,
+  fp_graphene,
   fp_glib2,
   fp_GTK4;
 
 type
   TMyWidget = record
-    parent_instance: TGtkBox;
+    parent_instance: TGtkWidget;
     vnc_client: PrfbClient;
-    drawing_area: PGtkWidget;
-    cairo_surface: Pcairo_surface_t;
     connect_io: boolean;
+    tick_id: Tguint;
     mouse_mask: integer;
   end;
   PMyWidget = ^TMyWidget;
 
   TMyWidgetClass = record
-    parent_class: TGtkBoxClass;
+    parent_class: TGtkWidgetClass;
   end;
   PMyWidgetClass = ^TMyWidgetClass;
 
@@ -32,10 +31,10 @@ implementation
 // ==== private
 
 var
-  parent_class: PMyWidgetClass = nil;
+  parentclass: PMyWidgetClass = nil;
 
 
-  // === VNC
+  // --- VNC
 
 function update_screen_size(client: PrfbClient): TrfbBool; cdecl;
 var
@@ -50,10 +49,6 @@ begin
 
     g_printf('[VNC] Bildschirmauflösung geändert: %dx%d'#10, width, height);
 
-    if cairo_surface <> nil then begin
-      cairo_surface_destroy(cairo_surface);
-    end;
-
     client^.frameBuffer := g_try_realloc(client^.frameBuffer, width * height * 4);
     client^.format.bitsPerPixel := 32;
     client^.format.depth := 24;
@@ -66,13 +61,10 @@ begin
     client^.format.greenShift := 8;
     client^.format.blueShift := 0;
 
-    cairo_surface := cairo_image_surface_create_for_data(client^.frameBuffer, CAIRO_FORMAT_RGB24, width, height, width * 4);
+    SendFramebufferUpdateRequest(client, 0, 0, width, height, False);
 
-    if drawing_area <> nil then begin
-      gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(drawing_area), width);
-      gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(drawing_area), height);
-      gtk_widget_queue_draw(drawing_area);
-    end;
+    gtk_widget_set_size_request(GTK_WIDGET(self), width, height);
+    gtk_widget_queue_draw(GTK_WIDGET(self));
 
     Result := True;
   end;
@@ -81,42 +73,22 @@ end;
 procedure handle_update(client: PrfbClient; x: longint; y: longint; w: longint; h: longint); cdecl;
 var
   self: PMyWidget;
-  width, height: longint;
 begin
   self := rfbClientGetClientData(client, pchar('user_data'));
-  with self^ do begin
-    //    WriteLn('handle_update()');
-    if drawing_area <> nil then begin
-      gtk_widget_queue_draw(drawing_area);
-    end;
-  end;
+  gtk_widget_queue_draw(GTK_WIDGET(self));
 end;
 
 
 // === GTK
-
-procedure draw_func(drawing_area: PGtkDrawingArea; cr: Pcairo_t; Width: longint; Height: longint; user_data: Tgpointer); cdecl;
-var
-  self: PMyWidget absolute user_data;
-begin
-  with self^ do begin
-    //    WriteLn('draw_func()');
-    if cairo_surface <> nil then begin
-      cairo_set_source_surface(cr, cairo_surface, 0, 0);
-      cairo_paint(cr);
-    end;
-  end;
-end;
 
 function vnc_loop_step(widget: PGtkWidget; frame_clock: PGdkFrameClock; user_data: Tgpointer): Tgboolean; cdecl;
 var
   self: PMyWidget absolute user_data;
   fd: TrfbSocket;
   pfd: TGPollFD;
-  app: PGtkApplication;
 begin
   with self^ do begin
-    if (drawing_area = nil) or (not GTK_IS_WIDGET(drawing_area)) or (vnc_client = nil) or not connect_io then begin
+    if (vnc_client = nil) or not connect_io then begin
       Exit(G_SOURCE_REMOVE_);
     end;
 
@@ -131,13 +103,10 @@ begin
     pfd.revents := 0;
 
     if g_poll(@pfd, 1, 0) > 0 then begin
-      //      WriteLn('vnc_loop_step()');
       if (pfd.revents and (G_IO_IN or G_IO_HUP or G_IO_ERR)) <> 0 then begin
         if not HandleRFBServerMessage(vnc_client) then begin
           g_printf('VNC: Verbindung vom Server getrennt.'#10);
           vnc_client := nil;
-          //          app := GTK_APPLICATION(user_data);
-          //          g_application_quit(G_APPLICATION(app));
           Exit(G_SOURCE_REMOVE_);
         end;
       end;
@@ -219,67 +188,63 @@ begin
   end;
 end;
 
+procedure snapshoot_cp(widget: PGtkWidget; snapshot: PGtkSnapshot); cdecl;
+var
+  self: PMyWidget;
+  r: Tgraphene_rect_t;
+  vnc_w, vnc_h: integer;
+  stride: integer;
+  texture: PGdkTexture;
+  bytes: PGBytes;
+begin
+  self := PMyWidget(widget);
 
-
-
-//procedure snapshoot_cp(widget: PGtkWidget; snapshot: PGtkSnapshot); cdecl;
-//var
-//  r: Tgraphene_rect_t;
-//  w, h: integer;
-//  texture: PGdkTexture;
-//  bytes: PGBytes;
-//  buffer: pbyte;
-//  stride, i: integer;
-//begin
-//  w := gtk_widget_get_width(widget);
-//  h := gtk_widget_get_height(widget);
-//
-//  if (w > 0) and (h > 0) then  begin
-//    stride := w * 4;
-//    buffer := g_malloc(h * stride);
-//    for i := 0 to (h * stride) - 1 do begin
-//      buffer[i] := Random($FF);
-//    end;
-//
-//    bytes := g_bytes_new_take(buffer, h * stride);
-//    texture := gdk_memory_texture_new(w, h, GDK_MEMORY_A8B8G8R8, bytes, stride);
-//
-//    graphene_rect_init(@r, 0, 0, w, h);
-//    gtk_snapshot_append_texture(snapshot, texture, @r);
-//
-//    g_object_unref(texture);
-//    g_bytes_unref(bytes);
-//  end;
-//end;
+  if (self^.vnc_client <> nil) and (self^.vnc_client^.frameBuffer <> nil) then begin
+    vnc_w := self^.vnc_client^.width;
+    vnc_h := self^.vnc_client^.height;
+    if (vnc_w > 0) and (vnc_h > 0) then begin
+      stride := vnc_w * 4;
+      bytes := g_bytes_new_static(self^.vnc_client^.frameBuffer, vnc_h * stride);
+      texture := gdk_memory_texture_new(vnc_w, vnc_h, GDK_MEMORY_B8G8R8X8, bytes, stride);
+      graphene_rect_init(@r, 0, 0, vnc_w, vnc_h);
+      gtk_snapshot_append_texture(snapshot, texture, @r);
+      g_object_unref(texture);
+      g_bytes_unref(bytes);
+    end;
+  end;
+end;
 
 procedure finalize_cp(obj: PGObject); cdecl;
 var
   self: PMyWidget absolute obj;
 begin
   with self^ do begin
+    connect_io := False;
+
+    if tick_id <> 0 then begin
+      gtk_widget_remove_tick_callback(GTK_WIDGET(self), tick_id);
+      tick_id := 0;
+    end;
+
+    if vnc_client <> nil then begin
+      g_free(vnc_client^.frameBuffer);
+//           rfbClientCleanup(vnc_client);
+      vnc_client := nil;
+    end;
   end;
-  G_OBJECT_CLASS(parent_class)^.finalize(obj);
+  G_OBJECT_CLASS(parentclass)^.finalize(obj);
 end;
 
 procedure class_init(g_class: Tgpointer; class_data: Tgpointer); cdecl;
 begin
   G_OBJECT_CLASS(g_class)^.finalize := @finalize_cp;
-  //  GTK_WIDGET_CLASS(g_class)^.snapshot := @snapshoot_cp;
-  parent_class := g_type_class_peek_parent(g_class);
+  GTK_WIDGET_CLASS(g_class)^.snapshot := @snapshoot_cp;
+  parentclass := g_type_class_peek_parent(g_class);
 end;
 
 procedure init_cp(instance: PGTypeInstance; g_class: Tgpointer); cdecl;
-var
-  self: PMyWidget absolute instance;
 begin
-  with self^ do begin
-  end;
 end;
-
-// ===========
-
-
-
 
 // ==== public
 
@@ -290,7 +255,7 @@ var
   id: TGType;
 begin
   if g_once_init_enter(@type_id) then begin
-    id := g_type_register_static_simple(GTK_TYPE_BOX, 'VNCWidget', SizeOf(TMyWidgetClass), @class_init, SizeOf(TMyWidget), @init_cp, 0);
+    id := g_type_register_static_simple(GTK_TYPE_WIDGET, 'VNCWidget', SizeOf(TMyWidgetClass), @class_init, SizeOf(TMyWidget), @init_cp, 0);
     g_once_init_leave(@type_id, id);
   end;
   Result := type_id;
@@ -339,43 +304,35 @@ begin
       end;
       SendFramebufferUpdateRequest(vnc_client, 0, 0, vnc_client^.width, vnc_client^.height, False);
 
-    mouse_mask := 0;
+      mouse_mask := 0;
 
-    gtk_orientable_set_orientation(GTK_ORIENTABLE(self), GTK_ORIENTATION_VERTICAL);
-    gtk_widget_set_hexpand(GTK_WIDGET(self), gTrue);
-    gtk_widget_set_vexpand(GTK_WIDGET(self), gTrue);
+      gtk_widget_set_hexpand(GTK_WIDGET(self), gTrue);
+      gtk_widget_set_vexpand(GTK_WIDGET(self), gTrue);
 
-    drawing_area := gtk_drawing_area_new;
-    gtk_widget_set_hexpand(drawing_area, gTrue);
-    gtk_widget_set_vexpand(drawing_area, gTrue);
-    gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(drawing_area), @draw_func, self, nil);
-    gtk_box_append(GTK_BOX(self), drawing_area);
+      gtk_widget_set_focusable(GTK_WIDGET(self), gTrue);
+      gtk_widget_set_focus_on_click(GTK_WIDGET(self), gTrue);
 
-    gtk_widget_set_focusable(drawing_area, gTrue);
+      gtk_widget_set_size_request(GTK_WIDGET(self), vnc_client^.width, vnc_client^.height);
 
-    gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(drawing_area), vnc_client^.width);
-    gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(drawing_area), vnc_client^.height);
+      motion_ctrl := gtk_event_controller_motion_new;
+      g_signal_connect(motion_ctrl, 'motion', G_CALLBACK(@on_motion), self);
+      gtk_widget_add_controller(GTK_WIDGET(self), motion_ctrl);
 
-    motion_ctrl := gtk_event_controller_motion_new;
-    g_signal_connect(motion_ctrl, 'motion', G_CALLBACK(@on_motion), self);
-    gtk_widget_add_controller(drawing_area, motion_ctrl);
+      click_gesture := gtk_gesture_click_new;
+      gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
+      g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@on_mouse_action), Pointer(1));
+      g_signal_connect(click_gesture, 'released', G_CALLBACK(@on_mouse_action), Pointer(0));
+      gtk_widget_add_controller(GTK_WIDGET(self), GTK_EVENT_CONTROLLER(click_gesture));
 
-    click_gesture := gtk_gesture_click_new;
-    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
-    g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@on_mouse_action), Pointer(1));
-    g_signal_connect(click_gesture, 'released', G_CALLBACK(@on_mouse_action), Pointer(0));
-    gtk_widget_add_controller(drawing_area, GTK_EVENT_CONTROLLER(click_gesture));
+      key_ctrl := gtk_event_controller_key_new;
+      g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@on_key_pressed), self);
+      g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@on_key_released), self);
+      gtk_widget_add_controller(GTK_WIDGET(self), key_ctrl);
 
-    key_ctrl := gtk_event_controller_key_new;
-    g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@on_key_pressed), self);
-    g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@on_key_released), self);
-    gtk_widget_add_controller(GTK_WIDGET(self), key_ctrl);
-
-    gtk_widget_add_tick_callback(drawing_area, @vnc_loop_step, self, nil);
+      tick_id := gtk_widget_add_tick_callback(GTK_WIDGET(self), @vnc_loop_step, self, nil);
     end else begin
       WriteLn('connection failure!');
     end;
-
   end;
 end;
 
