@@ -560,7 +560,7 @@ function rfbGetExtensionClientData(cl: TrfbClientPtr; extension: PrfbProtocolExt
 function rfbCheckPasswordByList(cl: TrfbClientPtr; response: pchar; len: longint): TrfbBool; cdecl; external libvncserver;
 function rfbGetScreen(argc: Plongint; argv: PPchar; width: longint; height: longint; bitsPerSample: longint;
   samplesPerPixel: longint; bytesPerPixel: longint): TrfbScreenInfoPtr; cdecl; external libvncserver;
-procedure rfbInitServer(rfbScreen: TrfbScreenInfoPtr); cdecl; external libvncserver;
+procedure rfbInitServer(rfbScreen: TrfbScreenInfoPtr); cdecl; external libvncserver name 'rfbInitServerWithPthreadsAndZRLE';
 procedure rfbShutdownServer(rfbScreen: TrfbScreenInfoPtr; disconnectClients: TrfbBool); cdecl; external libvncserver;
 procedure rfbNewFramebuffer(rfbScreen: TrfbScreenInfoPtr; framebuffer: pchar; width: longint; height: longint; bitsPerSample: longint;
   samplesPerPixel: longint; bytesPerPixel: longint); cdecl; external libvncserver;
