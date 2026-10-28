@@ -29,14 +29,15 @@ const
   begin
     dom_cfg := gvir_config_domain_new;
     gvir_config_domain_set_name(dom_cfg, RetroPC);
-    gvir_config_domain_set_virt_type(dom_cfg, GVIR_CONFIG_DOMAIN_VIRT_QEMU);
+    gvir_config_domain_set_virt_type(dom_cfg, GVIR_CONFIG_DOMAIN_VIRT_KVM);
     gvir_config_domain_set_memory(dom_cfg, 8388608);
     gvir_config_domain_set_vcpus(dom_cfg, 8);
 
     os_cfg := gvir_config_domain_os_new;
     gvir_config_domain_os_set_os_type(os_cfg, GVIR_CONFIG_DOMAIN_OS_TYPE_HVM);
     gvir_config_domain_os_set_arch(os_cfg, 'x86_64');
-    gvir_config_domain_os_set_machine(os_cfg, 'q35');
+//    gvir_config_domain_os_set_machine(os_cfg, 'q35');
+    gvir_config_domain_os_set_machine(os_cfg, 'pc');
 
     boot_devices := g_list_append(boot_devices, Tgpointer(GVIR_CONFIG_DOMAIN_OS_BOOT_DEVICE_HD));
     boot_devices := g_list_append(boot_devices, Tgpointer(GVIR_CONFIG_DOMAIN_OS_BOOT_DEVICE_CDROM));
@@ -57,7 +58,6 @@ const
     gvir_config_domain_disk_set_target_dev(disk_cfg, 'sdb');
     gvir_config_domain_add_device(dom_cfg, GVIR_CONFIG_DOMAIN_DEVICE(disk_cfg));
     g_object_unref(disk_cfg);
-
 
     iface_cfg := gvir_config_domain_interface_user_new;
     gvir_config_domain_interface_set_model(GVIR_CONFIG_DOMAIN_INTERFACE(iface_cfg), 'virtio');
