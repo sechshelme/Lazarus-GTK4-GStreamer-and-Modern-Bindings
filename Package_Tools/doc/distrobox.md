@@ -13,8 +13,7 @@
 `distrobox create -a "--platform=linux/riscv64" -i docker.io/library/ubuntu:25.04 -n ubuntu-riscv`
 
 
-
-Evtl, nur für arm
+Evtl. nur für arm
 `sudo apt install qemu-system qemu-user-static binfmt-support`
 
 Distroboxen auflisten:
@@ -28,18 +27,14 @@ Distrobox starten:_
 `podman logs -f [images]`
 
 
-
-sudo apt install libadwaita-1-dev 
-
 ## Version Abfrage
 pkg-config --modversion glib-2.0
 
 
-
 # Distrobox Tips
 
-## {TAB} für Packetauswahl
-```bash
+## [TAB] für Packetauswahl
+```sh
 sudo apt install bash-completion
 sudo rm /etc/apt/apt.conf.d/docker-clean
 sudo apt update
@@ -80,7 +75,7 @@ In Browser folgenden Link eingeben [https://localhost:9090]
 
 # distroBox mit Nemo öffnen
 
-in Folgenden Ordner ~/.local/share/nemo/actions eine Datei mit *.nemo_action erstellen.
+in Folgenden Ordner `~/.local/share/nemo/actions` eine Datei mit `*.nemo_action` erstellen.
 
 ```ini
 [Nemo Action]

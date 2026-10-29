@@ -1,5 +1,5 @@
 
-
+```sh
 docker run -it --rm --name macos \
 -p 8006:8806 \
 --device=/dev/kvm \
@@ -8,4 +8,5 @@ docker run -it --rm --name macos \
 -v "${PWD:-.}/macos:/storage" \
 --stop-timeout 120 \
 dockurr/macos
+```
 

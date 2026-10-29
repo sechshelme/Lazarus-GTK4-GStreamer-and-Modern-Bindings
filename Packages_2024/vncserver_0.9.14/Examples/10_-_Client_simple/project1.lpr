@@ -41,14 +41,13 @@ uses
     WriteLn('handle_update x: ', x, '  y: ', y, '  w: ', w, '  h: ', h);
   end;
 
-
   procedure main;
   var
     vnc_client: PrfbClient;
   begin
     vnc_client := rfbGetClient(8, 3, 4);
     vnc_client^.serverHost := '127.0.0.1';
-    vnc_client^.serverPort := 5900;
+    vnc_client^.serverPort := 5901;
     vnc_client^.MallocFrameBuffer := @update_screen_size;
     vnc_client^.GotFrameBufferUpdate := @handle_update;
 

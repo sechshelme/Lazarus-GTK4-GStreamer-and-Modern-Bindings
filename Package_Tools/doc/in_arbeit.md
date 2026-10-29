@@ -562,7 +562,7 @@ libbgfx
 
 
 
-
+ libfdt-dev   // Geräte Tabelle
 
 
 
@@ -709,10 +709,41 @@ libgccjit
 
 sudo apt-get install libdispatch-dev
 
+libmd4c-dev libmd4c-html0-dev
+
+libslirp
+librtmidi6     // rtmidi_c.h
+
+  libvirt-dbus
+libexodus
+libnova
+
+• libx264
+• libmatroska
+• libmpeg2
+• libsoundio
+• libspatialaudio
+• libmpcdec
+• libsrtp
+• libdvbpsi
+• liblastfm
+• libdvdnav
+• libdiscid
 
 
+libtcc   // nut statisch !!!
+
+libxtst6
+libei
+
+libmks // GTK4 und QEMU / brandneu, nicht bei ubuntu
+libdex
+iburing
 
 
+libguac // vnc client
+libguac19t64               libguac-client-ssh0t64     libguac-client-vnc0t64     
+libguac-client-rdp0t64     libguac-client-telnet0t64  libguac-dev   
 
 
 https://blends.debian.org/med/
@@ -727,6 +758,21 @@ https://blends.debian.org/blends/
 
 
 https://github.com/lcallarec/live-chart
+
+# ==== 86Box installieren.
+
+Runterladen: https://github.com/86Box/86Box
+
+Roms: https://github.com/86Box/roms
+Die Roms müsssen hier hin 
+
+~/.local/share/86Box/roms$ ls
+floppy  hdd  LICENSE  machines  memcard  network  printer  README.md  rtc  scsi  sound  video
+
+oder so starten 
+`86Box -R /home/tux/Schreibtisch/von_Git/86Box/roms`
+
+
 
 
 
@@ -836,6 +882,10 @@ done
 apt-cache rdepends libgtk-4-1 | grep lib
 apt-cache rdepends libgmp10 | grep lib
 apt-cache rdepends libgmp-dev | grep lib
+apt-cache rdepends libvirt-dev | grep lib
+apt-cache rdepends libvirt-glib-1.0-0
+
+
 
 pkcon required-by libgmp-dev
 
@@ -928,6 +978,14 @@ sudo apt install pocl-opencl-icd
 
 # 2. Treiber für die Grafikchips (Intel HD 4000 / AMD Radeon)
 sudo apt install mesa-opencl-icd
+
+# Alternative Desktops
+
+
+sudo apt install hyprland   # Erst ab ubuntu 26.4
+
+
+
 
 
 

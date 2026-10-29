@@ -290,7 +290,6 @@ begin
   with self^ do begin
     connect_io := check_ip_and_port(ip, port);
     if connect_io then begin
-      WriteLn('connection io!');
       vnc_client := rfbGetClient(8, 3, 4);
       rfbClientSetClientData(vnc_client, pchar('user_data'), self);
       vnc_client^.serverHost := ip;
@@ -331,7 +330,7 @@ begin
 
       tick_id := gtk_widget_add_tick_callback(GTK_WIDGET(self), @vnc_loop_step, self, nil);
     end else begin
-      WriteLn('connection failure!');
+      g_printerr('connection failure!'#10);
     end;
   end;
 end;
