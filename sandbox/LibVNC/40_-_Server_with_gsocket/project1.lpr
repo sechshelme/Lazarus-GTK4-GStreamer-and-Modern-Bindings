@@ -1,7 +1,8 @@
 program project1;
 
 uses
-  fp_glib2, sysutils;
+  fp_glib2,
+  SysUtils;
 
 const
   WIDTH = 640;
@@ -21,7 +22,7 @@ type
   end;
   PClientState = ^TClientState;
 
-  function send_all(stream: PGOutputStream; buffer: Pointer; count: Tgsize): Boolean;
+  function send_all(stream: PGOutputStream; buffer: Pointer; count: Tgsize): boolean;
   var
     err: PGError = nil;
   begin
@@ -71,12 +72,15 @@ type
     end;
   end;
 
-  // Freigabe-Prozedur, um Memory Leaks zu verhindern
   procedure free_client_state(cs: PClientState);
   begin
-    if cs = nil then Exit;
+    if cs = nil then begin
+      Exit;
+    end;
     g_print('Verbindung geschlossen. Räume Speicher auf...'#10);
-    if cs^.framebuffer <> nil then g_free(cs^.framebuffer);
+    if cs^.framebuffer <> nil then begin
+      g_free(cs^.framebuffer);
+    end;
     if cs^.connection <> nil then begin
       g_io_stream_close(G_IO_STREAM(cs^.connection), nil, nil);
       g_object_unref(cs^.connection);
@@ -90,7 +94,7 @@ type
     update_header: array[0..3] of Tguint8;
     x_pos, y_pos, w_val, h_val: Tguint16;
     enc_val: Tgint32;
-    success: Boolean;
+    success: boolean;
   begin
     cs := PClientState(user_data);
     render_frame(cs);
@@ -110,11 +114,11 @@ type
       enc_val := gint32_to_be(0); // Raw Encoding
 
       success := send_all(cs^.g_out, @x_pos, 2) and
-                 send_all(cs^.g_out, @y_pos, 2) and
-                 send_all(cs^.g_out, @w_val, 2) and
-                 send_all(cs^.g_out, @h_val, 2) and
-                 send_all(cs^.g_out, @enc_val, 4) and
-                 send_all(cs^.g_out, cs^.framebuffer, WIDTH * HEIGHT * BPP);
+        send_all(cs^.g_out, @y_pos, 2) and
+        send_all(cs^.g_out, @w_val, 2) and
+        send_all(cs^.g_out, @h_val, 2) and
+        send_all(cs^.g_out, @enc_val, 4) and
+        send_all(cs^.g_out, cs^.framebuffer, WIDTH * HEIGHT * BPP);
     end;
 
     if not success then begin
@@ -148,18 +152,24 @@ type
     g_in := g_io_stream_get_input_stream(G_IO_STREAM(connection));
     g_out := g_io_stream_get_output_stream(G_IO_STREAM(connection));
 
-    if not send_all(g_out, PChar('RFB 003.008'#10), 12) then Exit(True);
+    if not send_all(g_out, pchar('RFB 003.008'#10), 12) then begin
+      Exit(True);
+    end;
     g_input_stream_read_all(g_in, @buffer, 12, @bytes_read, nil, @err);
 
     sec_types[0] := 1;
     sec_types[1] := 1;
-    if not send_all(g_out, @sec_types, 2) then Exit(True);
+    if not send_all(g_out, @sec_types, 2) then begin
+      Exit(True);
+    end;
 
     chosen_sec := 0;
     g_input_stream_read_all(g_in, @chosen_sec, 1, @bytes_read, nil, @err);
 
     sec_result := 0;
-    if not send_all(g_out, @sec_result, 4) then Exit(True);
+    if not send_all(g_out, @sec_result, 4) then begin
+      Exit(True);
+    end;
 
     shared_flag := 0;
     g_input_stream_read_all(g_in, @shared_flag, 1, @bytes_read, nil, @err);
@@ -178,17 +188,27 @@ type
     pix_fmt[11] := 8;
     pix_fmt[12] := 0;
 
-    if not send_all(g_out, @s_width, 2) then Exit(True);
-    if not send_all(g_out, @s_height, 2) then Exit(True);
-    if not send_all(g_out, @pix_fmt, 16) then Exit(True);
+    if not send_all(g_out, @s_width, 2) then begin
+      Exit(True);
+    end;
+    if not send_all(g_out, @s_height, 2) then begin
+      Exit(True);
+    end;
+    if not send_all(g_out, @pix_fmt, 16) then begin
+      Exit(True);
+    end;
 
     name_len := guint32_to_be(14);
-    if not send_all(g_out, @name_len, 4) then Exit(True);
-    if not send_all(g_out, PChar('GIO VNC Server'), 14) then Exit(True);
+    if not send_all(g_out, @name_len, 4) then begin
+      Exit(True);
+    end;
+    if not send_all(g_out, pchar('GIO VNC Server'), 14) then begin
+      Exit(True);
+    end;
 
     g_print('Handshake erfolgreich. Starte Render-Loop...'#10);
 
-    cs := g_malloc(SizeOf( TClientState));
+    cs := g_malloc(SizeOf(TClientState));
     cs^.connection := PGSocketConnection(g_object_ref(connection));
     cs^.g_in := g_in;
     cs^.g_out := g_out;
@@ -232,4 +252,3 @@ type
 begin
   main;
 end.
-
