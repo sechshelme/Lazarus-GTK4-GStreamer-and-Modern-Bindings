@@ -1,7 +1,6 @@
 program project1;
 
 uses
-  Math,
   fp_glib2,
   fp_cairo,
   fp_GTK4,

@@ -9,36 +9,36 @@ uses
   fp_GTK4;
 
 type
-  TMyWidget = record
+  TVNCWidget = record
     parent_instance: TGtkWidget;
     vnc_client: PrfbClient;
     connect_io: boolean;
     tick_id: Tguint;
     mouse_mask: integer;
   end;
-  PMyWidget = ^TMyWidget;
+  PVNCWidget = ^TVNCWidget;
 
-  TMyWidgetClass = record
+  TVNCWidgetClass = record
     parent_class: TGtkWidgetClass;
   end;
-  PMyWidgetClass = ^TMyWidgetClass;
+  PVNCWidgetClass = ^TVNCWidgetClass;
 
-function my_widget_get_type: TGType;
-function my_widget_new(ip: Pgchar; port: Tguint16): PGTKWidget;
+function vnc_widget_get_type: TGType;
+function vnc_widget_new(ip: Pgchar; port: Tguint16): PGTKWidget;
 
 implementation
 
 // ==== private
 
 var
-  parentclass: PMyWidgetClass = nil;
+  parentclass: PVNCWidgetClass = nil;
 
 
   // --- VNC
 
-function update_screen_size(client: PrfbClient): TrfbBool; cdecl;
+function update_screen_size_cp(client: PrfbClient): TrfbBool; cdecl;
 var
-  self: PMyWidget;
+  self: PVNCWidget;
   width, height: longint;
 begin
   self := rfbClientGetClientData(client, pchar('user_data'));
@@ -70,9 +70,9 @@ begin
   end;
 end;
 
-procedure handle_update(client: PrfbClient; x: longint; y: longint; w: longint; h: longint); cdecl;
+procedure handle_update_cp(client: PrfbClient; x: longint; y: longint; w: longint; h: longint); cdecl;
 var
-  self: PMyWidget;
+  self: PVNCWidget;
 begin
   self := rfbClientGetClientData(client, pchar('user_data'));
   gtk_widget_queue_draw(GTK_WIDGET(self));
@@ -83,7 +83,7 @@ end;
 
 function vnc_loop_step(widget: PGtkWidget; frame_clock: PGdkFrameClock; user_data: Tgpointer): Tgboolean; cdecl;
 var
-  self: PMyWidget absolute user_data;
+  self: PVNCWidget absolute user_data;
   fd: TrfbSocket;
   pfd: TGPollFD;
 begin
@@ -117,7 +117,7 @@ end;
 
 procedure on_motion(controller: PGtkEventControllerMotion; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
 var
-  self: PMyWidget absolute user_data;
+  self: PVNCWidget absolute user_data;
 begin
   with self^ do begin
     if vnc_client <> nil then begin
@@ -126,14 +126,14 @@ begin
   end;
 end;
 
-procedure on_mouse_action(gesture: PGtkGestureClick; n_press: tgint; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
+procedure mouse_action_cp(gesture: PGtkGestureClick; n_press: tgint; x: Tgdouble; y: Tgdouble; user_data: Tgpointer); cdecl;
 var
-  self: PMyWidget;
+  self: PVNCWidget;
   button: Tguint;
   button_bit: integer;
   is_pressed: boolean;
 begin
-  self := PMyWidget(gtk_widget_get_ancestor(gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture)), my_widget_get_type));
+  self := PVNCWidget(gtk_widget_get_ancestor(gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture)), vnc_widget_get_type));
 
   is_pressed := (PtrUInt(user_data) = 1);
 
@@ -165,9 +165,9 @@ begin
   end;
 end;
 
-function on_key_pressed(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer): Tgboolean; cdecl;
+function key_pressed_cp(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer): Tgboolean; cdecl;
 var
-  self: PMyWidget absolute user_data;
+  self: PVNCWidget absolute user_data;
 begin
   with self^ do begin
     if vnc_client <> nil then begin
@@ -177,9 +177,9 @@ begin
   end;
 end;
 
-procedure on_key_released(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer); cdecl;
+procedure key_released_cp(controller: PGtkEventControllerKey; keyval: Tguint; keycode: Tguint; state: TGdkModifierType; user_data: Tgpointer); cdecl;
 var
-  self: PMyWidget absolute user_data;
+  self: PVNCWidget absolute user_data;
 begin
   with self^ do begin
     if vnc_client <> nil then begin
@@ -190,14 +190,14 @@ end;
 
 procedure snapshoot_cp(widget: PGtkWidget; snapshot: PGtkSnapshot); cdecl;
 var
-  self: PMyWidget;
+  self: PVNCWidget;
   r: Tgraphene_rect_t;
   vnc_w, vnc_h: integer;
   stride: integer;
   texture: PGdkTexture;
   bytes: PGBytes;
 begin
-  self := PMyWidget(widget);
+  self := PVNCWidget(widget);
 
   if (self^.vnc_client <> nil) and (self^.vnc_client^.frameBuffer <> nil) then begin
     vnc_w := self^.vnc_client^.width;
@@ -216,7 +216,7 @@ end;
 
 procedure finalize_cp(obj: PGObject); cdecl;
 var
-  self: PMyWidget absolute obj;
+  self: PVNCWidget absolute obj;
 begin
   with self^ do begin
     connect_io := False;
@@ -235,7 +235,7 @@ begin
   G_OBJECT_CLASS(parentclass)^.finalize(obj);
 end;
 
-procedure class_init(g_class: Tgpointer; class_data: Tgpointer); cdecl;
+procedure class_init_cp(g_class: Tgpointer; class_data: Tgpointer); cdecl;
 begin
   G_OBJECT_CLASS(g_class)^.finalize := @finalize_cp;
   GTK_WIDGET_CLASS(g_class)^.snapshot := @snapshoot_cp;
@@ -244,21 +244,6 @@ end;
 
 procedure init_cp(instance: PGTypeInstance; g_class: Tgpointer); cdecl;
 begin
-end;
-
-// ==== public
-
-function my_widget_get_type: TGType;
-const
-  type_id: TGType = 0;
-var
-  id: TGType;
-begin
-  if g_once_init_enter(@type_id) then begin
-    id := g_type_register_static_simple(GTK_TYPE_WIDGET, 'VNCWidget', SizeOf(TMyWidgetClass), @class_init, SizeOf(TMyWidget), @init_cp, 0);
-    g_once_init_leave(@type_id, id);
-  end;
-  Result := type_id;
 end;
 
 function check_ip_and_port(ip: Pgchar; port: Tguint16): boolean;
@@ -280,13 +265,28 @@ begin
   g_object_unref(client);
 end;
 
-function my_widget_new(ip: Pgchar; port: Tguint16): PGTKWidget;
+// ==== public
+
+function vnc_widget_get_type: TGType;
+const
+  type_id: TGType = 0;
 var
-  self: PMyWidget absolute Result;
+  id: TGType;
+begin
+  if g_once_init_enter(@type_id) then begin
+    id := g_type_register_static_simple(GTK_TYPE_WIDGET, 'VNCWidget', SizeOf(TVNCWidgetClass), @class_init_cp, SizeOf(TVNCWidget), @init_cp, 0);
+    g_once_init_leave(@type_id, id);
+  end;
+  Result := type_id;
+end;
+
+function vnc_widget_new(ip: Pgchar; port: Tguint16): PGTKWidget;
+var
+  self: PVNCWidget absolute Result;
   motion_ctrl, key_ctrl: PGtkEventController;
   click_gesture: PGtkGesture;
 begin
-  Result := g_object_new(my_widget_get_type, nil);
+  Result := g_object_new(vnc_widget_get_type, nil);
   with self^ do begin
     connect_io := check_ip_and_port(ip, port);
     if connect_io then begin
@@ -294,8 +294,8 @@ begin
       rfbClientSetClientData(vnc_client, pchar('user_data'), self);
       vnc_client^.serverHost := ip;
       vnc_client^.serverPort := port;
-      vnc_client^.MallocFrameBuffer := @update_screen_size;
-      vnc_client^.GotFrameBufferUpdate := @handle_update;
+      vnc_client^.MallocFrameBuffer := @update_screen_size_cp;
+      vnc_client^.GotFrameBufferUpdate := @handle_update_cp;
       g_printf('Verbinde zu VNC auf %s:%d...'#10, vnc_client^.serverHost, vnc_client^.serverPort);
       if not rfbInitClient(vnc_client, nil, nil) then begin
         g_printerr('VNC: Verbindung fehlgeschlagen!'#10);
@@ -319,13 +319,13 @@ begin
 
       click_gesture := gtk_gesture_click_new;
       gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click_gesture), 0);
-      g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@on_mouse_action), Pointer(1));
-      g_signal_connect(click_gesture, 'released', G_CALLBACK(@on_mouse_action), Pointer(0));
+      g_signal_connect(click_gesture, 'pressed', G_CALLBACK(@mouse_action_cp), Pointer(1));
+      g_signal_connect(click_gesture, 'released', G_CALLBACK(@mouse_action_cp), Pointer(0));
       gtk_widget_add_controller(GTK_WIDGET(self), GTK_EVENT_CONTROLLER(click_gesture));
 
       key_ctrl := gtk_event_controller_key_new;
-      g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@on_key_pressed), self);
-      g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@on_key_released), self);
+      g_signal_connect(key_ctrl, 'key-pressed', G_CALLBACK(@key_pressed_cp), self);
+      g_signal_connect(key_ctrl, 'key-released', G_CALLBACK(@key_released_cp), self);
       gtk_widget_add_controller(GTK_WIDGET(self), key_ctrl);
 
       tick_id := gtk_widget_add_tick_callback(GTK_WIDGET(self), @vnc_loop_step, self, nil);
