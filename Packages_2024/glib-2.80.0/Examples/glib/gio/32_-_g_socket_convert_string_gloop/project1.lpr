@@ -7,7 +7,7 @@ uses
 nc localhost 8080
 *)
 
-  function OnSocketReadable(socket: PGSocket; condition: TGIOCondition; user_data: Tgpointer): Tgboolean; cdecl;
+  function socket_readable_cp(socket: PGSocket; condition: TGIOCondition; user_data: Tgpointer): Tgboolean; cdecl;
   var
     err: PGError = nil;
     buffer: array[0..1023] of char;
@@ -48,7 +48,7 @@ nc localhost 8080
     Result := True;
   end;
 
-  function OnIncomingConnection(service: PGSocketService; connection: PGSocketConnection; source_object: PGObject; user_data: Tgpointer): Tgboolean; cdecl;
+  function incoming_connection_cp(service: PGSocketService; connection: PGSocketConnection; source_object: PGObject; user_data: Tgpointer): Tgboolean; cdecl;
   var
     client_socket: PGSocket;
     source: PGSource;
@@ -60,7 +60,7 @@ nc localhost 8080
 
     source := g_socket_create_source(client_socket, G_IO_IN, nil);
 
-    g_source_set_callback(source, TGSourceFunc(@OnSocketReadable), Pointer(1234), nil);
+    g_source_set_callback(source, TGSourceFunc(@socket_readable_cp), Pointer(1234), nil);
 
     g_source_attach(source, nil);
     g_source_unref(source);
@@ -68,7 +68,7 @@ nc localhost 8080
     Result := True;
   end;
 
-  procedure run_server;
+  procedure main;
   var
     err: PGError = nil;
     service: PGSocketService;
@@ -83,10 +83,10 @@ nc localhost 8080
       Exit;
     end;
 
-    g_signal_connect(service, 'incoming', G_CALLBACK(@OnIncomingConnection), nil);
+    g_signal_connect(service, 'incoming', G_CALLBACK(@incoming_connection_cp), nil);
 
     g_socket_service_start(service);
-    g_print('Server läuft sauber auf Port 8080 via GMainLoop...'#10);
+    g_printf('Server läuft sauber auf Port 8080 via GMainLoop...'#10);
 
     loop := g_main_loop_new(nil, False);
     g_main_loop_run(loop);
@@ -96,5 +96,5 @@ nc localhost 8080
   end;
 
 begin
-  run_server;
+  main;
 end.
