@@ -56,6 +56,9 @@ implementation
 var
   parentclass: PVNCWidgetClass = nil;
 
+  ///    g_printf('num_rects: %d  x: %d  y: %d  w: %d  h: %d'#10, num_rects, rect_x, rect_y, rect_w, rect_h);
+
+
 procedure process_rfb_data(self: PVNCWidget; bytes_read: Tgssize);
 var
   version_str: string;
@@ -159,9 +162,6 @@ begin
         g_output_stream_write(self^.output_stream, @self^.read_buffer_dyn[0], 10, nil, nil);
       end;
     end;
-
-    ///    g_printf('num_rects: %d  x: %d  y: %d  w: %d  h: %d'#10, num_rects, rect_x, rect_y, rect_w, rect_h);
-
 
     vncStateNormal: begin
       if bytes_read >= 4 then begin
