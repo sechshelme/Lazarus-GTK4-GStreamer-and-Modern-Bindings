@@ -5,18 +5,26 @@ uses
 
 (*
 nc localhost 8080
+
+Für einen gemütlichen Test:
+pv -L 10 oglglad_gl.pas | nc localhost 8080
 *)
 
-  function socket_readable_cp(socket: PGSocket; condition: TGIOCondition; user_data: Tgpointer): Tgboolean; cdecl;
-  var
-    err: PGError = nil;
-    buffer: array[0..1023] of char;
-    bytes_received: Tgssize;
-    response: Pgchar;
-    response_len: SizeInt;
-  begin
-    WriteLn(PtrUInt(user_data));
-    bytes_received := g_socket_receive(socket, buffer, SizeOf(buffer) - 1, nil, @err);
+function socket_readable_cp(socket: PGSocket; condition: TGIOCondition; user_data: Tgpointer): Tgboolean; cdecl;
+var
+  err: PGError = nil;
+  bytes_received: Tgssize;
+  response: Pgchar;
+  response_len: SizeInt;
+  buffer: array[0..1023] of Char;
+
+const
+  counter:Integer=0;
+begin
+  WriteLn('counter: ', counter);
+  inc(counter);
+
+    bytes_received := g_socket_receive(socket, buffer, Length(buffer) - 1, nil, @err);
 
     if bytes_received <= 0 then begin
       if bytes_received = 0 then begin
@@ -30,8 +38,10 @@ nc localhost 8080
       Exit(False);
     end;
 
+    // String null-terminieren
     buffer[bytes_received] := #0;
     g_strchomp(buffer);
+
     if g_strcmp0(buffer, 'quit') = 0 then begin
       g_print('Beende Verbindung...'#10);
       g_socket_send(socket, 'Verbindung getrennt'#10, 20, nil, nil);
@@ -45,8 +55,8 @@ nc localhost 8080
     g_socket_send(socket, response, response_len, nil, nil);
     g_free(response);
 
-    Result := True;
-  end;
+  Result := True;
+end;
 
   function incoming_connection_cp(service: PGSocketService; connection: PGSocketConnection; source_object: PGObject; user_data: Tgpointer): Tgboolean; cdecl;
   var
@@ -59,9 +69,7 @@ nc localhost 8080
     g_object_ref(client_socket);
 
     source := g_socket_create_source(client_socket, G_IO_IN, nil);
-
     g_source_set_callback(source, TGSourceFunc(@socket_readable_cp), Pointer(1234), nil);
-
     g_source_attach(source, nil);
     g_source_unref(source);
 
