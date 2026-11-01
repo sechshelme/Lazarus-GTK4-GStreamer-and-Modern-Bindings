@@ -7,7 +7,7 @@ uses
 
 const
   {$IFDEF Linux}
-  libgmime3 = 'libgmime-3.0';
+  libgmime3 = 'gmime-3.0';
   {$ENDIF}
 
   {$IFDEF Windows}
