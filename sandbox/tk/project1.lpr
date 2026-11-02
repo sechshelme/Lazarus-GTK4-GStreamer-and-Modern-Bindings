@@ -3,7 +3,6 @@ program project1;
 uses
   fp_tcl;
 
-
   function printSelection(clientData: TClientData; interp: PTcl_Interp; argc: longint; argv: PPchar): longint; cdecl;
   var
     selectedIndex, selectedItem: pchar;

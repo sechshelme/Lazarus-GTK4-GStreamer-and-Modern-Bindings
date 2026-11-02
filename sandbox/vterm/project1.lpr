@@ -17,8 +17,6 @@ type
     tpos: TVTermPos;
     cell: TVTermScreenCell;
   begin
-    //    Exit(1);
-
     for y := rect.start_row to rect.end_row - 1 do begin
       for x := rect.start_col to rect.end_col - 1 do begin
         tpos.col := x;
@@ -57,32 +55,34 @@ type
   end;
 
 
-function CreateColorGrid16x16: String;
-var
-  row, col: Integer;
-  bgColor, fgColor: Integer;
-  blockStr: String;
-begin
-  Result := '';
+  function CreateColorGrid16x16: string;
+  var
+    row, col: integer;
+    bgColor, fgColor: integer;
+    blockStr: string;
+  begin
+    Result := '';
 
-  // 16 Zeilen nach unten
-  for row := 0 to 15 do begin
-    // 16 Spalten nach rechts
-    for col := 0 to 15 do begin
-      bgColor := col;
-      fgColor := row;
+    for row := 0 to 15 do begin
+      for col := 0 to 15 do begin
+        if col < 8 then  begin
+          fgColor := col + 30;
+        end else begin
+          fgColor := col + 82;
+        end;
+        if row < 8 then  begin
+          bgColor := row + 40;
+        end else begin
+          bgColor := row + 92;
+        end;
+        WriteStr(blockStr, #27, '[', fgColor, ';', bgColor, 'mXX');
+        Result := Result + blockStr;
 
-      if bgColor = fgColor then
-        fgColor := (fgColor + 8) mod 16;
-
-//      WriteStr(blockStr, #27, '[38;5;', fgColor, ';48;5;', bgColor, 'm◆ ');
-      WriteStr(blockStr, #27, '[38;5;', fgColor, ';48;5;', bgColor, 'mX ');
-      Result := Result + blockStr;
-
+      end;
+      Result := Result + #27 + '[0m' + #13 + #10;
     end;
-    Result := Result + #27 + '[0m' + #13 + #10;
   end;
-end;
+
   procedure main;
   const
     rows = 25;
@@ -95,11 +95,11 @@ end;
     p: TVTermPos;
     cell: TVTermScreenCell;
     BaseAddr: pbyte;
-    s: String;
+    s: string;
   const
-    input_data1 = 'Hallo Welt! '#27'[32mDieser Text ist virtuell Rot!'#27'[0m'#13#10;
-    input_data2 = 'Hallo Welt! '#27'[33mDieser Text ist virtuell Grün!'#27'[0m'#13#10;
-    //    input_data = 'Hallo';
+    hello_red = 'Hallo Welt! '#27'[31mDieser Text ist virtuell Rot!'#27'[0m'#13#10;
+    hello_green = 'Hallo Welt! '#27'[32mDieser Text ist virtuell Grün!'#27'[0m'#13#10;
+    hello_blue = 'Hallo Welt! '#27'[34mDieser Text ist virtuell Grün!'#27'[0m'#13#10;
   begin
     ClrScr;
 
@@ -122,11 +122,12 @@ end;
     vterm_screen_set_callbacks(appData.screen, @cb_screen, @appData);
     vterm_screen_reset(appData.screen, 1);
 
-    vterm_input_write(vt, input_data1, strlen(input_data1));
-    vterm_input_write(vt, input_data2, strlen(input_data2));
+    vterm_input_write(vt, hello_red, strlen(hello_red));
+    vterm_input_write(vt, hello_green, strlen(hello_green));
+    vterm_input_write(vt, hello_blue, strlen(hello_blue));
 
-    s:=CreateColorGrid16x16;
-    vterm_input_write(vt, PChar( s), Length(s));
+    s := CreateColorGrid16x16;
+    vterm_input_write(vt, PChar(s), Length(s));
 
 
     //WriteLn('sizeof TVTermScreenCell: ', SizeOf(TVTermScreenCell));
@@ -149,10 +150,15 @@ end;
     //WriteLn('Gesamtgroesse des Records: ', SizeOf(TVTermScreenCell), ' Bytes');
 
 
-//    WriteLn(s);
-
-
     vterm_free(vt);
+
+   WriteLn(#27 + '[0m' + #13 + #10);
+
+
+    WriteLn();
+    WriteLn();
+    WriteLn(s);
+
   end;
 
 begin
