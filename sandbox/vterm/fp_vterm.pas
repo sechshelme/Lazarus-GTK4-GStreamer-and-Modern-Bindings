@@ -179,8 +179,6 @@ type
     len: 0..16383;
     initial: 0..1;
     final: 0..1;
-
-    flag0: longint;
   end;
 
 type
@@ -398,7 +396,7 @@ procedure vterm_state_send_selection(state: PVTermState; mask: TVTermSelectionMa
 
 type
   PVTermScreenCellAttrs = ^TVTermScreenCellAttrs;
-  TVTermScreenCellAttrs = record
+  TVTermScreenCellAttrs = bitpacked record
     bold: 0..1;
     underline: 0..3;
     italic: 0..1;
@@ -411,6 +409,7 @@ type
     dhl: 0..3;
     small: 0..1;
     baseline: 0..3;
+    pad:Byte;
   end;
 
 const
@@ -429,6 +428,7 @@ type
   TVTermScreenCell = record
     chars: array[0..(VTERM_MAX_CHARS_PER_CELL) - 1] of Tuint32_t;
     width: char;
+    pad0, pad1, pad2: byte;
     attrs: TVTermScreenCellAttrs;
     fg: TVTermColor;
     bg: TVTermColor;
