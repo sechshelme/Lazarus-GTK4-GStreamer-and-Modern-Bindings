@@ -91,10 +91,6 @@ type
     appData: TAppData;
     vt: PVTerm;
     cb_screen: TVTermScreenCallbacks;
-    r, c: integer;
-    p: TVTermPos;
-    cell: TVTermScreenCell;
-    BaseAddr: pbyte;
     s: string;
   const
     hello_red = 'Hallo Welt! '#27'[31mDieser Text ist virtuell Rot!'#27'[0m'#13#10;
@@ -128,37 +124,9 @@ type
 
     s := CreateColorGrid16x16;
     vterm_input_write(vt, PChar(s), Length(s));
-
-
-    //WriteLn('sizeof TVTermScreenCell: ', SizeOf(TVTermScreenCell));
-    //WriteLn('sizeof TVTermColor: ', SizeOf(TVTermColor));
-    //WriteLn('sizeof TVTermScreenCellAttrs: ', SizeOf(TVTermScreenCellAttrs));
-    //
-    //BaseAddr := pbyte(@Cell);
-    //
-    //WriteLn('Offsets fuer VTermScreenCell in Pascal:');
-    //WriteLn('--------------------------------------');
-    //
-    //// Abstand der Feld-Adresse von der Basis-Adresse berechnen
-    //WriteLn('chars:  Offset = ', pbyte(@Cell.chars) - BaseAddr, ' Bytes');
-    //WriteLn('width:  Offset = ', pbyte(@Cell.width) - BaseAddr, ' Bytes');
-    //WriteLn('attrs:  Offset = ', pbyte(@Cell.attrs) - BaseAddr, ' Bytes');
-    //WriteLn('fg:     Offset = ', pbyte(@Cell.fg) - BaseAddr, ' Bytes');
-    //WriteLn('bg:     Offset = ', pbyte(@Cell.bg) - BaseAddr, ' Bytes');
-    //
-    //WriteLn;
-    //WriteLn('Gesamtgroesse des Records: ', SizeOf(TVTermScreenCell), ' Bytes');
-
-
     vterm_free(vt);
 
-   WriteLn(#27 + '[0m' + #13 + #10);
-
-
-    WriteLn();
-    WriteLn();
-    WriteLn(s);
-
+    WriteLn(#27 + '[0m' + #13 + #10);
   end;
 
 begin
