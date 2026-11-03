@@ -164,10 +164,6 @@ type
   PPangoAttrSize = ^TPangoAttrSize;
 
 
-const
-  bm_TPangoAttrSize_absolute = $1;
-  bp_TPangoAttrSize_absolute = 0;
-
 type
   TPangoAttrShape = record
     attr: TPangoAttribute;

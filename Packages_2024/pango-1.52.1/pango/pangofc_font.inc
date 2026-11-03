@@ -15,12 +15,6 @@ type
   end;
   PPangoFcFont = ^TPangoFcFont;
 
-const
-  bm_TPangoFcFont_is_hinted = $1;
-  bp_TPangoFcFont_is_hinted = 0;
-  bm_TPangoFcFont_is_transformed = $2;
-  bp_TPangoFcFont_is_transformed = 1;
-
 function pango_fc_font_get_type: TGType; cdecl; external libpangoft2;
 function pango_fc_font_has_char(font: PPangoFcFont; wc: Tgunichar): Tgboolean; cdecl; external libpangoft2; deprecated 'PANGO_DEPRECATED_IN_1_44';
 function pango_fc_font_get_glyph(font: PPangoFcFont; wc: Tgunichar): Tguint; cdecl; external libpangoft2;

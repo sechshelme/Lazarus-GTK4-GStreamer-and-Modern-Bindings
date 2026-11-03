@@ -50,7 +50,6 @@ const
 
 type
   Pevhttp_request = ^Tevhttp_request;
-
   Tevhttp_request = bitpacked record
     next: record
       tqe_next: Pevhttp_request;

@@ -113,21 +113,6 @@ type
     io_get_flags: function(channel: PGIOChannel): TGIOFlags; cdecl;
   end;
 
-
-const
-  bm_TGIOChannel_use_buffer = $1;
-  bp_TGIOChannel_use_buffer = 0;
-  bm_TGIOChannel_do_encode = $2;
-  bp_TGIOChannel_do_encode = 1;
-  bm_TGIOChannel_close_on_unref = $4;
-  bp_TGIOChannel_close_on_unref = 2;
-  bm_TGIOChannel_is_readable = $8;
-  bp_TGIOChannel_is_readable = 3;
-  bm_TGIOChannel_is_writeable = $10;
-  bp_TGIOChannel_is_writeable = 4;
-  bm_TGIOChannel_is_seekable = $20;
-  bp_TGIOChannel_is_seekable = 5;
-
 procedure g_io_channel_init(channel: PGIOChannel); cdecl; external libglib2;
 function g_io_channel_ref(channel: PGIOChannel): PGIOChannel; cdecl; external libglib2;
 procedure g_io_channel_unref(channel: PGIOChannel); cdecl; external libglib2;

@@ -9,42 +9,20 @@
 #include <stdint.h>
 
 typedef struct {
-  uint32_t type;
-} VTermColor;
-
-
-typedef struct {
-    unsigned int bold      : 1;
-    unsigned int underline : 2;
-    unsigned int italic    : 1;
-    unsigned int blink     : 1;
-    unsigned int reverse   : 1;
-    unsigned int conceal   : 1;
-    unsigned int strike    : 1;
-    unsigned int font      : 4; 
-    unsigned int dwl       : 1; 
-    unsigned int dhl       : 2; 
-    unsigned int small     : 1;
-    unsigned int baseline  : 2;
-} VTermScreenCellAttrs;
+    int bit1      : 1;
+    int bit2      : 1;
+} BitRec;
 
 typedef struct {
-//  uint32_t chars[6];
-  char     width;
-  VTermScreenCellAttrs attrs;
-  int fg, bg;
-} VTermScreenCell;
-
-
+  char     c;
+  BitRec   bitrec;
+  int      i;
+} Rec;
 
 int main() {
-    printf("size screen: %zu\n", sizeof(VTermScreenCell));
-
-//    printf("ofs chars: %zu\n", offsetof(VTermScreenCell, chars));
-    printf("ofs width: %zu\n", offsetof(VTermScreenCell, width));
-    printf("ofs attrs: %zu\n", offsetof(VTermScreenCell, attrs));
-    printf("ofs fg:    %zu\n", offsetof(VTermScreenCell, fg));
-    printf("ofs bg:    %zu\n", offsetof(VTermScreenCell, bg));
+    printf("ofs c:      %zu\n", offsetof(Rec, c));         // -> 0
+    printf("ofs bitrec: %zu\n", offsetof(Rec, bitrec));    // -> 4
+    printf("ofs i:      %zu\n", offsetof(Rec, i));         // -> 8
 
     return 0;
 }

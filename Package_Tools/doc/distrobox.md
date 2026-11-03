@@ -75,14 +75,28 @@ In Browser folgenden Link eingeben [https://localhost:9090]
 
 # distroBox mit Nemo öffnen
 
-in Folgenden Ordner `~/.local/share/nemo/actions` eine Datei mit `*.nemo_action` erstellen.
-
+## Ubuntu LTS:
+in Folgenden Ordner `~/.local/share/nemo/actions` eine Datei mit `ubuntu_lts.nemo_action` erstellen.
 ```ini
 [Nemo Action]
 Active=true
 Name=Distrobox ubuntu-lts Terminal öffnen
 Comment=Öffnet dieses Verzeichnis direkt in einem Distrobox-Container
 Exec=gnome-terminal --working-directory="%F" -e "distrobox enter ubuntu-lts"
+Icon-Name=utilities-terminal
+Selection=any
+Extensions=dir;
+EscapeSpaces=true
+```
+
+## Ubuntu Entwickler:
+in Folgenden Ordner `~/.local/share/nemo/actions` eine Datei mit `ubuntu_dev.nemo_action` erstellen.
+```ini
+[Nemo Action]
+Active=true
+Name=Distrobox ubuntu-dev Terminal öffnen
+Comment=Öffnet dieses Verzeichnis direkt in einem Distrobox-Container
+Exec=gnome-terminal --working-directory="%F" -e "distrobox enter ubuntu-dev"
 Icon-Name=utilities-terminal
 Selection=any
 Extensions=dir;

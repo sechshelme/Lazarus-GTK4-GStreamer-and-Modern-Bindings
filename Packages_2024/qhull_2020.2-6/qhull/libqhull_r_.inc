@@ -527,7 +527,7 @@ type
   PPvertexT = ^PvertexT;
   PvertexT = ^TvertexT;
 
-  TvertexT = bitpacked  record
+  TvertexT = bitpacked record
     next: PvertexT;
     previous: PvertexT;
     point: PpointT;

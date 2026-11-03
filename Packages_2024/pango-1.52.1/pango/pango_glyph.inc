@@ -18,13 +18,6 @@ type
   end;
   PPangoGlyphVisAttr = ^TPangoGlyphVisAttr;
 
-
-const
-  bm_TPangoGlyphVisAttr_is_cluster_start = $1;
-  bp_TPangoGlyphVisAttr_is_cluster_start = 0;
-  bm_TPangoGlyphVisAttr_is_color = $2;
-  bp_TPangoGlyphVisAttr_is_color = 1;
-
 type
   TPangoGlyphInfo = record
     glyph: TPangoGlyph;

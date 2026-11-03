@@ -2,17 +2,13 @@ unit fp_laszip;
 
 interface
 
-uses
-  ctypes;
-
-
 const
   {$ifdef linux}
   liblaszip = 'laszip';
   {$endif}
 
   {$ifdef windows}
-  liblaszip = 'liblaszip3.dll'; // ?????
+  liblaszip = 'liblaszip3.dll';
   {$endif}
 
 
