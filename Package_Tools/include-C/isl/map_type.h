@@ -5,7 +5,7 @@
 #include <isl/list.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 struct __isl_subclass(isl_map) isl_basic_map;

@@ -14,7 +14,7 @@
 #include <isl/ctx.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 struct isl_options;

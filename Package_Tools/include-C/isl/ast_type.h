@@ -4,13 +4,13 @@
 #include <isl/list.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
-struct __isl_export isl_ast_expr;
+struct extern isl_ast_expr;
 typedef struct isl_ast_expr isl_ast_expr;
 
-struct __isl_export isl_ast_node;
+struct extern isl_ast_node;
 typedef struct isl_ast_node isl_ast_node;
 
 enum isl_ast_expr_op_type {

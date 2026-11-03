@@ -15,33 +15,33 @@
 
 #include <isl/arg.h>
 
-#ifndef __isl_give
-#define __isl_give
+#ifndef 
+#define 
 #endif
-#ifndef __isl_take
-#define __isl_take
+#ifndef 
+#define 
 #endif
-#ifndef __isl_keep
-#define __isl_keep
+#ifndef 
+#define 
 #endif
-#ifndef __isl_null
-#define __isl_null
+#ifndef 
+#define 
 #endif
-#ifndef __isl_export
-#define __isl_export
+#ifndef extern
+#define extern
 #endif
-#ifndef __isl_overload
-#define __isl_overload
+#ifndef 
+#define 
 #endif
-#ifndef __isl_constructor
-#define __isl_constructor
+#ifndef 
+#define 
 #endif
 #ifndef __isl_subclass
 #define __isl_subclass(super)
 #endif
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 /* Nearly all isa functions require a struct isl_ctx allocated using
@@ -159,7 +159,7 @@ void isl_handle_error(isl_ctx *ctx, enum isl_error error, const char *msg,
 struct isl_options *isl_ctx_options(isl_ctx *ctx);
 
 isl_ctx *isl_ctx_alloc_with_options(struct isl_args *args,
-	__isl_take void *opt);
+	 void *opt);
 isl_ctx *isl_ctx_alloc(void);
 void *isl_ctx_peek_options(isl_ctx *ctx, struct isl_args *args);
 int isl_ctx_parse_options(isl_ctx *ctx, int argc, char **argv, unsigned flags);

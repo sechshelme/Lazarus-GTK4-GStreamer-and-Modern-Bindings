@@ -3,7 +3,7 @@
 #include <isl/printer.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 #define ISL_xCAT(A,B) A ## B
@@ -11,52 +11,52 @@ extern "C" {
 #define ISL_xFN(TYPE,NAME) TYPE ## _ ## NAME
 #define ISL_FN(TYPE,NAME) ISL_xFN(TYPE,NAME)
 
-struct __isl_export ISL_HMAP;
+struct extern ISL_HMAP;
 typedef struct ISL_HMAP	ISL_HMAP;
 
-__isl_constructor
-__isl_give ISL_HMAP *ISL_FN(ISL_HMAP,alloc)(isl_ctx *ctx, int min_size);
-__isl_give ISL_HMAP *ISL_FN(ISL_HMAP,copy)(__isl_keep ISL_HMAP *hmap);
-__isl_null ISL_HMAP *ISL_FN(ISL_HMAP,free)(__isl_take ISL_HMAP *hmap);
 
-isl_ctx *ISL_FN(ISL_HMAP,get_ctx)(__isl_keep ISL_HMAP *hmap);
+ ISL_HMAP *ISL_FN(ISL_HMAP,alloc)(isl_ctx *ctx, int min_size);
+ ISL_HMAP *ISL_FN(ISL_HMAP,copy)( ISL_HMAP *hmap);
+ ISL_HMAP *ISL_FN(ISL_HMAP,free)( ISL_HMAP *hmap);
 
-__isl_give ISL_MAYBE(ISL_VAL) ISL_FN(ISL_HMAP,try_get)(
-	__isl_keep ISL_HMAP *hmap, __isl_keep ISL_KEY *key);
-isl_bool ISL_FN(ISL_HMAP,has)(__isl_keep ISL_HMAP *hmap,
-	__isl_keep ISL_KEY *key);
-__isl_give ISL_VAL *ISL_FN(ISL_HMAP,get)(__isl_keep ISL_HMAP *hmap,
-	__isl_take ISL_KEY *key);
-__isl_export
-__isl_give ISL_HMAP *ISL_FN(ISL_HMAP,set)(__isl_take ISL_HMAP *hmap,
-	__isl_take ISL_KEY *key, __isl_take ISL_VAL *val);
-__isl_give ISL_HMAP *ISL_FN(ISL_HMAP,drop)(__isl_take ISL_HMAP *hmap,
-	__isl_take ISL_KEY *key);
+isl_ctx *ISL_FN(ISL_HMAP,get_ctx)( ISL_HMAP *hmap);
 
-isl_stat ISL_FN(ISL_HMAP,foreach)(__isl_keep ISL_HMAP *hmap,
-	isl_stat (*fn)(__isl_take ISL_KEY *key, __isl_take ISL_VAL *val,
+ ISL_MAYBE(ISL_VAL) ISL_FN(ISL_HMAP,try_get)(
+	 ISL_HMAP *hmap,  ISL_KEY *key);
+isl_bool ISL_FN(ISL_HMAP,has)( ISL_HMAP *hmap,
+	 ISL_KEY *key);
+ ISL_VAL *ISL_FN(ISL_HMAP,get)( ISL_HMAP *hmap,
+	 ISL_KEY *key);
+extern
+ ISL_HMAP *ISL_FN(ISL_HMAP,set)( ISL_HMAP *hmap,
+	 ISL_KEY *key,  ISL_VAL *val);
+ ISL_HMAP *ISL_FN(ISL_HMAP,drop)( ISL_HMAP *hmap,
+	 ISL_KEY *key);
+
+isl_stat ISL_FN(ISL_HMAP,foreach)( ISL_HMAP *hmap,
+	isl_stat (*fn)( ISL_KEY *key,  ISL_VAL *val,
 		void *user),
 	void *user);
-isl_bool ISL_FN(ISL_HMAP,every)(__isl_keep ISL_HMAP *hmap,
-	isl_bool (*test)(__isl_keep ISL_KEY *key, __isl_keep ISL_VAL *val,
+isl_bool ISL_FN(ISL_HMAP,every)( ISL_HMAP *hmap,
+	isl_bool (*test)( ISL_KEY *key,  ISL_VAL *val,
 		void *user),
 	void *user);
 
 #ifdef ISL_HMAP_IS_EQUAL
-__isl_export
-isl_bool ISL_HMAP_IS_EQUAL(__isl_keep ISL_HMAP *hmap1,
-	__isl_keep ISL_HMAP *hmap2);
+extern
+isl_bool ISL_HMAP_IS_EQUAL( ISL_HMAP *hmap1,
+	 ISL_HMAP *hmap2);
 #endif
 
 #ifdef ISL_HMAP_HAVE_READ_FROM_STR
-__isl_constructor
-__isl_give ISL_HMAP *ISL_FN(ISL_HMAP,read_from_str)(isl_ctx *ctx,
+
+ ISL_HMAP *ISL_FN(ISL_HMAP,read_from_str)(isl_ctx *ctx,
 	const char *str);
 #endif
-__isl_give char *ISL_FN(ISL_HMAP,to_str)(__isl_keep ISL_HMAP *hmap);
-__isl_give isl_printer *ISL_FN(isl_printer_print,ISL_HMAP_SUFFIX)(
-	__isl_take isl_printer *p, __isl_keep ISL_HMAP *hmap);
-void ISL_FN(ISL_HMAP,dump)(__isl_keep ISL_HMAP *hmap);
+ char *ISL_FN(ISL_HMAP,to_str)( ISL_HMAP *hmap);
+ isl_printer *ISL_FN(isl_printer_print,ISL_HMAP_SUFFIX)(
+	 isl_printer *p,  ISL_HMAP *hmap);
+void ISL_FN(ISL_HMAP,dump)( ISL_HMAP *hmap);
 
 #undef ISL_xCAT
 #undef ISL_CAT

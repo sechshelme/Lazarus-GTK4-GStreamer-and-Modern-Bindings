@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 struct isl_arg_choice {

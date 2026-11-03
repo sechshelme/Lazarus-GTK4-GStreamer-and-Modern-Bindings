@@ -22,13 +22,13 @@ enum isl_lp_result {
 };
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
-__isl_give isl_val *isl_basic_set_min_lp_val(__isl_keep isl_basic_set *bset,
-	__isl_keep isl_aff *obj);
-__isl_give isl_val *isl_basic_set_max_lp_val(__isl_keep isl_basic_set *bset,
-	__isl_keep isl_aff *obj);
+ isl_val *isl_basic_set_min_lp_val( isl_basic_set *bset,
+	 isl_aff *obj);
+ isl_val *isl_basic_set_max_lp_val( isl_basic_set *bset,
+	 isl_aff *obj);
 
 #if defined(__cplusplus)
 }

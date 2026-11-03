@@ -4,15 +4,15 @@
 #include <isl/list.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
-struct __isl_export isl_val;
+struct extern isl_val;
 typedef struct isl_val isl_val;
 
 ISL_DECLARE_EXPORTED_LIST_TYPE(val)
 
-struct __isl_export isl_multi_val;
+struct extern isl_multi_val;
 typedef struct isl_multi_val isl_multi_val;
 
 #if defined(__cplusplus)

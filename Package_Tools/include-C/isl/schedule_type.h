@@ -2,7 +2,7 @@
 #define ISL_SCHEDULE_TYPE_H
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 enum isl_schedule_node_type {
@@ -20,10 +20,10 @@ enum isl_schedule_node_type {
 	isl_schedule_node_set
 };
 
-struct __isl_export isl_schedule_node;
+struct extern isl_schedule_node;
 typedef struct isl_schedule_node isl_schedule_node;
 
-struct __isl_export isl_schedule;
+struct extern isl_schedule;
 typedef struct isl_schedule isl_schedule;
 
 #if defined(__cplusplus)

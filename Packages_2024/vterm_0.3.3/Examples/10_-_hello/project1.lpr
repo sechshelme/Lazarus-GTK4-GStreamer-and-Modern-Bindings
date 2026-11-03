@@ -27,7 +27,6 @@ type
           TextBackground(cell.bg.indexed.idx mod 16);
           Write(char(cell.chars[0]));
         end;
-
       end;
     end;
 

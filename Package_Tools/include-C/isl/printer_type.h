@@ -2,7 +2,7 @@
 #define ISL_PRINTER_TYPE_H
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 struct isl_printer;

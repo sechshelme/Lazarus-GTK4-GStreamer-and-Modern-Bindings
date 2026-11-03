@@ -5,197 +5,197 @@
 #include <isl/union_map.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
-isl_size isl_union_set_dim(__isl_keep isl_union_set *uset,
+isl_size isl_union_set_dim( isl_union_set *uset,
 	enum isl_dim_type type);
 
-__isl_constructor
-__isl_give isl_union_set *isl_union_set_from_basic_set(
-	__isl_take isl_basic_set *bset);
-__isl_export
-__isl_give isl_union_set *isl_set_to_union_set(__isl_take isl_set *set);
-__isl_constructor
-__isl_give isl_union_set *isl_union_set_from_set(__isl_take isl_set *set);
-__isl_overload
-__isl_give isl_union_set *isl_union_set_empty_ctx(isl_ctx *ctx);
-__isl_give isl_union_set *isl_union_set_empty_space(
-	__isl_take isl_space *space);
-__isl_give isl_union_set *isl_union_set_empty(__isl_take isl_space *space);
-__isl_give isl_union_set *isl_union_set_copy(__isl_keep isl_union_set *uset);
-__isl_null isl_union_set *isl_union_set_free(__isl_take isl_union_set *uset);
 
-isl_ctx *isl_union_set_get_ctx(__isl_keep isl_union_set *uset);
-__isl_export
-__isl_give isl_space *isl_union_set_get_space(__isl_keep isl_union_set *uset);
+ isl_union_set *isl_union_set_from_basic_set(
+	 isl_basic_set *bset);
+extern
+ isl_union_set *isl_set_to_union_set( isl_set *set);
 
-__isl_give isl_union_set *isl_union_set_reset_user(
-	__isl_take isl_union_set *uset);
+ isl_union_set *isl_union_set_from_set( isl_set *set);
 
-__isl_export
-__isl_give isl_union_set *isl_union_set_universe(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_set *isl_union_set_params(__isl_take isl_union_set *uset);
+ isl_union_set *isl_union_set_empty_ctx(isl_ctx *ctx);
+ isl_union_set *isl_union_set_empty_space(
+	 isl_space *space);
+ isl_union_set *isl_union_set_empty( isl_space *space);
+ isl_union_set *isl_union_set_copy( isl_union_set *uset);
+ isl_union_set *isl_union_set_free( isl_union_set *uset);
 
-__isl_export
-__isl_give isl_union_set *isl_union_set_detect_equalities(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_affine_hull(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_polyhedral_hull(
-	__isl_take isl_union_set *uset);
-__isl_give isl_union_set *isl_union_set_remove_redundancies(
-	__isl_take isl_union_set *uset);
-__isl_give isl_union_set *isl_union_set_simple_hull(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_coalesce(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_compute_divs(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_lexmin(__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_lexmax(__isl_take isl_union_set *uset);
+isl_ctx *isl_union_set_get_ctx( isl_union_set *uset);
+extern
+ isl_space *isl_union_set_get_space( isl_union_set *uset);
 
-__isl_give isl_union_set *isl_union_set_add_set(__isl_take isl_union_set *uset,
-	__isl_take isl_set *set);
-__isl_export
-__isl_give isl_union_set *isl_union_set_union(__isl_take isl_union_set *uset1,
-	__isl_take isl_union_set *uset2);
-__isl_export
-__isl_give isl_union_set *isl_union_set_subtract(
-	__isl_take isl_union_set *uset1, __isl_take isl_union_set *uset2);
-__isl_export
-__isl_give isl_union_set *isl_union_set_intersect(
-	__isl_take isl_union_set *uset1, __isl_take isl_union_set *uset2);
-__isl_export
-__isl_give isl_union_set *isl_union_set_intersect_params(
-	__isl_take isl_union_set *uset, __isl_take isl_set *set);
-__isl_give isl_union_set *isl_union_set_product(__isl_take isl_union_set *uset1,
-	__isl_take isl_union_set *uset2);
-__isl_export
-__isl_give isl_union_set *isl_union_set_gist(__isl_take isl_union_set *uset,
-	__isl_take isl_union_set *context);
-__isl_export
-__isl_give isl_union_set *isl_union_set_gist_params(
-	__isl_take isl_union_set *uset, __isl_take isl_set *set);
+ isl_union_set *isl_union_set_reset_user(
+	 isl_union_set *uset);
 
-__isl_export
-__isl_give isl_union_set *isl_union_set_apply(
-	__isl_take isl_union_set *uset, __isl_take isl_union_map *umap);
-__isl_overload
-__isl_give isl_union_set *isl_union_set_preimage_multi_aff(
-	__isl_take isl_union_set *uset, __isl_take isl_multi_aff *ma);
-__isl_overload
-__isl_give isl_union_set *isl_union_set_preimage_pw_multi_aff(
-	__isl_take isl_union_set *uset, __isl_take isl_pw_multi_aff *pma);
-__isl_overload
-__isl_give isl_union_set *isl_union_set_preimage_union_pw_multi_aff(
-	__isl_take isl_union_set *uset,
-	__isl_take isl_union_pw_multi_aff *upma);
+extern
+ isl_union_set *isl_union_set_universe(
+	 isl_union_set *uset);
+extern
+ isl_set *isl_union_set_params( isl_union_set *uset);
 
-__isl_give isl_union_set *isl_union_set_project_out(
-	__isl_take isl_union_set *uset,
+extern
+ isl_union_set *isl_union_set_detect_equalities(
+	 isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_affine_hull(
+	 isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_polyhedral_hull(
+	 isl_union_set *uset);
+ isl_union_set *isl_union_set_remove_redundancies(
+	 isl_union_set *uset);
+ isl_union_set *isl_union_set_simple_hull(
+	 isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_coalesce(
+	 isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_compute_divs(
+	 isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_lexmin( isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_lexmax( isl_union_set *uset);
+
+ isl_union_set *isl_union_set_add_set( isl_union_set *uset,
+	 isl_set *set);
+extern
+ isl_union_set *isl_union_set_union( isl_union_set *uset1,
+	 isl_union_set *uset2);
+extern
+ isl_union_set *isl_union_set_subtract(
+	 isl_union_set *uset1,  isl_union_set *uset2);
+extern
+ isl_union_set *isl_union_set_intersect(
+	 isl_union_set *uset1,  isl_union_set *uset2);
+extern
+ isl_union_set *isl_union_set_intersect_params(
+	 isl_union_set *uset,  isl_set *set);
+ isl_union_set *isl_union_set_product( isl_union_set *uset1,
+	 isl_union_set *uset2);
+extern
+ isl_union_set *isl_union_set_gist( isl_union_set *uset,
+	 isl_union_set *context);
+extern
+ isl_union_set *isl_union_set_gist_params(
+	 isl_union_set *uset,  isl_set *set);
+
+extern
+ isl_union_set *isl_union_set_apply(
+	 isl_union_set *uset,  isl_union_map *umap);
+
+ isl_union_set *isl_union_set_preimage_multi_aff(
+	 isl_union_set *uset,  isl_multi_aff *ma);
+
+ isl_union_set *isl_union_set_preimage_pw_multi_aff(
+	 isl_union_set *uset,  isl_pw_multi_aff *pma);
+
+ isl_union_set *isl_union_set_preimage_union_pw_multi_aff(
+	 isl_union_set *uset,
+	 isl_union_pw_multi_aff *upma);
+
+ isl_union_set *isl_union_set_project_out(
+	 isl_union_set *uset,
 	enum isl_dim_type type, unsigned first, unsigned n);
-__isl_export
-__isl_give isl_union_set *isl_union_set_project_out_all_params(
-	__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_union_set *isl_union_set_drop_unused_params(
-	__isl_take isl_union_set *uset);
-__isl_give isl_union_set *isl_union_set_remove_divs(
-	__isl_take isl_union_set *bset);
+extern
+ isl_union_set *isl_union_set_project_out_all_params(
+	 isl_union_set *uset);
+extern
+ isl_union_set *isl_union_set_drop_unused_params(
+	 isl_union_set *uset);
+ isl_union_set *isl_union_set_remove_divs(
+	 isl_union_set *bset);
 
-isl_bool isl_union_set_is_params(__isl_keep isl_union_set *uset);
-__isl_export
-isl_bool isl_union_set_is_empty(__isl_keep isl_union_set *uset);
+isl_bool isl_union_set_is_params( isl_union_set *uset);
+extern
+isl_bool isl_union_set_is_empty( isl_union_set *uset);
 
-__isl_export
-isl_bool isl_union_set_is_subset(__isl_keep isl_union_set *uset1,
-	__isl_keep isl_union_set *uset2);
-__isl_export
-isl_bool isl_union_set_is_equal(__isl_keep isl_union_set *uset1,
-	__isl_keep isl_union_set *uset2);
-__isl_export
-isl_bool isl_union_set_is_disjoint(__isl_keep isl_union_set *uset1,
-	__isl_keep isl_union_set *uset2);
-__isl_export
-isl_bool isl_union_set_is_strict_subset(__isl_keep isl_union_set *uset1,
-	__isl_keep isl_union_set *uset2);
+extern
+isl_bool isl_union_set_is_subset( isl_union_set *uset1,
+	 isl_union_set *uset2);
+extern
+isl_bool isl_union_set_is_equal( isl_union_set *uset1,
+	 isl_union_set *uset2);
+extern
+isl_bool isl_union_set_is_disjoint( isl_union_set *uset1,
+	 isl_union_set *uset2);
+extern
+isl_bool isl_union_set_is_strict_subset( isl_union_set *uset1,
+	 isl_union_set *uset2);
 
-uint32_t isl_union_set_get_hash(__isl_keep isl_union_set *uset);
+uint32_t isl_union_set_get_hash( isl_union_set *uset);
 
-isl_size isl_union_set_n_set(__isl_keep isl_union_set *uset);
-__isl_export
-isl_stat isl_union_set_foreach_set(__isl_keep isl_union_set *uset,
-	isl_stat (*fn)(__isl_take isl_set *set, void *user), void *user);
-__isl_export
-isl_bool isl_union_set_every_set(__isl_keep isl_union_set *uset,
-	isl_bool (*test)(__isl_keep isl_set *set, void *user), void *user);
-__isl_give isl_basic_set_list *isl_union_set_get_basic_set_list(
-	__isl_keep isl_union_set *uset);
-__isl_export
-__isl_give isl_set_list *isl_union_set_get_set_list(
-	__isl_keep isl_union_set *uset);
-isl_bool isl_union_set_contains(__isl_keep isl_union_set *uset,
-	__isl_keep isl_space *space);
-__isl_export
-__isl_give isl_set *isl_union_set_extract_set(__isl_keep isl_union_set *uset,
-	__isl_take isl_space *space);
-__isl_export
-isl_bool isl_union_set_isa_set(__isl_keep isl_union_set *uset);
-__isl_export
-__isl_give isl_set *isl_union_set_as_set(__isl_take isl_union_set *uset);
-__isl_give isl_set *isl_set_from_union_set(__isl_take isl_union_set *uset);
-__isl_export
-isl_stat isl_union_set_foreach_point(__isl_keep isl_union_set *uset,
-	isl_stat (*fn)(__isl_take isl_point *pnt, void *user), void *user);
+isl_size isl_union_set_n_set( isl_union_set *uset);
+extern
+isl_stat isl_union_set_foreach_set( isl_union_set *uset,
+	isl_stat (*fn)( isl_set *set, void *user), void *user);
+extern
+isl_bool isl_union_set_every_set( isl_union_set *uset,
+	isl_bool (*test)( isl_set *set, void *user), void *user);
+ isl_basic_set_list *isl_union_set_get_basic_set_list(
+	 isl_union_set *uset);
+extern
+ isl_set_list *isl_union_set_get_set_list(
+	 isl_union_set *uset);
+isl_bool isl_union_set_contains( isl_union_set *uset,
+	 isl_space *space);
+extern
+ isl_set *isl_union_set_extract_set( isl_union_set *uset,
+	 isl_space *space);
+extern
+isl_bool isl_union_set_isa_set( isl_union_set *uset);
+extern
+ isl_set *isl_union_set_as_set( isl_union_set *uset);
+ isl_set *isl_set_from_union_set( isl_union_set *uset);
+extern
+isl_stat isl_union_set_foreach_point( isl_union_set *uset,
+	isl_stat (*fn)( isl_point *pnt, void *user), void *user);
 
-__isl_give isl_basic_set *isl_union_set_sample(__isl_take isl_union_set *uset);
-__isl_export
-__isl_give isl_point *isl_union_set_sample_point(
-	__isl_take isl_union_set *uset);
+ isl_basic_set *isl_union_set_sample( isl_union_set *uset);
+extern
+ isl_point *isl_union_set_sample_point(
+	 isl_union_set *uset);
 
-__isl_constructor
-__isl_give isl_union_set *isl_union_set_from_point(__isl_take isl_point *pnt);
 
-__isl_give isl_union_set *isl_union_set_lift(__isl_take isl_union_set *uset);
+ isl_union_set *isl_union_set_from_point( isl_point *pnt);
 
-__isl_give isl_union_map *isl_union_set_lex_lt_union_set(
-	__isl_take isl_union_set *uset1, __isl_take isl_union_set *uset2);
-__isl_give isl_union_map *isl_union_set_lex_le_union_set(
-	__isl_take isl_union_set *uset1, __isl_take isl_union_set *uset2);
-__isl_give isl_union_map *isl_union_set_lex_gt_union_set(
-	__isl_take isl_union_set *uset1, __isl_take isl_union_set *uset2);
-__isl_give isl_union_map *isl_union_set_lex_ge_union_set(
-	__isl_take isl_union_set *uset1, __isl_take isl_union_set *uset2);
+ isl_union_set *isl_union_set_lift( isl_union_set *uset);
 
-__isl_give isl_union_set *isl_union_set_coefficients(
-	__isl_take isl_union_set *bset);
-__isl_give isl_union_set *isl_union_set_solutions(
-	__isl_take isl_union_set *bset);
+ isl_union_map *isl_union_set_lex_lt_union_set(
+	 isl_union_set *uset1,  isl_union_set *uset2);
+ isl_union_map *isl_union_set_lex_le_union_set(
+	 isl_union_set *uset1,  isl_union_set *uset2);
+ isl_union_map *isl_union_set_lex_gt_union_set(
+	 isl_union_set *uset1,  isl_union_set *uset2);
+ isl_union_map *isl_union_set_lex_ge_union_set(
+	 isl_union_set *uset1,  isl_union_set *uset2);
 
-__isl_give isl_union_set *isl_union_set_read_from_file(isl_ctx *ctx,
+ isl_union_set *isl_union_set_coefficients(
+	 isl_union_set *bset);
+ isl_union_set *isl_union_set_solutions(
+	 isl_union_set *bset);
+
+ isl_union_set *isl_union_set_read_from_file(isl_ctx *ctx,
 	FILE *input);
-__isl_constructor
-__isl_give isl_union_set *isl_union_set_read_from_str(isl_ctx *ctx,
+
+ isl_union_set *isl_union_set_read_from_str(isl_ctx *ctx,
 	const char *str);
-__isl_give char *isl_union_set_to_str(__isl_keep isl_union_set *uset);
-__isl_give isl_printer *isl_printer_print_union_set(__isl_take isl_printer *p,
-	__isl_keep isl_union_set *uset);
-void isl_union_set_dump(__isl_keep isl_union_set *uset);
+ char *isl_union_set_to_str( isl_union_set *uset);
+ isl_printer *isl_printer_print_union_set( isl_printer *p,
+	 isl_union_set *uset);
+void isl_union_set_dump( isl_union_set *uset);
 
 ISL_DECLARE_EXPORTED_LIST_FN(union_set)
 ISL_DECLARE_EXPORTED_LIST_FN_READ(union_set)
 
-__isl_give isl_union_set *isl_union_set_list_union(
-	__isl_take isl_union_set_list *list);
+ isl_union_set *isl_union_set_list_union(
+	 isl_union_set_list *list);
 
 #if defined(__cplusplus)
 }

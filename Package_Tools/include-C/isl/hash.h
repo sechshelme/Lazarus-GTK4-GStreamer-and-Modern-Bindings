@@ -15,7 +15,7 @@
 #include <isl/ctx.h>
 
 #if defined(__cplusplus)
-extern "C" {
+
 #endif
 
 #define isl_hash_init()		(2166136261u)

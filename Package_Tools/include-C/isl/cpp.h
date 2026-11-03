@@ -372,17 +372,17 @@ class val;
 class val_list;
 
 // declarations for isl::aff
-inline aff manage(__isl_take isl_aff *ptr);
-inline aff manage_copy(__isl_keep isl_aff *ptr);
+inline aff manage( isl_aff *ptr);
+inline aff manage_copy( isl_aff *ptr);
 
 class aff {
-  friend inline aff manage(__isl_take isl_aff *ptr);
-  friend inline aff manage_copy(__isl_keep isl_aff *ptr);
+  friend inline aff manage( isl_aff *ptr);
+  friend inline aff manage_copy( isl_aff *ptr);
 
 protected:
   isl_aff *ptr = nullptr;
 
-  inline explicit aff(__isl_take isl_aff *ptr);
+  inline explicit aff( isl_aff *ptr);
 
 public:
   inline /* implicit */ aff();
@@ -390,10 +390,10 @@ public:
   inline explicit aff(isl::ctx ctx, const std::string &str);
   inline aff &operator=(aff obj);
   inline ~aff();
-  inline __isl_give isl_aff *copy() const &;
-  inline __isl_give isl_aff *copy() && = delete;
-  inline __isl_keep isl_aff *get() const;
-  inline __isl_give isl_aff *release();
+  inline  isl_aff *copy() const &;
+  inline  isl_aff *copy() && = delete;
+  inline  isl_aff *get() const;
+  inline  isl_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -565,17 +565,17 @@ public:
 };
 
 // declarations for isl::aff_list
-inline aff_list manage(__isl_take isl_aff_list *ptr);
-inline aff_list manage_copy(__isl_keep isl_aff_list *ptr);
+inline aff_list manage( isl_aff_list *ptr);
+inline aff_list manage_copy( isl_aff_list *ptr);
 
 class aff_list {
-  friend inline aff_list manage(__isl_take isl_aff_list *ptr);
-  friend inline aff_list manage_copy(__isl_keep isl_aff_list *ptr);
+  friend inline aff_list manage( isl_aff_list *ptr);
+  friend inline aff_list manage_copy( isl_aff_list *ptr);
 
 protected:
   isl_aff_list *ptr = nullptr;
 
-  inline explicit aff_list(__isl_take isl_aff_list *ptr);
+  inline explicit aff_list( isl_aff_list *ptr);
 
 public:
   inline /* implicit */ aff_list();
@@ -585,10 +585,10 @@ public:
   inline explicit aff_list(isl::ctx ctx, const std::string &str);
   inline aff_list &operator=(aff_list obj);
   inline ~aff_list();
-  inline __isl_give isl_aff_list *copy() const &;
-  inline __isl_give isl_aff_list *copy() && = delete;
-  inline __isl_keep isl_aff_list *get() const;
-  inline __isl_give isl_aff_list *release();
+  inline  isl_aff_list *copy() const &;
+  inline  isl_aff_list *copy() && = delete;
+  inline  isl_aff_list *get() const;
+  inline  isl_aff_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -606,17 +606,17 @@ public:
 };
 
 // declarations for isl::ast_build
-inline ast_build manage(__isl_take isl_ast_build *ptr);
-inline ast_build manage_copy(__isl_keep isl_ast_build *ptr);
+inline ast_build manage( isl_ast_build *ptr);
+inline ast_build manage_copy( isl_ast_build *ptr);
 
 class ast_build {
-  friend inline ast_build manage(__isl_take isl_ast_build *ptr);
-  friend inline ast_build manage_copy(__isl_keep isl_ast_build *ptr);
+  friend inline ast_build manage( isl_ast_build *ptr);
+  friend inline ast_build manage_copy( isl_ast_build *ptr);
 
 protected:
   isl_ast_build *ptr = nullptr;
 
-  inline explicit ast_build(__isl_take isl_ast_build *ptr);
+  inline explicit ast_build( isl_ast_build *ptr);
 
 public:
   inline /* implicit */ ast_build();
@@ -624,10 +624,10 @@ public:
   inline explicit ast_build(isl::ctx ctx);
   inline ast_build &operator=(ast_build obj);
   inline ~ast_build();
-  inline __isl_give isl_ast_build *copy() const &;
-  inline __isl_give isl_ast_build *copy() && = delete;
-  inline __isl_keep isl_ast_build *get() const;
-  inline __isl_give isl_ast_build *release();
+  inline  isl_ast_build *copy() const &;
+  inline  isl_ast_build *copy() && = delete;
+  inline  isl_ast_build *get() const;
+  inline  isl_ast_build *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -656,27 +656,27 @@ public:
 };
 
 // declarations for isl::ast_expr
-inline ast_expr manage(__isl_take isl_ast_expr *ptr);
-inline ast_expr manage_copy(__isl_keep isl_ast_expr *ptr);
+inline ast_expr manage( isl_ast_expr *ptr);
+inline ast_expr manage_copy( isl_ast_expr *ptr);
 
 class ast_expr {
-  friend inline ast_expr manage(__isl_take isl_ast_expr *ptr);
-  friend inline ast_expr manage_copy(__isl_keep isl_ast_expr *ptr);
+  friend inline ast_expr manage( isl_ast_expr *ptr);
+  friend inline ast_expr manage_copy( isl_ast_expr *ptr);
 
 protected:
   isl_ast_expr *ptr = nullptr;
 
-  inline explicit ast_expr(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr();
   inline /* implicit */ ast_expr(const ast_expr &obj);
   inline ast_expr &operator=(ast_expr obj);
   inline ~ast_expr();
-  inline __isl_give isl_ast_expr *copy() const &;
-  inline __isl_give isl_ast_expr *copy() && = delete;
-  inline __isl_keep isl_ast_expr *get() const;
-  inline __isl_give isl_ast_expr *release();
+  inline  isl_ast_expr *copy() const &;
+  inline  isl_ast_expr *copy() && = delete;
+  inline  isl_ast_expr *get() const;
+  inline  isl_ast_expr *release();
   inline bool is_null() const;
 private:
   template <typename T,
@@ -701,7 +701,7 @@ class ast_expr_id : public ast_expr {
   static const auto type = isl_ast_expr_id;
 
 protected:
-  inline explicit ast_expr_id(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_id( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_id();
@@ -722,7 +722,7 @@ class ast_expr_int : public ast_expr {
   static const auto type = isl_ast_expr_int;
 
 protected:
-  inline explicit ast_expr_int(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_int( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_int();
@@ -743,7 +743,7 @@ class ast_expr_op : public ast_expr {
   static const auto type = isl_ast_expr_op;
 
 protected:
-  inline explicit ast_expr_op(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op();
@@ -775,7 +775,7 @@ class ast_expr_op_access : public ast_expr_op {
   static const auto type = isl_ast_expr_op_access;
 
 protected:
-  inline explicit ast_expr_op_access(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_access( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_access();
@@ -794,7 +794,7 @@ class ast_expr_op_add : public ast_expr_op {
   static const auto type = isl_ast_expr_op_add;
 
 protected:
-  inline explicit ast_expr_op_add(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_add( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_add();
@@ -813,7 +813,7 @@ class ast_expr_op_address_of : public ast_expr_op {
   static const auto type = isl_ast_expr_op_address_of;
 
 protected:
-  inline explicit ast_expr_op_address_of(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_address_of( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_address_of();
@@ -832,7 +832,7 @@ class ast_expr_op_and : public ast_expr_op {
   static const auto type = isl_ast_expr_op_and;
 
 protected:
-  inline explicit ast_expr_op_and(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_and( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_and();
@@ -851,7 +851,7 @@ class ast_expr_op_and_then : public ast_expr_op {
   static const auto type = isl_ast_expr_op_and_then;
 
 protected:
-  inline explicit ast_expr_op_and_then(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_and_then( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_and_then();
@@ -870,7 +870,7 @@ class ast_expr_op_call : public ast_expr_op {
   static const auto type = isl_ast_expr_op_call;
 
 protected:
-  inline explicit ast_expr_op_call(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_call( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_call();
@@ -889,7 +889,7 @@ class ast_expr_op_cond : public ast_expr_op {
   static const auto type = isl_ast_expr_op_cond;
 
 protected:
-  inline explicit ast_expr_op_cond(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_cond( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_cond();
@@ -908,7 +908,7 @@ class ast_expr_op_div : public ast_expr_op {
   static const auto type = isl_ast_expr_op_div;
 
 protected:
-  inline explicit ast_expr_op_div(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_div( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_div();
@@ -927,7 +927,7 @@ class ast_expr_op_eq : public ast_expr_op {
   static const auto type = isl_ast_expr_op_eq;
 
 protected:
-  inline explicit ast_expr_op_eq(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_eq( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_eq();
@@ -946,7 +946,7 @@ class ast_expr_op_fdiv_q : public ast_expr_op {
   static const auto type = isl_ast_expr_op_fdiv_q;
 
 protected:
-  inline explicit ast_expr_op_fdiv_q(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_fdiv_q( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_fdiv_q();
@@ -965,7 +965,7 @@ class ast_expr_op_ge : public ast_expr_op {
   static const auto type = isl_ast_expr_op_ge;
 
 protected:
-  inline explicit ast_expr_op_ge(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_ge( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_ge();
@@ -984,7 +984,7 @@ class ast_expr_op_gt : public ast_expr_op {
   static const auto type = isl_ast_expr_op_gt;
 
 protected:
-  inline explicit ast_expr_op_gt(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_gt( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_gt();
@@ -1003,7 +1003,7 @@ class ast_expr_op_le : public ast_expr_op {
   static const auto type = isl_ast_expr_op_le;
 
 protected:
-  inline explicit ast_expr_op_le(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_le( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_le();
@@ -1022,7 +1022,7 @@ class ast_expr_op_lt : public ast_expr_op {
   static const auto type = isl_ast_expr_op_lt;
 
 protected:
-  inline explicit ast_expr_op_lt(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_lt( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_lt();
@@ -1041,7 +1041,7 @@ class ast_expr_op_max : public ast_expr_op {
   static const auto type = isl_ast_expr_op_max;
 
 protected:
-  inline explicit ast_expr_op_max(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_max( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_max();
@@ -1060,7 +1060,7 @@ class ast_expr_op_member : public ast_expr_op {
   static const auto type = isl_ast_expr_op_member;
 
 protected:
-  inline explicit ast_expr_op_member(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_member( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_member();
@@ -1079,7 +1079,7 @@ class ast_expr_op_min : public ast_expr_op {
   static const auto type = isl_ast_expr_op_min;
 
 protected:
-  inline explicit ast_expr_op_min(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_min( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_min();
@@ -1098,7 +1098,7 @@ class ast_expr_op_minus : public ast_expr_op {
   static const auto type = isl_ast_expr_op_minus;
 
 protected:
-  inline explicit ast_expr_op_minus(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_minus( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_minus();
@@ -1117,7 +1117,7 @@ class ast_expr_op_mul : public ast_expr_op {
   static const auto type = isl_ast_expr_op_mul;
 
 protected:
-  inline explicit ast_expr_op_mul(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_mul( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_mul();
@@ -1136,7 +1136,7 @@ class ast_expr_op_or : public ast_expr_op {
   static const auto type = isl_ast_expr_op_or;
 
 protected:
-  inline explicit ast_expr_op_or(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_or( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_or();
@@ -1155,7 +1155,7 @@ class ast_expr_op_or_else : public ast_expr_op {
   static const auto type = isl_ast_expr_op_or_else;
 
 protected:
-  inline explicit ast_expr_op_or_else(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_or_else( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_or_else();
@@ -1174,7 +1174,7 @@ class ast_expr_op_pdiv_q : public ast_expr_op {
   static const auto type = isl_ast_expr_op_pdiv_q;
 
 protected:
-  inline explicit ast_expr_op_pdiv_q(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_pdiv_q( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_pdiv_q();
@@ -1193,7 +1193,7 @@ class ast_expr_op_pdiv_r : public ast_expr_op {
   static const auto type = isl_ast_expr_op_pdiv_r;
 
 protected:
-  inline explicit ast_expr_op_pdiv_r(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_pdiv_r( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_pdiv_r();
@@ -1212,7 +1212,7 @@ class ast_expr_op_select : public ast_expr_op {
   static const auto type = isl_ast_expr_op_select;
 
 protected:
-  inline explicit ast_expr_op_select(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_select( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_select();
@@ -1231,7 +1231,7 @@ class ast_expr_op_sub : public ast_expr_op {
   static const auto type = isl_ast_expr_op_sub;
 
 protected:
-  inline explicit ast_expr_op_sub(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_sub( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_sub();
@@ -1250,7 +1250,7 @@ class ast_expr_op_zdiv_r : public ast_expr_op {
   static const auto type = isl_ast_expr_op_zdiv_r;
 
 protected:
-  inline explicit ast_expr_op_zdiv_r(__isl_take isl_ast_expr *ptr);
+  inline explicit ast_expr_op_zdiv_r( isl_ast_expr *ptr);
 
 public:
   inline /* implicit */ ast_expr_op_zdiv_r();
@@ -1261,27 +1261,27 @@ public:
 };
 
 // declarations for isl::ast_node
-inline ast_node manage(__isl_take isl_ast_node *ptr);
-inline ast_node manage_copy(__isl_keep isl_ast_node *ptr);
+inline ast_node manage( isl_ast_node *ptr);
+inline ast_node manage_copy( isl_ast_node *ptr);
 
 class ast_node {
-  friend inline ast_node manage(__isl_take isl_ast_node *ptr);
-  friend inline ast_node manage_copy(__isl_keep isl_ast_node *ptr);
+  friend inline ast_node manage( isl_ast_node *ptr);
+  friend inline ast_node manage_copy( isl_ast_node *ptr);
 
 protected:
   isl_ast_node *ptr = nullptr;
 
-  inline explicit ast_node(__isl_take isl_ast_node *ptr);
+  inline explicit ast_node( isl_ast_node *ptr);
 
 public:
   inline /* implicit */ ast_node();
   inline /* implicit */ ast_node(const ast_node &obj);
   inline ast_node &operator=(ast_node obj);
   inline ~ast_node();
-  inline __isl_give isl_ast_node *copy() const &;
-  inline __isl_give isl_ast_node *copy() && = delete;
-  inline __isl_keep isl_ast_node *get() const;
-  inline __isl_give isl_ast_node *release();
+  inline  isl_ast_node *copy() const &;
+  inline  isl_ast_node *copy() && = delete;
+  inline  isl_ast_node *get() const;
+  inline  isl_ast_node *release();
   inline bool is_null() const;
 private:
   template <typename T,
@@ -1308,7 +1308,7 @@ class ast_node_block : public ast_node {
   static const auto type = isl_ast_node_block;
 
 protected:
-  inline explicit ast_node_block(__isl_take isl_ast_node *ptr);
+  inline explicit ast_node_block( isl_ast_node *ptr);
 
 public:
   inline /* implicit */ ast_node_block();
@@ -1330,7 +1330,7 @@ class ast_node_for : public ast_node {
   static const auto type = isl_ast_node_for;
 
 protected:
-  inline explicit ast_node_for(__isl_take isl_ast_node *ptr);
+  inline explicit ast_node_for( isl_ast_node *ptr);
 
 public:
   inline /* implicit */ ast_node_for();
@@ -1360,7 +1360,7 @@ class ast_node_if : public ast_node {
   static const auto type = isl_ast_node_if;
 
 protected:
-  inline explicit ast_node_if(__isl_take isl_ast_node *ptr);
+  inline explicit ast_node_if( isl_ast_node *ptr);
 
 public:
   inline /* implicit */ ast_node_if();
@@ -1378,17 +1378,17 @@ public:
 };
 
 // declarations for isl::ast_node_list
-inline ast_node_list manage(__isl_take isl_ast_node_list *ptr);
-inline ast_node_list manage_copy(__isl_keep isl_ast_node_list *ptr);
+inline ast_node_list manage( isl_ast_node_list *ptr);
+inline ast_node_list manage_copy( isl_ast_node_list *ptr);
 
 class ast_node_list {
-  friend inline ast_node_list manage(__isl_take isl_ast_node_list *ptr);
-  friend inline ast_node_list manage_copy(__isl_keep isl_ast_node_list *ptr);
+  friend inline ast_node_list manage( isl_ast_node_list *ptr);
+  friend inline ast_node_list manage_copy( isl_ast_node_list *ptr);
 
 protected:
   isl_ast_node_list *ptr = nullptr;
 
-  inline explicit ast_node_list(__isl_take isl_ast_node_list *ptr);
+  inline explicit ast_node_list( isl_ast_node_list *ptr);
 
 public:
   inline /* implicit */ ast_node_list();
@@ -1397,10 +1397,10 @@ public:
   inline explicit ast_node_list(isl::ast_node el);
   inline ast_node_list &operator=(ast_node_list obj);
   inline ~ast_node_list();
-  inline __isl_give isl_ast_node_list *copy() const &;
-  inline __isl_give isl_ast_node_list *copy() && = delete;
-  inline __isl_keep isl_ast_node_list *get() const;
-  inline __isl_give isl_ast_node_list *release();
+  inline  isl_ast_node_list *copy() const &;
+  inline  isl_ast_node_list *copy() && = delete;
+  inline  isl_ast_node_list *get() const;
+  inline  isl_ast_node_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1426,7 +1426,7 @@ class ast_node_mark : public ast_node {
   static const auto type = isl_ast_node_mark;
 
 protected:
-  inline explicit ast_node_mark(__isl_take isl_ast_node *ptr);
+  inline explicit ast_node_mark( isl_ast_node *ptr);
 
 public:
   inline /* implicit */ ast_node_mark();
@@ -1449,7 +1449,7 @@ class ast_node_user : public ast_node {
   static const auto type = isl_ast_node_user;
 
 protected:
-  inline explicit ast_node_user(__isl_take isl_ast_node *ptr);
+  inline explicit ast_node_user( isl_ast_node *ptr);
 
 public:
   inline /* implicit */ ast_node_user();
@@ -1463,17 +1463,17 @@ public:
 };
 
 // declarations for isl::basic_map
-inline basic_map manage(__isl_take isl_basic_map *ptr);
-inline basic_map manage_copy(__isl_keep isl_basic_map *ptr);
+inline basic_map manage( isl_basic_map *ptr);
+inline basic_map manage_copy( isl_basic_map *ptr);
 
 class basic_map {
-  friend inline basic_map manage(__isl_take isl_basic_map *ptr);
-  friend inline basic_map manage_copy(__isl_keep isl_basic_map *ptr);
+  friend inline basic_map manage( isl_basic_map *ptr);
+  friend inline basic_map manage_copy( isl_basic_map *ptr);
 
 protected:
   isl_basic_map *ptr = nullptr;
 
-  inline explicit basic_map(__isl_take isl_basic_map *ptr);
+  inline explicit basic_map( isl_basic_map *ptr);
 
 public:
   inline /* implicit */ basic_map();
@@ -1481,10 +1481,10 @@ public:
   inline explicit basic_map(isl::ctx ctx, const std::string &str);
   inline basic_map &operator=(basic_map obj);
   inline ~basic_map();
-  inline __isl_give isl_basic_map *copy() const &;
-  inline __isl_give isl_basic_map *copy() && = delete;
-  inline __isl_keep isl_basic_map *get() const;
-  inline __isl_give isl_basic_map *release();
+  inline  isl_basic_map *copy() const &;
+  inline  isl_basic_map *copy() && = delete;
+  inline  isl_basic_map *get() const;
+  inline  isl_basic_map *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1644,17 +1644,17 @@ public:
 };
 
 // declarations for isl::basic_set
-inline basic_set manage(__isl_take isl_basic_set *ptr);
-inline basic_set manage_copy(__isl_keep isl_basic_set *ptr);
+inline basic_set manage( isl_basic_set *ptr);
+inline basic_set manage_copy( isl_basic_set *ptr);
 
 class basic_set {
-  friend inline basic_set manage(__isl_take isl_basic_set *ptr);
-  friend inline basic_set manage_copy(__isl_keep isl_basic_set *ptr);
+  friend inline basic_set manage( isl_basic_set *ptr);
+  friend inline basic_set manage_copy( isl_basic_set *ptr);
 
 protected:
   isl_basic_set *ptr = nullptr;
 
-  inline explicit basic_set(__isl_take isl_basic_set *ptr);
+  inline explicit basic_set( isl_basic_set *ptr);
 
 public:
   inline /* implicit */ basic_set();
@@ -1663,10 +1663,10 @@ public:
   inline explicit basic_set(isl::ctx ctx, const std::string &str);
   inline basic_set &operator=(basic_set obj);
   inline ~basic_set();
-  inline __isl_give isl_basic_set *copy() const &;
-  inline __isl_give isl_basic_set *copy() && = delete;
-  inline __isl_keep isl_basic_set *get() const;
-  inline __isl_give isl_basic_set *release();
+  inline  isl_basic_set *copy() const &;
+  inline  isl_basic_set *copy() && = delete;
+  inline  isl_basic_set *get() const;
+  inline  isl_basic_set *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1778,17 +1778,17 @@ public:
 };
 
 // declarations for isl::fixed_box
-inline fixed_box manage(__isl_take isl_fixed_box *ptr);
-inline fixed_box manage_copy(__isl_keep isl_fixed_box *ptr);
+inline fixed_box manage( isl_fixed_box *ptr);
+inline fixed_box manage_copy( isl_fixed_box *ptr);
 
 class fixed_box {
-  friend inline fixed_box manage(__isl_take isl_fixed_box *ptr);
-  friend inline fixed_box manage_copy(__isl_keep isl_fixed_box *ptr);
+  friend inline fixed_box manage( isl_fixed_box *ptr);
+  friend inline fixed_box manage_copy( isl_fixed_box *ptr);
 
 protected:
   isl_fixed_box *ptr = nullptr;
 
-  inline explicit fixed_box(__isl_take isl_fixed_box *ptr);
+  inline explicit fixed_box( isl_fixed_box *ptr);
 
 public:
   inline /* implicit */ fixed_box();
@@ -1796,10 +1796,10 @@ public:
   inline explicit fixed_box(isl::ctx ctx, const std::string &str);
   inline fixed_box &operator=(fixed_box obj);
   inline ~fixed_box();
-  inline __isl_give isl_fixed_box *copy() const &;
-  inline __isl_give isl_fixed_box *copy() && = delete;
-  inline __isl_keep isl_fixed_box *get() const;
-  inline __isl_give isl_fixed_box *release();
+  inline  isl_fixed_box *copy() const &;
+  inline  isl_fixed_box *copy() && = delete;
+  inline  isl_fixed_box *get() const;
+  inline  isl_fixed_box *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1813,17 +1813,17 @@ public:
 };
 
 // declarations for isl::id
-inline id manage(__isl_take isl_id *ptr);
-inline id manage_copy(__isl_keep isl_id *ptr);
+inline id manage( isl_id *ptr);
+inline id manage_copy( isl_id *ptr);
 
 class id {
-  friend inline id manage(__isl_take isl_id *ptr);
-  friend inline id manage_copy(__isl_keep isl_id *ptr);
+  friend inline id manage( isl_id *ptr);
+  friend inline id manage_copy( isl_id *ptr);
 
 protected:
   isl_id *ptr = nullptr;
 
-  inline explicit id(__isl_take isl_id *ptr);
+  inline explicit id( isl_id *ptr);
 
 public:
   inline /* implicit */ id();
@@ -1831,10 +1831,10 @@ public:
   inline explicit id(isl::ctx ctx, const std::string &str);
   inline id &operator=(id obj);
   inline ~id();
-  inline __isl_give isl_id *copy() const &;
-  inline __isl_give isl_id *copy() && = delete;
-  inline __isl_keep isl_id *get() const;
-  inline __isl_give isl_id *release();
+  inline  isl_id *copy() const &;
+  inline  isl_id *copy() && = delete;
+  inline  isl_id *get() const;
+  inline  isl_id *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1852,17 +1852,17 @@ public:
 };
 
 // declarations for isl::id_list
-inline id_list manage(__isl_take isl_id_list *ptr);
-inline id_list manage_copy(__isl_keep isl_id_list *ptr);
+inline id_list manage( isl_id_list *ptr);
+inline id_list manage_copy( isl_id_list *ptr);
 
 class id_list {
-  friend inline id_list manage(__isl_take isl_id_list *ptr);
-  friend inline id_list manage_copy(__isl_keep isl_id_list *ptr);
+  friend inline id_list manage( isl_id_list *ptr);
+  friend inline id_list manage_copy( isl_id_list *ptr);
 
 protected:
   isl_id_list *ptr = nullptr;
 
-  inline explicit id_list(__isl_take isl_id_list *ptr);
+  inline explicit id_list( isl_id_list *ptr);
 
 public:
   inline /* implicit */ id_list();
@@ -1872,10 +1872,10 @@ public:
   inline explicit id_list(isl::ctx ctx, const std::string &str);
   inline id_list &operator=(id_list obj);
   inline ~id_list();
-  inline __isl_give isl_id_list *copy() const &;
-  inline __isl_give isl_id_list *copy() && = delete;
-  inline __isl_keep isl_id_list *get() const;
-  inline __isl_give isl_id_list *release();
+  inline  isl_id_list *copy() const &;
+  inline  isl_id_list *copy() && = delete;
+  inline  isl_id_list *get() const;
+  inline  isl_id_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1896,17 +1896,17 @@ public:
 };
 
 // declarations for isl::id_to_ast_expr
-inline id_to_ast_expr manage(__isl_take isl_id_to_ast_expr *ptr);
-inline id_to_ast_expr manage_copy(__isl_keep isl_id_to_ast_expr *ptr);
+inline id_to_ast_expr manage( isl_id_to_ast_expr *ptr);
+inline id_to_ast_expr manage_copy( isl_id_to_ast_expr *ptr);
 
 class id_to_ast_expr {
-  friend inline id_to_ast_expr manage(__isl_take isl_id_to_ast_expr *ptr);
-  friend inline id_to_ast_expr manage_copy(__isl_keep isl_id_to_ast_expr *ptr);
+  friend inline id_to_ast_expr manage( isl_id_to_ast_expr *ptr);
+  friend inline id_to_ast_expr manage_copy( isl_id_to_ast_expr *ptr);
 
 protected:
   isl_id_to_ast_expr *ptr = nullptr;
 
-  inline explicit id_to_ast_expr(__isl_take isl_id_to_ast_expr *ptr);
+  inline explicit id_to_ast_expr( isl_id_to_ast_expr *ptr);
 
 public:
   inline /* implicit */ id_to_ast_expr();
@@ -1915,10 +1915,10 @@ public:
   inline explicit id_to_ast_expr(isl::ctx ctx, const std::string &str);
   inline id_to_ast_expr &operator=(id_to_ast_expr obj);
   inline ~id_to_ast_expr();
-  inline __isl_give isl_id_to_ast_expr *copy() const &;
-  inline __isl_give isl_id_to_ast_expr *copy() && = delete;
-  inline __isl_keep isl_id_to_ast_expr *get() const;
-  inline __isl_give isl_id_to_ast_expr *release();
+  inline  isl_id_to_ast_expr *copy() const &;
+  inline  isl_id_to_ast_expr *copy() && = delete;
+  inline  isl_id_to_ast_expr *get() const;
+  inline  isl_id_to_ast_expr *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1928,17 +1928,17 @@ public:
 };
 
 // declarations for isl::id_to_id
-inline id_to_id manage(__isl_take isl_id_to_id *ptr);
-inline id_to_id manage_copy(__isl_keep isl_id_to_id *ptr);
+inline id_to_id manage( isl_id_to_id *ptr);
+inline id_to_id manage_copy( isl_id_to_id *ptr);
 
 class id_to_id {
-  friend inline id_to_id manage(__isl_take isl_id_to_id *ptr);
-  friend inline id_to_id manage_copy(__isl_keep isl_id_to_id *ptr);
+  friend inline id_to_id manage( isl_id_to_id *ptr);
+  friend inline id_to_id manage_copy( isl_id_to_id *ptr);
 
 protected:
   isl_id_to_id *ptr = nullptr;
 
-  inline explicit id_to_id(__isl_take isl_id_to_id *ptr);
+  inline explicit id_to_id( isl_id_to_id *ptr);
 
 public:
   inline /* implicit */ id_to_id();
@@ -1947,10 +1947,10 @@ public:
   inline explicit id_to_id(isl::ctx ctx, const std::string &str);
   inline id_to_id &operator=(id_to_id obj);
   inline ~id_to_id();
-  inline __isl_give isl_id_to_id *copy() const &;
-  inline __isl_give isl_id_to_id *copy() && = delete;
-  inline __isl_keep isl_id_to_id *get() const;
-  inline __isl_give isl_id_to_id *release();
+  inline  isl_id_to_id *copy() const &;
+  inline  isl_id_to_id *copy() && = delete;
+  inline  isl_id_to_id *get() const;
+  inline  isl_id_to_id *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -1962,17 +1962,17 @@ public:
 };
 
 // declarations for isl::map
-inline map manage(__isl_take isl_map *ptr);
-inline map manage_copy(__isl_keep isl_map *ptr);
+inline map manage( isl_map *ptr);
+inline map manage_copy( isl_map *ptr);
 
 class map {
-  friend inline map manage(__isl_take isl_map *ptr);
-  friend inline map manage_copy(__isl_keep isl_map *ptr);
+  friend inline map manage( isl_map *ptr);
+  friend inline map manage_copy( isl_map *ptr);
 
 protected:
   isl_map *ptr = nullptr;
 
-  inline explicit map(__isl_take isl_map *ptr);
+  inline explicit map( isl_map *ptr);
 
 public:
   inline /* implicit */ map();
@@ -1981,10 +1981,10 @@ public:
   inline explicit map(isl::ctx ctx, const std::string &str);
   inline map &operator=(map obj);
   inline ~map();
-  inline __isl_give isl_map *copy() const &;
-  inline __isl_give isl_map *copy() && = delete;
-  inline __isl_keep isl_map *get() const;
-  inline __isl_give isl_map *release();
+  inline  isl_map *copy() const &;
+  inline  isl_map *copy() && = delete;
+  inline  isl_map *get() const;
+  inline  isl_map *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2171,17 +2171,17 @@ public:
 };
 
 // declarations for isl::map_list
-inline map_list manage(__isl_take isl_map_list *ptr);
-inline map_list manage_copy(__isl_keep isl_map_list *ptr);
+inline map_list manage( isl_map_list *ptr);
+inline map_list manage_copy( isl_map_list *ptr);
 
 class map_list {
-  friend inline map_list manage(__isl_take isl_map_list *ptr);
-  friend inline map_list manage_copy(__isl_keep isl_map_list *ptr);
+  friend inline map_list manage( isl_map_list *ptr);
+  friend inline map_list manage_copy( isl_map_list *ptr);
 
 protected:
   isl_map_list *ptr = nullptr;
 
-  inline explicit map_list(__isl_take isl_map_list *ptr);
+  inline explicit map_list( isl_map_list *ptr);
 
 public:
   inline /* implicit */ map_list();
@@ -2191,10 +2191,10 @@ public:
   inline explicit map_list(isl::ctx ctx, const std::string &str);
   inline map_list &operator=(map_list obj);
   inline ~map_list();
-  inline __isl_give isl_map_list *copy() const &;
-  inline __isl_give isl_map_list *copy() && = delete;
-  inline __isl_keep isl_map_list *get() const;
-  inline __isl_give isl_map_list *release();
+  inline  isl_map_list *copy() const &;
+  inline  isl_map_list *copy() && = delete;
+  inline  isl_map_list *get() const;
+  inline  isl_map_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2212,17 +2212,17 @@ public:
 };
 
 // declarations for isl::multi_aff
-inline multi_aff manage(__isl_take isl_multi_aff *ptr);
-inline multi_aff manage_copy(__isl_keep isl_multi_aff *ptr);
+inline multi_aff manage( isl_multi_aff *ptr);
+inline multi_aff manage_copy( isl_multi_aff *ptr);
 
 class multi_aff {
-  friend inline multi_aff manage(__isl_take isl_multi_aff *ptr);
-  friend inline multi_aff manage_copy(__isl_keep isl_multi_aff *ptr);
+  friend inline multi_aff manage( isl_multi_aff *ptr);
+  friend inline multi_aff manage_copy( isl_multi_aff *ptr);
 
 protected:
   isl_multi_aff *ptr = nullptr;
 
-  inline explicit multi_aff(__isl_take isl_multi_aff *ptr);
+  inline explicit multi_aff( isl_multi_aff *ptr);
 
 public:
   inline /* implicit */ multi_aff();
@@ -2232,10 +2232,10 @@ public:
   inline explicit multi_aff(isl::ctx ctx, const std::string &str);
   inline multi_aff &operator=(multi_aff obj);
   inline ~multi_aff();
-  inline __isl_give isl_multi_aff *copy() const &;
-  inline __isl_give isl_multi_aff *copy() && = delete;
-  inline __isl_keep isl_multi_aff *get() const;
-  inline __isl_give isl_multi_aff *release();
+  inline  isl_multi_aff *copy() const &;
+  inline  isl_multi_aff *copy() && = delete;
+  inline  isl_multi_aff *get() const;
+  inline  isl_multi_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2375,17 +2375,17 @@ public:
 };
 
 // declarations for isl::multi_id
-inline multi_id manage(__isl_take isl_multi_id *ptr);
-inline multi_id manage_copy(__isl_keep isl_multi_id *ptr);
+inline multi_id manage( isl_multi_id *ptr);
+inline multi_id manage_copy( isl_multi_id *ptr);
 
 class multi_id {
-  friend inline multi_id manage(__isl_take isl_multi_id *ptr);
-  friend inline multi_id manage_copy(__isl_keep isl_multi_id *ptr);
+  friend inline multi_id manage( isl_multi_id *ptr);
+  friend inline multi_id manage_copy( isl_multi_id *ptr);
 
 protected:
   isl_multi_id *ptr = nullptr;
 
-  inline explicit multi_id(__isl_take isl_multi_id *ptr);
+  inline explicit multi_id( isl_multi_id *ptr);
 
 public:
   inline /* implicit */ multi_id();
@@ -2394,10 +2394,10 @@ public:
   inline explicit multi_id(isl::ctx ctx, const std::string &str);
   inline multi_id &operator=(multi_id obj);
   inline ~multi_id();
-  inline __isl_give isl_multi_id *copy() const &;
-  inline __isl_give isl_multi_id *copy() && = delete;
-  inline __isl_keep isl_multi_id *get() const;
-  inline __isl_give isl_multi_id *release();
+  inline  isl_multi_id *copy() const &;
+  inline  isl_multi_id *copy() && = delete;
+  inline  isl_multi_id *get() const;
+  inline  isl_multi_id *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2416,17 +2416,17 @@ public:
 };
 
 // declarations for isl::multi_pw_aff
-inline multi_pw_aff manage(__isl_take isl_multi_pw_aff *ptr);
-inline multi_pw_aff manage_copy(__isl_keep isl_multi_pw_aff *ptr);
+inline multi_pw_aff manage( isl_multi_pw_aff *ptr);
+inline multi_pw_aff manage_copy( isl_multi_pw_aff *ptr);
 
 class multi_pw_aff {
-  friend inline multi_pw_aff manage(__isl_take isl_multi_pw_aff *ptr);
-  friend inline multi_pw_aff manage_copy(__isl_keep isl_multi_pw_aff *ptr);
+  friend inline multi_pw_aff manage( isl_multi_pw_aff *ptr);
+  friend inline multi_pw_aff manage_copy( isl_multi_pw_aff *ptr);
 
 protected:
   isl_multi_pw_aff *ptr = nullptr;
 
-  inline explicit multi_pw_aff(__isl_take isl_multi_pw_aff *ptr);
+  inline explicit multi_pw_aff( isl_multi_pw_aff *ptr);
 
 public:
   inline /* implicit */ multi_pw_aff();
@@ -2439,10 +2439,10 @@ public:
   inline explicit multi_pw_aff(isl::ctx ctx, const std::string &str);
   inline multi_pw_aff &operator=(multi_pw_aff obj);
   inline ~multi_pw_aff();
-  inline __isl_give isl_multi_pw_aff *copy() const &;
-  inline __isl_give isl_multi_pw_aff *copy() && = delete;
-  inline __isl_keep isl_multi_pw_aff *get() const;
-  inline __isl_give isl_multi_pw_aff *release();
+  inline  isl_multi_pw_aff *copy() const &;
+  inline  isl_multi_pw_aff *copy() && = delete;
+  inline  isl_multi_pw_aff *get() const;
+  inline  isl_multi_pw_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2548,17 +2548,17 @@ public:
 };
 
 // declarations for isl::multi_union_pw_aff
-inline multi_union_pw_aff manage(__isl_take isl_multi_union_pw_aff *ptr);
-inline multi_union_pw_aff manage_copy(__isl_keep isl_multi_union_pw_aff *ptr);
+inline multi_union_pw_aff manage( isl_multi_union_pw_aff *ptr);
+inline multi_union_pw_aff manage_copy( isl_multi_union_pw_aff *ptr);
 
 class multi_union_pw_aff {
-  friend inline multi_union_pw_aff manage(__isl_take isl_multi_union_pw_aff *ptr);
-  friend inline multi_union_pw_aff manage_copy(__isl_keep isl_multi_union_pw_aff *ptr);
+  friend inline multi_union_pw_aff manage( isl_multi_union_pw_aff *ptr);
+  friend inline multi_union_pw_aff manage_copy( isl_multi_union_pw_aff *ptr);
 
 protected:
   isl_multi_union_pw_aff *ptr = nullptr;
 
-  inline explicit multi_union_pw_aff(__isl_take isl_multi_union_pw_aff *ptr);
+  inline explicit multi_union_pw_aff( isl_multi_union_pw_aff *ptr);
 
 public:
   inline /* implicit */ multi_union_pw_aff();
@@ -2569,10 +2569,10 @@ public:
   inline explicit multi_union_pw_aff(isl::ctx ctx, const std::string &str);
   inline multi_union_pw_aff &operator=(multi_union_pw_aff obj);
   inline ~multi_union_pw_aff();
-  inline __isl_give isl_multi_union_pw_aff *copy() const &;
-  inline __isl_give isl_multi_union_pw_aff *copy() && = delete;
-  inline __isl_keep isl_multi_union_pw_aff *get() const;
-  inline __isl_give isl_multi_union_pw_aff *release();
+  inline  isl_multi_union_pw_aff *copy() const &;
+  inline  isl_multi_union_pw_aff *copy() && = delete;
+  inline  isl_multi_union_pw_aff *get() const;
+  inline  isl_multi_union_pw_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2616,17 +2616,17 @@ public:
 };
 
 // declarations for isl::multi_val
-inline multi_val manage(__isl_take isl_multi_val *ptr);
-inline multi_val manage_copy(__isl_keep isl_multi_val *ptr);
+inline multi_val manage( isl_multi_val *ptr);
+inline multi_val manage_copy( isl_multi_val *ptr);
 
 class multi_val {
-  friend inline multi_val manage(__isl_take isl_multi_val *ptr);
-  friend inline multi_val manage_copy(__isl_keep isl_multi_val *ptr);
+  friend inline multi_val manage( isl_multi_val *ptr);
+  friend inline multi_val manage_copy( isl_multi_val *ptr);
 
 protected:
   isl_multi_val *ptr = nullptr;
 
-  inline explicit multi_val(__isl_take isl_multi_val *ptr);
+  inline explicit multi_val( isl_multi_val *ptr);
 
 public:
   inline /* implicit */ multi_val();
@@ -2635,10 +2635,10 @@ public:
   inline explicit multi_val(isl::ctx ctx, const std::string &str);
   inline multi_val &operator=(multi_val obj);
   inline ~multi_val();
-  inline __isl_give isl_multi_val *copy() const &;
-  inline __isl_give isl_multi_val *copy() && = delete;
-  inline __isl_keep isl_multi_val *get() const;
-  inline __isl_give isl_multi_val *release();
+  inline  isl_multi_val *copy() const &;
+  inline  isl_multi_val *copy() && = delete;
+  inline  isl_multi_val *get() const;
+  inline  isl_multi_val *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2679,27 +2679,27 @@ public:
 };
 
 // declarations for isl::point
-inline point manage(__isl_take isl_point *ptr);
-inline point manage_copy(__isl_keep isl_point *ptr);
+inline point manage( isl_point *ptr);
+inline point manage_copy( isl_point *ptr);
 
 class point {
-  friend inline point manage(__isl_take isl_point *ptr);
-  friend inline point manage_copy(__isl_keep isl_point *ptr);
+  friend inline point manage( isl_point *ptr);
+  friend inline point manage_copy( isl_point *ptr);
 
 protected:
   isl_point *ptr = nullptr;
 
-  inline explicit point(__isl_take isl_point *ptr);
+  inline explicit point( isl_point *ptr);
 
 public:
   inline /* implicit */ point();
   inline /* implicit */ point(const point &obj);
   inline point &operator=(point obj);
   inline ~point();
-  inline __isl_give isl_point *copy() const &;
-  inline __isl_give isl_point *copy() && = delete;
-  inline __isl_keep isl_point *get() const;
-  inline __isl_give isl_point *release();
+  inline  isl_point *copy() const &;
+  inline  isl_point *copy() && = delete;
+  inline  isl_point *get() const;
+  inline  isl_point *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2807,17 +2807,17 @@ public:
 };
 
 // declarations for isl::pw_aff
-inline pw_aff manage(__isl_take isl_pw_aff *ptr);
-inline pw_aff manage_copy(__isl_keep isl_pw_aff *ptr);
+inline pw_aff manage( isl_pw_aff *ptr);
+inline pw_aff manage_copy( isl_pw_aff *ptr);
 
 class pw_aff {
-  friend inline pw_aff manage(__isl_take isl_pw_aff *ptr);
-  friend inline pw_aff manage_copy(__isl_keep isl_pw_aff *ptr);
+  friend inline pw_aff manage( isl_pw_aff *ptr);
+  friend inline pw_aff manage_copy( isl_pw_aff *ptr);
 
 protected:
   isl_pw_aff *ptr = nullptr;
 
-  inline explicit pw_aff(__isl_take isl_pw_aff *ptr);
+  inline explicit pw_aff( isl_pw_aff *ptr);
 
 public:
   inline /* implicit */ pw_aff();
@@ -2826,10 +2826,10 @@ public:
   inline explicit pw_aff(isl::ctx ctx, const std::string &str);
   inline pw_aff &operator=(pw_aff obj);
   inline ~pw_aff();
-  inline __isl_give isl_pw_aff *copy() const &;
-  inline __isl_give isl_pw_aff *copy() && = delete;
-  inline __isl_keep isl_pw_aff *get() const;
-  inline __isl_give isl_pw_aff *release();
+  inline  isl_pw_aff *copy() const &;
+  inline  isl_pw_aff *copy() && = delete;
+  inline  isl_pw_aff *get() const;
+  inline  isl_pw_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -2987,17 +2987,17 @@ public:
 };
 
 // declarations for isl::pw_aff_list
-inline pw_aff_list manage(__isl_take isl_pw_aff_list *ptr);
-inline pw_aff_list manage_copy(__isl_keep isl_pw_aff_list *ptr);
+inline pw_aff_list manage( isl_pw_aff_list *ptr);
+inline pw_aff_list manage_copy( isl_pw_aff_list *ptr);
 
 class pw_aff_list {
-  friend inline pw_aff_list manage(__isl_take isl_pw_aff_list *ptr);
-  friend inline pw_aff_list manage_copy(__isl_keep isl_pw_aff_list *ptr);
+  friend inline pw_aff_list manage( isl_pw_aff_list *ptr);
+  friend inline pw_aff_list manage_copy( isl_pw_aff_list *ptr);
 
 protected:
   isl_pw_aff_list *ptr = nullptr;
 
-  inline explicit pw_aff_list(__isl_take isl_pw_aff_list *ptr);
+  inline explicit pw_aff_list( isl_pw_aff_list *ptr);
 
 public:
   inline /* implicit */ pw_aff_list();
@@ -3007,10 +3007,10 @@ public:
   inline explicit pw_aff_list(isl::ctx ctx, const std::string &str);
   inline pw_aff_list &operator=(pw_aff_list obj);
   inline ~pw_aff_list();
-  inline __isl_give isl_pw_aff_list *copy() const &;
-  inline __isl_give isl_pw_aff_list *copy() && = delete;
-  inline __isl_keep isl_pw_aff_list *get() const;
-  inline __isl_give isl_pw_aff_list *release();
+  inline  isl_pw_aff_list *copy() const &;
+  inline  isl_pw_aff_list *copy() && = delete;
+  inline  isl_pw_aff_list *get() const;
+  inline  isl_pw_aff_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3028,17 +3028,17 @@ public:
 };
 
 // declarations for isl::pw_multi_aff
-inline pw_multi_aff manage(__isl_take isl_pw_multi_aff *ptr);
-inline pw_multi_aff manage_copy(__isl_keep isl_pw_multi_aff *ptr);
+inline pw_multi_aff manage( isl_pw_multi_aff *ptr);
+inline pw_multi_aff manage_copy( isl_pw_multi_aff *ptr);
 
 class pw_multi_aff {
-  friend inline pw_multi_aff manage(__isl_take isl_pw_multi_aff *ptr);
-  friend inline pw_multi_aff manage_copy(__isl_keep isl_pw_multi_aff *ptr);
+  friend inline pw_multi_aff manage( isl_pw_multi_aff *ptr);
+  friend inline pw_multi_aff manage_copy( isl_pw_multi_aff *ptr);
 
 protected:
   isl_pw_multi_aff *ptr = nullptr;
 
-  inline explicit pw_multi_aff(__isl_take isl_pw_multi_aff *ptr);
+  inline explicit pw_multi_aff( isl_pw_multi_aff *ptr);
 
 public:
   inline /* implicit */ pw_multi_aff();
@@ -3048,10 +3048,10 @@ public:
   inline explicit pw_multi_aff(isl::ctx ctx, const std::string &str);
   inline pw_multi_aff &operator=(pw_multi_aff obj);
   inline ~pw_multi_aff();
-  inline __isl_give isl_pw_multi_aff *copy() const &;
-  inline __isl_give isl_pw_multi_aff *copy() && = delete;
-  inline __isl_keep isl_pw_multi_aff *get() const;
-  inline __isl_give isl_pw_multi_aff *release();
+  inline  isl_pw_multi_aff *copy() const &;
+  inline  isl_pw_multi_aff *copy() && = delete;
+  inline  isl_pw_multi_aff *get() const;
+  inline  isl_pw_multi_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3191,17 +3191,17 @@ public:
 };
 
 // declarations for isl::pw_multi_aff_list
-inline pw_multi_aff_list manage(__isl_take isl_pw_multi_aff_list *ptr);
-inline pw_multi_aff_list manage_copy(__isl_keep isl_pw_multi_aff_list *ptr);
+inline pw_multi_aff_list manage( isl_pw_multi_aff_list *ptr);
+inline pw_multi_aff_list manage_copy( isl_pw_multi_aff_list *ptr);
 
 class pw_multi_aff_list {
-  friend inline pw_multi_aff_list manage(__isl_take isl_pw_multi_aff_list *ptr);
-  friend inline pw_multi_aff_list manage_copy(__isl_keep isl_pw_multi_aff_list *ptr);
+  friend inline pw_multi_aff_list manage( isl_pw_multi_aff_list *ptr);
+  friend inline pw_multi_aff_list manage_copy( isl_pw_multi_aff_list *ptr);
 
 protected:
   isl_pw_multi_aff_list *ptr = nullptr;
 
-  inline explicit pw_multi_aff_list(__isl_take isl_pw_multi_aff_list *ptr);
+  inline explicit pw_multi_aff_list( isl_pw_multi_aff_list *ptr);
 
 public:
   inline /* implicit */ pw_multi_aff_list();
@@ -3211,10 +3211,10 @@ public:
   inline explicit pw_multi_aff_list(isl::ctx ctx, const std::string &str);
   inline pw_multi_aff_list &operator=(pw_multi_aff_list obj);
   inline ~pw_multi_aff_list();
-  inline __isl_give isl_pw_multi_aff_list *copy() const &;
-  inline __isl_give isl_pw_multi_aff_list *copy() && = delete;
-  inline __isl_keep isl_pw_multi_aff_list *get() const;
-  inline __isl_give isl_pw_multi_aff_list *release();
+  inline  isl_pw_multi_aff_list *copy() const &;
+  inline  isl_pw_multi_aff_list *copy() && = delete;
+  inline  isl_pw_multi_aff_list *get() const;
+  inline  isl_pw_multi_aff_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3232,17 +3232,17 @@ public:
 };
 
 // declarations for isl::schedule
-inline schedule manage(__isl_take isl_schedule *ptr);
-inline schedule manage_copy(__isl_keep isl_schedule *ptr);
+inline schedule manage( isl_schedule *ptr);
+inline schedule manage_copy( isl_schedule *ptr);
 
 class schedule {
-  friend inline schedule manage(__isl_take isl_schedule *ptr);
-  friend inline schedule manage_copy(__isl_keep isl_schedule *ptr);
+  friend inline schedule manage( isl_schedule *ptr);
+  friend inline schedule manage_copy( isl_schedule *ptr);
 
 protected:
   isl_schedule *ptr = nullptr;
 
-  inline explicit schedule(__isl_take isl_schedule *ptr);
+  inline explicit schedule( isl_schedule *ptr);
 
 public:
   inline /* implicit */ schedule();
@@ -3250,10 +3250,10 @@ public:
   inline explicit schedule(isl::ctx ctx, const std::string &str);
   inline schedule &operator=(schedule obj);
   inline ~schedule();
-  inline __isl_give isl_schedule *copy() const &;
-  inline __isl_give isl_schedule *copy() && = delete;
-  inline __isl_keep isl_schedule *get() const;
-  inline __isl_give isl_schedule *release();
+  inline  isl_schedule *copy() const &;
+  inline  isl_schedule *copy() && = delete;
+  inline  isl_schedule *get() const;
+  inline  isl_schedule *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3268,17 +3268,17 @@ public:
 };
 
 // declarations for isl::schedule_constraints
-inline schedule_constraints manage(__isl_take isl_schedule_constraints *ptr);
-inline schedule_constraints manage_copy(__isl_keep isl_schedule_constraints *ptr);
+inline schedule_constraints manage( isl_schedule_constraints *ptr);
+inline schedule_constraints manage_copy( isl_schedule_constraints *ptr);
 
 class schedule_constraints {
-  friend inline schedule_constraints manage(__isl_take isl_schedule_constraints *ptr);
-  friend inline schedule_constraints manage_copy(__isl_keep isl_schedule_constraints *ptr);
+  friend inline schedule_constraints manage( isl_schedule_constraints *ptr);
+  friend inline schedule_constraints manage_copy( isl_schedule_constraints *ptr);
 
 protected:
   isl_schedule_constraints *ptr = nullptr;
 
-  inline explicit schedule_constraints(__isl_take isl_schedule_constraints *ptr);
+  inline explicit schedule_constraints( isl_schedule_constraints *ptr);
 
 public:
   inline /* implicit */ schedule_constraints();
@@ -3286,10 +3286,10 @@ public:
   inline explicit schedule_constraints(isl::ctx ctx, const std::string &str);
   inline schedule_constraints &operator=(schedule_constraints obj);
   inline ~schedule_constraints();
-  inline __isl_give isl_schedule_constraints *copy() const &;
-  inline __isl_give isl_schedule_constraints *copy() && = delete;
-  inline __isl_keep isl_schedule_constraints *get() const;
-  inline __isl_give isl_schedule_constraints *release();
+  inline  isl_schedule_constraints *copy() const &;
+  inline  isl_schedule_constraints *copy() && = delete;
+  inline  isl_schedule_constraints *get() const;
+  inline  isl_schedule_constraints *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3317,27 +3317,27 @@ public:
 };
 
 // declarations for isl::schedule_node
-inline schedule_node manage(__isl_take isl_schedule_node *ptr);
-inline schedule_node manage_copy(__isl_keep isl_schedule_node *ptr);
+inline schedule_node manage( isl_schedule_node *ptr);
+inline schedule_node manage_copy( isl_schedule_node *ptr);
 
 class schedule_node {
-  friend inline schedule_node manage(__isl_take isl_schedule_node *ptr);
-  friend inline schedule_node manage_copy(__isl_keep isl_schedule_node *ptr);
+  friend inline schedule_node manage( isl_schedule_node *ptr);
+  friend inline schedule_node manage_copy( isl_schedule_node *ptr);
 
 protected:
   isl_schedule_node *ptr = nullptr;
 
-  inline explicit schedule_node(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node();
   inline /* implicit */ schedule_node(const schedule_node &obj);
   inline schedule_node &operator=(schedule_node obj);
   inline ~schedule_node();
-  inline __isl_give isl_schedule_node *copy() const &;
-  inline __isl_give isl_schedule_node *copy() && = delete;
-  inline __isl_keep isl_schedule_node *get() const;
-  inline __isl_give isl_schedule_node *release();
+  inline  isl_schedule_node *copy() const &;
+  inline  isl_schedule_node *copy() && = delete;
+  inline  isl_schedule_node *get() const;
+  inline  isl_schedule_node *release();
   inline bool is_null() const;
 private:
   template <typename T,
@@ -3409,7 +3409,7 @@ class schedule_node_band : public schedule_node {
   static const auto type = isl_schedule_node_band;
 
 protected:
-  inline explicit schedule_node_band(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_band( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_band();
@@ -3451,7 +3451,7 @@ class schedule_node_context : public schedule_node {
   static const auto type = isl_schedule_node_context;
 
 protected:
-  inline explicit schedule_node_context(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_context( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_context();
@@ -3472,7 +3472,7 @@ class schedule_node_domain : public schedule_node {
   static const auto type = isl_schedule_node_domain;
 
 protected:
-  inline explicit schedule_node_domain(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_domain( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_domain();
@@ -3493,7 +3493,7 @@ class schedule_node_expansion : public schedule_node {
   static const auto type = isl_schedule_node_expansion;
 
 protected:
-  inline explicit schedule_node_expansion(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_expansion( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_expansion();
@@ -3516,7 +3516,7 @@ class schedule_node_extension : public schedule_node {
   static const auto type = isl_schedule_node_extension;
 
 protected:
-  inline explicit schedule_node_extension(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_extension( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_extension();
@@ -3537,7 +3537,7 @@ class schedule_node_filter : public schedule_node {
   static const auto type = isl_schedule_node_filter;
 
 protected:
-  inline explicit schedule_node_filter(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_filter( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_filter();
@@ -3558,7 +3558,7 @@ class schedule_node_guard : public schedule_node {
   static const auto type = isl_schedule_node_guard;
 
 protected:
-  inline explicit schedule_node_guard(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_guard( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_guard();
@@ -3579,7 +3579,7 @@ class schedule_node_leaf : public schedule_node {
   static const auto type = isl_schedule_node_leaf;
 
 protected:
-  inline explicit schedule_node_leaf(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_leaf( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_leaf();
@@ -3598,7 +3598,7 @@ class schedule_node_mark : public schedule_node {
   static const auto type = isl_schedule_node_mark;
 
 protected:
-  inline explicit schedule_node_mark(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_mark( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_mark();
@@ -3617,7 +3617,7 @@ class schedule_node_sequence : public schedule_node {
   static const auto type = isl_schedule_node_sequence;
 
 protected:
-  inline explicit schedule_node_sequence(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_sequence( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_sequence();
@@ -3636,7 +3636,7 @@ class schedule_node_set : public schedule_node {
   static const auto type = isl_schedule_node_set;
 
 protected:
-  inline explicit schedule_node_set(__isl_take isl_schedule_node *ptr);
+  inline explicit schedule_node_set( isl_schedule_node *ptr);
 
 public:
   inline /* implicit */ schedule_node_set();
@@ -3647,17 +3647,17 @@ public:
 };
 
 // declarations for isl::set
-inline set manage(__isl_take isl_set *ptr);
-inline set manage_copy(__isl_keep isl_set *ptr);
+inline set manage( isl_set *ptr);
+inline set manage_copy( isl_set *ptr);
 
 class set {
-  friend inline set manage(__isl_take isl_set *ptr);
-  friend inline set manage_copy(__isl_keep isl_set *ptr);
+  friend inline set manage( isl_set *ptr);
+  friend inline set manage_copy( isl_set *ptr);
 
 protected:
   isl_set *ptr = nullptr;
 
-  inline explicit set(__isl_take isl_set *ptr);
+  inline explicit set( isl_set *ptr);
 
 public:
   inline /* implicit */ set();
@@ -3667,10 +3667,10 @@ public:
   inline explicit set(isl::ctx ctx, const std::string &str);
   inline set &operator=(set obj);
   inline ~set();
-  inline __isl_give isl_set *copy() const &;
-  inline __isl_give isl_set *copy() && = delete;
-  inline __isl_keep isl_set *get() const;
-  inline __isl_give isl_set *release();
+  inline  isl_set *copy() const &;
+  inline  isl_set *copy() && = delete;
+  inline  isl_set *get() const;
+  inline  isl_set *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3792,17 +3792,17 @@ public:
 };
 
 // declarations for isl::set_list
-inline set_list manage(__isl_take isl_set_list *ptr);
-inline set_list manage_copy(__isl_keep isl_set_list *ptr);
+inline set_list manage( isl_set_list *ptr);
+inline set_list manage_copy( isl_set_list *ptr);
 
 class set_list {
-  friend inline set_list manage(__isl_take isl_set_list *ptr);
-  friend inline set_list manage_copy(__isl_keep isl_set_list *ptr);
+  friend inline set_list manage( isl_set_list *ptr);
+  friend inline set_list manage_copy( isl_set_list *ptr);
 
 protected:
   isl_set_list *ptr = nullptr;
 
-  inline explicit set_list(__isl_take isl_set_list *ptr);
+  inline explicit set_list( isl_set_list *ptr);
 
 public:
   inline /* implicit */ set_list();
@@ -3812,10 +3812,10 @@ public:
   inline explicit set_list(isl::ctx ctx, const std::string &str);
   inline set_list &operator=(set_list obj);
   inline ~set_list();
-  inline __isl_give isl_set_list *copy() const &;
-  inline __isl_give isl_set_list *copy() && = delete;
-  inline __isl_keep isl_set_list *get() const;
-  inline __isl_give isl_set_list *release();
+  inline  isl_set_list *copy() const &;
+  inline  isl_set_list *copy() && = delete;
+  inline  isl_set_list *get() const;
+  inline  isl_set_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3833,17 +3833,17 @@ public:
 };
 
 // declarations for isl::space
-inline space manage(__isl_take isl_space *ptr);
-inline space manage_copy(__isl_keep isl_space *ptr);
+inline space manage( isl_space *ptr);
+inline space manage_copy( isl_space *ptr);
 
 class space {
-  friend inline space manage(__isl_take isl_space *ptr);
-  friend inline space manage_copy(__isl_keep isl_space *ptr);
+  friend inline space manage( isl_space *ptr);
+  friend inline space manage_copy( isl_space *ptr);
 
 protected:
   isl_space *ptr = nullptr;
 
-  inline explicit space(__isl_take isl_space *ptr);
+  inline explicit space( isl_space *ptr);
 
 public:
   inline /* implicit */ space();
@@ -3851,10 +3851,10 @@ public:
   inline explicit space(isl::ctx ctx, const std::string &str);
   inline space &operator=(space obj);
   inline ~space();
-  inline __isl_give isl_space *copy() const &;
-  inline __isl_give isl_space *copy() && = delete;
-  inline __isl_keep isl_space *get() const;
-  inline __isl_give isl_space *release();
+  inline  isl_space *copy() const &;
+  inline  isl_space *copy() && = delete;
+  inline  isl_space *get() const;
+  inline  isl_space *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3917,17 +3917,17 @@ public:
 };
 
 // declarations for isl::union_access_info
-inline union_access_info manage(__isl_take isl_union_access_info *ptr);
-inline union_access_info manage_copy(__isl_keep isl_union_access_info *ptr);
+inline union_access_info manage( isl_union_access_info *ptr);
+inline union_access_info manage_copy( isl_union_access_info *ptr);
 
 class union_access_info {
-  friend inline union_access_info manage(__isl_take isl_union_access_info *ptr);
-  friend inline union_access_info manage_copy(__isl_keep isl_union_access_info *ptr);
+  friend inline union_access_info manage( isl_union_access_info *ptr);
+  friend inline union_access_info manage_copy( isl_union_access_info *ptr);
 
 protected:
   isl_union_access_info *ptr = nullptr;
 
-  inline explicit union_access_info(__isl_take isl_union_access_info *ptr);
+  inline explicit union_access_info( isl_union_access_info *ptr);
 
 public:
   inline /* implicit */ union_access_info();
@@ -3935,10 +3935,10 @@ public:
   inline explicit union_access_info(isl::union_map sink);
   inline union_access_info &operator=(union_access_info obj);
   inline ~union_access_info();
-  inline __isl_give isl_union_access_info *copy() const &;
-  inline __isl_give isl_union_access_info *copy() && = delete;
-  inline __isl_keep isl_union_access_info *get() const;
-  inline __isl_give isl_union_access_info *release();
+  inline  isl_union_access_info *copy() const &;
+  inline  isl_union_access_info *copy() && = delete;
+  inline  isl_union_access_info *get() const;
+  inline  isl_union_access_info *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3951,27 +3951,27 @@ public:
 };
 
 // declarations for isl::union_flow
-inline union_flow manage(__isl_take isl_union_flow *ptr);
-inline union_flow manage_copy(__isl_keep isl_union_flow *ptr);
+inline union_flow manage( isl_union_flow *ptr);
+inline union_flow manage_copy( isl_union_flow *ptr);
 
 class union_flow {
-  friend inline union_flow manage(__isl_take isl_union_flow *ptr);
-  friend inline union_flow manage_copy(__isl_keep isl_union_flow *ptr);
+  friend inline union_flow manage( isl_union_flow *ptr);
+  friend inline union_flow manage_copy( isl_union_flow *ptr);
 
 protected:
   isl_union_flow *ptr = nullptr;
 
-  inline explicit union_flow(__isl_take isl_union_flow *ptr);
+  inline explicit union_flow( isl_union_flow *ptr);
 
 public:
   inline /* implicit */ union_flow();
   inline /* implicit */ union_flow(const union_flow &obj);
   inline union_flow &operator=(union_flow obj);
   inline ~union_flow();
-  inline __isl_give isl_union_flow *copy() const &;
-  inline __isl_give isl_union_flow *copy() && = delete;
-  inline __isl_keep isl_union_flow *get() const;
-  inline __isl_give isl_union_flow *release();
+  inline  isl_union_flow *copy() const &;
+  inline  isl_union_flow *copy() && = delete;
+  inline  isl_union_flow *get() const;
+  inline  isl_union_flow *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -3990,17 +3990,17 @@ public:
 };
 
 // declarations for isl::union_map
-inline union_map manage(__isl_take isl_union_map *ptr);
-inline union_map manage_copy(__isl_keep isl_union_map *ptr);
+inline union_map manage( isl_union_map *ptr);
+inline union_map manage_copy( isl_union_map *ptr);
 
 class union_map {
-  friend inline union_map manage(__isl_take isl_union_map *ptr);
-  friend inline union_map manage_copy(__isl_keep isl_union_map *ptr);
+  friend inline union_map manage( isl_union_map *ptr);
+  friend inline union_map manage_copy( isl_union_map *ptr);
 
 protected:
   isl_union_map *ptr = nullptr;
 
-  inline explicit union_map(__isl_take isl_union_map *ptr);
+  inline explicit union_map( isl_union_map *ptr);
 
 public:
   inline /* implicit */ union_map();
@@ -4010,10 +4010,10 @@ public:
   inline explicit union_map(isl::ctx ctx, const std::string &str);
   inline union_map &operator=(union_map obj);
   inline ~union_map();
-  inline __isl_give isl_union_map *copy() const &;
-  inline __isl_give isl_union_map *copy() && = delete;
-  inline __isl_keep isl_union_map *get() const;
-  inline __isl_give isl_union_map *release();
+  inline  isl_union_map *copy() const &;
+  inline  isl_union_map *copy() && = delete;
+  inline  isl_union_map *get() const;
+  inline  isl_union_map *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4114,17 +4114,17 @@ public:
 };
 
 // declarations for isl::union_pw_aff
-inline union_pw_aff manage(__isl_take isl_union_pw_aff *ptr);
-inline union_pw_aff manage_copy(__isl_keep isl_union_pw_aff *ptr);
+inline union_pw_aff manage( isl_union_pw_aff *ptr);
+inline union_pw_aff manage_copy( isl_union_pw_aff *ptr);
 
 class union_pw_aff {
-  friend inline union_pw_aff manage(__isl_take isl_union_pw_aff *ptr);
-  friend inline union_pw_aff manage_copy(__isl_keep isl_union_pw_aff *ptr);
+  friend inline union_pw_aff manage( isl_union_pw_aff *ptr);
+  friend inline union_pw_aff manage_copy( isl_union_pw_aff *ptr);
 
 protected:
   isl_union_pw_aff *ptr = nullptr;
 
-  inline explicit union_pw_aff(__isl_take isl_union_pw_aff *ptr);
+  inline explicit union_pw_aff( isl_union_pw_aff *ptr);
 
 public:
   inline /* implicit */ union_pw_aff();
@@ -4134,10 +4134,10 @@ public:
   inline explicit union_pw_aff(isl::ctx ctx, const std::string &str);
   inline union_pw_aff &operator=(union_pw_aff obj);
   inline ~union_pw_aff();
-  inline __isl_give isl_union_pw_aff *copy() const &;
-  inline __isl_give isl_union_pw_aff *copy() && = delete;
-  inline __isl_keep isl_union_pw_aff *get() const;
-  inline __isl_give isl_union_pw_aff *release();
+  inline  isl_union_pw_aff *copy() const &;
+  inline  isl_union_pw_aff *copy() && = delete;
+  inline  isl_union_pw_aff *get() const;
+  inline  isl_union_pw_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4216,17 +4216,17 @@ public:
 };
 
 // declarations for isl::union_pw_aff_list
-inline union_pw_aff_list manage(__isl_take isl_union_pw_aff_list *ptr);
-inline union_pw_aff_list manage_copy(__isl_keep isl_union_pw_aff_list *ptr);
+inline union_pw_aff_list manage( isl_union_pw_aff_list *ptr);
+inline union_pw_aff_list manage_copy( isl_union_pw_aff_list *ptr);
 
 class union_pw_aff_list {
-  friend inline union_pw_aff_list manage(__isl_take isl_union_pw_aff_list *ptr);
-  friend inline union_pw_aff_list manage_copy(__isl_keep isl_union_pw_aff_list *ptr);
+  friend inline union_pw_aff_list manage( isl_union_pw_aff_list *ptr);
+  friend inline union_pw_aff_list manage_copy( isl_union_pw_aff_list *ptr);
 
 protected:
   isl_union_pw_aff_list *ptr = nullptr;
 
-  inline explicit union_pw_aff_list(__isl_take isl_union_pw_aff_list *ptr);
+  inline explicit union_pw_aff_list( isl_union_pw_aff_list *ptr);
 
 public:
   inline /* implicit */ union_pw_aff_list();
@@ -4236,10 +4236,10 @@ public:
   inline explicit union_pw_aff_list(isl::ctx ctx, const std::string &str);
   inline union_pw_aff_list &operator=(union_pw_aff_list obj);
   inline ~union_pw_aff_list();
-  inline __isl_give isl_union_pw_aff_list *copy() const &;
-  inline __isl_give isl_union_pw_aff_list *copy() && = delete;
-  inline __isl_keep isl_union_pw_aff_list *get() const;
-  inline __isl_give isl_union_pw_aff_list *release();
+  inline  isl_union_pw_aff_list *copy() const &;
+  inline  isl_union_pw_aff_list *copy() && = delete;
+  inline  isl_union_pw_aff_list *get() const;
+  inline  isl_union_pw_aff_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4257,17 +4257,17 @@ public:
 };
 
 // declarations for isl::union_pw_multi_aff
-inline union_pw_multi_aff manage(__isl_take isl_union_pw_multi_aff *ptr);
-inline union_pw_multi_aff manage_copy(__isl_keep isl_union_pw_multi_aff *ptr);
+inline union_pw_multi_aff manage( isl_union_pw_multi_aff *ptr);
+inline union_pw_multi_aff manage_copy( isl_union_pw_multi_aff *ptr);
 
 class union_pw_multi_aff {
-  friend inline union_pw_multi_aff manage(__isl_take isl_union_pw_multi_aff *ptr);
-  friend inline union_pw_multi_aff manage_copy(__isl_keep isl_union_pw_multi_aff *ptr);
+  friend inline union_pw_multi_aff manage( isl_union_pw_multi_aff *ptr);
+  friend inline union_pw_multi_aff manage_copy( isl_union_pw_multi_aff *ptr);
 
 protected:
   isl_union_pw_multi_aff *ptr = nullptr;
 
-  inline explicit union_pw_multi_aff(__isl_take isl_union_pw_multi_aff *ptr);
+  inline explicit union_pw_multi_aff( isl_union_pw_multi_aff *ptr);
 
 public:
   inline /* implicit */ union_pw_multi_aff();
@@ -4278,10 +4278,10 @@ public:
   inline explicit union_pw_multi_aff(isl::ctx ctx, const std::string &str);
   inline union_pw_multi_aff &operator=(union_pw_multi_aff obj);
   inline ~union_pw_multi_aff();
-  inline __isl_give isl_union_pw_multi_aff *copy() const &;
-  inline __isl_give isl_union_pw_multi_aff *copy() && = delete;
-  inline __isl_keep isl_union_pw_multi_aff *get() const;
-  inline __isl_give isl_union_pw_multi_aff *release();
+  inline  isl_union_pw_multi_aff *copy() const &;
+  inline  isl_union_pw_multi_aff *copy() && = delete;
+  inline  isl_union_pw_multi_aff *get() const;
+  inline  isl_union_pw_multi_aff *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4322,17 +4322,17 @@ public:
 };
 
 // declarations for isl::union_set
-inline union_set manage(__isl_take isl_union_set *ptr);
-inline union_set manage_copy(__isl_keep isl_union_set *ptr);
+inline union_set manage( isl_union_set *ptr);
+inline union_set manage_copy( isl_union_set *ptr);
 
 class union_set {
-  friend inline union_set manage(__isl_take isl_union_set *ptr);
-  friend inline union_set manage_copy(__isl_keep isl_union_set *ptr);
+  friend inline union_set manage( isl_union_set *ptr);
+  friend inline union_set manage_copy( isl_union_set *ptr);
 
 protected:
   isl_union_set *ptr = nullptr;
 
-  inline explicit union_set(__isl_take isl_union_set *ptr);
+  inline explicit union_set( isl_union_set *ptr);
 
 public:
   inline /* implicit */ union_set();
@@ -4343,10 +4343,10 @@ public:
   inline explicit union_set(isl::ctx ctx, const std::string &str);
   inline union_set &operator=(union_set obj);
   inline ~union_set();
-  inline __isl_give isl_union_set *copy() const &;
-  inline __isl_give isl_union_set *copy() && = delete;
-  inline __isl_keep isl_union_set *get() const;
-  inline __isl_give isl_union_set *release();
+  inline  isl_union_set *copy() const &;
+  inline  isl_union_set *copy() && = delete;
+  inline  isl_union_set *get() const;
+  inline  isl_union_set *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4394,17 +4394,17 @@ public:
 };
 
 // declarations for isl::union_set_list
-inline union_set_list manage(__isl_take isl_union_set_list *ptr);
-inline union_set_list manage_copy(__isl_keep isl_union_set_list *ptr);
+inline union_set_list manage( isl_union_set_list *ptr);
+inline union_set_list manage_copy( isl_union_set_list *ptr);
 
 class union_set_list {
-  friend inline union_set_list manage(__isl_take isl_union_set_list *ptr);
-  friend inline union_set_list manage_copy(__isl_keep isl_union_set_list *ptr);
+  friend inline union_set_list manage( isl_union_set_list *ptr);
+  friend inline union_set_list manage_copy( isl_union_set_list *ptr);
 
 protected:
   isl_union_set_list *ptr = nullptr;
 
-  inline explicit union_set_list(__isl_take isl_union_set_list *ptr);
+  inline explicit union_set_list( isl_union_set_list *ptr);
 
 public:
   inline /* implicit */ union_set_list();
@@ -4414,10 +4414,10 @@ public:
   inline explicit union_set_list(isl::ctx ctx, const std::string &str);
   inline union_set_list &operator=(union_set_list obj);
   inline ~union_set_list();
-  inline __isl_give isl_union_set_list *copy() const &;
-  inline __isl_give isl_union_set_list *copy() && = delete;
-  inline __isl_keep isl_union_set_list *get() const;
-  inline __isl_give isl_union_set_list *release();
+  inline  isl_union_set_list *copy() const &;
+  inline  isl_union_set_list *copy() && = delete;
+  inline  isl_union_set_list *get() const;
+  inline  isl_union_set_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4435,17 +4435,17 @@ public:
 };
 
 // declarations for isl::val
-inline val manage(__isl_take isl_val *ptr);
-inline val manage_copy(__isl_keep isl_val *ptr);
+inline val manage( isl_val *ptr);
+inline val manage_copy( isl_val *ptr);
 
 class val {
-  friend inline val manage(__isl_take isl_val *ptr);
-  friend inline val manage_copy(__isl_keep isl_val *ptr);
+  friend inline val manage( isl_val *ptr);
+  friend inline val manage_copy( isl_val *ptr);
 
 protected:
   isl_val *ptr = nullptr;
 
-  inline explicit val(__isl_take isl_val *ptr);
+  inline explicit val( isl_val *ptr);
 
 public:
   inline /* implicit */ val();
@@ -4454,10 +4454,10 @@ public:
   inline explicit val(isl::ctx ctx, const std::string &str);
   inline val &operator=(val obj);
   inline ~val();
-  inline __isl_give isl_val *copy() const &;
-  inline __isl_give isl_val *copy() && = delete;
-  inline __isl_keep isl_val *get() const;
-  inline __isl_give isl_val *release();
+  inline  isl_val *copy() const &;
+  inline  isl_val *copy() && = delete;
+  inline  isl_val *get() const;
+  inline  isl_val *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4528,17 +4528,17 @@ public:
 };
 
 // declarations for isl::val_list
-inline val_list manage(__isl_take isl_val_list *ptr);
-inline val_list manage_copy(__isl_keep isl_val_list *ptr);
+inline val_list manage( isl_val_list *ptr);
+inline val_list manage_copy( isl_val_list *ptr);
 
 class val_list {
-  friend inline val_list manage(__isl_take isl_val_list *ptr);
-  friend inline val_list manage_copy(__isl_keep isl_val_list *ptr);
+  friend inline val_list manage( isl_val_list *ptr);
+  friend inline val_list manage_copy( isl_val_list *ptr);
 
 protected:
   isl_val_list *ptr = nullptr;
 
-  inline explicit val_list(__isl_take isl_val_list *ptr);
+  inline explicit val_list( isl_val_list *ptr);
 
 public:
   inline /* implicit */ val_list();
@@ -4548,10 +4548,10 @@ public:
   inline explicit val_list(isl::ctx ctx, const std::string &str);
   inline val_list &operator=(val_list obj);
   inline ~val_list();
-  inline __isl_give isl_val_list *copy() const &;
-  inline __isl_give isl_val_list *copy() && = delete;
-  inline __isl_keep isl_val_list *get() const;
-  inline __isl_give isl_val_list *release();
+  inline  isl_val_list *copy() const &;
+  inline  isl_val_list *copy() && = delete;
+  inline  isl_val_list *get() const;
+  inline  isl_val_list *release();
   inline bool is_null() const;
   inline isl::ctx ctx() const;
 
@@ -4572,12 +4572,12 @@ public:
 };
 
 // implementations for isl::aff
-aff manage(__isl_take isl_aff *ptr) {
+aff manage( isl_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return aff(ptr);
 }
-aff manage_copy(__isl_keep isl_aff *ptr) {
+aff manage_copy( isl_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_aff_get_ctx(ptr);
@@ -4588,7 +4588,7 @@ aff manage_copy(__isl_keep isl_aff *ptr) {
   return aff(ptr);
 }
 
-aff::aff(__isl_take isl_aff *ptr)
+aff::aff( isl_aff *ptr)
     : ptr(ptr) {}
 
 aff::aff()
@@ -4626,15 +4626,15 @@ aff::~aff() {
     isl_aff_free(ptr);
 }
 
-__isl_give isl_aff *aff::copy() const & {
+ isl_aff *aff::copy() const & {
   return isl_aff_copy(ptr);
 }
 
-__isl_keep isl_aff *aff::get() const {
+ isl_aff *aff::get() const {
   return ptr;
 }
 
-__isl_give isl_aff *aff::release() {
+ isl_aff *aff::release() {
   isl_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -5961,12 +5961,12 @@ inline std::ostream &operator<<(std::ostream &os, const aff &obj)
 }
 
 // implementations for isl::aff_list
-aff_list manage(__isl_take isl_aff_list *ptr) {
+aff_list manage( isl_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return aff_list(ptr);
 }
-aff_list manage_copy(__isl_keep isl_aff_list *ptr) {
+aff_list manage_copy( isl_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_aff_list_get_ctx(ptr);
@@ -5977,7 +5977,7 @@ aff_list manage_copy(__isl_keep isl_aff_list *ptr) {
   return aff_list(ptr);
 }
 
-aff_list::aff_list(__isl_take isl_aff_list *ptr)
+aff_list::aff_list( isl_aff_list *ptr)
     : ptr(ptr) {}
 
 aff_list::aff_list()
@@ -6037,15 +6037,15 @@ aff_list::~aff_list() {
     isl_aff_list_free(ptr);
 }
 
-__isl_give isl_aff_list *aff_list::copy() const & {
+ isl_aff_list *aff_list::copy() const & {
   return isl_aff_list_copy(ptr);
 }
 
-__isl_keep isl_aff_list *aff_list::get() const {
+ isl_aff_list *aff_list::get() const {
   return ptr;
 }
 
-__isl_give isl_aff_list *aff_list::release() {
+ isl_aff_list *aff_list::release() {
   isl_aff_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -6247,12 +6247,12 @@ inline std::ostream &operator<<(std::ostream &os, const aff_list &obj)
 }
 
 // implementations for isl::ast_build
-ast_build manage(__isl_take isl_ast_build *ptr) {
+ast_build manage( isl_ast_build *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return ast_build(ptr);
 }
-ast_build manage_copy(__isl_keep isl_ast_build *ptr) {
+ast_build manage_copy( isl_ast_build *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_ast_build_get_ctx(ptr);
@@ -6263,7 +6263,7 @@ ast_build manage_copy(__isl_keep isl_ast_build *ptr) {
   return ast_build(ptr);
 }
 
-ast_build::ast_build(__isl_take isl_ast_build *ptr)
+ast_build::ast_build( isl_ast_build *ptr)
     : ptr(ptr) {}
 
 ast_build::ast_build()
@@ -6303,15 +6303,15 @@ ast_build::~ast_build() {
     isl_ast_build_free(ptr);
 }
 
-__isl_give isl_ast_build *ast_build::copy() const & {
+ isl_ast_build *ast_build::copy() const & {
   return isl_ast_build_copy(ptr);
 }
 
-__isl_keep isl_ast_build *ast_build::get() const {
+ isl_ast_build *ast_build::get() const {
   return ptr;
 }
 
-__isl_give isl_ast_build *ast_build::release() {
+ isl_ast_build *ast_build::release() {
   if (at_each_domain_data)
     exception::throw_invalid("cannot release object with persistent callbacks", __FILE__, __LINE__);
   isl_ast_build *tmp = ptr;
@@ -6536,12 +6536,12 @@ isl::union_map ast_build::get_schedule() const
 }
 
 // implementations for isl::ast_expr
-ast_expr manage(__isl_take isl_ast_expr *ptr) {
+ast_expr manage( isl_ast_expr *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return ast_expr(ptr);
 }
-ast_expr manage_copy(__isl_keep isl_ast_expr *ptr) {
+ast_expr manage_copy( isl_ast_expr *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_ast_expr_get_ctx(ptr);
@@ -6552,7 +6552,7 @@ ast_expr manage_copy(__isl_keep isl_ast_expr *ptr) {
   return ast_expr(ptr);
 }
 
-ast_expr::ast_expr(__isl_take isl_ast_expr *ptr)
+ast_expr::ast_expr( isl_ast_expr *ptr)
     : ptr(ptr) {}
 
 ast_expr::ast_expr()
@@ -6580,15 +6580,15 @@ ast_expr::~ast_expr() {
     isl_ast_expr_free(ptr);
 }
 
-__isl_give isl_ast_expr *ast_expr::copy() const & {
+ isl_ast_expr *ast_expr::copy() const & {
   return isl_ast_expr_copy(ptr);
 }
 
-__isl_keep isl_ast_expr *ast_expr::get() const {
+ isl_ast_expr *ast_expr::get() const {
   return ptr;
 }
 
-__isl_give isl_ast_expr *ast_expr::release() {
+ isl_ast_expr *ast_expr::release() {
   isl_ast_expr *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -6649,7 +6649,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr &obj)
 }
 
 // implementations for isl::ast_expr_id
-ast_expr_id::ast_expr_id(__isl_take isl_ast_expr *ptr)
+ast_expr_id::ast_expr_id( isl_ast_expr *ptr)
     : ast_expr(ptr) {}
 
 ast_expr_id::ast_expr_id()
@@ -6701,7 +6701,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_id &obj)
 }
 
 // implementations for isl::ast_expr_int
-ast_expr_int::ast_expr_int(__isl_take isl_ast_expr *ptr)
+ast_expr_int::ast_expr_int( isl_ast_expr *ptr)
     : ast_expr(ptr) {}
 
 ast_expr_int::ast_expr_int()
@@ -6753,7 +6753,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_int &obj)
 }
 
 // implementations for isl::ast_expr_op
-ast_expr_op::ast_expr_op(__isl_take isl_ast_expr *ptr)
+ast_expr_op::ast_expr_op( isl_ast_expr *ptr)
     : ast_expr(ptr) {}
 
 ast_expr_op::ast_expr_op()
@@ -6842,7 +6842,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op &obj)
 }
 
 // implementations for isl::ast_expr_op_access
-ast_expr_op_access::ast_expr_op_access(__isl_take isl_ast_expr *ptr)
+ast_expr_op_access::ast_expr_op_access( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_access::ast_expr_op_access()
@@ -6877,7 +6877,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_access &obj)
 }
 
 // implementations for isl::ast_expr_op_add
-ast_expr_op_add::ast_expr_op_add(__isl_take isl_ast_expr *ptr)
+ast_expr_op_add::ast_expr_op_add( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_add::ast_expr_op_add()
@@ -6912,7 +6912,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_add &obj)
 }
 
 // implementations for isl::ast_expr_op_address_of
-ast_expr_op_address_of::ast_expr_op_address_of(__isl_take isl_ast_expr *ptr)
+ast_expr_op_address_of::ast_expr_op_address_of( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_address_of::ast_expr_op_address_of()
@@ -6947,7 +6947,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_address_of &
 }
 
 // implementations for isl::ast_expr_op_and
-ast_expr_op_and::ast_expr_op_and(__isl_take isl_ast_expr *ptr)
+ast_expr_op_and::ast_expr_op_and( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_and::ast_expr_op_and()
@@ -6982,7 +6982,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_and &obj)
 }
 
 // implementations for isl::ast_expr_op_and_then
-ast_expr_op_and_then::ast_expr_op_and_then(__isl_take isl_ast_expr *ptr)
+ast_expr_op_and_then::ast_expr_op_and_then( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_and_then::ast_expr_op_and_then()
@@ -7017,7 +7017,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_and_then &ob
 }
 
 // implementations for isl::ast_expr_op_call
-ast_expr_op_call::ast_expr_op_call(__isl_take isl_ast_expr *ptr)
+ast_expr_op_call::ast_expr_op_call( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_call::ast_expr_op_call()
@@ -7052,7 +7052,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_call &obj)
 }
 
 // implementations for isl::ast_expr_op_cond
-ast_expr_op_cond::ast_expr_op_cond(__isl_take isl_ast_expr *ptr)
+ast_expr_op_cond::ast_expr_op_cond( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_cond::ast_expr_op_cond()
@@ -7087,7 +7087,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_cond &obj)
 }
 
 // implementations for isl::ast_expr_op_div
-ast_expr_op_div::ast_expr_op_div(__isl_take isl_ast_expr *ptr)
+ast_expr_op_div::ast_expr_op_div( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_div::ast_expr_op_div()
@@ -7122,7 +7122,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_div &obj)
 }
 
 // implementations for isl::ast_expr_op_eq
-ast_expr_op_eq::ast_expr_op_eq(__isl_take isl_ast_expr *ptr)
+ast_expr_op_eq::ast_expr_op_eq( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_eq::ast_expr_op_eq()
@@ -7157,7 +7157,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_eq &obj)
 }
 
 // implementations for isl::ast_expr_op_fdiv_q
-ast_expr_op_fdiv_q::ast_expr_op_fdiv_q(__isl_take isl_ast_expr *ptr)
+ast_expr_op_fdiv_q::ast_expr_op_fdiv_q( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_fdiv_q::ast_expr_op_fdiv_q()
@@ -7192,7 +7192,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_fdiv_q &obj)
 }
 
 // implementations for isl::ast_expr_op_ge
-ast_expr_op_ge::ast_expr_op_ge(__isl_take isl_ast_expr *ptr)
+ast_expr_op_ge::ast_expr_op_ge( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_ge::ast_expr_op_ge()
@@ -7227,7 +7227,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_ge &obj)
 }
 
 // implementations for isl::ast_expr_op_gt
-ast_expr_op_gt::ast_expr_op_gt(__isl_take isl_ast_expr *ptr)
+ast_expr_op_gt::ast_expr_op_gt( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_gt::ast_expr_op_gt()
@@ -7262,7 +7262,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_gt &obj)
 }
 
 // implementations for isl::ast_expr_op_le
-ast_expr_op_le::ast_expr_op_le(__isl_take isl_ast_expr *ptr)
+ast_expr_op_le::ast_expr_op_le( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_le::ast_expr_op_le()
@@ -7297,7 +7297,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_le &obj)
 }
 
 // implementations for isl::ast_expr_op_lt
-ast_expr_op_lt::ast_expr_op_lt(__isl_take isl_ast_expr *ptr)
+ast_expr_op_lt::ast_expr_op_lt( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_lt::ast_expr_op_lt()
@@ -7332,7 +7332,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_lt &obj)
 }
 
 // implementations for isl::ast_expr_op_max
-ast_expr_op_max::ast_expr_op_max(__isl_take isl_ast_expr *ptr)
+ast_expr_op_max::ast_expr_op_max( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_max::ast_expr_op_max()
@@ -7367,7 +7367,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_max &obj)
 }
 
 // implementations for isl::ast_expr_op_member
-ast_expr_op_member::ast_expr_op_member(__isl_take isl_ast_expr *ptr)
+ast_expr_op_member::ast_expr_op_member( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_member::ast_expr_op_member()
@@ -7402,7 +7402,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_member &obj)
 }
 
 // implementations for isl::ast_expr_op_min
-ast_expr_op_min::ast_expr_op_min(__isl_take isl_ast_expr *ptr)
+ast_expr_op_min::ast_expr_op_min( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_min::ast_expr_op_min()
@@ -7437,7 +7437,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_min &obj)
 }
 
 // implementations for isl::ast_expr_op_minus
-ast_expr_op_minus::ast_expr_op_minus(__isl_take isl_ast_expr *ptr)
+ast_expr_op_minus::ast_expr_op_minus( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_minus::ast_expr_op_minus()
@@ -7472,7 +7472,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_minus &obj)
 }
 
 // implementations for isl::ast_expr_op_mul
-ast_expr_op_mul::ast_expr_op_mul(__isl_take isl_ast_expr *ptr)
+ast_expr_op_mul::ast_expr_op_mul( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_mul::ast_expr_op_mul()
@@ -7507,7 +7507,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_mul &obj)
 }
 
 // implementations for isl::ast_expr_op_or
-ast_expr_op_or::ast_expr_op_or(__isl_take isl_ast_expr *ptr)
+ast_expr_op_or::ast_expr_op_or( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_or::ast_expr_op_or()
@@ -7542,7 +7542,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_or &obj)
 }
 
 // implementations for isl::ast_expr_op_or_else
-ast_expr_op_or_else::ast_expr_op_or_else(__isl_take isl_ast_expr *ptr)
+ast_expr_op_or_else::ast_expr_op_or_else( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_or_else::ast_expr_op_or_else()
@@ -7577,7 +7577,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_or_else &obj
 }
 
 // implementations for isl::ast_expr_op_pdiv_q
-ast_expr_op_pdiv_q::ast_expr_op_pdiv_q(__isl_take isl_ast_expr *ptr)
+ast_expr_op_pdiv_q::ast_expr_op_pdiv_q( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_pdiv_q::ast_expr_op_pdiv_q()
@@ -7612,7 +7612,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_pdiv_q &obj)
 }
 
 // implementations for isl::ast_expr_op_pdiv_r
-ast_expr_op_pdiv_r::ast_expr_op_pdiv_r(__isl_take isl_ast_expr *ptr)
+ast_expr_op_pdiv_r::ast_expr_op_pdiv_r( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_pdiv_r::ast_expr_op_pdiv_r()
@@ -7647,7 +7647,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_pdiv_r &obj)
 }
 
 // implementations for isl::ast_expr_op_select
-ast_expr_op_select::ast_expr_op_select(__isl_take isl_ast_expr *ptr)
+ast_expr_op_select::ast_expr_op_select( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_select::ast_expr_op_select()
@@ -7682,7 +7682,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_select &obj)
 }
 
 // implementations for isl::ast_expr_op_sub
-ast_expr_op_sub::ast_expr_op_sub(__isl_take isl_ast_expr *ptr)
+ast_expr_op_sub::ast_expr_op_sub( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_sub::ast_expr_op_sub()
@@ -7717,7 +7717,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_sub &obj)
 }
 
 // implementations for isl::ast_expr_op_zdiv_r
-ast_expr_op_zdiv_r::ast_expr_op_zdiv_r(__isl_take isl_ast_expr *ptr)
+ast_expr_op_zdiv_r::ast_expr_op_zdiv_r( isl_ast_expr *ptr)
     : ast_expr_op(ptr) {}
 
 ast_expr_op_zdiv_r::ast_expr_op_zdiv_r()
@@ -7752,12 +7752,12 @@ inline std::ostream &operator<<(std::ostream &os, const ast_expr_op_zdiv_r &obj)
 }
 
 // implementations for isl::ast_node
-ast_node manage(__isl_take isl_ast_node *ptr) {
+ast_node manage( isl_ast_node *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return ast_node(ptr);
 }
-ast_node manage_copy(__isl_keep isl_ast_node *ptr) {
+ast_node manage_copy( isl_ast_node *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_ast_node_get_ctx(ptr);
@@ -7768,7 +7768,7 @@ ast_node manage_copy(__isl_keep isl_ast_node *ptr) {
   return ast_node(ptr);
 }
 
-ast_node::ast_node(__isl_take isl_ast_node *ptr)
+ast_node::ast_node( isl_ast_node *ptr)
     : ptr(ptr) {}
 
 ast_node::ast_node()
@@ -7796,15 +7796,15 @@ ast_node::~ast_node() {
     isl_ast_node_free(ptr);
 }
 
-__isl_give isl_ast_node *ast_node::copy() const & {
+ isl_ast_node *ast_node::copy() const & {
   return isl_ast_node_copy(ptr);
 }
 
-__isl_keep isl_ast_node *ast_node::get() const {
+ isl_ast_node *ast_node::get() const {
   return ptr;
 }
 
-__isl_give isl_ast_node *ast_node::release() {
+ isl_ast_node *ast_node::release() {
   isl_ast_node *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -7905,7 +7905,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node &obj)
 }
 
 // implementations for isl::ast_node_block
-ast_node_block::ast_node_block(__isl_take isl_ast_node *ptr)
+ast_node_block::ast_node_block( isl_ast_node *ptr)
     : ast_node(ptr) {}
 
 ast_node_block::ast_node_block()
@@ -7969,7 +7969,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node_block &obj)
 }
 
 // implementations for isl::ast_node_for
-ast_node_for::ast_node_for(__isl_take isl_ast_node *ptr)
+ast_node_for::ast_node_for( isl_ast_node *ptr)
     : ast_node(ptr) {}
 
 ast_node_for::ast_node_for()
@@ -8101,7 +8101,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node_for &obj)
 }
 
 // implementations for isl::ast_node_if
-ast_node_if::ast_node_if(__isl_take isl_ast_node *ptr)
+ast_node_if::ast_node_if( isl_ast_node *ptr)
     : ast_node(ptr) {}
 
 ast_node_if::ast_node_if()
@@ -8199,12 +8199,12 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node_if &obj)
 }
 
 // implementations for isl::ast_node_list
-ast_node_list manage(__isl_take isl_ast_node_list *ptr) {
+ast_node_list manage( isl_ast_node_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return ast_node_list(ptr);
 }
-ast_node_list manage_copy(__isl_keep isl_ast_node_list *ptr) {
+ast_node_list manage_copy( isl_ast_node_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_ast_node_list_get_ctx(ptr);
@@ -8215,7 +8215,7 @@ ast_node_list manage_copy(__isl_keep isl_ast_node_list *ptr) {
   return ast_node_list(ptr);
 }
 
-ast_node_list::ast_node_list(__isl_take isl_ast_node_list *ptr)
+ast_node_list::ast_node_list( isl_ast_node_list *ptr)
     : ptr(ptr) {}
 
 ast_node_list::ast_node_list()
@@ -8265,15 +8265,15 @@ ast_node_list::~ast_node_list() {
     isl_ast_node_list_free(ptr);
 }
 
-__isl_give isl_ast_node_list *ast_node_list::copy() const & {
+ isl_ast_node_list *ast_node_list::copy() const & {
   return isl_ast_node_list_copy(ptr);
 }
 
-__isl_keep isl_ast_node_list *ast_node_list::get() const {
+ isl_ast_node_list *ast_node_list::get() const {
   return ptr;
 }
 
-__isl_give isl_ast_node_list *ast_node_list::release() {
+ isl_ast_node_list *ast_node_list::release() {
   isl_ast_node_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -8475,7 +8475,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node_list &obj)
 }
 
 // implementations for isl::ast_node_mark
-ast_node_mark::ast_node_mark(__isl_take isl_ast_node *ptr)
+ast_node_mark::ast_node_mark( isl_ast_node *ptr)
     : ast_node(ptr) {}
 
 ast_node_mark::ast_node_mark()
@@ -8544,7 +8544,7 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node_mark &obj)
 }
 
 // implementations for isl::ast_node_user
-ast_node_user::ast_node_user(__isl_take isl_ast_node *ptr)
+ast_node_user::ast_node_user( isl_ast_node *ptr)
     : ast_node(ptr) {}
 
 ast_node_user::ast_node_user()
@@ -8608,12 +8608,12 @@ inline std::ostream &operator<<(std::ostream &os, const ast_node_user &obj)
 }
 
 // implementations for isl::basic_map
-basic_map manage(__isl_take isl_basic_map *ptr) {
+basic_map manage( isl_basic_map *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return basic_map(ptr);
 }
-basic_map manage_copy(__isl_keep isl_basic_map *ptr) {
+basic_map manage_copy( isl_basic_map *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_basic_map_get_ctx(ptr);
@@ -8624,7 +8624,7 @@ basic_map manage_copy(__isl_keep isl_basic_map *ptr) {
   return basic_map(ptr);
 }
 
-basic_map::basic_map(__isl_take isl_basic_map *ptr)
+basic_map::basic_map( isl_basic_map *ptr)
     : ptr(ptr) {}
 
 basic_map::basic_map()
@@ -8662,15 +8662,15 @@ basic_map::~basic_map() {
     isl_basic_map_free(ptr);
 }
 
-__isl_give isl_basic_map *basic_map::copy() const & {
+ isl_basic_map *basic_map::copy() const & {
   return isl_basic_map_copy(ptr);
 }
 
-__isl_keep isl_basic_map *basic_map::get() const {
+ isl_basic_map *basic_map::get() const {
   return ptr;
 }
 
-__isl_give isl_basic_map *basic_map::release() {
+ isl_basic_map *basic_map::release() {
   isl_basic_map *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -9870,12 +9870,12 @@ inline std::ostream &operator<<(std::ostream &os, const basic_map &obj)
 }
 
 // implementations for isl::basic_set
-basic_set manage(__isl_take isl_basic_set *ptr) {
+basic_set manage( isl_basic_set *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return basic_set(ptr);
 }
-basic_set manage_copy(__isl_keep isl_basic_set *ptr) {
+basic_set manage_copy( isl_basic_set *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_basic_set_get_ctx(ptr);
@@ -9886,7 +9886,7 @@ basic_set manage_copy(__isl_keep isl_basic_set *ptr) {
   return basic_set(ptr);
 }
 
-basic_set::basic_set(__isl_take isl_basic_set *ptr)
+basic_set::basic_set( isl_basic_set *ptr)
     : ptr(ptr) {}
 
 basic_set::basic_set()
@@ -9936,15 +9936,15 @@ basic_set::~basic_set() {
     isl_basic_set_free(ptr);
 }
 
-__isl_give isl_basic_set *basic_set::copy() const & {
+ isl_basic_set *basic_set::copy() const & {
   return isl_basic_set_copy(ptr);
 }
 
-__isl_keep isl_basic_set *basic_set::get() const {
+ isl_basic_set *basic_set::get() const {
   return ptr;
 }
 
-__isl_give isl_basic_set *basic_set::release() {
+ isl_basic_set *basic_set::release() {
   isl_basic_set *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -10803,12 +10803,12 @@ inline std::ostream &operator<<(std::ostream &os, const basic_set &obj)
 }
 
 // implementations for isl::fixed_box
-fixed_box manage(__isl_take isl_fixed_box *ptr) {
+fixed_box manage( isl_fixed_box *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return fixed_box(ptr);
 }
-fixed_box manage_copy(__isl_keep isl_fixed_box *ptr) {
+fixed_box manage_copy( isl_fixed_box *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_fixed_box_get_ctx(ptr);
@@ -10819,7 +10819,7 @@ fixed_box manage_copy(__isl_keep isl_fixed_box *ptr) {
   return fixed_box(ptr);
 }
 
-fixed_box::fixed_box(__isl_take isl_fixed_box *ptr)
+fixed_box::fixed_box( isl_fixed_box *ptr)
     : ptr(ptr) {}
 
 fixed_box::fixed_box()
@@ -10857,15 +10857,15 @@ fixed_box::~fixed_box() {
     isl_fixed_box_free(ptr);
 }
 
-__isl_give isl_fixed_box *fixed_box::copy() const & {
+ isl_fixed_box *fixed_box::copy() const & {
   return isl_fixed_box_copy(ptr);
 }
 
-__isl_keep isl_fixed_box *fixed_box::get() const {
+ isl_fixed_box *fixed_box::get() const {
   return ptr;
 }
 
-__isl_give isl_fixed_box *fixed_box::release() {
+ isl_fixed_box *fixed_box::release() {
   isl_fixed_box *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -10957,12 +10957,12 @@ inline std::ostream &operator<<(std::ostream &os, const fixed_box &obj)
 }
 
 // implementations for isl::id
-id manage(__isl_take isl_id *ptr) {
+id manage( isl_id *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return id(ptr);
 }
-id manage_copy(__isl_keep isl_id *ptr) {
+id manage_copy( isl_id *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_id_get_ctx(ptr);
@@ -10973,7 +10973,7 @@ id manage_copy(__isl_keep isl_id *ptr) {
   return id(ptr);
 }
 
-id::id(__isl_take isl_id *ptr)
+id::id( isl_id *ptr)
     : ptr(ptr) {}
 
 id::id()
@@ -11011,15 +11011,15 @@ id::~id() {
     isl_id_free(ptr);
 }
 
-__isl_give isl_id *id::copy() const & {
+ isl_id *id::copy() const & {
   return isl_id_copy(ptr);
 }
 
-__isl_keep isl_id *id::get() const {
+ isl_id *id::get() const {
   return ptr;
 }
 
-__isl_give isl_id *id::release() {
+ isl_id *id::release() {
   isl_id *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -11124,12 +11124,12 @@ inline std::ostream &operator<<(std::ostream &os, const id &obj)
 }
 
 // implementations for isl::id_list
-id_list manage(__isl_take isl_id_list *ptr) {
+id_list manage( isl_id_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return id_list(ptr);
 }
-id_list manage_copy(__isl_keep isl_id_list *ptr) {
+id_list manage_copy( isl_id_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_id_list_get_ctx(ptr);
@@ -11140,7 +11140,7 @@ id_list manage_copy(__isl_keep isl_id_list *ptr) {
   return id_list(ptr);
 }
 
-id_list::id_list(__isl_take isl_id_list *ptr)
+id_list::id_list( isl_id_list *ptr)
     : ptr(ptr) {}
 
 id_list::id_list()
@@ -11200,15 +11200,15 @@ id_list::~id_list() {
     isl_id_list_free(ptr);
 }
 
-__isl_give isl_id_list *id_list::copy() const & {
+ isl_id_list *id_list::copy() const & {
   return isl_id_list_copy(ptr);
 }
 
-__isl_keep isl_id_list *id_list::get() const {
+ isl_id_list *id_list::get() const {
   return ptr;
 }
 
-__isl_give isl_id_list *id_list::release() {
+ isl_id_list *id_list::release() {
   isl_id_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -11431,12 +11431,12 @@ inline std::ostream &operator<<(std::ostream &os, const id_list &obj)
 }
 
 // implementations for isl::id_to_ast_expr
-id_to_ast_expr manage(__isl_take isl_id_to_ast_expr *ptr) {
+id_to_ast_expr manage( isl_id_to_ast_expr *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return id_to_ast_expr(ptr);
 }
-id_to_ast_expr manage_copy(__isl_keep isl_id_to_ast_expr *ptr) {
+id_to_ast_expr manage_copy( isl_id_to_ast_expr *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_id_to_ast_expr_get_ctx(ptr);
@@ -11447,7 +11447,7 @@ id_to_ast_expr manage_copy(__isl_keep isl_id_to_ast_expr *ptr) {
   return id_to_ast_expr(ptr);
 }
 
-id_to_ast_expr::id_to_ast_expr(__isl_take isl_id_to_ast_expr *ptr)
+id_to_ast_expr::id_to_ast_expr( isl_id_to_ast_expr *ptr)
     : ptr(ptr) {}
 
 id_to_ast_expr::id_to_ast_expr()
@@ -11495,15 +11495,15 @@ id_to_ast_expr::~id_to_ast_expr() {
     isl_id_to_ast_expr_free(ptr);
 }
 
-__isl_give isl_id_to_ast_expr *id_to_ast_expr::copy() const & {
+ isl_id_to_ast_expr *id_to_ast_expr::copy() const & {
   return isl_id_to_ast_expr_copy(ptr);
 }
 
-__isl_keep isl_id_to_ast_expr *id_to_ast_expr::get() const {
+ isl_id_to_ast_expr *id_to_ast_expr::get() const {
   return ptr;
 }
 
-__isl_give isl_id_to_ast_expr *id_to_ast_expr::release() {
+ isl_id_to_ast_expr *id_to_ast_expr::release() {
   isl_id_to_ast_expr *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -11563,12 +11563,12 @@ inline std::ostream &operator<<(std::ostream &os, const id_to_ast_expr &obj)
 }
 
 // implementations for isl::id_to_id
-id_to_id manage(__isl_take isl_id_to_id *ptr) {
+id_to_id manage( isl_id_to_id *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return id_to_id(ptr);
 }
-id_to_id manage_copy(__isl_keep isl_id_to_id *ptr) {
+id_to_id manage_copy( isl_id_to_id *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_id_to_id_get_ctx(ptr);
@@ -11579,7 +11579,7 @@ id_to_id manage_copy(__isl_keep isl_id_to_id *ptr) {
   return id_to_id(ptr);
 }
 
-id_to_id::id_to_id(__isl_take isl_id_to_id *ptr)
+id_to_id::id_to_id( isl_id_to_id *ptr)
     : ptr(ptr) {}
 
 id_to_id::id_to_id()
@@ -11627,15 +11627,15 @@ id_to_id::~id_to_id() {
     isl_id_to_id_free(ptr);
 }
 
-__isl_give isl_id_to_id *id_to_id::copy() const & {
+ isl_id_to_id *id_to_id::copy() const & {
   return isl_id_to_id_copy(ptr);
 }
 
-__isl_keep isl_id_to_id *id_to_id::get() const {
+ isl_id_to_id *id_to_id::get() const {
   return ptr;
 }
 
-__isl_give isl_id_to_id *id_to_id::release() {
+ isl_id_to_id *id_to_id::release() {
   isl_id_to_id *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -11709,12 +11709,12 @@ inline std::ostream &operator<<(std::ostream &os, const id_to_id &obj)
 }
 
 // implementations for isl::map
-map manage(__isl_take isl_map *ptr) {
+map manage( isl_map *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return map(ptr);
 }
-map manage_copy(__isl_keep isl_map *ptr) {
+map manage_copy( isl_map *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_map_get_ctx(ptr);
@@ -11725,7 +11725,7 @@ map manage_copy(__isl_keep isl_map *ptr) {
   return map(ptr);
 }
 
-map::map(__isl_take isl_map *ptr)
+map::map( isl_map *ptr)
     : ptr(ptr) {}
 
 map::map()
@@ -11775,15 +11775,15 @@ map::~map() {
     isl_map_free(ptr);
 }
 
-__isl_give isl_map *map::copy() const & {
+ isl_map *map::copy() const & {
   return isl_map_copy(ptr);
 }
 
-__isl_keep isl_map *map::get() const {
+ isl_map *map::get() const {
   return ptr;
 }
 
-__isl_give isl_map *map::release() {
+ isl_map *map::release() {
   isl_map *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -13568,12 +13568,12 @@ inline std::ostream &operator<<(std::ostream &os, const map &obj)
 }
 
 // implementations for isl::map_list
-map_list manage(__isl_take isl_map_list *ptr) {
+map_list manage( isl_map_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return map_list(ptr);
 }
-map_list manage_copy(__isl_keep isl_map_list *ptr) {
+map_list manage_copy( isl_map_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_map_list_get_ctx(ptr);
@@ -13584,7 +13584,7 @@ map_list manage_copy(__isl_keep isl_map_list *ptr) {
   return map_list(ptr);
 }
 
-map_list::map_list(__isl_take isl_map_list *ptr)
+map_list::map_list( isl_map_list *ptr)
     : ptr(ptr) {}
 
 map_list::map_list()
@@ -13644,15 +13644,15 @@ map_list::~map_list() {
     isl_map_list_free(ptr);
 }
 
-__isl_give isl_map_list *map_list::copy() const & {
+ isl_map_list *map_list::copy() const & {
   return isl_map_list_copy(ptr);
 }
 
-__isl_keep isl_map_list *map_list::get() const {
+ isl_map_list *map_list::get() const {
   return ptr;
 }
 
-__isl_give isl_map_list *map_list::release() {
+ isl_map_list *map_list::release() {
   isl_map_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -13854,12 +13854,12 @@ inline std::ostream &operator<<(std::ostream &os, const map_list &obj)
 }
 
 // implementations for isl::multi_aff
-multi_aff manage(__isl_take isl_multi_aff *ptr) {
+multi_aff manage( isl_multi_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return multi_aff(ptr);
 }
-multi_aff manage_copy(__isl_keep isl_multi_aff *ptr) {
+multi_aff manage_copy( isl_multi_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_multi_aff_get_ctx(ptr);
@@ -13870,7 +13870,7 @@ multi_aff manage_copy(__isl_keep isl_multi_aff *ptr) {
   return multi_aff(ptr);
 }
 
-multi_aff::multi_aff(__isl_take isl_multi_aff *ptr)
+multi_aff::multi_aff( isl_multi_aff *ptr)
     : ptr(ptr) {}
 
 multi_aff::multi_aff()
@@ -13932,15 +13932,15 @@ multi_aff::~multi_aff() {
     isl_multi_aff_free(ptr);
 }
 
-__isl_give isl_multi_aff *multi_aff::copy() const & {
+ isl_multi_aff *multi_aff::copy() const & {
   return isl_multi_aff_copy(ptr);
 }
 
-__isl_keep isl_multi_aff *multi_aff::get() const {
+ isl_multi_aff *multi_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_multi_aff *multi_aff::release() {
+ isl_multi_aff *multi_aff::release() {
   isl_multi_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -15120,12 +15120,12 @@ inline std::ostream &operator<<(std::ostream &os, const multi_aff &obj)
 }
 
 // implementations for isl::multi_id
-multi_id manage(__isl_take isl_multi_id *ptr) {
+multi_id manage( isl_multi_id *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return multi_id(ptr);
 }
-multi_id manage_copy(__isl_keep isl_multi_id *ptr) {
+multi_id manage_copy( isl_multi_id *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_multi_id_get_ctx(ptr);
@@ -15136,7 +15136,7 @@ multi_id manage_copy(__isl_keep isl_multi_id *ptr) {
   return multi_id(ptr);
 }
 
-multi_id::multi_id(__isl_take isl_multi_id *ptr)
+multi_id::multi_id( isl_multi_id *ptr)
     : ptr(ptr) {}
 
 multi_id::multi_id()
@@ -15186,15 +15186,15 @@ multi_id::~multi_id() {
     isl_multi_id_free(ptr);
 }
 
-__isl_give isl_multi_id *multi_id::copy() const & {
+ isl_multi_id *multi_id::copy() const & {
   return isl_multi_id_copy(ptr);
 }
 
-__isl_keep isl_multi_id *multi_id::get() const {
+ isl_multi_id *multi_id::get() const {
   return ptr;
 }
 
-__isl_give isl_multi_id *multi_id::release() {
+ isl_multi_id *multi_id::release() {
   isl_multi_id *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -15341,12 +15341,12 @@ inline std::ostream &operator<<(std::ostream &os, const multi_id &obj)
 }
 
 // implementations for isl::multi_pw_aff
-multi_pw_aff manage(__isl_take isl_multi_pw_aff *ptr) {
+multi_pw_aff manage( isl_multi_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return multi_pw_aff(ptr);
 }
-multi_pw_aff manage_copy(__isl_keep isl_multi_pw_aff *ptr) {
+multi_pw_aff manage_copy( isl_multi_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_multi_pw_aff_get_ctx(ptr);
@@ -15357,7 +15357,7 @@ multi_pw_aff manage_copy(__isl_keep isl_multi_pw_aff *ptr) {
   return multi_pw_aff(ptr);
 }
 
-multi_pw_aff::multi_pw_aff(__isl_take isl_multi_pw_aff *ptr)
+multi_pw_aff::multi_pw_aff( isl_multi_pw_aff *ptr)
     : ptr(ptr) {}
 
 multi_pw_aff::multi_pw_aff()
@@ -15455,15 +15455,15 @@ multi_pw_aff::~multi_pw_aff() {
     isl_multi_pw_aff_free(ptr);
 }
 
-__isl_give isl_multi_pw_aff *multi_pw_aff::copy() const & {
+ isl_multi_pw_aff *multi_pw_aff::copy() const & {
   return isl_multi_pw_aff_copy(ptr);
 }
 
-__isl_keep isl_multi_pw_aff *multi_pw_aff::get() const {
+ isl_multi_pw_aff *multi_pw_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_multi_pw_aff *multi_pw_aff::release() {
+ isl_multi_pw_aff *multi_pw_aff::release() {
   isl_multi_pw_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -16437,12 +16437,12 @@ inline std::ostream &operator<<(std::ostream &os, const multi_pw_aff &obj)
 }
 
 // implementations for isl::multi_union_pw_aff
-multi_union_pw_aff manage(__isl_take isl_multi_union_pw_aff *ptr) {
+multi_union_pw_aff manage( isl_multi_union_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return multi_union_pw_aff(ptr);
 }
-multi_union_pw_aff manage_copy(__isl_keep isl_multi_union_pw_aff *ptr) {
+multi_union_pw_aff manage_copy( isl_multi_union_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_multi_union_pw_aff_get_ctx(ptr);
@@ -16453,7 +16453,7 @@ multi_union_pw_aff manage_copy(__isl_keep isl_multi_union_pw_aff *ptr) {
   return multi_union_pw_aff(ptr);
 }
 
-multi_union_pw_aff::multi_union_pw_aff(__isl_take isl_multi_union_pw_aff *ptr)
+multi_union_pw_aff::multi_union_pw_aff( isl_multi_union_pw_aff *ptr)
     : ptr(ptr) {}
 
 multi_union_pw_aff::multi_union_pw_aff()
@@ -16527,15 +16527,15 @@ multi_union_pw_aff::~multi_union_pw_aff() {
     isl_multi_union_pw_aff_free(ptr);
 }
 
-__isl_give isl_multi_union_pw_aff *multi_union_pw_aff::copy() const & {
+ isl_multi_union_pw_aff *multi_union_pw_aff::copy() const & {
   return isl_multi_union_pw_aff_copy(ptr);
 }
 
-__isl_keep isl_multi_union_pw_aff *multi_union_pw_aff::get() const {
+ isl_multi_union_pw_aff *multi_union_pw_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_multi_union_pw_aff *multi_union_pw_aff::release() {
+ isl_multi_union_pw_aff *multi_union_pw_aff::release() {
   isl_multi_union_pw_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -16965,12 +16965,12 @@ inline std::ostream &operator<<(std::ostream &os, const multi_union_pw_aff &obj)
 }
 
 // implementations for isl::multi_val
-multi_val manage(__isl_take isl_multi_val *ptr) {
+multi_val manage( isl_multi_val *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return multi_val(ptr);
 }
-multi_val manage_copy(__isl_keep isl_multi_val *ptr) {
+multi_val manage_copy( isl_multi_val *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_multi_val_get_ctx(ptr);
@@ -16981,7 +16981,7 @@ multi_val manage_copy(__isl_keep isl_multi_val *ptr) {
   return multi_val(ptr);
 }
 
-multi_val::multi_val(__isl_take isl_multi_val *ptr)
+multi_val::multi_val( isl_multi_val *ptr)
     : ptr(ptr) {}
 
 multi_val::multi_val()
@@ -17031,15 +17031,15 @@ multi_val::~multi_val() {
     isl_multi_val_free(ptr);
 }
 
-__isl_give isl_multi_val *multi_val::copy() const & {
+ isl_multi_val *multi_val::copy() const & {
   return isl_multi_val_copy(ptr);
 }
 
-__isl_keep isl_multi_val *multi_val::get() const {
+ isl_multi_val *multi_val::get() const {
   return ptr;
 }
 
-__isl_give isl_multi_val *multi_val::release() {
+ isl_multi_val *multi_val::release() {
   isl_multi_val *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -17423,12 +17423,12 @@ inline std::ostream &operator<<(std::ostream &os, const multi_val &obj)
 }
 
 // implementations for isl::point
-point manage(__isl_take isl_point *ptr) {
+point manage( isl_point *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return point(ptr);
 }
-point manage_copy(__isl_keep isl_point *ptr) {
+point manage_copy( isl_point *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_point_get_ctx(ptr);
@@ -17439,7 +17439,7 @@ point manage_copy(__isl_keep isl_point *ptr) {
   return point(ptr);
 }
 
-point::point(__isl_take isl_point *ptr)
+point::point( isl_point *ptr)
     : ptr(ptr) {}
 
 point::point()
@@ -17467,15 +17467,15 @@ point::~point() {
     isl_point_free(ptr);
 }
 
-__isl_give isl_point *point::copy() const & {
+ isl_point *point::copy() const & {
   return isl_point_copy(ptr);
 }
 
-__isl_keep isl_point *point::get() const {
+ isl_point *point::get() const {
   return ptr;
 }
 
-__isl_give isl_point *point::release() {
+ isl_point *point::release() {
   isl_point *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -18219,12 +18219,12 @@ inline std::ostream &operator<<(std::ostream &os, const point &obj)
 }
 
 // implementations for isl::pw_aff
-pw_aff manage(__isl_take isl_pw_aff *ptr) {
+pw_aff manage( isl_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return pw_aff(ptr);
 }
-pw_aff manage_copy(__isl_keep isl_pw_aff *ptr) {
+pw_aff manage_copy( isl_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_pw_aff_get_ctx(ptr);
@@ -18235,7 +18235,7 @@ pw_aff manage_copy(__isl_keep isl_pw_aff *ptr) {
   return pw_aff(ptr);
 }
 
-pw_aff::pw_aff(__isl_take isl_pw_aff *ptr)
+pw_aff::pw_aff( isl_pw_aff *ptr)
     : ptr(ptr) {}
 
 pw_aff::pw_aff()
@@ -18285,15 +18285,15 @@ pw_aff::~pw_aff() {
     isl_pw_aff_free(ptr);
 }
 
-__isl_give isl_pw_aff *pw_aff::copy() const & {
+ isl_pw_aff *pw_aff::copy() const & {
   return isl_pw_aff_copy(ptr);
 }
 
-__isl_keep isl_pw_aff *pw_aff::get() const {
+ isl_pw_aff *pw_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_pw_aff *pw_aff::release() {
+ isl_pw_aff *pw_aff::release() {
   isl_pw_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -19632,12 +19632,12 @@ inline std::ostream &operator<<(std::ostream &os, const pw_aff &obj)
 }
 
 // implementations for isl::pw_aff_list
-pw_aff_list manage(__isl_take isl_pw_aff_list *ptr) {
+pw_aff_list manage( isl_pw_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return pw_aff_list(ptr);
 }
-pw_aff_list manage_copy(__isl_keep isl_pw_aff_list *ptr) {
+pw_aff_list manage_copy( isl_pw_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_pw_aff_list_get_ctx(ptr);
@@ -19648,7 +19648,7 @@ pw_aff_list manage_copy(__isl_keep isl_pw_aff_list *ptr) {
   return pw_aff_list(ptr);
 }
 
-pw_aff_list::pw_aff_list(__isl_take isl_pw_aff_list *ptr)
+pw_aff_list::pw_aff_list( isl_pw_aff_list *ptr)
     : ptr(ptr) {}
 
 pw_aff_list::pw_aff_list()
@@ -19708,15 +19708,15 @@ pw_aff_list::~pw_aff_list() {
     isl_pw_aff_list_free(ptr);
 }
 
-__isl_give isl_pw_aff_list *pw_aff_list::copy() const & {
+ isl_pw_aff_list *pw_aff_list::copy() const & {
   return isl_pw_aff_list_copy(ptr);
 }
 
-__isl_keep isl_pw_aff_list *pw_aff_list::get() const {
+ isl_pw_aff_list *pw_aff_list::get() const {
   return ptr;
 }
 
-__isl_give isl_pw_aff_list *pw_aff_list::release() {
+ isl_pw_aff_list *pw_aff_list::release() {
   isl_pw_aff_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -19918,12 +19918,12 @@ inline std::ostream &operator<<(std::ostream &os, const pw_aff_list &obj)
 }
 
 // implementations for isl::pw_multi_aff
-pw_multi_aff manage(__isl_take isl_pw_multi_aff *ptr) {
+pw_multi_aff manage( isl_pw_multi_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return pw_multi_aff(ptr);
 }
-pw_multi_aff manage_copy(__isl_keep isl_pw_multi_aff *ptr) {
+pw_multi_aff manage_copy( isl_pw_multi_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_pw_multi_aff_get_ctx(ptr);
@@ -19934,7 +19934,7 @@ pw_multi_aff manage_copy(__isl_keep isl_pw_multi_aff *ptr) {
   return pw_multi_aff(ptr);
 }
 
-pw_multi_aff::pw_multi_aff(__isl_take isl_pw_multi_aff *ptr)
+pw_multi_aff::pw_multi_aff( isl_pw_multi_aff *ptr)
     : ptr(ptr) {}
 
 pw_multi_aff::pw_multi_aff()
@@ -19996,15 +19996,15 @@ pw_multi_aff::~pw_multi_aff() {
     isl_pw_multi_aff_free(ptr);
 }
 
-__isl_give isl_pw_multi_aff *pw_multi_aff::copy() const & {
+ isl_pw_multi_aff *pw_multi_aff::copy() const & {
   return isl_pw_multi_aff_copy(ptr);
 }
 
-__isl_keep isl_pw_multi_aff *pw_multi_aff::get() const {
+ isl_pw_multi_aff *pw_multi_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_pw_multi_aff *pw_multi_aff::release() {
+ isl_pw_multi_aff *pw_multi_aff::release() {
   isl_pw_multi_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -21234,12 +21234,12 @@ inline std::ostream &operator<<(std::ostream &os, const pw_multi_aff &obj)
 }
 
 // implementations for isl::pw_multi_aff_list
-pw_multi_aff_list manage(__isl_take isl_pw_multi_aff_list *ptr) {
+pw_multi_aff_list manage( isl_pw_multi_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return pw_multi_aff_list(ptr);
 }
-pw_multi_aff_list manage_copy(__isl_keep isl_pw_multi_aff_list *ptr) {
+pw_multi_aff_list manage_copy( isl_pw_multi_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_pw_multi_aff_list_get_ctx(ptr);
@@ -21250,7 +21250,7 @@ pw_multi_aff_list manage_copy(__isl_keep isl_pw_multi_aff_list *ptr) {
   return pw_multi_aff_list(ptr);
 }
 
-pw_multi_aff_list::pw_multi_aff_list(__isl_take isl_pw_multi_aff_list *ptr)
+pw_multi_aff_list::pw_multi_aff_list( isl_pw_multi_aff_list *ptr)
     : ptr(ptr) {}
 
 pw_multi_aff_list::pw_multi_aff_list()
@@ -21310,15 +21310,15 @@ pw_multi_aff_list::~pw_multi_aff_list() {
     isl_pw_multi_aff_list_free(ptr);
 }
 
-__isl_give isl_pw_multi_aff_list *pw_multi_aff_list::copy() const & {
+ isl_pw_multi_aff_list *pw_multi_aff_list::copy() const & {
   return isl_pw_multi_aff_list_copy(ptr);
 }
 
-__isl_keep isl_pw_multi_aff_list *pw_multi_aff_list::get() const {
+ isl_pw_multi_aff_list *pw_multi_aff_list::get() const {
   return ptr;
 }
 
-__isl_give isl_pw_multi_aff_list *pw_multi_aff_list::release() {
+ isl_pw_multi_aff_list *pw_multi_aff_list::release() {
   isl_pw_multi_aff_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -21520,12 +21520,12 @@ inline std::ostream &operator<<(std::ostream &os, const pw_multi_aff_list &obj)
 }
 
 // implementations for isl::schedule
-schedule manage(__isl_take isl_schedule *ptr) {
+schedule manage( isl_schedule *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return schedule(ptr);
 }
-schedule manage_copy(__isl_keep isl_schedule *ptr) {
+schedule manage_copy( isl_schedule *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_schedule_get_ctx(ptr);
@@ -21536,7 +21536,7 @@ schedule manage_copy(__isl_keep isl_schedule *ptr) {
   return schedule(ptr);
 }
 
-schedule::schedule(__isl_take isl_schedule *ptr)
+schedule::schedule( isl_schedule *ptr)
     : ptr(ptr) {}
 
 schedule::schedule()
@@ -21574,15 +21574,15 @@ schedule::~schedule() {
     isl_schedule_free(ptr);
 }
 
-__isl_give isl_schedule *schedule::copy() const & {
+ isl_schedule *schedule::copy() const & {
   return isl_schedule_copy(ptr);
 }
 
-__isl_keep isl_schedule *schedule::get() const {
+ isl_schedule *schedule::get() const {
   return ptr;
 }
 
-__isl_give isl_schedule *schedule::release() {
+ isl_schedule *schedule::release() {
   isl_schedule *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -21686,12 +21686,12 @@ inline std::ostream &operator<<(std::ostream &os, const schedule &obj)
 }
 
 // implementations for isl::schedule_constraints
-schedule_constraints manage(__isl_take isl_schedule_constraints *ptr) {
+schedule_constraints manage( isl_schedule_constraints *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return schedule_constraints(ptr);
 }
-schedule_constraints manage_copy(__isl_keep isl_schedule_constraints *ptr) {
+schedule_constraints manage_copy( isl_schedule_constraints *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_schedule_constraints_get_ctx(ptr);
@@ -21702,7 +21702,7 @@ schedule_constraints manage_copy(__isl_keep isl_schedule_constraints *ptr) {
   return schedule_constraints(ptr);
 }
 
-schedule_constraints::schedule_constraints(__isl_take isl_schedule_constraints *ptr)
+schedule_constraints::schedule_constraints( isl_schedule_constraints *ptr)
     : ptr(ptr) {}
 
 schedule_constraints::schedule_constraints()
@@ -21740,15 +21740,15 @@ schedule_constraints::~schedule_constraints() {
     isl_schedule_constraints_free(ptr);
 }
 
-__isl_give isl_schedule_constraints *schedule_constraints::copy() const & {
+ isl_schedule_constraints *schedule_constraints::copy() const & {
   return isl_schedule_constraints_copy(ptr);
 }
 
-__isl_keep isl_schedule_constraints *schedule_constraints::get() const {
+ isl_schedule_constraints *schedule_constraints::get() const {
   return ptr;
 }
 
-__isl_give isl_schedule_constraints *schedule_constraints::release() {
+ isl_schedule_constraints *schedule_constraints::release() {
   isl_schedule_constraints *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -21980,12 +21980,12 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_constraints &ob
 }
 
 // implementations for isl::schedule_node
-schedule_node manage(__isl_take isl_schedule_node *ptr) {
+schedule_node manage( isl_schedule_node *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return schedule_node(ptr);
 }
-schedule_node manage_copy(__isl_keep isl_schedule_node *ptr) {
+schedule_node manage_copy( isl_schedule_node *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_schedule_node_get_ctx(ptr);
@@ -21996,7 +21996,7 @@ schedule_node manage_copy(__isl_keep isl_schedule_node *ptr) {
   return schedule_node(ptr);
 }
 
-schedule_node::schedule_node(__isl_take isl_schedule_node *ptr)
+schedule_node::schedule_node( isl_schedule_node *ptr)
     : ptr(ptr) {}
 
 schedule_node::schedule_node()
@@ -22024,15 +22024,15 @@ schedule_node::~schedule_node() {
     isl_schedule_node_free(ptr);
 }
 
-__isl_give isl_schedule_node *schedule_node::copy() const & {
+ isl_schedule_node *schedule_node::copy() const & {
   return isl_schedule_node_copy(ptr);
 }
 
-__isl_keep isl_schedule_node *schedule_node::get() const {
+ isl_schedule_node *schedule_node::get() const {
   return ptr;
 }
 
-__isl_give isl_schedule_node *schedule_node::release() {
+ isl_schedule_node *schedule_node::release() {
   isl_schedule_node *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -22660,7 +22660,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node &obj)
 }
 
 // implementations for isl::schedule_node_band
-schedule_node_band::schedule_node_band(__isl_take isl_schedule_node *ptr)
+schedule_node_band::schedule_node_band( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_band::schedule_node_band()
@@ -22943,7 +22943,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_band &obj)
 }
 
 // implementations for isl::schedule_node_context
-schedule_node_context::schedule_node_context(__isl_take isl_schedule_node *ptr)
+schedule_node_context::schedule_node_context( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_context::schedule_node_context()
@@ -22995,7 +22995,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_context &o
 }
 
 // implementations for isl::schedule_node_domain
-schedule_node_domain::schedule_node_domain(__isl_take isl_schedule_node *ptr)
+schedule_node_domain::schedule_node_domain( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_domain::schedule_node_domain()
@@ -23047,7 +23047,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_domain &ob
 }
 
 // implementations for isl::schedule_node_expansion
-schedule_node_expansion::schedule_node_expansion(__isl_take isl_schedule_node *ptr)
+schedule_node_expansion::schedule_node_expansion( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_expansion::schedule_node_expansion()
@@ -23116,7 +23116,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_expansion 
 }
 
 // implementations for isl::schedule_node_extension
-schedule_node_extension::schedule_node_extension(__isl_take isl_schedule_node *ptr)
+schedule_node_extension::schedule_node_extension( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_extension::schedule_node_extension()
@@ -23168,7 +23168,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_extension 
 }
 
 // implementations for isl::schedule_node_filter
-schedule_node_filter::schedule_node_filter(__isl_take isl_schedule_node *ptr)
+schedule_node_filter::schedule_node_filter( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_filter::schedule_node_filter()
@@ -23220,7 +23220,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_filter &ob
 }
 
 // implementations for isl::schedule_node_guard
-schedule_node_guard::schedule_node_guard(__isl_take isl_schedule_node *ptr)
+schedule_node_guard::schedule_node_guard( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_guard::schedule_node_guard()
@@ -23272,7 +23272,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_guard &obj
 }
 
 // implementations for isl::schedule_node_leaf
-schedule_node_leaf::schedule_node_leaf(__isl_take isl_schedule_node *ptr)
+schedule_node_leaf::schedule_node_leaf( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_leaf::schedule_node_leaf()
@@ -23307,7 +23307,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_leaf &obj)
 }
 
 // implementations for isl::schedule_node_mark
-schedule_node_mark::schedule_node_mark(__isl_take isl_schedule_node *ptr)
+schedule_node_mark::schedule_node_mark( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_mark::schedule_node_mark()
@@ -23342,7 +23342,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_mark &obj)
 }
 
 // implementations for isl::schedule_node_sequence
-schedule_node_sequence::schedule_node_sequence(__isl_take isl_schedule_node *ptr)
+schedule_node_sequence::schedule_node_sequence( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_sequence::schedule_node_sequence()
@@ -23377,7 +23377,7 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_sequence &
 }
 
 // implementations for isl::schedule_node_set
-schedule_node_set::schedule_node_set(__isl_take isl_schedule_node *ptr)
+schedule_node_set::schedule_node_set( isl_schedule_node *ptr)
     : schedule_node(ptr) {}
 
 schedule_node_set::schedule_node_set()
@@ -23412,12 +23412,12 @@ inline std::ostream &operator<<(std::ostream &os, const schedule_node_set &obj)
 }
 
 // implementations for isl::set
-set manage(__isl_take isl_set *ptr) {
+set manage( isl_set *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return set(ptr);
 }
-set manage_copy(__isl_keep isl_set *ptr) {
+set manage_copy( isl_set *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_set_get_ctx(ptr);
@@ -23428,7 +23428,7 @@ set manage_copy(__isl_keep isl_set *ptr) {
   return set(ptr);
 }
 
-set::set(__isl_take isl_set *ptr)
+set::set( isl_set *ptr)
     : ptr(ptr) {}
 
 set::set()
@@ -23490,15 +23490,15 @@ set::~set() {
     isl_set_free(ptr);
 }
 
-__isl_give isl_set *set::copy() const & {
+ isl_set *set::copy() const & {
   return isl_set_copy(ptr);
 }
 
-__isl_keep isl_set *set::get() const {
+ isl_set *set::get() const {
   return ptr;
 }
 
-__isl_give isl_set *set::release() {
+ isl_set *set::release() {
   isl_set *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -24719,12 +24719,12 @@ inline std::ostream &operator<<(std::ostream &os, const set &obj)
 }
 
 // implementations for isl::set_list
-set_list manage(__isl_take isl_set_list *ptr) {
+set_list manage( isl_set_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return set_list(ptr);
 }
-set_list manage_copy(__isl_keep isl_set_list *ptr) {
+set_list manage_copy( isl_set_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_set_list_get_ctx(ptr);
@@ -24735,7 +24735,7 @@ set_list manage_copy(__isl_keep isl_set_list *ptr) {
   return set_list(ptr);
 }
 
-set_list::set_list(__isl_take isl_set_list *ptr)
+set_list::set_list( isl_set_list *ptr)
     : ptr(ptr) {}
 
 set_list::set_list()
@@ -24795,15 +24795,15 @@ set_list::~set_list() {
     isl_set_list_free(ptr);
 }
 
-__isl_give isl_set_list *set_list::copy() const & {
+ isl_set_list *set_list::copy() const & {
   return isl_set_list_copy(ptr);
 }
 
-__isl_keep isl_set_list *set_list::get() const {
+ isl_set_list *set_list::get() const {
   return ptr;
 }
 
-__isl_give isl_set_list *set_list::release() {
+ isl_set_list *set_list::release() {
   isl_set_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -25005,12 +25005,12 @@ inline std::ostream &operator<<(std::ostream &os, const set_list &obj)
 }
 
 // implementations for isl::space
-space manage(__isl_take isl_space *ptr) {
+space manage( isl_space *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return space(ptr);
 }
-space manage_copy(__isl_keep isl_space *ptr) {
+space manage_copy( isl_space *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_space_get_ctx(ptr);
@@ -25021,7 +25021,7 @@ space manage_copy(__isl_keep isl_space *ptr) {
   return space(ptr);
 }
 
-space::space(__isl_take isl_space *ptr)
+space::space( isl_space *ptr)
     : ptr(ptr) {}
 
 space::space()
@@ -25059,15 +25059,15 @@ space::~space() {
     isl_space_free(ptr);
 }
 
-__isl_give isl_space *space::copy() const & {
+ isl_space *space::copy() const & {
   return isl_space_copy(ptr);
 }
 
-__isl_keep isl_space *space::get() const {
+ isl_space *space::get() const {
   return ptr;
 }
 
-__isl_give isl_space *space::release() {
+ isl_space *space::release() {
   isl_space *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -25727,12 +25727,12 @@ inline std::ostream &operator<<(std::ostream &os, const space &obj)
 }
 
 // implementations for isl::union_access_info
-union_access_info manage(__isl_take isl_union_access_info *ptr) {
+union_access_info manage( isl_union_access_info *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_access_info(ptr);
 }
-union_access_info manage_copy(__isl_keep isl_union_access_info *ptr) {
+union_access_info manage_copy( isl_union_access_info *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_access_info_get_ctx(ptr);
@@ -25743,7 +25743,7 @@ union_access_info manage_copy(__isl_keep isl_union_access_info *ptr) {
   return union_access_info(ptr);
 }
 
-union_access_info::union_access_info(__isl_take isl_union_access_info *ptr)
+union_access_info::union_access_info( isl_union_access_info *ptr)
     : ptr(ptr) {}
 
 union_access_info::union_access_info()
@@ -25783,15 +25783,15 @@ union_access_info::~union_access_info() {
     isl_union_access_info_free(ptr);
 }
 
-__isl_give isl_union_access_info *union_access_info::copy() const & {
+ isl_union_access_info *union_access_info::copy() const & {
   return isl_union_access_info_copy(ptr);
 }
 
-__isl_keep isl_union_access_info *union_access_info::get() const {
+ isl_union_access_info *union_access_info::get() const {
   return ptr;
 }
 
-__isl_give isl_union_access_info *union_access_info::release() {
+ isl_union_access_info *union_access_info::release() {
   isl_union_access_info *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -25892,12 +25892,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_access_info &obj)
 }
 
 // implementations for isl::union_flow
-union_flow manage(__isl_take isl_union_flow *ptr) {
+union_flow manage( isl_union_flow *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_flow(ptr);
 }
-union_flow manage_copy(__isl_keep isl_union_flow *ptr) {
+union_flow manage_copy( isl_union_flow *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_flow_get_ctx(ptr);
@@ -25908,7 +25908,7 @@ union_flow manage_copy(__isl_keep isl_union_flow *ptr) {
   return union_flow(ptr);
 }
 
-union_flow::union_flow(__isl_take isl_union_flow *ptr)
+union_flow::union_flow( isl_union_flow *ptr)
     : ptr(ptr) {}
 
 union_flow::union_flow()
@@ -25936,15 +25936,15 @@ union_flow::~union_flow() {
     isl_union_flow_free(ptr);
 }
 
-__isl_give isl_union_flow *union_flow::copy() const & {
+ isl_union_flow *union_flow::copy() const & {
   return isl_union_flow_copy(ptr);
 }
 
-__isl_keep isl_union_flow *union_flow::get() const {
+ isl_union_flow *union_flow::get() const {
   return ptr;
 }
 
-__isl_give isl_union_flow *union_flow::release() {
+ isl_union_flow *union_flow::release() {
   isl_union_flow *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -26075,12 +26075,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_flow &obj)
 }
 
 // implementations for isl::union_map
-union_map manage(__isl_take isl_union_map *ptr) {
+union_map manage( isl_union_map *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_map(ptr);
 }
-union_map manage_copy(__isl_keep isl_union_map *ptr) {
+union_map manage_copy( isl_union_map *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_map_get_ctx(ptr);
@@ -26091,7 +26091,7 @@ union_map manage_copy(__isl_keep isl_union_map *ptr) {
   return union_map(ptr);
 }
 
-union_map::union_map(__isl_take isl_union_map *ptr)
+union_map::union_map( isl_union_map *ptr)
     : ptr(ptr) {}
 
 union_map::union_map()
@@ -26153,15 +26153,15 @@ union_map::~union_map() {
     isl_union_map_free(ptr);
 }
 
-__isl_give isl_union_map *union_map::copy() const & {
+ isl_union_map *union_map::copy() const & {
   return isl_union_map_copy(ptr);
 }
 
-__isl_keep isl_union_map *union_map::get() const {
+ isl_union_map *union_map::get() const {
   return ptr;
 }
 
-__isl_give isl_union_map *union_map::release() {
+ isl_union_map *union_map::release() {
   isl_union_map *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -27324,12 +27324,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_map &obj)
 }
 
 // implementations for isl::union_pw_aff
-union_pw_aff manage(__isl_take isl_union_pw_aff *ptr) {
+union_pw_aff manage( isl_union_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_pw_aff(ptr);
 }
-union_pw_aff manage_copy(__isl_keep isl_union_pw_aff *ptr) {
+union_pw_aff manage_copy( isl_union_pw_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_pw_aff_get_ctx(ptr);
@@ -27340,7 +27340,7 @@ union_pw_aff manage_copy(__isl_keep isl_union_pw_aff *ptr) {
   return union_pw_aff(ptr);
 }
 
-union_pw_aff::union_pw_aff(__isl_take isl_union_pw_aff *ptr)
+union_pw_aff::union_pw_aff( isl_union_pw_aff *ptr)
     : ptr(ptr) {}
 
 union_pw_aff::union_pw_aff()
@@ -27402,15 +27402,15 @@ union_pw_aff::~union_pw_aff() {
     isl_union_pw_aff_free(ptr);
 }
 
-__isl_give isl_union_pw_aff *union_pw_aff::copy() const & {
+ isl_union_pw_aff *union_pw_aff::copy() const & {
   return isl_union_pw_aff_copy(ptr);
 }
 
-__isl_keep isl_union_pw_aff *union_pw_aff::get() const {
+ isl_union_pw_aff *union_pw_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_union_pw_aff *union_pw_aff::release() {
+ isl_union_pw_aff *union_pw_aff::release() {
   isl_union_pw_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -28036,12 +28036,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_pw_aff &obj)
 }
 
 // implementations for isl::union_pw_aff_list
-union_pw_aff_list manage(__isl_take isl_union_pw_aff_list *ptr) {
+union_pw_aff_list manage( isl_union_pw_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_pw_aff_list(ptr);
 }
-union_pw_aff_list manage_copy(__isl_keep isl_union_pw_aff_list *ptr) {
+union_pw_aff_list manage_copy( isl_union_pw_aff_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_pw_aff_list_get_ctx(ptr);
@@ -28052,7 +28052,7 @@ union_pw_aff_list manage_copy(__isl_keep isl_union_pw_aff_list *ptr) {
   return union_pw_aff_list(ptr);
 }
 
-union_pw_aff_list::union_pw_aff_list(__isl_take isl_union_pw_aff_list *ptr)
+union_pw_aff_list::union_pw_aff_list( isl_union_pw_aff_list *ptr)
     : ptr(ptr) {}
 
 union_pw_aff_list::union_pw_aff_list()
@@ -28112,15 +28112,15 @@ union_pw_aff_list::~union_pw_aff_list() {
     isl_union_pw_aff_list_free(ptr);
 }
 
-__isl_give isl_union_pw_aff_list *union_pw_aff_list::copy() const & {
+ isl_union_pw_aff_list *union_pw_aff_list::copy() const & {
   return isl_union_pw_aff_list_copy(ptr);
 }
 
-__isl_keep isl_union_pw_aff_list *union_pw_aff_list::get() const {
+ isl_union_pw_aff_list *union_pw_aff_list::get() const {
   return ptr;
 }
 
-__isl_give isl_union_pw_aff_list *union_pw_aff_list::release() {
+ isl_union_pw_aff_list *union_pw_aff_list::release() {
   isl_union_pw_aff_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -28322,12 +28322,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_pw_aff_list &obj)
 }
 
 // implementations for isl::union_pw_multi_aff
-union_pw_multi_aff manage(__isl_take isl_union_pw_multi_aff *ptr) {
+union_pw_multi_aff manage( isl_union_pw_multi_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_pw_multi_aff(ptr);
 }
-union_pw_multi_aff manage_copy(__isl_keep isl_union_pw_multi_aff *ptr) {
+union_pw_multi_aff manage_copy( isl_union_pw_multi_aff *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_pw_multi_aff_get_ctx(ptr);
@@ -28338,7 +28338,7 @@ union_pw_multi_aff manage_copy(__isl_keep isl_union_pw_multi_aff *ptr) {
   return union_pw_multi_aff(ptr);
 }
 
-union_pw_multi_aff::union_pw_multi_aff(__isl_take isl_union_pw_multi_aff *ptr)
+union_pw_multi_aff::union_pw_multi_aff( isl_union_pw_multi_aff *ptr)
     : ptr(ptr) {}
 
 union_pw_multi_aff::union_pw_multi_aff()
@@ -28412,15 +28412,15 @@ union_pw_multi_aff::~union_pw_multi_aff() {
     isl_union_pw_multi_aff_free(ptr);
 }
 
-__isl_give isl_union_pw_multi_aff *union_pw_multi_aff::copy() const & {
+ isl_union_pw_multi_aff *union_pw_multi_aff::copy() const & {
   return isl_union_pw_multi_aff_copy(ptr);
 }
 
-__isl_keep isl_union_pw_multi_aff *union_pw_multi_aff::get() const {
+ isl_union_pw_multi_aff *union_pw_multi_aff::get() const {
   return ptr;
 }
 
-__isl_give isl_union_pw_multi_aff *union_pw_multi_aff::release() {
+ isl_union_pw_multi_aff *union_pw_multi_aff::release() {
   isl_union_pw_multi_aff *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -28841,12 +28841,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_pw_multi_aff &obj)
 }
 
 // implementations for isl::union_set
-union_set manage(__isl_take isl_union_set *ptr) {
+union_set manage( isl_union_set *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_set(ptr);
 }
-union_set manage_copy(__isl_keep isl_union_set *ptr) {
+union_set manage_copy( isl_union_set *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_set_get_ctx(ptr);
@@ -28857,7 +28857,7 @@ union_set manage_copy(__isl_keep isl_union_set *ptr) {
   return union_set(ptr);
 }
 
-union_set::union_set(__isl_take isl_union_set *ptr)
+union_set::union_set( isl_union_set *ptr)
     : ptr(ptr) {}
 
 union_set::union_set()
@@ -28931,15 +28931,15 @@ union_set::~union_set() {
     isl_union_set_free(ptr);
 }
 
-__isl_give isl_union_set *union_set::copy() const & {
+ isl_union_set *union_set::copy() const & {
   return isl_union_set_copy(ptr);
 }
 
-__isl_keep isl_union_set *union_set::get() const {
+ isl_union_set *union_set::get() const {
   return ptr;
 }
 
-__isl_give isl_union_set *union_set::release() {
+ isl_union_set *union_set::release() {
   isl_union_set *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -29492,12 +29492,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_set &obj)
 }
 
 // implementations for isl::union_set_list
-union_set_list manage(__isl_take isl_union_set_list *ptr) {
+union_set_list manage( isl_union_set_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return union_set_list(ptr);
 }
-union_set_list manage_copy(__isl_keep isl_union_set_list *ptr) {
+union_set_list manage_copy( isl_union_set_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_union_set_list_get_ctx(ptr);
@@ -29508,7 +29508,7 @@ union_set_list manage_copy(__isl_keep isl_union_set_list *ptr) {
   return union_set_list(ptr);
 }
 
-union_set_list::union_set_list(__isl_take isl_union_set_list *ptr)
+union_set_list::union_set_list( isl_union_set_list *ptr)
     : ptr(ptr) {}
 
 union_set_list::union_set_list()
@@ -29568,15 +29568,15 @@ union_set_list::~union_set_list() {
     isl_union_set_list_free(ptr);
 }
 
-__isl_give isl_union_set_list *union_set_list::copy() const & {
+ isl_union_set_list *union_set_list::copy() const & {
   return isl_union_set_list_copy(ptr);
 }
 
-__isl_keep isl_union_set_list *union_set_list::get() const {
+ isl_union_set_list *union_set_list::get() const {
   return ptr;
 }
 
-__isl_give isl_union_set_list *union_set_list::release() {
+ isl_union_set_list *union_set_list::release() {
   isl_union_set_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -29778,12 +29778,12 @@ inline std::ostream &operator<<(std::ostream &os, const union_set_list &obj)
 }
 
 // implementations for isl::val
-val manage(__isl_take isl_val *ptr) {
+val manage( isl_val *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return val(ptr);
 }
-val manage_copy(__isl_keep isl_val *ptr) {
+val manage_copy( isl_val *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_val_get_ctx(ptr);
@@ -29794,7 +29794,7 @@ val manage_copy(__isl_keep isl_val *ptr) {
   return val(ptr);
 }
 
-val::val(__isl_take isl_val *ptr)
+val::val( isl_val *ptr)
     : ptr(ptr) {}
 
 val::val()
@@ -29842,15 +29842,15 @@ val::~val() {
     isl_val_free(ptr);
 }
 
-__isl_give isl_val *val::copy() const & {
+ isl_val *val::copy() const & {
   return isl_val_copy(ptr);
 }
 
-__isl_keep isl_val *val::get() const {
+ isl_val *val::get() const {
   return ptr;
 }
 
-__isl_give isl_val *val::release() {
+ isl_val *val::release() {
   isl_val *tmp = ptr;
   ptr = nullptr;
   return tmp;
@@ -30533,12 +30533,12 @@ inline std::ostream &operator<<(std::ostream &os, const val &obj)
 }
 
 // implementations for isl::val_list
-val_list manage(__isl_take isl_val_list *ptr) {
+val_list manage( isl_val_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   return val_list(ptr);
 }
-val_list manage_copy(__isl_keep isl_val_list *ptr) {
+val_list manage_copy( isl_val_list *ptr) {
   if (!ptr)
     exception::throw_invalid("NULL input", __FILE__, __LINE__);
   auto saved_ctx = isl_val_list_get_ctx(ptr);
@@ -30549,7 +30549,7 @@ val_list manage_copy(__isl_keep isl_val_list *ptr) {
   return val_list(ptr);
 }
 
-val_list::val_list(__isl_take isl_val_list *ptr)
+val_list::val_list( isl_val_list *ptr)
     : ptr(ptr) {}
 
 val_list::val_list()
@@ -30609,15 +30609,15 @@ val_list::~val_list() {
     isl_val_list_free(ptr);
 }
 
-__isl_give isl_val_list *val_list::copy() const & {
+ isl_val_list *val_list::copy() const & {
   return isl_val_list_copy(ptr);
 }
 
-__isl_keep isl_val_list *val_list::get() const {
+ isl_val_list *val_list::get() const {
   return ptr;
 }
 
-__isl_give isl_val_list *val_list::release() {
+ isl_val_list *val_list::release() {
   isl_val_list *tmp = ptr;
   ptr = nullptr;
   return tmp;
