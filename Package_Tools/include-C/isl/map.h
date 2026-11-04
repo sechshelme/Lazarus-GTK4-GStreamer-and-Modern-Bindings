@@ -793,9 +793,140 @@ extern
  isl_pw_aff *isl_map_dim_min( isl_map *map, int pos);
  isl_pw_aff *isl_map_dim_max( isl_map *map, int pos);
 
-ISL_DECLARE_LIST_FN(basic_map)
-ISL_DECLARE_EXPORTED_LIST_FN(map)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(map)
+isl_ctx *isl_basic_map_list_get_ctx( isl_basic_map_list *list);	
+ isl_basic_map_list *isl_basic_map_to_list( isl_basic_map *el);
+ isl_basic_map_list *isl_basic_map_list_from_basic_map(			
+	 isl_basic_map *el);					
+ isl_basic_map_list *isl_basic_map_list_alloc(isl_ctx *ctx, int n);	
+ isl_basic_map_list *isl_basic_map_list_copy(			
+	 isl_basic_map_list *list);				
+ isl_basic_map_list *isl_basic_map_list_free(			
+	 isl_basic_map_list *list);				
+ isl_basic_map_list *isl_basic_map_list_add(			
+	 isl_basic_map_list *list,				
+	 isl_basic_map *el);					
+ isl_basic_map_list *isl_basic_map_list_insert(			
+	 isl_basic_map_list *list, unsigned pos,			
+	 isl_basic_map *el);					
+ isl_basic_map_list *isl_basic_map_list_drop(			
+	 isl_basic_map_list *list, unsigned first, unsigned n);	
+ isl_basic_map_list *isl_basic_map_list_clear(			
+	 isl_basic_map_list *list);				
+ isl_basic_map_list *isl_basic_map_list_swap(			
+	 isl_basic_map_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_basic_map_list *isl_basic_map_list_reverse(			
+	 isl_basic_map_list *list);				
+ isl_basic_map_list *isl_basic_map_list_concat(			
+	 isl_basic_map_list *list1,				
+	 isl_basic_map_list *list2);				
+isl_size isl_basic_map_list_size( isl_basic_map_list *list);	
+isl_size isl_basic_map_list_n_basic_map( isl_basic_map_list *list);	
+ isl_basic_map *isl_basic_map_list_get_at(				
+	 isl_basic_map_list *list, int index);			
+  isl_basic_map *isl_basic_map_list_get_basic_map(			
+	 isl_basic_map_list *list, int index);			
+ isl_basic_map_list *isl_basic_map_list_set_at(			
+	 isl_basic_map_list *list, int index,			
+	 isl_basic_map *el);					
+  isl_basic_map_list *isl_basic_map_list_set_basic_map(		
+	 struct isl_basic_map_list *list, int index,		
+	 struct isl_basic_map *el);				
+isl_stat isl_basic_map_list_foreach( isl_basic_map_list *list,	
+	isl_stat (*fn)( isl_basic_map *el, void *user),		
+	void *user);							
+isl_bool isl_basic_map_list_every( isl_basic_map_list *list,	
+	isl_bool (*test)( isl_basic_map *el, void *user),		
+	void *user);							
+ isl_basic_map_list *isl_basic_map_list_map(			
+	 isl_basic_map_list *list,				
+	 isl_basic_map * (*fn)( isl_basic_map *el,		
+		void *user),						
+	void *user);							
+ isl_basic_map_list *isl_basic_map_list_sort(			
+	 isl_basic_map_list *list,				
+	int (*cmp)( struct isl_basic_map *a,			
+		 struct isl_basic_map *b,				
+		void *user), void *user);				
+isl_stat isl_basic_map_list_foreach_scc( isl_basic_map_list *list,	
+	isl_bool (*follows)( isl_basic_map *a,			
+			 isl_basic_map *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_basic_map_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_basic_map_list_to_str(				
+	 isl_basic_map_list *list);				
+ isl_printer *isl_printer_print_basic_map_list(			
+	 isl_printer *p,  isl_basic_map_list *list);	
+void isl_basic_map_list_dump( isl_basic_map_list *list);  
+isl_ctx *isl_map_list_get_ctx( isl_map_list *list);	
+ isl_map_list *isl_map_to_list( isl_map *el);
+ isl_map_list *isl_map_list_from_map(			
+	 isl_map *el);					
+ isl_map_list *isl_map_list_alloc(isl_ctx *ctx, int n);	
+ isl_map_list *isl_map_list_copy(			
+	 isl_map_list *list);				
+ isl_map_list *isl_map_list_free(			
+	 isl_map_list *list);				
+ isl_map_list *isl_map_list_add(			
+	 isl_map_list *list,				
+	 isl_map *el);					
+ isl_map_list *isl_map_list_insert(			
+	 isl_map_list *list, unsigned pos,			
+	 isl_map *el);					
+ isl_map_list *isl_map_list_drop(			
+	 isl_map_list *list, unsigned first, unsigned n);	
+ isl_map_list *isl_map_list_clear(			
+	 isl_map_list *list);				
+ isl_map_list *isl_map_list_swap(			
+	 isl_map_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_map_list *isl_map_list_reverse(			
+	 isl_map_list *list);				
+ isl_map_list *isl_map_list_concat(			
+	 isl_map_list *list1,				
+	 isl_map_list *list2);				
+isl_size isl_map_list_size( isl_map_list *list);	
+isl_size isl_map_list_n_map( isl_map_list *list);	
+ isl_map *isl_map_list_get_at(				
+	 isl_map_list *list, int index);			
+  isl_map *isl_map_list_get_map(			
+	 isl_map_list *list, int index);			
+ isl_map_list *isl_map_list_set_at(			
+	 isl_map_list *list, int index,			
+	 isl_map *el);					
+  isl_map_list *isl_map_list_set_map(		
+	 struct isl_map_list *list, int index,		
+	 struct isl_map *el);				
+isl_stat isl_map_list_foreach( isl_map_list *list,	
+	isl_stat (*fn)( isl_map *el, void *user),		
+	void *user);							
+isl_bool isl_map_list_every( isl_map_list *list,	
+	isl_bool (*test)( isl_map *el, void *user),		
+	void *user);							
+ isl_map_list *isl_map_list_map(			
+	 isl_map_list *list,				
+	 isl_map * (*fn)( isl_map *el,		
+		void *user),						
+	void *user);							
+ isl_map_list *isl_map_list_sort(			
+	 isl_map_list *list,				
+	int (*cmp)( struct isl_map *a,			
+		 struct isl_map *b,				
+		void *user), void *user);				
+isl_stat isl_map_list_foreach_scc( isl_map_list *list,	
+	isl_bool (*follows)( isl_map *a,			
+			 isl_map *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_map_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_map_list_to_str(				
+	 isl_map_list *list);				
+ isl_printer *isl_printer_print_map_list(			
+	 isl_printer *p,  isl_map_list *list);	
+void isl_map_list_dump( isl_map_list *list);  
+isl_map_list *isl_map_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
 
 #if defined(__cplusplus)
 }

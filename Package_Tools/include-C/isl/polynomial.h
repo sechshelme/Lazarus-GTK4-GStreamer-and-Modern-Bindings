@@ -834,9 +834,204 @@ isl_bool isl_union_pw_qpolynomial_fold_every_pw_qpolynomial_fold(
  isl_union_pw_qpolynomial *isl_union_pw_qpolynomial_to_polynomial(
 	 isl_union_pw_qpolynomial *upwqp, int sign);
 
-ISL_DECLARE_LIST_FN(qpolynomial)
-ISL_DECLARE_LIST_FN(pw_qpolynomial)
-ISL_DECLARE_LIST_FN(pw_qpolynomial_fold)
+isl_ctx *isl_qpolynomial_list_get_ctx( isl_qpolynomial_list *list);	
+ isl_qpolynomial_list *isl_qpolynomial_to_list( isl_qpolynomial *el);
+ isl_qpolynomial_list *isl_qpolynomial_list_from_qpolynomial(			
+	 isl_qpolynomial *el);					
+ isl_qpolynomial_list *isl_qpolynomial_list_alloc(isl_ctx *ctx, int n);	
+ isl_qpolynomial_list *isl_qpolynomial_list_copy(			
+	 isl_qpolynomial_list *list);				
+ isl_qpolynomial_list *isl_qpolynomial_list_free(			
+	 isl_qpolynomial_list *list);				
+ isl_qpolynomial_list *isl_qpolynomial_list_add(			
+	 isl_qpolynomial_list *list,				
+	 isl_qpolynomial *el);					
+ isl_qpolynomial_list *isl_qpolynomial_list_insert(			
+	 isl_qpolynomial_list *list, unsigned pos,			
+	 isl_qpolynomial *el);					
+ isl_qpolynomial_list *isl_qpolynomial_list_drop(			
+	 isl_qpolynomial_list *list, unsigned first, unsigned n);	
+ isl_qpolynomial_list *isl_qpolynomial_list_clear(			
+	 isl_qpolynomial_list *list);				
+ isl_qpolynomial_list *isl_qpolynomial_list_swap(			
+	 isl_qpolynomial_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_qpolynomial_list *isl_qpolynomial_list_reverse(			
+	 isl_qpolynomial_list *list);				
+ isl_qpolynomial_list *isl_qpolynomial_list_concat(			
+	 isl_qpolynomial_list *list1,				
+	 isl_qpolynomial_list *list2);				
+isl_size isl_qpolynomial_list_size( isl_qpolynomial_list *list);	
+isl_size isl_qpolynomial_list_n_qpolynomial( isl_qpolynomial_list *list);	
+ isl_qpolynomial *isl_qpolynomial_list_get_at(				
+	 isl_qpolynomial_list *list, int index);			
+  isl_qpolynomial *isl_qpolynomial_list_get_qpolynomial(			
+	 isl_qpolynomial_list *list, int index);			
+ isl_qpolynomial_list *isl_qpolynomial_list_set_at(			
+	 isl_qpolynomial_list *list, int index,			
+	 isl_qpolynomial *el);					
+  isl_qpolynomial_list *isl_qpolynomial_list_set_qpolynomial(		
+	 struct isl_qpolynomial_list *list, int index,		
+	 struct isl_qpolynomial *el);				
+isl_stat isl_qpolynomial_list_foreach( isl_qpolynomial_list *list,	
+	isl_stat (*fn)( isl_qpolynomial *el, void *user),		
+	void *user);							
+isl_bool isl_qpolynomial_list_every( isl_qpolynomial_list *list,	
+	isl_bool (*test)( isl_qpolynomial *el, void *user),		
+	void *user);							
+ isl_qpolynomial_list *isl_qpolynomial_list_map(			
+	 isl_qpolynomial_list *list,				
+	 isl_qpolynomial * (*fn)( isl_qpolynomial *el,		
+		void *user),						
+	void *user);							
+ isl_qpolynomial_list *isl_qpolynomial_list_sort(			
+	 isl_qpolynomial_list *list,				
+	int (*cmp)( struct isl_qpolynomial *a,			
+		 struct isl_qpolynomial *b,				
+		void *user), void *user);				
+isl_stat isl_qpolynomial_list_foreach_scc( isl_qpolynomial_list *list,	
+	isl_bool (*follows)( isl_qpolynomial *a,			
+			 isl_qpolynomial *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_qpolynomial_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_qpolynomial_list_to_str(				
+	 isl_qpolynomial_list *list);				
+ isl_printer *isl_printer_print_qpolynomial_list(			
+	 isl_printer *p,  isl_qpolynomial_list *list);	
+void isl_qpolynomial_list_dump( isl_qpolynomial_list *list);  
+isl_ctx *isl_pw_qpolynomial_list_get_ctx( isl_pw_qpolynomial_list *list);	
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_to_list( isl_pw_qpolynomial *el);
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_from_pw_qpolynomial(			
+	 isl_pw_qpolynomial *el);					
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_alloc(isl_ctx *ctx, int n);	
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_copy(			
+	 isl_pw_qpolynomial_list *list);				
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_free(			
+	 isl_pw_qpolynomial_list *list);				
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_add(			
+	 isl_pw_qpolynomial_list *list,				
+	 isl_pw_qpolynomial *el);					
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_insert(			
+	 isl_pw_qpolynomial_list *list, unsigned pos,			
+	 isl_pw_qpolynomial *el);					
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_drop(			
+	 isl_pw_qpolynomial_list *list, unsigned first, unsigned n);	
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_clear(			
+	 isl_pw_qpolynomial_list *list);				
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_swap(			
+	 isl_pw_qpolynomial_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_reverse(			
+	 isl_pw_qpolynomial_list *list);				
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_concat(			
+	 isl_pw_qpolynomial_list *list1,				
+	 isl_pw_qpolynomial_list *list2);				
+isl_size isl_pw_qpolynomial_list_size( isl_pw_qpolynomial_list *list);	
+isl_size isl_pw_qpolynomial_list_n_pw_qpolynomial( isl_pw_qpolynomial_list *list);	
+ isl_pw_qpolynomial *isl_pw_qpolynomial_list_get_at(				
+	 isl_pw_qpolynomial_list *list, int index);			
+  isl_pw_qpolynomial *isl_pw_qpolynomial_list_get_pw_qpolynomial(			
+	 isl_pw_qpolynomial_list *list, int index);			
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_set_at(			
+	 isl_pw_qpolynomial_list *list, int index,			
+	 isl_pw_qpolynomial *el);					
+  isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_set_pw_qpolynomial(		
+	 struct isl_pw_qpolynomial_list *list, int index,		
+	 struct isl_pw_qpolynomial *el);				
+isl_stat isl_pw_qpolynomial_list_foreach( isl_pw_qpolynomial_list *list,	
+	isl_stat (*fn)( isl_pw_qpolynomial *el, void *user),		
+	void *user);							
+isl_bool isl_pw_qpolynomial_list_every( isl_pw_qpolynomial_list *list,	
+	isl_bool (*test)( isl_pw_qpolynomial *el, void *user),		
+	void *user);							
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_map(			
+	 isl_pw_qpolynomial_list *list,				
+	 isl_pw_qpolynomial * (*fn)( isl_pw_qpolynomial *el,		
+		void *user),						
+	void *user);							
+ isl_pw_qpolynomial_list *isl_pw_qpolynomial_list_sort(			
+	 isl_pw_qpolynomial_list *list,				
+	int (*cmp)( struct isl_pw_qpolynomial *a,			
+		 struct isl_pw_qpolynomial *b,				
+		void *user), void *user);				
+isl_stat isl_pw_qpolynomial_list_foreach_scc( isl_pw_qpolynomial_list *list,	
+	isl_bool (*follows)( isl_pw_qpolynomial *a,			
+			 isl_pw_qpolynomial *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_pw_qpolynomial_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_pw_qpolynomial_list_to_str(				
+	 isl_pw_qpolynomial_list *list);				
+ isl_printer *isl_printer_print_pw_qpolynomial_list(			
+	 isl_printer *p,  isl_pw_qpolynomial_list *list);	
+void isl_pw_qpolynomial_list_dump( isl_pw_qpolynomial_list *list);  
+isl_ctx *isl_pw_qpolynomial_fold_list_get_ctx( isl_pw_qpolynomial_fold_list *list);	
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_to_list( isl_pw_qpolynomial_fold *el);
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_from_pw_qpolynomial_fold(			
+	 isl_pw_qpolynomial_fold *el);					
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_alloc(isl_ctx *ctx, int n);	
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_copy(			
+	 isl_pw_qpolynomial_fold_list *list);				
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_free(			
+	 isl_pw_qpolynomial_fold_list *list);				
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_add(			
+	 isl_pw_qpolynomial_fold_list *list,				
+	 isl_pw_qpolynomial_fold *el);					
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_insert(			
+	 isl_pw_qpolynomial_fold_list *list, unsigned pos,			
+	 isl_pw_qpolynomial_fold *el);					
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_drop(			
+	 isl_pw_qpolynomial_fold_list *list, unsigned first, unsigned n);	
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_clear(			
+	 isl_pw_qpolynomial_fold_list *list);				
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_swap(			
+	 isl_pw_qpolynomial_fold_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_reverse(			
+	 isl_pw_qpolynomial_fold_list *list);				
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_concat(			
+	 isl_pw_qpolynomial_fold_list *list1,				
+	 isl_pw_qpolynomial_fold_list *list2);				
+isl_size isl_pw_qpolynomial_fold_list_size( isl_pw_qpolynomial_fold_list *list);	
+isl_size isl_pw_qpolynomial_fold_list_n_pw_qpolynomial_fold( isl_pw_qpolynomial_fold_list *list);	
+ isl_pw_qpolynomial_fold *isl_pw_qpolynomial_fold_list_get_at(				
+	 isl_pw_qpolynomial_fold_list *list, int index);			
+  isl_pw_qpolynomial_fold *isl_pw_qpolynomial_fold_list_get_pw_qpolynomial_fold(			
+	 isl_pw_qpolynomial_fold_list *list, int index);			
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_set_at(			
+	 isl_pw_qpolynomial_fold_list *list, int index,			
+	 isl_pw_qpolynomial_fold *el);					
+  isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_set_pw_qpolynomial_fold(		
+	 struct isl_pw_qpolynomial_fold_list *list, int index,		
+	 struct isl_pw_qpolynomial_fold *el);				
+isl_stat isl_pw_qpolynomial_fold_list_foreach( isl_pw_qpolynomial_fold_list *list,	
+	isl_stat (*fn)( isl_pw_qpolynomial_fold *el, void *user),		
+	void *user);							
+isl_bool isl_pw_qpolynomial_fold_list_every( isl_pw_qpolynomial_fold_list *list,	
+	isl_bool (*test)( isl_pw_qpolynomial_fold *el, void *user),		
+	void *user);							
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_map(			
+	 isl_pw_qpolynomial_fold_list *list,				
+	 isl_pw_qpolynomial_fold * (*fn)( isl_pw_qpolynomial_fold *el,		
+		void *user),						
+	void *user);							
+ isl_pw_qpolynomial_fold_list *isl_pw_qpolynomial_fold_list_sort(			
+	 isl_pw_qpolynomial_fold_list *list,				
+	int (*cmp)( struct isl_pw_qpolynomial_fold *a,			
+		 struct isl_pw_qpolynomial_fold *b,				
+		void *user), void *user);				
+isl_stat isl_pw_qpolynomial_fold_list_foreach_scc( isl_pw_qpolynomial_fold_list *list,	
+	isl_bool (*follows)( isl_pw_qpolynomial_fold *a,			
+			 isl_pw_qpolynomial_fold *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_pw_qpolynomial_fold_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_pw_qpolynomial_fold_list_to_str(				
+	 isl_pw_qpolynomial_fold_list *list);				
+ isl_printer *isl_printer_print_pw_qpolynomial_fold_list(			
+	 isl_printer *p,  isl_pw_qpolynomial_fold_list *list);	
+void isl_pw_qpolynomial_fold_list_dump( isl_pw_qpolynomial_fold_list *list);  
 
 #if defined(__cplusplus)
 }

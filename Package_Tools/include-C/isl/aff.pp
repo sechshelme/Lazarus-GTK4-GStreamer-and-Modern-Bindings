@@ -49,6 +49,7 @@ Pisl_union_map  = ^isl_union_map;
 Pisl_union_pw_aff  = ^isl_union_pw_aff;
 Pisl_union_pw_aff_list  = ^isl_union_pw_aff_list;
 Pisl_union_pw_multi_aff  = ^isl_union_pw_multi_aff;
+Pisl_union_pw_multi_aff_list  = ^isl_union_pw_multi_aff_list;
 Pisl_union_set  = ^isl_union_set;
 Pisl_val  = ^isl_val;
 {$IFDEF FPC}
@@ -329,12 +330,13 @@ function isl_multi_aff_add_constant_multi_val(mpa:Pisl_multi_aff; mv:Pisl_multi_
 function isl_multi_aff_zero(space:Pisl_space):Pisl_multi_aff;cdecl;external;
 function isl_space_zero_multi_aff(space:Pisl_space):Pisl_multi_aff;cdecl;external;
 function isl_multi_aff_involves_nan(multi:Pisl_multi_aff):Tisl_bool;cdecl;external;
-(* error 
-extern								
-(* error 
-	 isl_space *domain);     
- in declarator_list *)
- in declarator_list *)
+function isl_multi_aff_dim(multi:Pisl_multi_aff; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_multi_aff_drop_dims(multi:Pisl_multi_aff; _type:Tisl_dim_type; first:dword; n:dword):Pisl_multi_aff;cdecl;external;
+function isl_multi_aff_involves_dims(multi:Pisl_multi_aff; _type:Tisl_dim_type; first:dword; n:dword):Tisl_bool;cdecl;external;
+function isl_multi_aff_insert_dims(multi:Pisl_multi_aff; _type:Tisl_dim_type; first:dword; n:dword):Pisl_multi_aff;cdecl;external;
+function isl_multi_aff_add_dims(multi:Pisl_multi_aff; _type:Tisl_dim_type; n:dword):Pisl_multi_aff;cdecl;external;
+function isl_multi_aff_project_domain_on_params(multi:Pisl_multi_aff):Pisl_multi_aff;cdecl;external;
+function isl_multi_aff_insert_domain(multi:Pisl_multi_aff; domain:Pisl_space):Pisl_multi_aff;cdecl;external;
 function isl_multi_aff_involves_locals(multi:Pisl_multi_aff):Tisl_bool;cdecl;external;
 (* Const before type ignored *)
 function isl_multi_aff_find_dim_by_name(multi:Pisl_multi_aff; _type:Tisl_dim_type; name:Pchar):longint;cdecl;external;
@@ -432,15 +434,14 @@ function isl_multi_pw_aff_add_constant_multi_val(mpa:Pisl_multi_pw_aff; mv:Pisl_
 function isl_multi_pw_aff_zero(space:Pisl_space):Pisl_multi_pw_aff;cdecl;external;
 function isl_space_zero_multi_pw_aff(space:Pisl_space):Pisl_multi_pw_aff;cdecl;external;
 function isl_multi_pw_aff_involves_nan(multi:Pisl_multi_pw_aff):Tisl_bool;cdecl;external;
-(* error 
-int isl_multi_pw_aff_find_dim_by_name(				
-(* error 
-	enum isl_dim_type type, const char *name);			
-(* error 
-	enum isl_dim_type type, const char *name);			
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+function isl_multi_pw_aff_dim(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_multi_pw_aff_drop_dims(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; first:dword; n:dword):Pisl_multi_pw_aff;cdecl;external;
+function isl_multi_pw_aff_involves_dims(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; first:dword; n:dword):Tisl_bool;cdecl;external;
+function isl_multi_pw_aff_insert_dims(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; first:dword; n:dword):Pisl_multi_pw_aff;cdecl;external;
+function isl_multi_pw_aff_add_dims(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; n:dword):Pisl_multi_pw_aff;cdecl;external;
+function isl_multi_pw_aff_project_domain_on_params(multi:Pisl_multi_pw_aff):Pisl_multi_pw_aff;cdecl;external;
+(* Const before type ignored *)
+function isl_multi_pw_aff_find_dim_by_name(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; name:Pchar):longint;cdecl;external;
 function isl_multi_pw_aff_find_dim_by_id(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; id:Pisl_id):longint;cdecl;external;
 function isl_multi_pw_aff_get_dim_id(multi:Pisl_multi_pw_aff; _type:Tisl_dim_type; pos:dword):Pisl_id;cdecl;external;
 (* Const before type ignored *)
@@ -841,10 +842,149 @@ function isl_multi_union_pw_aff_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_mult
 function isl_multi_union_pw_aff_to_str(mupa:Pisl_multi_union_pw_aff):Pchar;cdecl;external;
 function isl_printer_print_multi_union_pw_aff(p:Pisl_printer; mupa:Pisl_multi_union_pw_aff):Pisl_printer;cdecl;external;
 procedure isl_multi_union_pw_aff_dump(mupa:Pisl_multi_union_pw_aff);cdecl;external;
-(* error 
-ISL_DECLARE_EXPORTED_LIST_FN_READ(aff)
-{$if defined(__cplusplus)}
-{$endif}
+function isl_aff_list_get_ctx(list:Pisl_aff_list):Pisl_ctx;cdecl;external;
+function isl_aff_to_list(el:Pisl_aff):Pisl_aff_list;cdecl;external;
+function isl_aff_list_from_aff(el:Pisl_aff):Pisl_aff_list;cdecl;external;
+function isl_aff_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_aff_list;cdecl;external;
+function isl_aff_list_copy(list:Pisl_aff_list):Pisl_aff_list;cdecl;external;
+function isl_aff_list_free(list:Pisl_aff_list):Pisl_aff_list;cdecl;external;
+function isl_aff_list_add(list:Pisl_aff_list; el:Pisl_aff):Pisl_aff_list;cdecl;external;
+function isl_aff_list_insert(list:Pisl_aff_list; pos:dword; el:Pisl_aff):Pisl_aff_list;cdecl;external;
+function isl_aff_list_drop(list:Pisl_aff_list; first:dword; n:dword):Pisl_aff_list;cdecl;external;
+function isl_aff_list_clear(list:Pisl_aff_list):Pisl_aff_list;cdecl;external;
+function isl_aff_list_swap(list:Pisl_aff_list; pos1:dword; pos2:dword):Pisl_aff_list;cdecl;external;
+function isl_aff_list_reverse(list:Pisl_aff_list):Pisl_aff_list;cdecl;external;
+function isl_aff_list_concat(list1:Pisl_aff_list; list2:Pisl_aff_list):Pisl_aff_list;cdecl;external;
+function isl_aff_list_size(list:Pisl_aff_list):Tisl_size;cdecl;external;
+function isl_aff_list_n_aff(list:Pisl_aff_list):Tisl_size;cdecl;external;
+function isl_aff_list_get_at(list:Pisl_aff_list; index:longint):Pisl_aff;cdecl;external;
+function isl_aff_list_get_aff(list:Pisl_aff_list; index:longint):Pisl_aff;cdecl;external;
+function isl_aff_list_set_at(list:Pisl_aff_list; index:longint; el:Pisl_aff):Pisl_aff_list;cdecl;external;
+function isl_aff_list_set_aff(list:Pisl_aff_list; index:longint; el:Pisl_aff):Pisl_aff_list;cdecl;external;
+function isl_aff_list_foreach(list:Pisl_aff_list; fn:function (el:Pisl_aff; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_aff_list_every(list:Pisl_aff_list; test:function (el:Pisl_aff; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_aff_list_map(list:Pisl_aff_list; fn:function (el:Pisl_aff; user:pointer):Pisl_aff; user:pointer):Pisl_aff_list;cdecl;external;
+function isl_aff_list_sort(list:Pisl_aff_list; cmp:function (a:Pisl_aff; b:Pisl_aff; user:pointer):longint; user:pointer):Pisl_aff_list;cdecl;external;
+function isl_aff_list_foreach_scc(list:Pisl_aff_list; follows:function (a:Pisl_aff; b:Pisl_aff; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_aff_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_aff_list_to_str(list:Pisl_aff_list):Pchar;cdecl;external;
+function isl_printer_print_aff_list(p:Pisl_printer; list:Pisl_aff_list):Pisl_printer;cdecl;external;
+procedure isl_aff_list_dump(list:Pisl_aff_list);cdecl;external;
+(* Const before type ignored *)
+function isl_aff_list_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_aff_list;cdecl;external;
+function isl_pw_aff_list_get_ctx(list:Pisl_pw_aff_list):Pisl_ctx;cdecl;external;
+function isl_pw_aff_to_list(el:Pisl_pw_aff):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_from_pw_aff(el:Pisl_pw_aff):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_copy(list:Pisl_pw_aff_list):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_free(list:Pisl_pw_aff_list):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_add(list:Pisl_pw_aff_list; el:Pisl_pw_aff):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_insert(list:Pisl_pw_aff_list; pos:dword; el:Pisl_pw_aff):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_drop(list:Pisl_pw_aff_list; first:dword; n:dword):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_clear(list:Pisl_pw_aff_list):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_swap(list:Pisl_pw_aff_list; pos1:dword; pos2:dword):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_reverse(list:Pisl_pw_aff_list):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_concat(list1:Pisl_pw_aff_list; list2:Pisl_pw_aff_list):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_size(list:Pisl_pw_aff_list):Tisl_size;cdecl;external;
+function isl_pw_aff_list_n_pw_aff(list:Pisl_pw_aff_list):Tisl_size;cdecl;external;
+function isl_pw_aff_list_get_at(list:Pisl_pw_aff_list; index:longint):Pisl_pw_aff;cdecl;external;
+function isl_pw_aff_list_get_pw_aff(list:Pisl_pw_aff_list; index:longint):Pisl_pw_aff;cdecl;external;
+function isl_pw_aff_list_set_at(list:Pisl_pw_aff_list; index:longint; el:Pisl_pw_aff):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_set_pw_aff(list:Pisl_pw_aff_list; index:longint; el:Pisl_pw_aff):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_foreach(list:Pisl_pw_aff_list; fn:function (el:Pisl_pw_aff; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_aff_list_every(list:Pisl_pw_aff_list; test:function (el:Pisl_pw_aff; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_pw_aff_list_map(list:Pisl_pw_aff_list; fn:function (el:Pisl_pw_aff; user:pointer):Pisl_pw_aff; user:pointer):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_sort(list:Pisl_pw_aff_list; cmp:function (a:Pisl_pw_aff; b:Pisl_pw_aff; user:pointer):longint; user:pointer):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_aff_list_foreach_scc(list:Pisl_pw_aff_list; follows:function (a:Pisl_pw_aff; b:Pisl_pw_aff; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_pw_aff_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_aff_list_to_str(list:Pisl_pw_aff_list):Pchar;cdecl;external;
+function isl_printer_print_pw_aff_list(p:Pisl_printer; list:Pisl_pw_aff_list):Pisl_printer;cdecl;external;
+procedure isl_pw_aff_list_dump(list:Pisl_pw_aff_list);cdecl;external;
+(* Const before type ignored *)
+function isl_pw_aff_list_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_pw_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_get_ctx(list:Pisl_pw_multi_aff_list):Pisl_ctx;cdecl;external;
+function isl_pw_multi_aff_to_list(el:Pisl_pw_multi_aff):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_from_pw_multi_aff(el:Pisl_pw_multi_aff):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_copy(list:Pisl_pw_multi_aff_list):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_free(list:Pisl_pw_multi_aff_list):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_add(list:Pisl_pw_multi_aff_list; el:Pisl_pw_multi_aff):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_insert(list:Pisl_pw_multi_aff_list; pos:dword; el:Pisl_pw_multi_aff):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_drop(list:Pisl_pw_multi_aff_list; first:dword; n:dword):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_clear(list:Pisl_pw_multi_aff_list):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_swap(list:Pisl_pw_multi_aff_list; pos1:dword; pos2:dword):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_reverse(list:Pisl_pw_multi_aff_list):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_concat(list1:Pisl_pw_multi_aff_list; list2:Pisl_pw_multi_aff_list):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_size(list:Pisl_pw_multi_aff_list):Tisl_size;cdecl;external;
+function isl_pw_multi_aff_list_n_pw_multi_aff(list:Pisl_pw_multi_aff_list):Tisl_size;cdecl;external;
+function isl_pw_multi_aff_list_get_at(list:Pisl_pw_multi_aff_list; index:longint):Pisl_pw_multi_aff;cdecl;external;
+function isl_pw_multi_aff_list_get_pw_multi_aff(list:Pisl_pw_multi_aff_list; index:longint):Pisl_pw_multi_aff;cdecl;external;
+function isl_pw_multi_aff_list_set_at(list:Pisl_pw_multi_aff_list; index:longint; el:Pisl_pw_multi_aff):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_set_pw_multi_aff(list:Pisl_pw_multi_aff_list; index:longint; el:Pisl_pw_multi_aff):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_foreach(list:Pisl_pw_multi_aff_list; fn:function (el:Pisl_pw_multi_aff; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_multi_aff_list_every(list:Pisl_pw_multi_aff_list; test:function (el:Pisl_pw_multi_aff; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_pw_multi_aff_list_map(list:Pisl_pw_multi_aff_list; fn:function (el:Pisl_pw_multi_aff; user:pointer):Pisl_pw_multi_aff; user:pointer):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_sort(list:Pisl_pw_multi_aff_list; cmp:function (a:Pisl_pw_multi_aff; b:Pisl_pw_multi_aff; user:pointer):longint; user:pointer):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_pw_multi_aff_list_foreach_scc(list:Pisl_pw_multi_aff_list; follows:function (a:Pisl_pw_multi_aff; b:Pisl_pw_multi_aff; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_pw_multi_aff_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_multi_aff_list_to_str(list:Pisl_pw_multi_aff_list):Pchar;cdecl;external;
+function isl_printer_print_pw_multi_aff_list(p:Pisl_printer; list:Pisl_pw_multi_aff_list):Pisl_printer;cdecl;external;
+procedure isl_pw_multi_aff_list_dump(list:Pisl_pw_multi_aff_list);cdecl;external;
+(* Const before type ignored *)
+function isl_pw_multi_aff_list_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_aff_list_get_ctx(list:Pisl_union_pw_aff_list):Pisl_ctx;cdecl;external;
+function isl_union_pw_aff_to_list(el:Pisl_union_pw_aff):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_from_union_pw_aff(el:Pisl_union_pw_aff):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_copy(list:Pisl_union_pw_aff_list):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_free(list:Pisl_union_pw_aff_list):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_add(list:Pisl_union_pw_aff_list; el:Pisl_union_pw_aff):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_insert(list:Pisl_union_pw_aff_list; pos:dword; el:Pisl_union_pw_aff):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_drop(list:Pisl_union_pw_aff_list; first:dword; n:dword):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_clear(list:Pisl_union_pw_aff_list):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_swap(list:Pisl_union_pw_aff_list; pos1:dword; pos2:dword):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_reverse(list:Pisl_union_pw_aff_list):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_concat(list1:Pisl_union_pw_aff_list; list2:Pisl_union_pw_aff_list):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_size(list:Pisl_union_pw_aff_list):Tisl_size;cdecl;external;
+function isl_union_pw_aff_list_n_union_pw_aff(list:Pisl_union_pw_aff_list):Tisl_size;cdecl;external;
+function isl_union_pw_aff_list_get_at(list:Pisl_union_pw_aff_list; index:longint):Pisl_union_pw_aff;cdecl;external;
+function isl_union_pw_aff_list_get_union_pw_aff(list:Pisl_union_pw_aff_list; index:longint):Pisl_union_pw_aff;cdecl;external;
+function isl_union_pw_aff_list_set_at(list:Pisl_union_pw_aff_list; index:longint; el:Pisl_union_pw_aff):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_set_union_pw_aff(list:Pisl_union_pw_aff_list; index:longint; el:Pisl_union_pw_aff):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_foreach(list:Pisl_union_pw_aff_list; fn:function (el:Pisl_union_pw_aff; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_union_pw_aff_list_every(list:Pisl_union_pw_aff_list; test:function (el:Pisl_union_pw_aff; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_union_pw_aff_list_map(list:Pisl_union_pw_aff_list; fn:function (el:Pisl_union_pw_aff; user:pointer):Pisl_union_pw_aff; user:pointer):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_sort(list:Pisl_union_pw_aff_list; cmp:function (a:Pisl_union_pw_aff; b:Pisl_union_pw_aff; user:pointer):longint; user:pointer):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_aff_list_foreach_scc(list:Pisl_union_pw_aff_list; follows:function (a:Pisl_union_pw_aff; b:Pisl_union_pw_aff; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_union_pw_aff_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_union_pw_aff_list_to_str(list:Pisl_union_pw_aff_list):Pchar;cdecl;external;
+function isl_printer_print_union_pw_aff_list(p:Pisl_printer; list:Pisl_union_pw_aff_list):Pisl_printer;cdecl;external;
+procedure isl_union_pw_aff_list_dump(list:Pisl_union_pw_aff_list);cdecl;external;
+(* Const before type ignored *)
+function isl_union_pw_aff_list_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_union_pw_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_get_ctx(list:Pisl_union_pw_multi_aff_list):Pisl_ctx;cdecl;external;
+function isl_union_pw_multi_aff_to_list(el:Pisl_union_pw_multi_aff):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_from_union_pw_multi_aff(el:Pisl_union_pw_multi_aff):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_copy(list:Pisl_union_pw_multi_aff_list):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_free(list:Pisl_union_pw_multi_aff_list):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_add(list:Pisl_union_pw_multi_aff_list; el:Pisl_union_pw_multi_aff):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_insert(list:Pisl_union_pw_multi_aff_list; pos:dword; el:Pisl_union_pw_multi_aff):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_drop(list:Pisl_union_pw_multi_aff_list; first:dword; n:dword):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_clear(list:Pisl_union_pw_multi_aff_list):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_swap(list:Pisl_union_pw_multi_aff_list; pos1:dword; pos2:dword):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_reverse(list:Pisl_union_pw_multi_aff_list):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_concat(list1:Pisl_union_pw_multi_aff_list; list2:Pisl_union_pw_multi_aff_list):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_size(list:Pisl_union_pw_multi_aff_list):Tisl_size;cdecl;external;
+function isl_union_pw_multi_aff_list_n_union_pw_multi_aff(list:Pisl_union_pw_multi_aff_list):Tisl_size;cdecl;external;
+function isl_union_pw_multi_aff_list_get_at(list:Pisl_union_pw_multi_aff_list; index:longint):Pisl_union_pw_multi_aff;cdecl;external;
+function isl_union_pw_multi_aff_list_get_union_pw_multi_aff(list:Pisl_union_pw_multi_aff_list; index:longint):Pisl_union_pw_multi_aff;cdecl;external;
+function isl_union_pw_multi_aff_list_set_at(list:Pisl_union_pw_multi_aff_list; index:longint; el:Pisl_union_pw_multi_aff):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_set_union_pw_multi_aff(list:Pisl_union_pw_multi_aff_list; index:longint; el:Pisl_union_pw_multi_aff):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_foreach(list:Pisl_union_pw_multi_aff_list; fn:function (el:Pisl_union_pw_multi_aff; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_union_pw_multi_aff_list_every(list:Pisl_union_pw_multi_aff_list; test:function (el:Pisl_union_pw_multi_aff; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_union_pw_multi_aff_list_map(list:Pisl_union_pw_multi_aff_list; fn:function (el:Pisl_union_pw_multi_aff; user:pointer):Pisl_union_pw_multi_aff; user:pointer):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_sort(list:Pisl_union_pw_multi_aff_list; cmp:function (a:Pisl_union_pw_multi_aff; b:Pisl_union_pw_multi_aff; user:pointer):longint; user:pointer):Pisl_union_pw_multi_aff_list;cdecl;external;
+function isl_union_pw_multi_aff_list_foreach_scc(list:Pisl_union_pw_multi_aff_list; follows:function (a:Pisl_union_pw_multi_aff; b:Pisl_union_pw_multi_aff; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_union_pw_multi_aff_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_union_pw_multi_aff_list_to_str(list:Pisl_union_pw_multi_aff_list):Pchar;cdecl;external;
+function isl_printer_print_union_pw_multi_aff_list(p:Pisl_printer; list:Pisl_union_pw_multi_aff_list):Pisl_printer;cdecl;external;
+procedure isl_union_pw_multi_aff_list_dump(list:Pisl_union_pw_multi_aff_list);cdecl;external;
 {$endif}
 
 implementation

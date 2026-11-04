@@ -122,7 +122,23 @@ extern
 extern								
 isl_bool isl_multi_val_involves_nan(				
 	 isl_multi_val *multi);       
-ISL_DECLARE_MULTI_DIMS(val)
+isl_size isl_multi_val_dim( isl_multi_val *multi,	
+	enum isl_dim_type type);					
+ isl_multi_val *isl_multi_val_drop_dims(		
+	 isl_multi_val *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);
+isl_bool isl_multi_val_involves_dims(				
+	 isl_multi_val *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);					
+ isl_multi_val *isl_multi_val_insert_dims(		
+	 isl_multi_val *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);					
+ isl_multi_val *isl_multi_val_add_dims(		
+	 isl_multi_val *multi, enum isl_dim_type type,	
+	unsigned n);							
+ isl_multi_val *						
+isl_multi_val_project_domain_on_params(				
+	 isl_multi_val *multi);           
 int isl_multi_val_find_dim_by_name(				
 	 isl_multi_val *multi,				
 	enum isl_dim_type type, const char *name);			
@@ -319,8 +335,74 @@ isl_bool isl_multi_val_is_zero( isl_multi_val *mv);
 void isl_multi_val_dump( isl_multi_val *mv);
  char *isl_multi_val_to_str( isl_multi_val *mv);
 
-ISL_DECLARE_EXPORTED_LIST_FN(val)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(val)
+isl_ctx *isl_val_list_get_ctx( isl_val_list *list);	
+ isl_val_list *isl_val_to_list( isl_val *el);
+ isl_val_list *isl_val_list_from_val(			
+	 isl_val *el);					
+ isl_val_list *isl_val_list_alloc(isl_ctx *ctx, int n);	
+ isl_val_list *isl_val_list_copy(			
+	 isl_val_list *list);				
+ isl_val_list *isl_val_list_free(			
+	 isl_val_list *list);				
+ isl_val_list *isl_val_list_add(			
+	 isl_val_list *list,				
+	 isl_val *el);					
+ isl_val_list *isl_val_list_insert(			
+	 isl_val_list *list, unsigned pos,			
+	 isl_val *el);					
+ isl_val_list *isl_val_list_drop(			
+	 isl_val_list *list, unsigned first, unsigned n);	
+ isl_val_list *isl_val_list_clear(			
+	 isl_val_list *list);				
+ isl_val_list *isl_val_list_swap(			
+	 isl_val_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_val_list *isl_val_list_reverse(			
+	 isl_val_list *list);				
+ isl_val_list *isl_val_list_concat(			
+	 isl_val_list *list1,				
+	 isl_val_list *list2);				
+isl_size isl_val_list_size( isl_val_list *list);	
+isl_size isl_val_list_n_val( isl_val_list *list);	
+ isl_val *isl_val_list_get_at(				
+	 isl_val_list *list, int index);			
+  isl_val *isl_val_list_get_val(			
+	 isl_val_list *list, int index);			
+ isl_val_list *isl_val_list_set_at(			
+	 isl_val_list *list, int index,			
+	 isl_val *el);					
+  isl_val_list *isl_val_list_set_val(		
+	 struct isl_val_list *list, int index,		
+	 struct isl_val *el);				
+isl_stat isl_val_list_foreach( isl_val_list *list,	
+	isl_stat (*fn)( isl_val *el, void *user),		
+	void *user);							
+isl_bool isl_val_list_every( isl_val_list *list,	
+	isl_bool (*test)( isl_val *el, void *user),		
+	void *user);							
+ isl_val_list *isl_val_list_map(			
+	 isl_val_list *list,				
+	 isl_val * (*fn)( isl_val *el,		
+		void *user),						
+	void *user);							
+ isl_val_list *isl_val_list_sort(			
+	 isl_val_list *list,				
+	int (*cmp)( struct isl_val *a,			
+		 struct isl_val *b,				
+		void *user), void *user);				
+isl_stat isl_val_list_foreach_scc( isl_val_list *list,	
+	isl_bool (*follows)( isl_val *a,			
+			 isl_val *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_val_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_val_list_to_str(				
+	 isl_val_list *list);				
+ isl_printer *isl_printer_print_val_list(			
+	 isl_printer *p,  isl_val_list *list);	
+void isl_val_list_dump( isl_val_list *list);  
+isl_val_list *isl_val_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
 
 #if defined(__cplusplus)
 }

@@ -61,44 +61,44 @@ struct isl_arg {
 #define ISL_ARG_HIDDEN		(1 << 2)
 	unsigned		 flags;
 	union {
-	struct {
+	 {
 		struct isl_arg_choice	*choice;
 		unsigned	 	 default_value;
 		unsigned	 	 default_selected;
 		int (*set)(void *opt, unsigned val);
 	} choice;
-	struct {
+	 {
 		struct isl_arg_flags	*flags;
 		unsigned	 	 default_value;
 	} flags;
-	struct {
+	 {
 		unsigned		 default_value;
 		int (*set)(void *opt, unsigned val);
 	} b;
-	struct {
+	 {
 		int			default_value;
 	} i;
-	struct {
+	 {
 		long		 	default_value;
 		long		 	default_selected;
 		int (*set)(void *opt, long val);
 	} l;
-	struct {
+	 {
 		unsigned long		default_value;
 	} ul;
-	struct {
+	 {
 		const char		*default_value;
 	} str;
-	struct {
+	 {
 		size_t			 offset_n;
 	} str_list;
-	struct {
+	 {
 		struct isl_args		*child;
 	} child;
-	struct {
+	 {
 		void (*print_version)(void);
 	} version;
-	struct {
+	 {
 		int (*init)(void*);
 		void (*clear)(void*);
 	} user;
@@ -107,13 +107,13 @@ struct isl_arg {
 
 struct isl_args {
 	size_t			 options_size;
-	struct isl_arg		*args;
+	 isl_arg		*args;
 };
 
 #define ISL_ARGS_START(s,name)						\
-	struct isl_arg name ## LIST[];					\
-	struct isl_args name = { sizeof(s), name ## LIST };		\
-	struct isl_arg name ## LIST[] = {
+	 isl_arg name ## LIST[];					\
+	 isl_args name = { sizeof(s), name ## LIST };		\
+	 isl_arg name ## LIST[] = {
 #define ISL_ARGS_END							\
 	{ isl_arg_end } };
 

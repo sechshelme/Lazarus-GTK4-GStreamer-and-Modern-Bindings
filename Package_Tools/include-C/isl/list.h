@@ -25,31 +25,31 @@ typedef struct isl_##EL##_list isl_##EL##_list;
 	ISL_DECLARE_LIST_TYPE2(EL,)
 #define ISL_DECLARE_EXPORTED_LIST_TYPE(EL)				\
 	ISL_DECLARE_LIST_TYPE2(EL,extern)
-#define ISL_DECLARE_LIST_FN3(EL,CONSTRUCTOR,EXPORT)			\
+#define ISL_DECLARE_LIST_FN3(EL,,EXPORT)			\
 isl_ctx *isl_##EL##_list_get_ctx( isl_##EL##_list *list);	\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_to_list( isl_##EL *el);\
-CONSTRUCTOR								\
+								\
  isl_##EL##_list *isl_##EL##_list_from_##EL(			\
 	 isl_##EL *el);					\
-CONSTRUCTOR								\
+								\
  isl_##EL##_list *isl_##EL##_list_alloc(isl_ctx *ctx, int n);	\
  isl_##EL##_list *isl_##EL##_list_copy(			\
 	 isl_##EL##_list *list);				\
  isl_##EL##_list *isl_##EL##_list_free(			\
 	 isl_##EL##_list *list);				\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_list_add(			\
 	 isl_##EL##_list *list,				\
 	 isl_##EL *el);					\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_list_insert(			\
 	 isl_##EL##_list *list, unsigned pos,			\
 	 isl_##EL *el);					\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_list_drop(			\
 	 isl_##EL##_list *list, unsigned first, unsigned n);	\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_list_clear(			\
 	 isl_##EL##_list *list);				\
  isl_##EL##_list *isl_##EL##_list_swap(			\
@@ -57,26 +57,26 @@ EXPORT									\
 	unsigned pos2);							\
  isl_##EL##_list *isl_##EL##_list_reverse(			\
 	 isl_##EL##_list *list);				\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_list_concat(			\
 	 isl_##EL##_list *list1,				\
 	 isl_##EL##_list *list2);				\
-EXPORT									\
+
 isl_size isl_##EL##_list_size( isl_##EL##_list *list);	\
 isl_size isl_##EL##_list_n_##EL( isl_##EL##_list *list);	\
-EXPORT									\
+
  isl_##EL *isl_##EL##_list_get_at(				\
 	 isl_##EL##_list *list, int index);			\
- struct isl_##EL *isl_##EL##_list_get_##EL(			\
+  isl_##EL *isl_##EL##_list_get_##EL(			\
 	 isl_##EL##_list *list, int index);			\
-EXPORT									\
+
  isl_##EL##_list *isl_##EL##_list_set_at(			\
 	 isl_##EL##_list *list, int index,			\
 	 isl_##EL *el);					\
- struct isl_##EL##_list *isl_##EL##_list_set_##EL(		\
+  isl_##EL##_list *isl_##EL##_list_set_##EL(		\
 	 struct isl_##EL##_list *list, int index,		\
 	 struct isl_##EL *el);				\
-EXPORT									\
+
 isl_stat isl_##EL##_list_foreach( isl_##EL##_list *list,	\
 	isl_stat (*fn)( isl_##EL *el, void *user),		\
 	void *user);							\
@@ -93,7 +93,7 @@ isl_bool isl_##EL##_list_every( isl_##EL##_list *list,	\
 	int (*cmp)( struct isl_##EL *a,			\
 		 struct isl_##EL *b,				\
 		void *user), void *user);				\
-EXPORT									\
+
 isl_stat isl_##EL##_list_foreach_scc( isl_##EL##_list *list,	\
 	isl_bool (*follows)( isl_##EL *a,			\
 			 isl_##EL *b, void *user),		\
@@ -109,8 +109,8 @@ void isl_##EL##_list_dump( isl_##EL##_list *list);
 	ISL_DECLARE_LIST_FN3(EL,,)
 #define ISL_DECLARE_EXPORTED_LIST_FN(EL)				\
 	ISL_DECLARE_LIST_FN3(EL,,extern)
-#define ISL_DECLARE_LIST_FN_READ2(EL,CONSTRUCTOR)			\
-CONSTRUCTOR								\
+#define ISL_DECLARE_LIST_FN_READ2(EL,)			\
+								\
  isl_##EL##_list *isl_##EL##_list_read_from_str(		\
 	isl_ctx *ctx, const char *str);
 #define ISL_DECLARE_LIST_FN_READ(EL)					\

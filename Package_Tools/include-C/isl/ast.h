@@ -242,8 +242,138 @@ isl_stat isl_ast_node_foreach_ast_op_type( isl_ast_node *node,
 extern
  char *isl_ast_node_to_C_str( isl_ast_node *node);
 
-ISL_DECLARE_LIST_FN(ast_expr)
-ISL_DECLARE_EXPORTED_LIST_FN(ast_node)
+isl_ctx *isl_ast_expr_list_get_ctx( isl_ast_expr_list *list);	
+ isl_ast_expr_list *isl_ast_expr_to_list( isl_ast_expr *el);
+ isl_ast_expr_list *isl_ast_expr_list_from_ast_expr(			
+	 isl_ast_expr *el);					
+ isl_ast_expr_list *isl_ast_expr_list_alloc(isl_ctx *ctx, int n);	
+ isl_ast_expr_list *isl_ast_expr_list_copy(			
+	 isl_ast_expr_list *list);				
+ isl_ast_expr_list *isl_ast_expr_list_free(			
+	 isl_ast_expr_list *list);				
+ isl_ast_expr_list *isl_ast_expr_list_add(			
+	 isl_ast_expr_list *list,				
+	 isl_ast_expr *el);					
+ isl_ast_expr_list *isl_ast_expr_list_insert(			
+	 isl_ast_expr_list *list, unsigned pos,			
+	 isl_ast_expr *el);					
+ isl_ast_expr_list *isl_ast_expr_list_drop(			
+	 isl_ast_expr_list *list, unsigned first, unsigned n);	
+ isl_ast_expr_list *isl_ast_expr_list_clear(			
+	 isl_ast_expr_list *list);				
+ isl_ast_expr_list *isl_ast_expr_list_swap(			
+	 isl_ast_expr_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_ast_expr_list *isl_ast_expr_list_reverse(			
+	 isl_ast_expr_list *list);				
+ isl_ast_expr_list *isl_ast_expr_list_concat(			
+	 isl_ast_expr_list *list1,				
+	 isl_ast_expr_list *list2);				
+isl_size isl_ast_expr_list_size( isl_ast_expr_list *list);	
+isl_size isl_ast_expr_list_n_ast_expr( isl_ast_expr_list *list);	
+ isl_ast_expr *isl_ast_expr_list_get_at(				
+	 isl_ast_expr_list *list, int index);			
+  isl_ast_expr *isl_ast_expr_list_get_ast_expr(			
+	 isl_ast_expr_list *list, int index);			
+ isl_ast_expr_list *isl_ast_expr_list_set_at(			
+	 isl_ast_expr_list *list, int index,			
+	 isl_ast_expr *el);					
+  isl_ast_expr_list *isl_ast_expr_list_set_ast_expr(		
+	 struct isl_ast_expr_list *list, int index,		
+	 struct isl_ast_expr *el);				
+isl_stat isl_ast_expr_list_foreach( isl_ast_expr_list *list,	
+	isl_stat (*fn)( isl_ast_expr *el, void *user),		
+	void *user);							
+isl_bool isl_ast_expr_list_every( isl_ast_expr_list *list,	
+	isl_bool (*test)( isl_ast_expr *el, void *user),		
+	void *user);							
+ isl_ast_expr_list *isl_ast_expr_list_map(			
+	 isl_ast_expr_list *list,				
+	 isl_ast_expr * (*fn)( isl_ast_expr *el,		
+		void *user),						
+	void *user);							
+ isl_ast_expr_list *isl_ast_expr_list_sort(			
+	 isl_ast_expr_list *list,				
+	int (*cmp)( struct isl_ast_expr *a,			
+		 struct isl_ast_expr *b,				
+		void *user), void *user);				
+isl_stat isl_ast_expr_list_foreach_scc( isl_ast_expr_list *list,	
+	isl_bool (*follows)( isl_ast_expr *a,			
+			 isl_ast_expr *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_ast_expr_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_ast_expr_list_to_str(				
+	 isl_ast_expr_list *list);				
+ isl_printer *isl_printer_print_ast_expr_list(			
+	 isl_printer *p,  isl_ast_expr_list *list);	
+void isl_ast_expr_list_dump( isl_ast_expr_list *list);  
+isl_ctx *isl_ast_node_list_get_ctx( isl_ast_node_list *list);	
+ isl_ast_node_list *isl_ast_node_to_list( isl_ast_node *el);
+ isl_ast_node_list *isl_ast_node_list_from_ast_node(			
+	 isl_ast_node *el);					
+ isl_ast_node_list *isl_ast_node_list_alloc(isl_ctx *ctx, int n);	
+ isl_ast_node_list *isl_ast_node_list_copy(			
+	 isl_ast_node_list *list);				
+ isl_ast_node_list *isl_ast_node_list_free(			
+	 isl_ast_node_list *list);				
+ isl_ast_node_list *isl_ast_node_list_add(			
+	 isl_ast_node_list *list,				
+	 isl_ast_node *el);					
+ isl_ast_node_list *isl_ast_node_list_insert(			
+	 isl_ast_node_list *list, unsigned pos,			
+	 isl_ast_node *el);					
+ isl_ast_node_list *isl_ast_node_list_drop(			
+	 isl_ast_node_list *list, unsigned first, unsigned n);	
+ isl_ast_node_list *isl_ast_node_list_clear(			
+	 isl_ast_node_list *list);				
+ isl_ast_node_list *isl_ast_node_list_swap(			
+	 isl_ast_node_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_ast_node_list *isl_ast_node_list_reverse(			
+	 isl_ast_node_list *list);				
+ isl_ast_node_list *isl_ast_node_list_concat(			
+	 isl_ast_node_list *list1,				
+	 isl_ast_node_list *list2);				
+isl_size isl_ast_node_list_size( isl_ast_node_list *list);	
+isl_size isl_ast_node_list_n_ast_node( isl_ast_node_list *list);	
+ isl_ast_node *isl_ast_node_list_get_at(				
+	 isl_ast_node_list *list, int index);			
+  isl_ast_node *isl_ast_node_list_get_ast_node(			
+	 isl_ast_node_list *list, int index);			
+ isl_ast_node_list *isl_ast_node_list_set_at(			
+	 isl_ast_node_list *list, int index,			
+	 isl_ast_node *el);					
+  isl_ast_node_list *isl_ast_node_list_set_ast_node(		
+	 struct isl_ast_node_list *list, int index,		
+	 struct isl_ast_node *el);				
+isl_stat isl_ast_node_list_foreach( isl_ast_node_list *list,	
+	isl_stat (*fn)( isl_ast_node *el, void *user),		
+	void *user);							
+isl_bool isl_ast_node_list_every( isl_ast_node_list *list,	
+	isl_bool (*test)( isl_ast_node *el, void *user),		
+	void *user);							
+ isl_ast_node_list *isl_ast_node_list_map(			
+	 isl_ast_node_list *list,				
+	 isl_ast_node * (*fn)( isl_ast_node *el,		
+		void *user),						
+	void *user);							
+ isl_ast_node_list *isl_ast_node_list_sort(			
+	 isl_ast_node_list *list,				
+	int (*cmp)( struct isl_ast_node *a,			
+		 struct isl_ast_node *b,				
+		void *user), void *user);				
+isl_stat isl_ast_node_list_foreach_scc( isl_ast_node_list *list,	
+	isl_bool (*follows)( isl_ast_node *a,			
+			 isl_ast_node *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_ast_node_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_ast_node_list_to_str(				
+	 isl_ast_node_list *list);				
+ isl_printer *isl_printer_print_ast_node_list(			
+	 isl_printer *p,  isl_ast_node_list *list);	
+void isl_ast_node_list_dump( isl_ast_node_list *list);  
 
 #if defined(__cplusplus)
 }

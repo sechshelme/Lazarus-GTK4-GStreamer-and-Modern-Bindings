@@ -50,7 +50,7 @@ struct isl_hash_table_entry
 struct isl_hash_table {
 	int    bits;
 	int    n;
-	struct isl_hash_table_entry *entries;
+	 isl_hash_table_entry *entries;
 };
 
 struct isl_hash_table *isl_hash_table_alloc(struct isl_ctx *ctx, int min_size);

@@ -12,8 +12,74 @@
 
 #endif
 
-ISL_DECLARE_EXPORTED_LIST_FN(id)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(id)
+isl_ctx *isl_id_list_get_ctx( isl_id_list *list);	
+ isl_id_list *isl_id_to_list( isl_id *el);
+ isl_id_list *isl_id_list_from_id(			
+	 isl_id *el);					
+ isl_id_list *isl_id_list_alloc(isl_ctx *ctx, int n);	
+ isl_id_list *isl_id_list_copy(			
+	 isl_id_list *list);				
+ isl_id_list *isl_id_list_free(			
+	 isl_id_list *list);				
+ isl_id_list *isl_id_list_add(			
+	 isl_id_list *list,				
+	 isl_id *el);					
+ isl_id_list *isl_id_list_insert(			
+	 isl_id_list *list, unsigned pos,			
+	 isl_id *el);					
+ isl_id_list *isl_id_list_drop(			
+	 isl_id_list *list, unsigned first, unsigned n);	
+ isl_id_list *isl_id_list_clear(			
+	 isl_id_list *list);				
+ isl_id_list *isl_id_list_swap(			
+	 isl_id_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_id_list *isl_id_list_reverse(			
+	 isl_id_list *list);				
+ isl_id_list *isl_id_list_concat(			
+	 isl_id_list *list1,				
+	 isl_id_list *list2);				
+isl_size isl_id_list_size( isl_id_list *list);	
+isl_size isl_id_list_n_id( isl_id_list *list);	
+ isl_id *isl_id_list_get_at(				
+	 isl_id_list *list, int index);			
+  isl_id *isl_id_list_get_id(			
+	 isl_id_list *list, int index);			
+ isl_id_list *isl_id_list_set_at(			
+	 isl_id_list *list, int index,			
+	 isl_id *el);					
+  isl_id_list *isl_id_list_set_id(		
+	 struct isl_id_list *list, int index,		
+	 struct isl_id *el);				
+isl_stat isl_id_list_foreach( isl_id_list *list,	
+	isl_stat (*fn)( isl_id *el, void *user),		
+	void *user);							
+isl_bool isl_id_list_every( isl_id_list *list,	
+	isl_bool (*test)( isl_id *el, void *user),		
+	void *user);							
+ isl_id_list *isl_id_list_map(			
+	 isl_id_list *list,				
+	 isl_id * (*fn)( isl_id *el,		
+		void *user),						
+	void *user);							
+ isl_id_list *isl_id_list_sort(			
+	 isl_id_list *list,				
+	int (*cmp)( struct isl_id *a,			
+		 struct isl_id *b,				
+		void *user), void *user);				
+isl_stat isl_id_list_foreach_scc( isl_id_list *list,	
+	isl_bool (*follows)( isl_id *a,			
+			 isl_id *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_id_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_id_list_to_str(				
+	 isl_id_list *list);				
+ isl_printer *isl_printer_print_id_list(			
+	 isl_printer *p,  isl_id_list *list);	
+void isl_id_list_dump( isl_id_list *list);  
+isl_id_list *isl_id_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
 
 isl_ctx *isl_multi_id_get_ctx(					
 	 isl_multi_id *multi);				

@@ -618,7 +618,23 @@ extern
 extern								
 isl_bool isl_multi_aff_involves_nan(				
 	 isl_multi_aff *multi);       
-ISL_DECLARE_MULTI_DIMS(aff)
+isl_size isl_multi_aff_dim( isl_multi_aff *multi,	
+	enum isl_dim_type type);					
+ isl_multi_aff *isl_multi_aff_drop_dims(		
+	 isl_multi_aff *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);
+isl_bool isl_multi_aff_involves_dims(				
+	 isl_multi_aff *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);					
+ isl_multi_aff *isl_multi_aff_insert_dims(		
+	 isl_multi_aff *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);					
+ isl_multi_aff *isl_multi_aff_add_dims(		
+	 isl_multi_aff *multi, enum isl_dim_type type,	
+	unsigned n);							
+ isl_multi_aff *						
+isl_multi_aff_project_domain_on_params(				
+	 isl_multi_aff *multi);           
 extern								
  isl_multi_aff *						
 isl_multi_aff_insert_domain( isl_multi_aff *multi,	
@@ -891,7 +907,23 @@ extern
 extern								
 isl_bool isl_multi_pw_aff_involves_nan(				
 	 isl_multi_pw_aff *multi);       
-ISL_DECLARE_MULTI_DIMS(pw_aff)
+isl_size isl_multi_pw_aff_dim( isl_multi_pw_aff *multi,	
+	enum isl_dim_type type);					
+ isl_multi_pw_aff *isl_multi_pw_aff_drop_dims(		
+	 isl_multi_pw_aff *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);
+isl_bool isl_multi_pw_aff_involves_dims(				
+	 isl_multi_pw_aff *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);					
+ isl_multi_pw_aff *isl_multi_pw_aff_insert_dims(		
+	 isl_multi_pw_aff *multi, enum isl_dim_type type,	
+	unsigned first, unsigned n);					
+ isl_multi_pw_aff *isl_multi_pw_aff_add_dims(		
+	 isl_multi_pw_aff *multi, enum isl_dim_type type,	
+	unsigned n);							
+ isl_multi_pw_aff *						
+isl_multi_pw_aff_project_domain_on_params(				
+	 isl_multi_pw_aff *multi);           
 int isl_multi_pw_aff_find_dim_by_name(				
 	 isl_multi_pw_aff *multi,				
 	enum isl_dim_type type, const char *name);			
@@ -2005,18 +2037,345 @@ extern
 	 isl_printer *p,  isl_multi_union_pw_aff *mupa);
 void isl_multi_union_pw_aff_dump( isl_multi_union_pw_aff *mupa);
 
-ISL_DECLARE_EXPORTED_LIST_FN(aff)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(aff)
-ISL_DECLARE_EXPORTED_LIST_FN(pw_aff)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(pw_aff)
-ISL_DECLARE_EXPORTED_LIST_FN(pw_multi_aff)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(pw_multi_aff)
-ISL_DECLARE_EXPORTED_LIST_FN(union_pw_aff)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(union_pw_aff)
-ISL_DECLARE_LIST_FN(union_pw_multi_aff)
+isl_ctx *isl_aff_list_get_ctx( isl_aff_list *list);	
+ isl_aff_list *isl_aff_to_list( isl_aff *el);
+ isl_aff_list *isl_aff_list_from_aff(			
+	 isl_aff *el);					
+ isl_aff_list *isl_aff_list_alloc(isl_ctx *ctx, int n);	
+ isl_aff_list *isl_aff_list_copy(			
+	 isl_aff_list *list);				
+ isl_aff_list *isl_aff_list_free(			
+	 isl_aff_list *list);				
+ isl_aff_list *isl_aff_list_add(			
+	 isl_aff_list *list,				
+	 isl_aff *el);					
+ isl_aff_list *isl_aff_list_insert(			
+	 isl_aff_list *list, unsigned pos,			
+	 isl_aff *el);					
+ isl_aff_list *isl_aff_list_drop(			
+	 isl_aff_list *list, unsigned first, unsigned n);	
+ isl_aff_list *isl_aff_list_clear(			
+	 isl_aff_list *list);				
+ isl_aff_list *isl_aff_list_swap(			
+	 isl_aff_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_aff_list *isl_aff_list_reverse(			
+	 isl_aff_list *list);				
+ isl_aff_list *isl_aff_list_concat(			
+	 isl_aff_list *list1,				
+	 isl_aff_list *list2);				
+isl_size isl_aff_list_size( isl_aff_list *list);	
+isl_size isl_aff_list_n_aff( isl_aff_list *list);	
+ isl_aff *isl_aff_list_get_at(				
+	 isl_aff_list *list, int index);			
+  isl_aff *isl_aff_list_get_aff(			
+	 isl_aff_list *list, int index);			
+ isl_aff_list *isl_aff_list_set_at(			
+	 isl_aff_list *list, int index,			
+	 isl_aff *el);					
+  isl_aff_list *isl_aff_list_set_aff(		
+	 struct isl_aff_list *list, int index,		
+	 struct isl_aff *el);				
+isl_stat isl_aff_list_foreach( isl_aff_list *list,	
+	isl_stat (*fn)( isl_aff *el, void *user),		
+	void *user);							
+isl_bool isl_aff_list_every( isl_aff_list *list,	
+	isl_bool (*test)( isl_aff *el, void *user),		
+	void *user);							
+ isl_aff_list *isl_aff_list_map(			
+	 isl_aff_list *list,				
+	 isl_aff * (*fn)( isl_aff *el,		
+		void *user),						
+	void *user);							
+ isl_aff_list *isl_aff_list_sort(			
+	 isl_aff_list *list,				
+	int (*cmp)( struct isl_aff *a,			
+		 struct isl_aff *b,				
+		void *user), void *user);				
+isl_stat isl_aff_list_foreach_scc( isl_aff_list *list,	
+	isl_bool (*follows)( isl_aff *a,			
+			 isl_aff *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_aff_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_aff_list_to_str(				
+	 isl_aff_list *list);				
+ isl_printer *isl_printer_print_aff_list(			
+	 isl_printer *p,  isl_aff_list *list);	
+void isl_aff_list_dump( isl_aff_list *list);  
+isl_aff_list *isl_aff_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
+isl_ctx *isl_pw_aff_list_get_ctx( isl_pw_aff_list *list);	
+ isl_pw_aff_list *isl_pw_aff_to_list( isl_pw_aff *el);
+ isl_pw_aff_list *isl_pw_aff_list_from_pw_aff(			
+	 isl_pw_aff *el);					
+ isl_pw_aff_list *isl_pw_aff_list_alloc(isl_ctx *ctx, int n);	
+ isl_pw_aff_list *isl_pw_aff_list_copy(			
+	 isl_pw_aff_list *list);				
+ isl_pw_aff_list *isl_pw_aff_list_free(			
+	 isl_pw_aff_list *list);				
+ isl_pw_aff_list *isl_pw_aff_list_add(			
+	 isl_pw_aff_list *list,				
+	 isl_pw_aff *el);					
+ isl_pw_aff_list *isl_pw_aff_list_insert(			
+	 isl_pw_aff_list *list, unsigned pos,			
+	 isl_pw_aff *el);					
+ isl_pw_aff_list *isl_pw_aff_list_drop(			
+	 isl_pw_aff_list *list, unsigned first, unsigned n);	
+ isl_pw_aff_list *isl_pw_aff_list_clear(			
+	 isl_pw_aff_list *list);				
+ isl_pw_aff_list *isl_pw_aff_list_swap(			
+	 isl_pw_aff_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_pw_aff_list *isl_pw_aff_list_reverse(			
+	 isl_pw_aff_list *list);				
+ isl_pw_aff_list *isl_pw_aff_list_concat(			
+	 isl_pw_aff_list *list1,				
+	 isl_pw_aff_list *list2);				
+isl_size isl_pw_aff_list_size( isl_pw_aff_list *list);	
+isl_size isl_pw_aff_list_n_pw_aff( isl_pw_aff_list *list);	
+ isl_pw_aff *isl_pw_aff_list_get_at(				
+	 isl_pw_aff_list *list, int index);			
+  isl_pw_aff *isl_pw_aff_list_get_pw_aff(			
+	 isl_pw_aff_list *list, int index);			
+ isl_pw_aff_list *isl_pw_aff_list_set_at(			
+	 isl_pw_aff_list *list, int index,			
+	 isl_pw_aff *el);					
+  isl_pw_aff_list *isl_pw_aff_list_set_pw_aff(		
+	 struct isl_pw_aff_list *list, int index,		
+	 struct isl_pw_aff *el);				
+isl_stat isl_pw_aff_list_foreach( isl_pw_aff_list *list,	
+	isl_stat (*fn)( isl_pw_aff *el, void *user),		
+	void *user);							
+isl_bool isl_pw_aff_list_every( isl_pw_aff_list *list,	
+	isl_bool (*test)( isl_pw_aff *el, void *user),		
+	void *user);							
+ isl_pw_aff_list *isl_pw_aff_list_map(			
+	 isl_pw_aff_list *list,				
+	 isl_pw_aff * (*fn)( isl_pw_aff *el,		
+		void *user),						
+	void *user);							
+ isl_pw_aff_list *isl_pw_aff_list_sort(			
+	 isl_pw_aff_list *list,				
+	int (*cmp)( struct isl_pw_aff *a,			
+		 struct isl_pw_aff *b,				
+		void *user), void *user);				
+isl_stat isl_pw_aff_list_foreach_scc( isl_pw_aff_list *list,	
+	isl_bool (*follows)( isl_pw_aff *a,			
+			 isl_pw_aff *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_pw_aff_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_pw_aff_list_to_str(				
+	 isl_pw_aff_list *list);				
+ isl_printer *isl_printer_print_pw_aff_list(			
+	 isl_printer *p,  isl_pw_aff_list *list);	
+void isl_pw_aff_list_dump( isl_pw_aff_list *list);  
+isl_pw_aff_list *isl_pw_aff_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
+isl_ctx *isl_pw_multi_aff_list_get_ctx( isl_pw_multi_aff_list *list);	
+ isl_pw_multi_aff_list *isl_pw_multi_aff_to_list( isl_pw_multi_aff *el);
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_from_pw_multi_aff(			
+	 isl_pw_multi_aff *el);					
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_alloc(isl_ctx *ctx, int n);	
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_copy(			
+	 isl_pw_multi_aff_list *list);				
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_free(			
+	 isl_pw_multi_aff_list *list);				
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_add(			
+	 isl_pw_multi_aff_list *list,				
+	 isl_pw_multi_aff *el);					
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_insert(			
+	 isl_pw_multi_aff_list *list, unsigned pos,			
+	 isl_pw_multi_aff *el);					
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_drop(			
+	 isl_pw_multi_aff_list *list, unsigned first, unsigned n);	
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_clear(			
+	 isl_pw_multi_aff_list *list);				
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_swap(			
+	 isl_pw_multi_aff_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_reverse(			
+	 isl_pw_multi_aff_list *list);				
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_concat(			
+	 isl_pw_multi_aff_list *list1,				
+	 isl_pw_multi_aff_list *list2);				
+isl_size isl_pw_multi_aff_list_size( isl_pw_multi_aff_list *list);	
+isl_size isl_pw_multi_aff_list_n_pw_multi_aff( isl_pw_multi_aff_list *list);	
+ isl_pw_multi_aff *isl_pw_multi_aff_list_get_at(				
+	 isl_pw_multi_aff_list *list, int index);			
+  isl_pw_multi_aff *isl_pw_multi_aff_list_get_pw_multi_aff(			
+	 isl_pw_multi_aff_list *list, int index);			
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_set_at(			
+	 isl_pw_multi_aff_list *list, int index,			
+	 isl_pw_multi_aff *el);					
+  isl_pw_multi_aff_list *isl_pw_multi_aff_list_set_pw_multi_aff(		
+	 struct isl_pw_multi_aff_list *list, int index,		
+	 struct isl_pw_multi_aff *el);				
+isl_stat isl_pw_multi_aff_list_foreach( isl_pw_multi_aff_list *list,	
+	isl_stat (*fn)( isl_pw_multi_aff *el, void *user),		
+	void *user);							
+isl_bool isl_pw_multi_aff_list_every( isl_pw_multi_aff_list *list,	
+	isl_bool (*test)( isl_pw_multi_aff *el, void *user),		
+	void *user);							
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_map(			
+	 isl_pw_multi_aff_list *list,				
+	 isl_pw_multi_aff * (*fn)( isl_pw_multi_aff *el,		
+		void *user),						
+	void *user);							
+ isl_pw_multi_aff_list *isl_pw_multi_aff_list_sort(			
+	 isl_pw_multi_aff_list *list,				
+	int (*cmp)( struct isl_pw_multi_aff *a,			
+		 struct isl_pw_multi_aff *b,				
+		void *user), void *user);				
+isl_stat isl_pw_multi_aff_list_foreach_scc( isl_pw_multi_aff_list *list,	
+	isl_bool (*follows)( isl_pw_multi_aff *a,			
+			 isl_pw_multi_aff *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_pw_multi_aff_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_pw_multi_aff_list_to_str(				
+	 isl_pw_multi_aff_list *list);				
+ isl_printer *isl_printer_print_pw_multi_aff_list(			
+	 isl_printer *p,  isl_pw_multi_aff_list *list);	
+void isl_pw_multi_aff_list_dump( isl_pw_multi_aff_list *list);  
+isl_pw_multi_aff_list *isl_pw_multi_aff_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
+isl_ctx *isl_union_pw_aff_list_get_ctx( isl_union_pw_aff_list *list);	
+ isl_union_pw_aff_list *isl_union_pw_aff_to_list( isl_union_pw_aff *el);
+ isl_union_pw_aff_list *isl_union_pw_aff_list_from_union_pw_aff(			
+	 isl_union_pw_aff *el);					
+ isl_union_pw_aff_list *isl_union_pw_aff_list_alloc(isl_ctx *ctx, int n);	
+ isl_union_pw_aff_list *isl_union_pw_aff_list_copy(			
+	 isl_union_pw_aff_list *list);				
+ isl_union_pw_aff_list *isl_union_pw_aff_list_free(			
+	 isl_union_pw_aff_list *list);				
+ isl_union_pw_aff_list *isl_union_pw_aff_list_add(			
+	 isl_union_pw_aff_list *list,				
+	 isl_union_pw_aff *el);					
+ isl_union_pw_aff_list *isl_union_pw_aff_list_insert(			
+	 isl_union_pw_aff_list *list, unsigned pos,			
+	 isl_union_pw_aff *el);					
+ isl_union_pw_aff_list *isl_union_pw_aff_list_drop(			
+	 isl_union_pw_aff_list *list, unsigned first, unsigned n);	
+ isl_union_pw_aff_list *isl_union_pw_aff_list_clear(			
+	 isl_union_pw_aff_list *list);				
+ isl_union_pw_aff_list *isl_union_pw_aff_list_swap(			
+	 isl_union_pw_aff_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_union_pw_aff_list *isl_union_pw_aff_list_reverse(			
+	 isl_union_pw_aff_list *list);				
+ isl_union_pw_aff_list *isl_union_pw_aff_list_concat(			
+	 isl_union_pw_aff_list *list1,				
+	 isl_union_pw_aff_list *list2);				
+isl_size isl_union_pw_aff_list_size( isl_union_pw_aff_list *list);	
+isl_size isl_union_pw_aff_list_n_union_pw_aff( isl_union_pw_aff_list *list);	
+ isl_union_pw_aff *isl_union_pw_aff_list_get_at(				
+	 isl_union_pw_aff_list *list, int index);			
+  isl_union_pw_aff *isl_union_pw_aff_list_get_union_pw_aff(			
+	 isl_union_pw_aff_list *list, int index);			
+ isl_union_pw_aff_list *isl_union_pw_aff_list_set_at(			
+	 isl_union_pw_aff_list *list, int index,			
+	 isl_union_pw_aff *el);					
+  isl_union_pw_aff_list *isl_union_pw_aff_list_set_union_pw_aff(		
+	 struct isl_union_pw_aff_list *list, int index,		
+	 struct isl_union_pw_aff *el);				
+isl_stat isl_union_pw_aff_list_foreach( isl_union_pw_aff_list *list,	
+	isl_stat (*fn)( isl_union_pw_aff *el, void *user),		
+	void *user);							
+isl_bool isl_union_pw_aff_list_every( isl_union_pw_aff_list *list,	
+	isl_bool (*test)( isl_union_pw_aff *el, void *user),		
+	void *user);							
+ isl_union_pw_aff_list *isl_union_pw_aff_list_map(			
+	 isl_union_pw_aff_list *list,				
+	 isl_union_pw_aff * (*fn)( isl_union_pw_aff *el,		
+		void *user),						
+	void *user);							
+ isl_union_pw_aff_list *isl_union_pw_aff_list_sort(			
+	 isl_union_pw_aff_list *list,				
+	int (*cmp)( struct isl_union_pw_aff *a,			
+		 struct isl_union_pw_aff *b,				
+		void *user), void *user);				
+isl_stat isl_union_pw_aff_list_foreach_scc( isl_union_pw_aff_list *list,	
+	isl_bool (*follows)( isl_union_pw_aff *a,			
+			 isl_union_pw_aff *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_union_pw_aff_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_union_pw_aff_list_to_str(				
+	 isl_union_pw_aff_list *list);				
+ isl_printer *isl_printer_print_union_pw_aff_list(			
+	 isl_printer *p,  isl_union_pw_aff_list *list);	
+void isl_union_pw_aff_list_dump( isl_union_pw_aff_list *list);  
+isl_union_pw_aff_list *isl_union_pw_aff_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
+isl_ctx *isl_union_pw_multi_aff_list_get_ctx( isl_union_pw_multi_aff_list *list);	
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_to_list( isl_union_pw_multi_aff *el);
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_from_union_pw_multi_aff(			
+	 isl_union_pw_multi_aff *el);					
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_alloc(isl_ctx *ctx, int n);	
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_copy(			
+	 isl_union_pw_multi_aff_list *list);				
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_free(			
+	 isl_union_pw_multi_aff_list *list);				
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_add(			
+	 isl_union_pw_multi_aff_list *list,				
+	 isl_union_pw_multi_aff *el);					
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_insert(			
+	 isl_union_pw_multi_aff_list *list, unsigned pos,			
+	 isl_union_pw_multi_aff *el);					
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_drop(			
+	 isl_union_pw_multi_aff_list *list, unsigned first, unsigned n);	
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_clear(			
+	 isl_union_pw_multi_aff_list *list);				
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_swap(			
+	 isl_union_pw_multi_aff_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_reverse(			
+	 isl_union_pw_multi_aff_list *list);				
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_concat(			
+	 isl_union_pw_multi_aff_list *list1,				
+	 isl_union_pw_multi_aff_list *list2);				
+isl_size isl_union_pw_multi_aff_list_size( isl_union_pw_multi_aff_list *list);	
+isl_size isl_union_pw_multi_aff_list_n_union_pw_multi_aff( isl_union_pw_multi_aff_list *list);	
+ isl_union_pw_multi_aff *isl_union_pw_multi_aff_list_get_at(				
+	 isl_union_pw_multi_aff_list *list, int index);			
+  isl_union_pw_multi_aff *isl_union_pw_multi_aff_list_get_union_pw_multi_aff(			
+	 isl_union_pw_multi_aff_list *list, int index);			
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_set_at(			
+	 isl_union_pw_multi_aff_list *list, int index,			
+	 isl_union_pw_multi_aff *el);					
+  isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_set_union_pw_multi_aff(		
+	 struct isl_union_pw_multi_aff_list *list, int index,		
+	 struct isl_union_pw_multi_aff *el);				
+isl_stat isl_union_pw_multi_aff_list_foreach( isl_union_pw_multi_aff_list *list,	
+	isl_stat (*fn)( isl_union_pw_multi_aff *el, void *user),		
+	void *user);							
+isl_bool isl_union_pw_multi_aff_list_every( isl_union_pw_multi_aff_list *list,	
+	isl_bool (*test)( isl_union_pw_multi_aff *el, void *user),		
+	void *user);							
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_map(			
+	 isl_union_pw_multi_aff_list *list,				
+	 isl_union_pw_multi_aff * (*fn)( isl_union_pw_multi_aff *el,		
+		void *user),						
+	void *user);							
+ isl_union_pw_multi_aff_list *isl_union_pw_multi_aff_list_sort(			
+	 isl_union_pw_multi_aff_list *list,				
+	int (*cmp)( struct isl_union_pw_multi_aff *a,			
+		 struct isl_union_pw_multi_aff *b,				
+		void *user), void *user);				
+isl_stat isl_union_pw_multi_aff_list_foreach_scc( isl_union_pw_multi_aff_list *list,	
+	isl_bool (*follows)( isl_union_pw_multi_aff *a,			
+			 isl_union_pw_multi_aff *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_union_pw_multi_aff_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_union_pw_multi_aff_list_to_str(				
+	 isl_union_pw_multi_aff_list *list);				
+ isl_printer *isl_printer_print_union_pw_multi_aff_list(			
+	 isl_printer *p,  isl_union_pw_multi_aff_list *list);	
+void isl_union_pw_multi_aff_list_dump( isl_union_pw_multi_aff_list *list);  
 
-#if defined(__cplusplus)
-}
-#endif
+
 
 #endif

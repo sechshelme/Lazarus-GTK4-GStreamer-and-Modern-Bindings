@@ -191,8 +191,74 @@ extern
 	 isl_union_set *uset);
 void isl_union_set_dump( isl_union_set *uset);
 
-ISL_DECLARE_EXPORTED_LIST_FN(union_set)
-ISL_DECLARE_EXPORTED_LIST_FN_READ(union_set)
+isl_ctx *isl_union_set_list_get_ctx( isl_union_set_list *list);	
+ isl_union_set_list *isl_union_set_to_list( isl_union_set *el);
+ isl_union_set_list *isl_union_set_list_from_union_set(			
+	 isl_union_set *el);					
+ isl_union_set_list *isl_union_set_list_alloc(isl_ctx *ctx, int n);	
+ isl_union_set_list *isl_union_set_list_copy(			
+	 isl_union_set_list *list);				
+ isl_union_set_list *isl_union_set_list_free(			
+	 isl_union_set_list *list);				
+ isl_union_set_list *isl_union_set_list_add(			
+	 isl_union_set_list *list,				
+	 isl_union_set *el);					
+ isl_union_set_list *isl_union_set_list_insert(			
+	 isl_union_set_list *list, unsigned pos,			
+	 isl_union_set *el);					
+ isl_union_set_list *isl_union_set_list_drop(			
+	 isl_union_set_list *list, unsigned first, unsigned n);	
+ isl_union_set_list *isl_union_set_list_clear(			
+	 isl_union_set_list *list);				
+ isl_union_set_list *isl_union_set_list_swap(			
+	 isl_union_set_list *list, unsigned pos1,		
+	unsigned pos2);							
+ isl_union_set_list *isl_union_set_list_reverse(			
+	 isl_union_set_list *list);				
+ isl_union_set_list *isl_union_set_list_concat(			
+	 isl_union_set_list *list1,				
+	 isl_union_set_list *list2);				
+isl_size isl_union_set_list_size( isl_union_set_list *list);	
+isl_size isl_union_set_list_n_union_set( isl_union_set_list *list);	
+ isl_union_set *isl_union_set_list_get_at(				
+	 isl_union_set_list *list, int index);			
+  isl_union_set *isl_union_set_list_get_union_set(			
+	 isl_union_set_list *list, int index);			
+ isl_union_set_list *isl_union_set_list_set_at(			
+	 isl_union_set_list *list, int index,			
+	 isl_union_set *el);					
+  isl_union_set_list *isl_union_set_list_set_union_set(		
+	 struct isl_union_set_list *list, int index,		
+	 struct isl_union_set *el);				
+isl_stat isl_union_set_list_foreach( isl_union_set_list *list,	
+	isl_stat (*fn)( isl_union_set *el, void *user),		
+	void *user);							
+isl_bool isl_union_set_list_every( isl_union_set_list *list,	
+	isl_bool (*test)( isl_union_set *el, void *user),		
+	void *user);							
+ isl_union_set_list *isl_union_set_list_map(			
+	 isl_union_set_list *list,				
+	 isl_union_set * (*fn)( isl_union_set *el,		
+		void *user),						
+	void *user);							
+ isl_union_set_list *isl_union_set_list_sort(			
+	 isl_union_set_list *list,				
+	int (*cmp)( struct isl_union_set *a,			
+		 struct isl_union_set *b,				
+		void *user), void *user);				
+isl_stat isl_union_set_list_foreach_scc( isl_union_set_list *list,	
+	isl_bool (*follows)( isl_union_set *a,			
+			 isl_union_set *b, void *user),		
+	void *follows_user,						
+	isl_stat (*fn)( isl_union_set_list *scc, void *user),	
+	void *fn_user);							
+ char *isl_union_set_list_to_str(				
+	 isl_union_set_list *list);				
+ isl_printer *isl_printer_print_union_set_list(			
+	 isl_printer *p,  isl_union_set_list *list);	
+void isl_union_set_list_dump( isl_union_set_list *list);  
+isl_union_set_list *isl_union_set_list_read_from_str(		
+	isl_ctx *ctx, const char *str);
 
  isl_union_set *isl_union_set_list_union(
 	 isl_union_set_list *list);

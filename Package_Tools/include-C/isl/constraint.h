@@ -71,12 +71,12 @@ isl_bool isl_basic_map_has_defining_equality(
 	 isl_basic_map *bmap, enum isl_dim_type type, int pos,
 	 isl_constraint **c);
 isl_bool isl_basic_set_has_defining_equality(
-	struct isl_basic_set *bset, enum isl_dim_type type, int pos,
-	struct isl_constraint **constraint);
+	 isl_basic_set *bset, enum isl_dim_type type, int pos,
+	 isl_constraint **constraint);
 isl_bool isl_basic_set_has_defining_inequalities(
-	struct isl_basic_set *bset, enum isl_dim_type type, int pos,
-	struct isl_constraint **lower,
-	struct isl_constraint **upper);
+	 isl_basic_set *bset, enum isl_dim_type type, int pos,
+	 isl_constraint **lower,
+	 isl_constraint **upper);
 
  isl_space *isl_constraint_get_space(
 	 isl_constraint *constraint);
