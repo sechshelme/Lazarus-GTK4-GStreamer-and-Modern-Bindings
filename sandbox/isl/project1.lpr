@@ -1,20 +1,27 @@
 program project1;
 
+// doppelt : function isl_union_pw_aff_set_dim_name(upa:Pisl_union_pw_aff; _type:Tisl_dim_type; pos:dword; s:Pchar):Pisl_union_pw_aff;cdecl;external libisl;
+
+
 uses
   version,
   aff_type,
   space_type,
-
+  id_type,
+  printer_type,
+  val_type,
   arg,
-
   ctx,
+  map_type,
   options,
-
-
+  printer,
+  space,
+  point,
+  union_map_type,
+  aff,
   local_space,
 
 
-  aff,
   ast,
   ast_build,
   ast_type,
@@ -24,32 +31,24 @@ uses
   hash,
   hmap,
   id,
-  id_type,
   ilp,
   lp,
   map,
-  map_type,
   mat,
   maybe_templ,
   obj,
-  point,
   polynomial,
   polynomial_type,
-  printer,
-  printer_type,
   schedule,
   schedule_node,
   schedule_type,
   set_,                         // unit name
-  space,
   stream,
   stride_info,
   union_map,
-  union_map_type,
   union_set,
   val,
   val_gmp,
-  val_type,
   vec,
   vertices,
   fp_isl;

@@ -3,15 +3,12 @@ unit local_space;
 interface
 
 uses
-  fp_isl;
+  fp_isl, ctx, space_type, id_type, aff_type, map_type, printer_type;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
 
-
-type
-  Pisl_local_space = type Pointer;
 
 function isl_local_space_get_ctx(ls: Pisl_local_space): Pisl_ctx; cdecl; external libisl;
 function isl_local_space_from_space(space: Pisl_space): Pisl_local_space; cdecl; external libisl;

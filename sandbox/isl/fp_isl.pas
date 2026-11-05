@@ -12,13 +12,21 @@ const
   {$ENDIF}
 
   type
+    Tuint32_t=UInt32;
+
   Tsize_t=SizeUInt;
+
+  PFILE=type Pointer;
 
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
+  type
+    Pisl_options = type Pointer;
+    Pisl_local_space = type Pointer;
+    PPisl_local_space=^Pisl_local_space;
 
 
 // === Konventiert am: 5-11-26 16:55:29 ===

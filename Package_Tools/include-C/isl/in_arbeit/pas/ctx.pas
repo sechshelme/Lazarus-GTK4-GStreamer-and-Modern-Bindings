@@ -3,7 +3,7 @@ unit ctx;
 interface
 
 uses
-  fp_isl;
+  fp_isl, arg;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

@@ -3,15 +3,12 @@ unit options;
 interface
 
 uses
-  fp_isl, arg;
+  fp_isl, arg, ctx;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
 
-
-type
-  Pisl_options = type Pointer;
 
 var
   isl_options_args: Tisl_args; cvar;external libisl;

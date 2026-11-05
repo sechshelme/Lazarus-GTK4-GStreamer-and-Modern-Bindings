@@ -12,6 +12,7 @@ uses
 
 type
   Pisl_aff = type Pointer;
+  Pisl_aff_list = type Pointer;
   Pisl_pw_aff = type Pointer;
   Pisl_pw_aff_list = type Pointer;
   Pisl_union_pw_aff = type Pointer;
