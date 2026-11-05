@@ -23,8 +23,5 @@ isl_ctx *isl_stride_info_get_ctx( isl_stride_info *si);
  isl_stride_info *isl_stride_info_copy(
 	 isl_stride_info *si);
 
-#if defined(__cplusplus)
-}
-#endif
 
 #endif

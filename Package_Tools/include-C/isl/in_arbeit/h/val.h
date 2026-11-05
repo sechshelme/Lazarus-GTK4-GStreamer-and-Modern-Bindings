@@ -426,8 +426,6 @@ isl_val_list *isl_val_list_read_from_str(
 	isl_ctx *ctx, const char *str);
 
 
-#if defined(__cplusplus)
-}
-#endif
+
 
 #endif

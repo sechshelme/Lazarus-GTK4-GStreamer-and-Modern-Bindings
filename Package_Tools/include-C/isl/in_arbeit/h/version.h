@@ -7,8 +7,6 @@
 
 const char *isl_version(void);
 
-#if defined(__cplusplus)
-}
-#endif
+
 
 #endif

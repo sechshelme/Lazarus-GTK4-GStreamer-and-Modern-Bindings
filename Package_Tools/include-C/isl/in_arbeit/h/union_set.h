@@ -267,8 +267,5 @@ isl_union_set_list *isl_union_set_list_read_from_str(
  isl_union_set *isl_union_set_list_union(
 	 isl_union_set_list *list);
 
-#if defined(__cplusplus)
-}
-#endif
 
 #endif

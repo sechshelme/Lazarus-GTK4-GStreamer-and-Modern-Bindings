@@ -40,8 +40,5 @@ isl_stat isl_cell_foreach_vertex( isl_cell *cell,
 isl_stat isl_vertices_foreach_cell( isl_vertices *vertices,
 	isl_stat (*fn)( isl_cell *cell, void *user), void *user);
 
-#if defined(__cplusplus)
-}
-#endif
 
 #endif

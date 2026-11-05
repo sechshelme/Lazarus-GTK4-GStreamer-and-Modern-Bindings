@@ -14,8 +14,5 @@
 int isl_val_get_num_gmp( isl_val *v, mpz_t z);
 int isl_val_get_den_gmp( isl_val *v, mpz_t z);
 
-#if defined(__cplusplus)
-}
-#endif
 
 #endif

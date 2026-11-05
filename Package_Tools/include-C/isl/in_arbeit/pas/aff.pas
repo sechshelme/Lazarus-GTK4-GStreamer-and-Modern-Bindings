@@ -3,28 +3,12 @@ unit aff;
 interface
 
 uses
-  fp_isl;
+  fp_isl, space_type, aff_type;
 
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
-
-{$ifndef ISL_AFF_H}
-{$define ISL_AFF_H}
-{$include <isl/stdint.h>}
-{$include <isl/local_space.h>}
-{$include <isl/printer.h>}
-{$include <isl/id_type.h>}
-{$include <isl/set_type.h>}
-{$include <isl/aff_type.h>}
-{$include <isl/list.h>}
-{$include <isl/multi.h>}
-{$include <isl/union_set_type.h>}
-{$include <isl/val_type.h>}
-{$include <isl/point.h>}
-{$if defined(__cplusplus)}
-{$endif}
 
 function isl_aff_zero_on_domain_space(space:Pisl_space):Pisl_aff;cdecl;external libisl;
 function isl_space_zero_aff_on_domain(space:Pisl_space):Pisl_aff;cdecl;external libisl;

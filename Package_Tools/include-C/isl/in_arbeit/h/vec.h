@@ -73,8 +73,5 @@ void isl_vec_dump( isl_vec *vec);
  isl_vec *isl_vec_move_els( isl_vec *vec,
 	unsigned dst_col, unsigned src_col, unsigned n);
 
-#if defined(__cplusplus)
-}
-#endif
 
 #endif

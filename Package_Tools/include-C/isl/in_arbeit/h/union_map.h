@@ -453,8 +453,5 @@ isl_stat isl_union_map_list_foreach_scc( isl_union_map_list *list,
 void isl_union_map_list_dump( isl_union_map_list *list);  
 
 
-#if defined(__cplusplus)
-}
-#endif
 
 #endif
