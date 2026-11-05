@@ -1,0 +1,475 @@
+
+unit polynomial;
+interface
+
+{
+  Automatically converted by H2Pas 1.0.0 from polynomial.h
+  The following command line parameters were used:
+    -p
+    -T
+    -d
+    -c
+    -e
+    polynomial.h
+}
+
+{ Pointers to basic pascal types, inserted by h2pas conversion program.}
+Type
+  PLongint  = ^Longint;
+  PSmallInt = ^SmallInt;
+  PByte     = ^Byte;
+  PWord     = ^Word;
+  PDWord    = ^DWord;
+  PDouble   = ^Double;
+
+Type
+Pchar  = ^char;
+PFILE  = ^FILE;
+Pisl_aff  = ^isl_aff;
+Pisl_basic_map  = ^isl_basic_map;
+Pisl_basic_set  = ^isl_basic_set;
+Pisl_bool  = ^isl_bool;
+Pisl_constraint  = ^isl_constraint;
+Pisl_ctx  = ^isl_ctx;
+Pisl_id  = ^isl_id;
+Pisl_map  = ^isl_map;
+Pisl_point  = ^isl_point;
+Pisl_printer  = ^isl_printer;
+Pisl_pw_aff  = ^isl_pw_aff;
+Pisl_pw_qpolynomial  = ^isl_pw_qpolynomial;
+Pisl_pw_qpolynomial_fold  = ^isl_pw_qpolynomial_fold;
+Pisl_pw_qpolynomial_fold_list  = ^isl_pw_qpolynomial_fold_list;
+Pisl_pw_qpolynomial_list  = ^isl_pw_qpolynomial_list;
+Pisl_qpolynomial  = ^isl_qpolynomial;
+Pisl_qpolynomial_fold  = ^isl_qpolynomial_fold;
+Pisl_qpolynomial_list  = ^isl_qpolynomial_list;
+Pisl_set  = ^isl_set;
+Pisl_space  = ^isl_space;
+Pisl_term  = ^isl_term;
+Pisl_union_map  = ^isl_union_map;
+Pisl_union_pw_qpolynomial  = ^isl_union_pw_qpolynomial;
+Pisl_union_pw_qpolynomial_fold  = ^isl_union_pw_qpolynomial_fold;
+Pisl_union_set  = ^isl_union_set;
+Pisl_val  = ^isl_val;
+{$IFDEF FPC}
+{$PACKRECORDS C}
+{$ENDIF}
+
+
+{$ifndef ISL_POLYNOMIAL_H}
+{$define ISL_POLYNOMIAL_H}
+{$include <isl/ctx.h>}
+{$include <isl/constraint.h>}
+{$include <isl/space_type.h>}
+{$include <isl/set_type.h>}
+{$include <isl/point.h>}
+{$include <isl/printer.h>}
+{$include <isl/union_set_type.h>}
+{$include <isl/aff_type.h>}
+{$include <isl/polynomial_type.h>}
+{$include <isl/val_type.h>}
+{$if defined(__cplusplus)}
+{$endif}
+
+function isl_qpolynomial_get_ctx(qp:Pisl_qpolynomial):Pisl_ctx;cdecl;external;
+function isl_qpolynomial_get_domain_space(qp:Pisl_qpolynomial):Pisl_space;cdecl;external;
+function isl_qpolynomial_get_space(qp:Pisl_qpolynomial):Pisl_space;cdecl;external;
+function isl_qpolynomial_dim(qp:Pisl_qpolynomial; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_qpolynomial_involves_dims(qp:Pisl_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Tisl_bool;cdecl;external;
+function isl_qpolynomial_get_constant_val(qp:Pisl_qpolynomial):Pisl_val;cdecl;external;
+(* Const before type ignored *)
+function isl_qpolynomial_set_dim_name(qp:Pisl_qpolynomial; _type:Tisl_dim_type; pos:dword; s:Pchar):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_zero_on_domain(domain:Pisl_space):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_one_on_domain(domain:Pisl_space):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_infty_on_domain(domain:Pisl_space):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_neginfty_on_domain(domain:Pisl_space):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_nan_on_domain(domain:Pisl_space):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_val_on_domain(space:Pisl_space; val:Pisl_val):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_var_on_domain(domain:Pisl_space; _type:Tisl_dim_type; pos:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_copy(qp:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_free(qp:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_plain_is_equal(qp1:Pisl_qpolynomial; qp2:Pisl_qpolynomial):Tisl_bool;cdecl;external;
+function isl_qpolynomial_is_zero(qp:Pisl_qpolynomial):Tisl_bool;cdecl;external;
+function isl_qpolynomial_is_nan(qp:Pisl_qpolynomial):Tisl_bool;cdecl;external;
+function isl_qpolynomial_is_infty(qp:Pisl_qpolynomial):Tisl_bool;cdecl;external;
+function isl_qpolynomial_is_neginfty(qp:Pisl_qpolynomial):Tisl_bool;cdecl;external;
+function isl_qpolynomial_sgn(qp:Pisl_qpolynomial):longint;cdecl;external;
+function isl_qpolynomial_neg(qp:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_add(qp1:Pisl_qpolynomial; qp2:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_sub(qp1:Pisl_qpolynomial; qp2:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_mul(qp1:Pisl_qpolynomial; qp2:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_pow(qp:Pisl_qpolynomial; power:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_scale_val(qp:Pisl_qpolynomial; v:Pisl_val):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_scale_down_val(qp:Pisl_qpolynomial; v:Pisl_val):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_domain_reverse(qp:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_insert_dims(qp:Pisl_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_add_dims(qp:Pisl_qpolynomial; _type:Tisl_dim_type; n:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_move_dims(qp:Pisl_qpolynomial; dst_type:Tisl_dim_type; dst_pos:dword; src_type:Tisl_dim_type; src_pos:dword; 
+           n:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_project_domain_on_params(qp:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_drop_dims(qp:Pisl_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_substitute(qp:Pisl_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword; subs:PPisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_as_polynomial_on_domain(qp:Pisl_qpolynomial; bset:Pisl_basic_set; fn:function (bset:Pisl_basic_set; poly:Pisl_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_qpolynomial_homogenize(poly:Pisl_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_align_params(qp:Pisl_qpolynomial; model:Pisl_space):Pisl_qpolynomial;cdecl;external;
+function isl_term_get_ctx(term:Pisl_term):Pisl_ctx;cdecl;external;
+function isl_term_copy(term:Pisl_term):Pisl_term;cdecl;external;
+function isl_term_free(term:Pisl_term):Pisl_term;cdecl;external;
+function isl_term_dim(term:Pisl_term; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_term_get_coefficient_val(term:Pisl_term):Pisl_val;cdecl;external;
+function isl_term_get_exp(term:Pisl_term; _type:Tisl_dim_type; pos:dword):Tisl_size;cdecl;external;
+function isl_term_get_div(term:Pisl_term; pos:dword):Pisl_aff;cdecl;external;
+function isl_qpolynomial_foreach_term(qp:Pisl_qpolynomial; fn:function (term:Pisl_term; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_qpolynomial_eval(qp:Pisl_qpolynomial; pnt:Pisl_point):Pisl_val;cdecl;external;
+function isl_qpolynomial_gist_params(qp:Pisl_qpolynomial; context:Pisl_set):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_gist(qp:Pisl_qpolynomial; context:Pisl_set):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_from_constraint(c:Pisl_constraint; _type:Tisl_dim_type; pos:dword):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_from_term(term:Pisl_term):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_from_aff(aff:Pisl_aff):Pisl_qpolynomial;cdecl;external;
+function isl_basic_map_from_qpolynomial(qp:Pisl_qpolynomial):Pisl_basic_map;cdecl;external;
+function isl_printer_print_qpolynomial(p:Pisl_printer; qp:Pisl_qpolynomial):Pisl_printer;cdecl;external;
+procedure isl_qpolynomial_print(qp:Pisl_qpolynomial; out:PFILE; output_format:dword);cdecl;external;
+procedure isl_qpolynomial_dump(qp:Pisl_qpolynomial);cdecl;external;
+function isl_pw_qpolynomial_get_ctx(pwqp:Pisl_pw_qpolynomial):Pisl_ctx;cdecl;external;
+function isl_pw_qpolynomial_involves_nan(pwqp:Pisl_pw_qpolynomial):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_plain_is_equal(pwqp1:Pisl_pw_qpolynomial; pwqp2:Pisl_pw_qpolynomial):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_zero(space:Pisl_space):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_alloc(set:Pisl_set; qp:Pisl_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_from_qpolynomial(qp:Pisl_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_copy(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_free(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_is_zero(pwqp:Pisl_pw_qpolynomial):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_get_domain_space(pwqp:Pisl_pw_qpolynomial):Pisl_space;cdecl;external;
+function isl_pw_qpolynomial_get_space(pwqp:Pisl_pw_qpolynomial):Pisl_space;cdecl;external;
+function isl_pw_qpolynomial_reset_domain_space(pwqp:Pisl_pw_qpolynomial; space:Pisl_space):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_dim(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_involves_param_id(pwqp:Pisl_pw_qpolynomial; id:Pisl_id):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_involves_dims(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_has_equal_space(pwqp1:Pisl_pw_qpolynomial; pwqp2:Pisl_pw_qpolynomial):Tisl_bool;cdecl;external;
+(* Const before type ignored *)
+function isl_pw_qpolynomial_set_dim_name(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; pos:dword; s:Pchar):Pisl_pw_qpolynomial;cdecl;external;
+(* Const before type ignored *)
+function isl_pw_qpolynomial_find_dim_by_name(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; name:Pchar):longint;cdecl;external;
+function isl_pw_qpolynomial_reset_user(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_domain(pwqp:Pisl_pw_qpolynomial):Pisl_set;cdecl;external;
+function isl_pw_qpolynomial_intersect_domain(pwpq:Pisl_pw_qpolynomial; set:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_intersect_domain_wrapped_domain(pwpq:Pisl_pw_qpolynomial; set:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_intersect_domain_wrapped_range(pwpq:Pisl_pw_qpolynomial; set:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_intersect_params(pwpq:Pisl_pw_qpolynomial; set:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_subtract_domain(pwpq:Pisl_pw_qpolynomial; set:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_project_domain_on_params(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_from_range(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_drop_dims(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_split_dims(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_drop_unused_params(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_add(pwqp1:Pisl_pw_qpolynomial; pwqp2:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_sub(pwqp1:Pisl_pw_qpolynomial; pwqp2:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_add_disjoint(pwqp1:Pisl_pw_qpolynomial; pwqp2:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_neg(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_mul(pwqp1:Pisl_pw_qpolynomial; pwqp2:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_scale_val(pwqp:Pisl_pw_qpolynomial; v:Pisl_val):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_scale_down_val(pwqp:Pisl_pw_qpolynomial; v:Pisl_val):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_pow(pwqp:Pisl_pw_qpolynomial; exponent:dword):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_domain_reverse(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_insert_dims(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_add_dims(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; n:dword):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_move_dims(pwqp:Pisl_pw_qpolynomial; dst_type:Tisl_dim_type; dst_pos:dword; src_type:Tisl_dim_type; src_pos:dword; 
+           n:dword):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_fix_val(pwqp:Pisl_pw_qpolynomial; _type:Tisl_dim_type; n:dword; v:Pisl_val):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_eval(pwqp:Pisl_pw_qpolynomial; pnt:Pisl_point):Pisl_val;cdecl;external;
+function isl_pw_qpolynomial_max(pwqp:Pisl_pw_qpolynomial):Pisl_val;cdecl;external;
+function isl_pw_qpolynomial_min(pwqp:Pisl_pw_qpolynomial):Pisl_val;cdecl;external;
+function isl_pw_qpolynomial_n_piece(pwqp:Pisl_pw_qpolynomial):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_foreach_piece(pwqp:Pisl_pw_qpolynomial; fn:function (set:Pisl_set; qp:Pisl_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_every_piece(pwqp:Pisl_pw_qpolynomial; test:function (set:Pisl_set; qp:Pisl_qpolynomial; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_foreach_lifted_piece(pwqp:Pisl_pw_qpolynomial; fn:function (set:Pisl_set; qp:Pisl_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_isa_qpolynomial(pwqp:Pisl_pw_qpolynomial):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_as_qpolynomial(pwqp:Pisl_pw_qpolynomial):Pisl_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_from_pw_aff(pwaff:Pisl_pw_aff):Pisl_pw_qpolynomial;cdecl;external;
+(* Const before type ignored *)
+function isl_pw_qpolynomial_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_read_from_file(ctx:Pisl_ctx; input:PFILE):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_to_str(pwqp:Pisl_pw_qpolynomial):Pchar;cdecl;external;
+function isl_printer_print_pw_qpolynomial(p:Pisl_printer; pwqp:Pisl_pw_qpolynomial):Pisl_printer;cdecl;external;
+procedure isl_pw_qpolynomial_print(pwqp:Pisl_pw_qpolynomial; out:PFILE; output_format:dword);cdecl;external;
+procedure isl_pw_qpolynomial_dump(pwqp:Pisl_pw_qpolynomial);cdecl;external;
+function isl_pw_qpolynomial_coalesce(pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_gist(pwqp:Pisl_pw_qpolynomial; context:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_gist_params(pwqp:Pisl_pw_qpolynomial; context:Pisl_set):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_split_periods(pwqp:Pisl_pw_qpolynomial; max_periods:longint):Pisl_pw_qpolynomial;cdecl;external;
+function isl_basic_set_multiplicative_call(bset:Pisl_basic_set; fn:function (bset:Pisl_basic_set):Pisl_pw_qpolynomial):Pisl_pw_qpolynomial;cdecl;external;
+function isl_qpolynomial_fold_get_ctx(fold:Pisl_qpolynomial_fold):Pisl_ctx;cdecl;external;
+function isl_qpolynomial_fold_get_type(fold:Pisl_qpolynomial_fold):Tisl_fold;cdecl;external;
+function isl_qpolynomial_fold_empty(_type:Tisl_fold; space:Pisl_space):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_alloc(_type:Tisl_fold; qp:Pisl_qpolynomial):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_copy(fold:Pisl_qpolynomial_fold):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_free(fold:Pisl_qpolynomial_fold):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_is_empty(fold:Pisl_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_qpolynomial_fold_is_nan(fold:Pisl_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_qpolynomial_fold_plain_is_equal(fold1:Pisl_qpolynomial_fold; fold2:Pisl_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_qpolynomial_fold_get_domain_space(fold:Pisl_qpolynomial_fold):Pisl_space;cdecl;external;
+function isl_qpolynomial_fold_get_space(fold:Pisl_qpolynomial_fold):Pisl_space;cdecl;external;
+function isl_qpolynomial_fold_fold(fold1:Pisl_qpolynomial_fold; fold2:Pisl_qpolynomial_fold):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_scale_val(fold:Pisl_qpolynomial_fold; v:Pisl_val):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_scale_down_val(fold:Pisl_qpolynomial_fold; v:Pisl_val):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_move_dims(fold:Pisl_qpolynomial_fold; dst_type:Tisl_dim_type; dst_pos:dword; src_type:Tisl_dim_type; src_pos:dword; 
+           n:dword):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_substitute(fold:Pisl_qpolynomial_fold; _type:Tisl_dim_type; first:dword; n:dword; subs:PPisl_qpolynomial):Pisl_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_fix_val(pwf:Pisl_pw_qpolynomial_fold; _type:Tisl_dim_type; n:dword; v:Pisl_val):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_eval(fold:Pisl_qpolynomial_fold; pnt:Pisl_point):Pisl_val;cdecl;external;
+function isl_qpolynomial_fold_gist_params(fold:Pisl_qpolynomial_fold; context:Pisl_set):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_gist(fold:Pisl_qpolynomial_fold; context:Pisl_set):Pisl_qpolynomial_fold;cdecl;external;
+function isl_qpolynomial_fold_foreach_qpolynomial(fold:Pisl_qpolynomial_fold; fn:function (qp:Pisl_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_printer_print_qpolynomial_fold(p:Pisl_printer; fold:Pisl_qpolynomial_fold):Pisl_printer;cdecl;external;
+procedure isl_qpolynomial_fold_print(fold:Pisl_qpolynomial_fold; out:PFILE; output_format:dword);cdecl;external;
+procedure isl_qpolynomial_fold_dump(fold:Pisl_qpolynomial_fold);cdecl;external;
+function isl_pw_qpolynomial_fold_get_ctx(pwf:Pisl_pw_qpolynomial_fold):Pisl_ctx;cdecl;external;
+function isl_pw_qpolynomial_fold_get_type(pwf:Pisl_pw_qpolynomial_fold):Tisl_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_involves_nan(pwf:Pisl_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_plain_is_equal(pwf1:Pisl_pw_qpolynomial_fold; pwf2:Pisl_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_from_pw_qpolynomial(_type:Tisl_fold; pwqp:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_alloc(_type:Tisl_fold; set:Pisl_set; fold:Pisl_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_from_qpolynomial_fold(fold:Pisl_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_copy(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_free(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_is_zero(pwf:Pisl_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_get_domain_space(pwf:Pisl_pw_qpolynomial_fold):Pisl_space;cdecl;external;
+function isl_pw_qpolynomial_fold_get_space(pwf:Pisl_pw_qpolynomial_fold):Pisl_space;cdecl;external;
+function isl_pw_qpolynomial_fold_reset_space(pwf:Pisl_pw_qpolynomial_fold; space:Pisl_space):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_dim(pwf:Pisl_pw_qpolynomial_fold; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_fold_involves_param_id(pwf:Pisl_pw_qpolynomial_fold; id:Pisl_id):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_has_equal_space(pwf1:Pisl_pw_qpolynomial_fold; pwf2:Pisl_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_size(pwf:Pisl_pw_qpolynomial_fold):Tsize_t;cdecl;external;
+function isl_pw_qpolynomial_fold_zero(space:Pisl_space; _type:Tisl_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+(* Const before type ignored *)
+function isl_pw_qpolynomial_fold_set_dim_name(pwf:Pisl_pw_qpolynomial_fold; _type:Tisl_dim_type; pos:dword; s:Pchar):Pisl_pw_qpolynomial_fold;cdecl;external;
+(* Const before type ignored *)
+function isl_pw_qpolynomial_fold_find_dim_by_name(pwf:Pisl_pw_qpolynomial_fold; _type:Tisl_dim_type; name:Pchar):longint;cdecl;external;
+function isl_pw_qpolynomial_fold_reset_user(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_domain(pwf:Pisl_pw_qpolynomial_fold):Pisl_set;cdecl;external;
+function isl_pw_qpolynomial_fold_intersect_domain(pwf:Pisl_pw_qpolynomial_fold; set:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_intersect_domain_wrapped_domain(pwf:Pisl_pw_qpolynomial_fold; set:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_intersect_domain_wrapped_range(pwf:Pisl_pw_qpolynomial_fold; set:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_intersect_params(pwf:Pisl_pw_qpolynomial_fold; set:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_subtract_domain(pwf:Pisl_pw_qpolynomial_fold; set:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_add(pwf1:Pisl_pw_qpolynomial_fold; pwf2:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_fold(pwf1:Pisl_pw_qpolynomial_fold; pwf2:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_add_disjoint(pwf1:Pisl_pw_qpolynomial_fold; pwf2:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_scale_val(pwf:Pisl_pw_qpolynomial_fold; v:Pisl_val):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_scale_down_val(pwf:Pisl_pw_qpolynomial_fold; v:Pisl_val):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_project_domain_on_params(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_from_range(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_drop_dims(pwf:Pisl_pw_qpolynomial_fold; _type:Tisl_dim_type; first:dword; n:dword):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_move_dims(pwf:Pisl_pw_qpolynomial_fold; dst_type:Tisl_dim_type; dst_pos:dword; src_type:Tisl_dim_type; src_pos:dword; 
+           n:dword):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_drop_unused_params(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_eval(pwf:Pisl_pw_qpolynomial_fold; pnt:Pisl_point):Pisl_val;cdecl;external;
+function isl_pw_qpolynomial_fold_n_piece(pwf:Pisl_pw_qpolynomial_fold):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_fold_foreach_piece(pwf:Pisl_pw_qpolynomial_fold; fn:function (set:Pisl_set; fold:Pisl_qpolynomial_fold; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_fold_every_piece(pwf:Pisl_pw_qpolynomial_fold; test:function (set:Pisl_set; fold:Pisl_qpolynomial_fold; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_foreach_lifted_piece(pwf:Pisl_pw_qpolynomial_fold; fn:function (set:Pisl_set; fold:Pisl_qpolynomial_fold; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_fold_isa_qpolynomial_fold(pwf:Pisl_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_as_qpolynomial_fold(pwf:Pisl_pw_qpolynomial_fold):Pisl_qpolynomial_fold;cdecl;external;
+(* Const before type ignored *)
+function isl_pw_qpolynomial_fold_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_printer_print_pw_qpolynomial_fold(p:Pisl_printer; pwf:Pisl_pw_qpolynomial_fold):Pisl_printer;cdecl;external;
+procedure isl_pw_qpolynomial_fold_print(pwf:Pisl_pw_qpolynomial_fold; out:PFILE; output_format:dword);cdecl;external;
+procedure isl_pw_qpolynomial_fold_dump(pwf:Pisl_pw_qpolynomial_fold);cdecl;external;
+function isl_pw_qpolynomial_fold_coalesce(pwf:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_gist(pwf:Pisl_pw_qpolynomial_fold; context:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_gist_params(pwf:Pisl_pw_qpolynomial_fold; context:Pisl_set):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_max(pwf:Pisl_pw_qpolynomial_fold):Pisl_val;cdecl;external;
+function isl_pw_qpolynomial_fold_min(pwf:Pisl_pw_qpolynomial_fold):Pisl_val;cdecl;external;
+function isl_pw_qpolynomial_bound(pwqp:Pisl_pw_qpolynomial; _type:Tisl_fold; tight:Pisl_bool):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_bound(pwf:Pisl_pw_qpolynomial_fold; tight:Pisl_bool):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_set_apply_pw_qpolynomial_fold(set:Pisl_set; pwf:Pisl_pw_qpolynomial_fold; tight:Pisl_bool):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_map_apply_pw_qpolynomial_fold(map:Pisl_map; pwf:Pisl_pw_qpolynomial_fold; tight:Pisl_bool):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_to_polynomial(pwqp:Pisl_pw_qpolynomial; sign:longint):Pisl_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_get_ctx(upwqp:Pisl_union_pw_qpolynomial):Pisl_ctx;cdecl;external;
+function isl_union_pw_qpolynomial_dim(upwqp:Pisl_union_pw_qpolynomial; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_union_pw_qpolynomial_involves_nan(upwqp:Pisl_union_pw_qpolynomial):Tisl_bool;cdecl;external;
+function isl_union_pw_qpolynomial_plain_is_equal(upwqp1:Pisl_union_pw_qpolynomial; upwqp2:Pisl_union_pw_qpolynomial):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_to_union_pw_qpolynomial(pwqp:Pisl_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_from_pw_qpolynomial(pwqp:Pisl_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_zero_ctx(ctx:Pisl_ctx):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_zero_space(space:Pisl_space):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_zero(space:Pisl_space):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_add_pw_qpolynomial(upwqp:Pisl_union_pw_qpolynomial; pwqp:Pisl_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_copy(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_free(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+(* Const before type ignored *)
+function isl_union_pw_qpolynomial_read_from_str(ctx:Pisl_ctx; str:Pchar):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_to_str(upwqp:Pisl_union_pw_qpolynomial):Pchar;cdecl;external;
+function isl_union_pw_qpolynomial_neg(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_add(upwqp1:Pisl_union_pw_qpolynomial; upwqp2:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_sub(upwqp1:Pisl_union_pw_qpolynomial; upwqp2:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_mul(upwqp1:Pisl_union_pw_qpolynomial; upwqp2:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_scale_val(upwqp:Pisl_union_pw_qpolynomial; v:Pisl_val):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_scale_down_val(upwqp:Pisl_union_pw_qpolynomial; v:Pisl_val):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_domain(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_set;cdecl;external;
+function isl_union_pw_qpolynomial_intersect_domain_space(upwpq:Pisl_union_pw_qpolynomial; space:Pisl_space):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_intersect_domain_union_set(upwpq:Pisl_union_pw_qpolynomial; uset:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_intersect_domain(upwpq:Pisl_union_pw_qpolynomial; uset:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_intersect_domain_wrapped_domain(upwpq:Pisl_union_pw_qpolynomial; uset:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_intersect_domain_wrapped_range(upwpq:Pisl_union_pw_qpolynomial; uset:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_intersect_params(upwpq:Pisl_union_pw_qpolynomial; set:Pisl_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_subtract_domain_union_set(upwpq:Pisl_union_pw_qpolynomial; uset:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_subtract_domain_space(upwpq:Pisl_union_pw_qpolynomial; space:Pisl_space):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_subtract_domain(upwpq:Pisl_union_pw_qpolynomial; uset:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_get_space(upwqp:Pisl_union_pw_qpolynomial):Pisl_space;cdecl;external;
+function isl_union_pw_qpolynomial_get_pw_qpolynomial_list(upwqp:Pisl_union_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+(* Const before type ignored *)
+function isl_union_pw_qpolynomial_set_dim_name(upwqp:Pisl_union_pw_qpolynomial; _type:Tisl_dim_type; pos:dword; s:Pchar):Pisl_union_pw_qpolynomial;cdecl;external;
+(* Const before type ignored *)
+function isl_union_pw_qpolynomial_find_dim_by_name(upwqp:Pisl_union_pw_qpolynomial; _type:Tisl_dim_type; name:Pchar):longint;cdecl;external;
+function isl_union_pw_qpolynomial_domain_reverse(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_drop_dims(upwqp:Pisl_union_pw_qpolynomial; _type:Tisl_dim_type; first:dword; n:dword):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_reset_user(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_eval(upwqp:Pisl_union_pw_qpolynomial; pnt:Pisl_point):Pisl_val;cdecl;external;
+function isl_union_pw_qpolynomial_coalesce(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_gist(upwqp:Pisl_union_pw_qpolynomial; context:Pisl_union_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_gist_params(upwqp:Pisl_union_pw_qpolynomial; context:Pisl_set):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_align_params(upwqp:Pisl_union_pw_qpolynomial; model:Pisl_space):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_drop_unused_params(upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_union_pw_qpolynomial_n_pw_qpolynomial(upwqp:Pisl_union_pw_qpolynomial):Tisl_size;cdecl;external;
+function isl_union_pw_qpolynomial_foreach_pw_qpolynomial(upwqp:Pisl_union_pw_qpolynomial; fn:function (pwqp:Pisl_pw_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_union_pw_qpolynomial_every_pw_qpolynomial(upwqp:Pisl_union_pw_qpolynomial; test:function (pwqp:Pisl_pw_qpolynomial; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_union_pw_qpolynomial_extract_pw_qpolynomial(upwqp:Pisl_union_pw_qpolynomial; space:Pisl_space):Pisl_pw_qpolynomial;cdecl;external;
+function isl_printer_print_union_pw_qpolynomial(p:Pisl_printer; upwqp:Pisl_union_pw_qpolynomial):Pisl_printer;cdecl;external;
+function isl_union_pw_qpolynomial_fold_get_ctx(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_ctx;cdecl;external;
+function isl_union_pw_qpolynomial_fold_dim(upwf:Pisl_union_pw_qpolynomial_fold; _type:Tisl_dim_type):Tisl_size;cdecl;external;
+function isl_union_pw_qpolynomial_fold_involves_nan(upwf:Pisl_union_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_union_pw_qpolynomial_fold_plain_is_equal(upwf1:Pisl_union_pw_qpolynomial_fold; upwf2:Pisl_union_pw_qpolynomial_fold):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_to_union_pw_qpolynomial_fold(pwf:Pisl_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_from_pw_qpolynomial_fold(pwf:Pisl_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_zero_ctx(ctx:Pisl_ctx; _type:Tisl_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_zero_space(space:Pisl_space; _type:Tisl_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_zero(space:Pisl_space; _type:Tisl_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_fold_pw_qpolynomial_fold(upwqp:Pisl_union_pw_qpolynomial_fold; pwqp:Pisl_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_free(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_copy(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_fold(upwf1:Pisl_union_pw_qpolynomial_fold; upwf2:Pisl_union_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_add_union_pw_qpolynomial(upwf:Pisl_union_pw_qpolynomial_fold; upwqp:Pisl_union_pw_qpolynomial):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_scale_val(upwf:Pisl_union_pw_qpolynomial_fold; v:Pisl_val):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_scale_down_val(upwf:Pisl_union_pw_qpolynomial_fold; v:Pisl_val):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_domain(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_union_set;cdecl;external;
+function isl_union_pw_qpolynomial_fold_intersect_domain_space(upwf:Pisl_union_pw_qpolynomial_fold; space:Pisl_space):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_intersect_domain_union_set(upwf:Pisl_union_pw_qpolynomial_fold; uset:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_intersect_domain(upwf:Pisl_union_pw_qpolynomial_fold; uset:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_intersect_domain_wrapped_domain(upwf:Pisl_union_pw_qpolynomial_fold; uset:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_intersect_domain_wrapped_range(upwf:Pisl_union_pw_qpolynomial_fold; uset:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_intersect_params(upwf:Pisl_union_pw_qpolynomial_fold; set:Pisl_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_subtract_domain_union_set(upwf:Pisl_union_pw_qpolynomial_fold; uset:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_subtract_domain_space(upwf:Pisl_union_pw_qpolynomial_fold; space:Pisl_space):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_subtract_domain(upwf:Pisl_union_pw_qpolynomial_fold; uset:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_get_type(upwf:Pisl_union_pw_qpolynomial_fold):Tisl_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_get_space(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_space;cdecl;external;
+function isl_union_pw_qpolynomial_fold_get_pw_qpolynomial_fold_list(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+(* Const before type ignored *)
+function isl_union_pw_qpolynomial_fold_set_dim_name(upwf:Pisl_union_pw_qpolynomial_fold; _type:Tisl_dim_type; pos:dword; s:Pchar):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+(* Const before type ignored *)
+function isl_union_pw_qpolynomial_fold_find_dim_by_name(upwf:Pisl_union_pw_qpolynomial_fold; _type:Tisl_dim_type; name:Pchar):longint;cdecl;external;
+function isl_union_pw_qpolynomial_fold_drop_dims(upwf:Pisl_union_pw_qpolynomial_fold; _type:Tisl_dim_type; first:dword; n:dword):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_reset_user(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_eval(upwf:Pisl_union_pw_qpolynomial_fold; pnt:Pisl_point):Pisl_val;cdecl;external;
+function isl_union_pw_qpolynomial_fold_coalesce(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_gist(upwf:Pisl_union_pw_qpolynomial_fold; context:Pisl_union_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_gist_params(upwf:Pisl_union_pw_qpolynomial_fold; context:Pisl_set):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_align_params(upwf:Pisl_union_pw_qpolynomial_fold; model:Pisl_space):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_drop_unused_params(upwf:Pisl_union_pw_qpolynomial_fold):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_fold_n_pw_qpolynomial_fold(upwf:Pisl_union_pw_qpolynomial_fold):Tisl_size;cdecl;external;
+function isl_union_pw_qpolynomial_fold_foreach_pw_qpolynomial_fold(upwf:Pisl_union_pw_qpolynomial_fold; fn:function (pwf:Pisl_pw_qpolynomial_fold; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_union_pw_qpolynomial_fold_every_pw_qpolynomial_fold(upwf:Pisl_union_pw_qpolynomial_fold; test:function (pwf:Pisl_pw_qpolynomial_fold; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_union_pw_qpolynomial_fold_extract_pw_qpolynomial_fold(upwf:Pisl_union_pw_qpolynomial_fold; space:Pisl_space):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_printer_print_union_pw_qpolynomial_fold(p:Pisl_printer; upwf:Pisl_union_pw_qpolynomial_fold):Pisl_printer;cdecl;external;
+function isl_union_pw_qpolynomial_bound(upwqp:Pisl_union_pw_qpolynomial; _type:Tisl_fold; tight:Pisl_bool):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_set_apply_union_pw_qpolynomial_fold(uset:Pisl_union_set; upwf:Pisl_union_pw_qpolynomial_fold; tight:Pisl_bool):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_map_apply_union_pw_qpolynomial_fold(umap:Pisl_union_map; upwf:Pisl_union_pw_qpolynomial_fold; tight:Pisl_bool):Pisl_union_pw_qpolynomial_fold;cdecl;external;
+function isl_union_pw_qpolynomial_to_polynomial(upwqp:Pisl_union_pw_qpolynomial; sign:longint):Pisl_union_pw_qpolynomial;cdecl;external;
+function isl_qpolynomial_list_get_ctx(list:Pisl_qpolynomial_list):Pisl_ctx;cdecl;external;
+function isl_qpolynomial_to_list(el:Pisl_qpolynomial):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_from_qpolynomial(el:Pisl_qpolynomial):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_copy(list:Pisl_qpolynomial_list):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_free(list:Pisl_qpolynomial_list):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_add(list:Pisl_qpolynomial_list; el:Pisl_qpolynomial):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_insert(list:Pisl_qpolynomial_list; pos:dword; el:Pisl_qpolynomial):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_drop(list:Pisl_qpolynomial_list; first:dword; n:dword):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_clear(list:Pisl_qpolynomial_list):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_swap(list:Pisl_qpolynomial_list; pos1:dword; pos2:dword):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_reverse(list:Pisl_qpolynomial_list):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_concat(list1:Pisl_qpolynomial_list; list2:Pisl_qpolynomial_list):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_size(list:Pisl_qpolynomial_list):Tisl_size;cdecl;external;
+function isl_qpolynomial_list_n_qpolynomial(list:Pisl_qpolynomial_list):Tisl_size;cdecl;external;
+function isl_qpolynomial_list_get_at(list:Pisl_qpolynomial_list; index:longint):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_list_get_qpolynomial(list:Pisl_qpolynomial_list; index:longint):Pisl_qpolynomial;cdecl;external;
+function isl_qpolynomial_list_set_at(list:Pisl_qpolynomial_list; index:longint; el:Pisl_qpolynomial):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_set_qpolynomial(list:Pisl_qpolynomial_list; index:longint; el:Pisl_qpolynomial):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_foreach(list:Pisl_qpolynomial_list; fn:function (el:Pisl_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_qpolynomial_list_every(list:Pisl_qpolynomial_list; test:function (el:Pisl_qpolynomial; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_qpolynomial_list_map(list:Pisl_qpolynomial_list; fn:function (el:Pisl_qpolynomial; user:pointer):Pisl_qpolynomial; user:pointer):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_sort(list:Pisl_qpolynomial_list; cmp:function (a:Pisl_qpolynomial; b:Pisl_qpolynomial; user:pointer):longint; user:pointer):Pisl_qpolynomial_list;cdecl;external;
+function isl_qpolynomial_list_foreach_scc(list:Pisl_qpolynomial_list; follows:function (a:Pisl_qpolynomial; b:Pisl_qpolynomial; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_qpolynomial_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_qpolynomial_list_to_str(list:Pisl_qpolynomial_list):Pchar;cdecl;external;
+function isl_printer_print_qpolynomial_list(p:Pisl_printer; list:Pisl_qpolynomial_list):Pisl_printer;cdecl;external;
+procedure isl_qpolynomial_list_dump(list:Pisl_qpolynomial_list);cdecl;external;
+function isl_pw_qpolynomial_list_get_ctx(list:Pisl_pw_qpolynomial_list):Pisl_ctx;cdecl;external;
+function isl_pw_qpolynomial_to_list(el:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_from_pw_qpolynomial(el:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_copy(list:Pisl_pw_qpolynomial_list):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_free(list:Pisl_pw_qpolynomial_list):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_add(list:Pisl_pw_qpolynomial_list; el:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_insert(list:Pisl_pw_qpolynomial_list; pos:dword; el:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_drop(list:Pisl_pw_qpolynomial_list; first:dword; n:dword):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_clear(list:Pisl_pw_qpolynomial_list):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_swap(list:Pisl_pw_qpolynomial_list; pos1:dword; pos2:dword):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_reverse(list:Pisl_pw_qpolynomial_list):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_concat(list1:Pisl_pw_qpolynomial_list; list2:Pisl_pw_qpolynomial_list):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_size(list:Pisl_pw_qpolynomial_list):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_list_n_pw_qpolynomial(list:Pisl_pw_qpolynomial_list):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_list_get_at(list:Pisl_pw_qpolynomial_list; index:longint):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_list_get_pw_qpolynomial(list:Pisl_pw_qpolynomial_list; index:longint):Pisl_pw_qpolynomial;cdecl;external;
+function isl_pw_qpolynomial_list_set_at(list:Pisl_pw_qpolynomial_list; index:longint; el:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_set_pw_qpolynomial(list:Pisl_pw_qpolynomial_list; index:longint; el:Pisl_pw_qpolynomial):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_foreach(list:Pisl_pw_qpolynomial_list; fn:function (el:Pisl_pw_qpolynomial; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_list_every(list:Pisl_pw_qpolynomial_list; test:function (el:Pisl_pw_qpolynomial; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_list_map(list:Pisl_pw_qpolynomial_list; fn:function (el:Pisl_pw_qpolynomial; user:pointer):Pisl_pw_qpolynomial; user:pointer):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_sort(list:Pisl_pw_qpolynomial_list; cmp:function (a:Pisl_pw_qpolynomial; b:Pisl_pw_qpolynomial; user:pointer):longint; user:pointer):Pisl_pw_qpolynomial_list;cdecl;external;
+function isl_pw_qpolynomial_list_foreach_scc(list:Pisl_pw_qpolynomial_list; follows:function (a:Pisl_pw_qpolynomial; b:Pisl_pw_qpolynomial; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_pw_qpolynomial_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_list_to_str(list:Pisl_pw_qpolynomial_list):Pchar;cdecl;external;
+function isl_printer_print_pw_qpolynomial_list(p:Pisl_printer; list:Pisl_pw_qpolynomial_list):Pisl_printer;cdecl;external;
+procedure isl_pw_qpolynomial_list_dump(list:Pisl_pw_qpolynomial_list);cdecl;external;
+function isl_pw_qpolynomial_fold_list_get_ctx(list:Pisl_pw_qpolynomial_fold_list):Pisl_ctx;cdecl;external;
+function isl_pw_qpolynomial_fold_to_list(el:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_from_pw_qpolynomial_fold(el:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_alloc(ctx:Pisl_ctx; n:longint):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_copy(list:Pisl_pw_qpolynomial_fold_list):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_free(list:Pisl_pw_qpolynomial_fold_list):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_add(list:Pisl_pw_qpolynomial_fold_list; el:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_insert(list:Pisl_pw_qpolynomial_fold_list; pos:dword; el:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_drop(list:Pisl_pw_qpolynomial_fold_list; first:dword; n:dword):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_clear(list:Pisl_pw_qpolynomial_fold_list):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_swap(list:Pisl_pw_qpolynomial_fold_list; pos1:dword; pos2:dword):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_reverse(list:Pisl_pw_qpolynomial_fold_list):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_concat(list1:Pisl_pw_qpolynomial_fold_list; list2:Pisl_pw_qpolynomial_fold_list):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_size(list:Pisl_pw_qpolynomial_fold_list):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_fold_list_n_pw_qpolynomial_fold(list:Pisl_pw_qpolynomial_fold_list):Tisl_size;cdecl;external;
+function isl_pw_qpolynomial_fold_list_get_at(list:Pisl_pw_qpolynomial_fold_list; index:longint):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_list_get_pw_qpolynomial_fold(list:Pisl_pw_qpolynomial_fold_list; index:longint):Pisl_pw_qpolynomial_fold;cdecl;external;
+function isl_pw_qpolynomial_fold_list_set_at(list:Pisl_pw_qpolynomial_fold_list; index:longint; el:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_set_pw_qpolynomial_fold(list:Pisl_pw_qpolynomial_fold_list; index:longint; el:Pisl_pw_qpolynomial_fold):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_foreach(list:Pisl_pw_qpolynomial_fold_list; fn:function (el:Pisl_pw_qpolynomial_fold; user:pointer):Tisl_stat; user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_fold_list_every(list:Pisl_pw_qpolynomial_fold_list; test:function (el:Pisl_pw_qpolynomial_fold; user:pointer):Tisl_bool; user:pointer):Tisl_bool;cdecl;external;
+function isl_pw_qpolynomial_fold_list_map(list:Pisl_pw_qpolynomial_fold_list; fn:function (el:Pisl_pw_qpolynomial_fold; user:pointer):Pisl_pw_qpolynomial_fold; user:pointer):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_sort(list:Pisl_pw_qpolynomial_fold_list; cmp:function (a:Pisl_pw_qpolynomial_fold; b:Pisl_pw_qpolynomial_fold; user:pointer):longint; user:pointer):Pisl_pw_qpolynomial_fold_list;cdecl;external;
+function isl_pw_qpolynomial_fold_list_foreach_scc(list:Pisl_pw_qpolynomial_fold_list; follows:function (a:Pisl_pw_qpolynomial_fold; b:Pisl_pw_qpolynomial_fold; user:pointer):Tisl_bool; follows_user:pointer; fn:function (scc:Pisl_pw_qpolynomial_fold_list; user:pointer):Tisl_stat; fn_user:pointer):Tisl_stat;cdecl;external;
+function isl_pw_qpolynomial_fold_list_to_str(list:Pisl_pw_qpolynomial_fold_list):Pchar;cdecl;external;
+function isl_printer_print_pw_qpolynomial_fold_list(p:Pisl_printer; list:Pisl_pw_qpolynomial_fold_list):Pisl_printer;cdecl;external;
+procedure isl_pw_qpolynomial_fold_list_dump(list:Pisl_pw_qpolynomial_fold_list);cdecl;external;
+{$endif}
+
+implementation
+
+
+end.

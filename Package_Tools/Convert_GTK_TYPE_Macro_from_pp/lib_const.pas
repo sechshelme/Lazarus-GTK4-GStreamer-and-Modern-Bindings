@@ -387,6 +387,7 @@ const
     (libs: 'libvncclient'; units: 'fp_vnc'),
     (libs: 'libvncserver'; units: 'fp_vnc'),
     (libs: 'libvterm'; units: 'fp_vnc'),
+    (libs: 'libisl'; units: 'fp_isl'),
 
 
 

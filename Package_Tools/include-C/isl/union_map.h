@@ -384,6 +384,7 @@ extern
  isl_union_set *isl_union_set_align_params(
 	 isl_union_set *uset,  isl_space *model);
 
+
 isl_ctx *isl_union_map_list_get_ctx( isl_union_map_list *list);	
  isl_union_map_list *isl_union_map_to_list( isl_union_map *el);
  isl_union_map_list *isl_union_map_list_from_union_map(			
@@ -415,12 +416,12 @@ isl_size isl_union_map_list_size( isl_union_map_list *list);
 isl_size isl_union_map_list_n_union_map( isl_union_map_list *list);	
  isl_union_map *isl_union_map_list_get_at(				
 	 isl_union_map_list *list, int index);			
-  isl_union_map *isl_union_map_list_get_union_map(			
+ isl_union_map *isl_union_map_list_get_union_map(			
 	 isl_union_map_list *list, int index);			
  isl_union_map_list *isl_union_map_list_set_at(			
 	 isl_union_map_list *list, int index,			
 	 isl_union_map *el);					
-  isl_union_map_list *isl_union_map_list_set_union_map(		
+ isl_union_map_list *isl_union_map_list_set_union_map(		
 	 struct isl_union_map_list *list, int index,		
 	 struct isl_union_map *el);				
 isl_stat isl_union_map_list_foreach( isl_union_map_list *list,	
@@ -450,6 +451,7 @@ isl_stat isl_union_map_list_foreach_scc( isl_union_map_list *list,
  isl_printer *isl_printer_print_union_map_list(			
 	 isl_printer *p,  isl_union_map_list *list);	
 void isl_union_map_list_dump( isl_union_map_list *list);  
+
 
 #if defined(__cplusplus)
 }

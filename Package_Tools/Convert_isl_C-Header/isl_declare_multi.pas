@@ -19,7 +19,7 @@ begin
     sa := s.Split(['(', ')']);
     BASE := sa[1];
     Result :=
-      'isl_ctx *isl_multi_' + BASE + '_get_ctx(					'#10 +
+      #10'isl_ctx *isl_multi_' + BASE + '_get_ctx(					'#10 +
       '	 isl_multi_' + BASE + ' *multi);				'#10 +
       'extern								'#10 +
       ' isl_space *isl_multi_' + BASE + '_get_space(			'#10 +
@@ -84,7 +84,7 @@ begin
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
       '	 isl_space *model);					'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_from_range(		'#10 +
-      '	 isl_multi_' + BASE + ' *multi);               ';
+      '	 isl_multi_' + BASE + ' *multi);               '#10;
   end else begin
     Result := s;
   end;
@@ -100,7 +100,7 @@ begin
     BASE := sa[1];
 
     Result :=
-      ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_identity_multi_' + BASE + '(	'#10 +
+      #10' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_identity_multi_' + BASE + '(	'#10 +
       '	 isl_multi_' + BASE + ' *multi);				'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_identity(		'#10 +
       '	 isl_space *space);					'#10 +
@@ -111,7 +111,7 @@ begin
       'extern								'#10 +
       ' isl_multi_' + BASE + ' *						'#10 +
       'isl_space_identity_multi_' + BASE + '_on_domain(				'#10 +
-      '	 isl_space *space);   ';
+      '	 isl_space *space);   '#10;
   end else begin
     Result := s;
   end;
@@ -127,8 +127,8 @@ begin
     BASE := sa[1];
 
     Result :=
-      'int isl_multi_' + BASE + '_plain_cmp( isl_multi_' + BASE + ' *multi1,	'#10 +
-      '	 isl_multi_' + BASE + ' *multi2);';
+      #10'int isl_multi_' + BASE + '_plain_cmp( isl_multi_' + BASE + ' *multi1,	'#10 +
+      '	 isl_multi_' + BASE + ' *multi2);'#10;
   end else begin
     Result := s;
   end;
@@ -145,7 +145,7 @@ begin
     BASE := sa[1];
 
     Result :=
-      ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_scale_val(		'#10 +
+      #10' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_scale_val(		'#10 +
       '	 isl_multi_' + BASE + ' *multi,  isl_val *v);	'#10 +
       '								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_scale_down_val(		'#10 +
@@ -171,7 +171,7 @@ begin
       '	 isl_multi_' + BASE + ' *multi2);				'#10 +
       'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_neg(		 	'#10 +
-      '	 isl_multi_' + BASE + ' *multi);      ';
+      '	 isl_multi_' + BASE + ' *multi);      '#10;
   end else begin
     Result := s;
   end;
@@ -188,15 +188,14 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_min(			'#10 +
       '	 isl_multi_' + BASE + ' *multi1,				'#10 +
       '	 isl_multi_' + BASE + ' *multi2);				'#10 +
       'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_max(			'#10 +
       '	 isl_multi_' + BASE + ' *multi1,				'#10 +
-      '	 isl_multi_' + BASE + ' *multi2);  ';
-
+      '	 isl_multi_' + BASE + ' *multi2);  '#10;
   end else begin
     Result := s;
   end;
@@ -213,11 +212,11 @@ begin
     BASE := sa[1];
 
     Result :=
-      'isl_multi_' + BASE + ' *isl_multi_' + BASE + '_add_constant_val(	'#10 +
+      #10'isl_multi_' + BASE + ' *isl_multi_' + BASE + '_add_constant_val(	'#10 +
       '	 isl_multi_' + BASE + ' *mpa,  isl_val *v);	'#10 +
       '								'#10 +
       'isl_multi_' + BASE + ' *isl_multi_' + BASE + '_add_constant_multi_val(	'#10 +
-      '	 isl_multi_' + BASE + ' *mpa,  isl_multi_val *mv);';
+      '	 isl_multi_' + BASE + ' *mpa,  isl_multi_val *mv);'#10;
   end else begin
     Result := s;
   end;
@@ -234,12 +233,12 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_zero(			'#10 +
       '	 isl_space *space);					'#10 +
       'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_space_zero_multi_' + BASE + '(		'#10 +
-      '	 isl_space *space);';
+      '	 isl_space *space);'#10;
   end else begin
     Result := s;
   end;
@@ -256,9 +255,9 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       'isl_bool isl_multi_' + BASE + '_involves_nan(				'#10 +
-      '	 isl_multi_' + BASE + ' *multi);       ';
+      '	 isl_multi_' + BASE + ' *multi);       '#10;
   end else begin
     Result := s;
   end;
@@ -275,11 +274,11 @@ begin
     BASE := sa[1];
 
     Result :=
-      'isl_size isl_multi_' + BASE + '_dim( isl_multi_' + BASE + ' *multi,	'#10 +
+      #10'isl_size isl_multi_' + BASE + '_dim( isl_multi_' + BASE + ' *multi,	'#10 +
       '	enum isl_dim_type type);					'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_drop_dims(		'#10 +
       '	 isl_multi_' + BASE + ' *multi, enum isl_dim_type type,	'#10 +
-      '	unsigned first, unsigned n);';
+      '	unsigned first, unsigned n);'#10;
   end else begin
     Result := s;
   end;
@@ -297,7 +296,7 @@ begin
 
     Result :=
       //    ISL_DECLARE_MULTI_DROP_DIMS(BASE)
-      'isl_size isl_multi_' + BASE + '_dim( isl_multi_' + BASE + ' *multi,	'#10 +
+      #10'isl_size isl_multi_' + BASE + '_dim( isl_multi_' + BASE + ' *multi,	'#10 +
       '	enum isl_dim_type type);					'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_drop_dims(		'#10 +
       '	 isl_multi_' + BASE + ' *multi, enum isl_dim_type type,	'#10 +
@@ -314,7 +313,7 @@ begin
       '	unsigned n);							'#10 +
       ' isl_multi_' + BASE + ' *						'#10 +
       'isl_multi_' + BASE + '_project_domain_on_params(				'#10 +
-      '	 isl_multi_' + BASE + ' *multi);           ';
+      '	 isl_multi_' + BASE + ' *multi);           '#10;
   end else begin
     Result := s;
   end;
@@ -331,10 +330,10 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *						'#10 +
       'isl_multi_' + BASE + '_insert_domain( isl_multi_' + BASE + ' *multi,	'#10 +
-      '	 isl_space *domain);     ';
+      '	 isl_space *domain);     '#10;
   end else begin
     Result := s;
   end;
@@ -351,9 +350,9 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       'isl_bool isl_multi_' + BASE + '_involves_locals(				'#10 +
-      '	 isl_multi_' + BASE + ' *multi); ';
+      '	 isl_multi_' + BASE + ' *multi); '#10;
   end else begin
     Result := s;
   end;
@@ -369,7 +368,7 @@ begin
     BASE := sa[1];
 
     Result :=
-      'int isl_multi_' + BASE + '_find_dim_by_name(				'#10 +
+      #10'int isl_multi_' + BASE + '_find_dim_by_name(				'#10 +
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
       '	enum isl_dim_type type, const char *name);			'#10 +
       'int isl_multi_' + BASE + '_find_dim_by_id(					'#10 +
@@ -383,7 +382,7 @@ begin
       '	enum isl_dim_type type, unsigned pos, const char *s);		'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_set_dim_id(		'#10 +
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
-      '	enum isl_dim_type type, unsigned pos,  isl_id *id);   ';
+      '	enum isl_dim_type type, unsigned pos,  isl_id *id);   '#10;
   end else begin
     Result := s;
   end;
@@ -399,7 +398,7 @@ begin
     BASE := sa[1];
 
     Result :=
-      'const char *isl_multi_' + BASE + '_get_tuple_name(				'#10 +
+      #10'const char *isl_multi_' + BASE + '_get_tuple_name(				'#10 +
       '	 isl_multi_' + BASE + ' *multi, enum isl_dim_type type);	'#10 +
       'extern								'#10 +
       'isl_bool isl_multi_' + BASE + '_has_range_tuple_id(				'#10 +
@@ -424,7 +423,7 @@ begin
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_reset_range_tuple_id(	'#10 +
       '	 isl_multi_' + BASE + ' *multi);				'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_reset_tuple_id(		'#10 +
-      '	 isl_multi_' + BASE + ' *multi, enum isl_dim_type type);    ';
+      '	 isl_multi_' + BASE + ' *multi, enum isl_dim_type type);    '#10;
   end else begin
     Result := s;
   end;
@@ -440,13 +439,13 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_product(		'#10 +
       '	 isl_multi_' + BASE + ' *multi1,				'#10 +
       '	 isl_multi_' + BASE + ' *multi2);				'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_splice(			'#10 +
       '	 isl_multi_' + BASE + ' *multi1, unsigned in_pos,		'#10 +
-      '	unsigned out_pos,  isl_multi_' + BASE + ' *multi2);  ';
+      '	unsigned out_pos,  isl_multi_' + BASE + ' *multi2);  '#10;
   end else begin
     Result := s;
   end;
@@ -462,7 +461,7 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_bind_domain(		'#10 +
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
       '	 isl_multi_id *tuple);				'#10 +
@@ -470,7 +469,7 @@ begin
       ' isl_multi_' + BASE + ' *						'#10 +
       'isl_multi_' + BASE + '_bind_domain_wrapped_domain(				'#10 +
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
-      '	 isl_multi_id *tuple);     ';
+      '	 isl_multi_id *tuple);     '#10;
   end else begin
     Result := s;
   end;
@@ -486,11 +485,11 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *						'#10 +
       'isl_multi_' + BASE + '_unbind_params_insert_domain(				'#10 +
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
-      '	 isl_multi_id *domain);';
+      '	 isl_multi_id *domain);'#10;
   end else begin
     Result := s;
   end;
@@ -507,12 +506,12 @@ begin
     BASE := sa[1];
 
     Result :=
-      'isl_bool isl_multi_' + BASE + '_involves_param_id(				'#10 +
+      #10'isl_bool isl_multi_' + BASE + '_involves_param_id(				'#10 +
       '	 isl_multi_' + BASE + ' *multi,  isl_id *id);	'#10 +
       '								'#10 +
       'isl_bool isl_multi_' + BASE + '_involves_param_id_list(			'#10 +
       '	 isl_multi_' + BASE + ' *multi,				'#10 +
-      '	 isl_id_list *list);    ';
+      '	 isl_id_list *list);    '#10;
   end else begin
     Result := s;
   end;
@@ -529,9 +528,9 @@ begin
     BASE := sa[1];
 
     Result :=
-      'extern								'#10 +
+      #10'extern								'#10 +
       ' isl_multi_' + BASE + ' *isl_multi_' + BASE + '_domain_reverse(		'#10 +
-      '	 isl_multi_' + BASE + ' *multi);';
+      '	 isl_multi_' + BASE + ' *multi);'#10;
   end else begin
     Result := s;
   end;

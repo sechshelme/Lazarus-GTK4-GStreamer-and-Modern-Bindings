@@ -29,6 +29,9 @@ implementation
 
 {$R *.lfm}
 
+//  nm -D /usr/lib/x86_64-linux-gnu/libisl.so | grep isl_union_pw_aff_list_read_from_str
+
+
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
@@ -63,11 +66,20 @@ begin
 
       slHeader[j] := Convert_ISL_DECLARE_MULTI(slHeader[j]);
       slHeader[j] := Convert_ISL_DECLARE_LIST(slHeader[j]);
+    end;
 
-      if pos('struct', slHeader[j]) = 2 then begin
+    for j := 0 to slHeader.Count - 1 do begin
+      //if pos('struct', slHeader[j]) = 1 then begin
+      //  s:=slHeader[j];
+      //  WriteLn('s: ',s);
+      //  Delete(s, 1, 6);
+      //  WriteLn('s: ',s);
+      //  slHeader[j]:=s;
+      //end;
+      if pos(' struct', slHeader[j]) = 1 then begin
         s:=slHeader[j];
         WriteLn('s: ',s);
-        Delete(s, 2, 6);
+        Delete(s, 1, 7);
         WriteLn('s: ',s);
         slHeader[j]:=s;
       end;

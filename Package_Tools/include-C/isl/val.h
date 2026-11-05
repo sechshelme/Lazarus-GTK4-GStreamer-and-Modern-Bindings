@@ -12,6 +12,7 @@
 
 #endif
 
+
 isl_ctx *isl_multi_val_get_ctx(					
 	 isl_multi_val *multi);				
 extern								
@@ -78,6 +79,8 @@ isl_bool isl_multi_val_range_is_wrapping(
 	 isl_space *model);					
  isl_multi_val *isl_multi_val_from_range(		
 	 isl_multi_val *multi);               
+
+
  isl_multi_val *isl_multi_val_scale_val(		
 	 isl_multi_val *multi,  isl_val *v);	
 								
@@ -105,6 +108,8 @@ extern
 extern								
  isl_multi_val *isl_multi_val_neg(		 	
 	 isl_multi_val *multi);      
+
+
 extern								
  isl_multi_val *isl_multi_val_min(			
 	 isl_multi_val *multi1,				
@@ -113,15 +118,21 @@ extern
  isl_multi_val *isl_multi_val_max(			
 	 isl_multi_val *multi1,				
 	 isl_multi_val *multi2);  
+
+
 extern								
  isl_multi_val *isl_multi_val_zero(			
 	 isl_space *space);					
 extern								
  isl_multi_val *isl_space_zero_multi_val(		
 	 isl_space *space);
+
+
 extern								
 isl_bool isl_multi_val_involves_nan(				
 	 isl_multi_val *multi);       
+
+
 isl_size isl_multi_val_dim( isl_multi_val *multi,	
 	enum isl_dim_type type);					
  isl_multi_val *isl_multi_val_drop_dims(		
@@ -139,6 +150,8 @@ isl_bool isl_multi_val_involves_dims(
  isl_multi_val *						
 isl_multi_val_project_domain_on_params(				
 	 isl_multi_val *multi);           
+
+
 int isl_multi_val_find_dim_by_name(				
 	 isl_multi_val *multi,				
 	enum isl_dim_type type, const char *name);			
@@ -154,6 +167,8 @@ int isl_multi_val_find_dim_by_id(
  isl_multi_val *isl_multi_val_set_dim_id(		
 	 isl_multi_val *multi,				
 	enum isl_dim_type type, unsigned pos,  isl_id *id);   
+
+
 const char *isl_multi_val_get_tuple_name(				
 	 isl_multi_val *multi, enum isl_dim_type type);	
 extern								
@@ -180,6 +195,8 @@ extern
 	 isl_multi_val *multi);				
  isl_multi_val *isl_multi_val_reset_tuple_id(		
 	 isl_multi_val *multi, enum isl_dim_type type);    
+
+
 extern								
  isl_multi_val *isl_multi_val_product(		
 	 isl_multi_val *multi1,				
@@ -187,6 +204,7 @@ extern
  isl_multi_val *isl_multi_val_splice(			
 	 isl_multi_val *multi1, unsigned in_pos,		
 	unsigned out_pos,  isl_multi_val *multi2);  
+
 
 extern
  isl_val *isl_val_zero(isl_ctx *ctx);
@@ -335,6 +353,7 @@ isl_bool isl_multi_val_is_zero( isl_multi_val *mv);
 void isl_multi_val_dump( isl_multi_val *mv);
  char *isl_multi_val_to_str( isl_multi_val *mv);
 
+
 isl_ctx *isl_val_list_get_ctx( isl_val_list *list);	
  isl_val_list *isl_val_to_list( isl_val *el);
  isl_val_list *isl_val_list_from_val(			
@@ -366,12 +385,12 @@ isl_size isl_val_list_size( isl_val_list *list);
 isl_size isl_val_list_n_val( isl_val_list *list);	
  isl_val *isl_val_list_get_at(				
 	 isl_val_list *list, int index);			
-  isl_val *isl_val_list_get_val(			
+ isl_val *isl_val_list_get_val(			
 	 isl_val_list *list, int index);			
  isl_val_list *isl_val_list_set_at(			
 	 isl_val_list *list, int index,			
 	 isl_val *el);					
-  isl_val_list *isl_val_list_set_val(		
+ isl_val_list *isl_val_list_set_val(		
 	 struct isl_val_list *list, int index,		
 	 struct isl_val *el);				
 isl_stat isl_val_list_foreach( isl_val_list *list,	
@@ -401,8 +420,11 @@ isl_stat isl_val_list_foreach_scc( isl_val_list *list,
  isl_printer *isl_printer_print_val_list(			
 	 isl_printer *p,  isl_val_list *list);	
 void isl_val_list_dump( isl_val_list *list);  
+
+
 isl_val_list *isl_val_list_read_from_str(		
 	isl_ctx *ctx, const char *str);
+
 
 #if defined(__cplusplus)
 }

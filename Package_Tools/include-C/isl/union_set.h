@@ -191,6 +191,7 @@ extern
 	 isl_union_set *uset);
 void isl_union_set_dump( isl_union_set *uset);
 
+
 isl_ctx *isl_union_set_list_get_ctx( isl_union_set_list *list);	
  isl_union_set_list *isl_union_set_to_list( isl_union_set *el);
  isl_union_set_list *isl_union_set_list_from_union_set(			
@@ -222,12 +223,12 @@ isl_size isl_union_set_list_size( isl_union_set_list *list);
 isl_size isl_union_set_list_n_union_set( isl_union_set_list *list);	
  isl_union_set *isl_union_set_list_get_at(				
 	 isl_union_set_list *list, int index);			
-  isl_union_set *isl_union_set_list_get_union_set(			
+ isl_union_set *isl_union_set_list_get_union_set(			
 	 isl_union_set_list *list, int index);			
  isl_union_set_list *isl_union_set_list_set_at(			
 	 isl_union_set_list *list, int index,			
 	 isl_union_set *el);					
-  isl_union_set_list *isl_union_set_list_set_union_set(		
+ isl_union_set_list *isl_union_set_list_set_union_set(		
 	 struct isl_union_set_list *list, int index,		
 	 struct isl_union_set *el);				
 isl_stat isl_union_set_list_foreach( isl_union_set_list *list,	
@@ -257,8 +258,11 @@ isl_stat isl_union_set_list_foreach_scc( isl_union_set_list *list,
  isl_printer *isl_printer_print_union_set_list(			
 	 isl_printer *p,  isl_union_set_list *list);	
 void isl_union_set_list_dump( isl_union_set_list *list);  
+
+
 isl_union_set_list *isl_union_set_list_read_from_str(		
 	isl_ctx *ctx, const char *str);
+
 
  isl_union_set *isl_union_set_list_union(
 	 isl_union_set_list *list);
