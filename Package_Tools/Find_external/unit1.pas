@@ -66,8 +66,10 @@ var
 const
 //  srcPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Packages_2024/gtk-4.14.2';
 //  soPath = '/usr/lib/x86_64-linux-gnu/libgtk-4.so';
-  srcPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/SDL-3/packages/SDL3';
-  soPath = '/usr/local/lib/libSDL3.so';
+//  srcPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/SDL-3/packages/SDL3';
+//  soPath = '/usr/local/lib/libSDL3.so';
+  srcPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/isl/in_arbeit/pas';
+  soPath = '/usr/lib/x86_64-linux-gnu/libisl.so';
 begin
 
   LibHandle := SafeLoadLibrary(soPath);

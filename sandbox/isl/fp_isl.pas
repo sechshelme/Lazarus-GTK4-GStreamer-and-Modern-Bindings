@@ -11,36 +11,38 @@ const
   libisl = 'libisl-23.dll';
   {$ENDIF}
 
-  type
-    Tuint32_t=UInt32;
+type
+  Tuint32_t = uint32;
 
-  Tsize_t=SizeUInt;
+  Tsize_t = SizeUInt;
 
-  PFILE=type Pointer;
-
-
-{$IFDEF FPC}
-{$PACKRECORDS C}
-{$ENDIF}
-
-  type
-    Pisl_options = type Pointer;
-    Pisl_local_space = type Pointer;
-    PPisl_local_space=^Pisl_local_space;
-
-    Pisl_id_to_ast_expr=type Pointer; // ?????
-    Pisl_id_to_id=type Pointer;
-    Pisl_id_to_pw_aff=type Pointer;
-    Pisl_map_to_basic_set=type Pointer;
-    Pisl_stride_info=type Pointer;
+  PFILE = type Pointer;
 
 
-// === Konventiert am: 5-11-26 16:55:29 ===
+  {$IFDEF FPC}
+  {$PACKRECORDS C}
+  {$ENDIF}
+
+type
+  Pisl_options = type Pointer;
+  Pisl_local_space = type Pointer;
+  PPisl_local_space = ^Pisl_local_space;
+
+  Pisl_id_to_ast_expr = type Pointer;
+  Pisl_id_to_id = type Pointer;
+  Pisl_id_to_pw_aff = type Pointer;
+  Pisl_map_to_basic_set = type Pointer;
+  Pisl_stride_info = type Pointer;
+
+  Tmpz_t = Pointer; // ????
 
 
-{$DEFINE read_interface}
-//{$include fp_isl_includes.inc}
-{$UNDEF read_interface}
+  // === Konventiert am: 5-11-26 16:55:29 ===
+
+
+  {$DEFINE read_interface}
+  //{$include fp_isl_includes.inc}
+  {$UNDEF read_interface}
 
 implementation
 

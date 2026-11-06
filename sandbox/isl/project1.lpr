@@ -41,15 +41,14 @@ uses
   polynomial,
   schedule,
   schedule_node,
-
   set_,                         // unit name
   stream,
   stride_info,
   union_map,
   union_set,
   val,
-  val_gmp,
   vertices,
+  val_gmp,
 
   fp_isl;
 
@@ -58,5 +57,7 @@ uses
   end;
 
 begin
+  isl_aff_zero_on_domain_space(nil);
+//  isl_obj_int_vtable;
   main;
 end.
