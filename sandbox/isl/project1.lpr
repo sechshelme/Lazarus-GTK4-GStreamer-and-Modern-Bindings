@@ -37,11 +37,11 @@ uses
   mat,
   map,
   obj,
-
   polynomial_type,
   polynomial,
   schedule,
   schedule_node,
+
   set_,                         // unit name
   stream,
   stride_info,

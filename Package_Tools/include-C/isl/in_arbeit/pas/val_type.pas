@@ -12,6 +12,7 @@ uses
 
 type
   Pisl_val = type Pointer;
+  PPisl_val = ^Pisl_val;
   Pisl_val_list = type Pointer;
   Pisl_multi_val = type Pointer;
 

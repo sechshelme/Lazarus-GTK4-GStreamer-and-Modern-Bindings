@@ -3,35 +3,21 @@ unit stride_info;
 interface
 
 uses
-  fp_isl;
+  fp_isl, ctx, val_type, aff_type;
 
-{$IFDEF FPC}
-{$PACKRECORDS C}
-{$ENDIF}
+  {$IFDEF FPC}
+  {$PACKRECORDS C}
+  {$ENDIF}
 
 
-{
- * Use of this software is governed by the MIT license
-  }
-{$ifndef ISL_STRIDE_INFO_H}
-{$define ISL_STRIDE_INFO_H}
-{$include <isl/val_type.h>}
-{$include <isl/aff_type.h>}
-{$if defined(__cplusplus)}
-{$endif}
 type
-  Pisl_stride_info = ^Tisl_stride_info;
-  Tisl_stride_info = record
-      {undefined structure}
-    end;
+  Pisl_stride_info = type Pointer;
 
-
-function isl_stride_info_get_ctx(si:Pisl_stride_info):Pisl_ctx;cdecl;external libisl;
-function isl_stride_info_get_stride(si:Pisl_stride_info):Pisl_val;cdecl;external libisl;
-function isl_stride_info_get_offset(si:Pisl_stride_info):Pisl_aff;cdecl;external libisl;
-function isl_stride_info_free(si:Pisl_stride_info):Pisl_stride_info;cdecl;external libisl;
-function isl_stride_info_copy(si:Pisl_stride_info):Pisl_stride_info;cdecl;external libisl;
-{$endif}
+function isl_stride_info_get_ctx(si: Pisl_stride_info): Pisl_ctx; cdecl; external libisl;
+function isl_stride_info_get_stride(si: Pisl_stride_info): Pisl_val; cdecl; external libisl;
+function isl_stride_info_get_offset(si: Pisl_stride_info): Pisl_aff; cdecl; external libisl;
+function isl_stride_info_free(si: Pisl_stride_info): Pisl_stride_info; cdecl; external libisl;
+function isl_stride_info_copy(si: Pisl_stride_info): Pisl_stride_info; cdecl; external libisl;
 
 // === Konventiert am: 5-11-26 16:53:26 ===
 
