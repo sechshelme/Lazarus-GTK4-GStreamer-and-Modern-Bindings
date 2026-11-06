@@ -109,7 +109,7 @@ end;
 // In der so nicht vorhanden
 function isl_obj_int: Pisl_obj_vtable;
 begin
-//  isl_obj_int := @(isl_obj_int_vtable);
+  isl_obj_int := @(isl_obj_int_vtable);
 end;
 
 function isl_obj_val: Pisl_obj_vtable;
