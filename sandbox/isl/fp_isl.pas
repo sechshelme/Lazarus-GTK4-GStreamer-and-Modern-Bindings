@@ -28,6 +28,12 @@ const
     Pisl_local_space = type Pointer;
     PPisl_local_space=^Pisl_local_space;
 
+    Pisl_id_to_ast_expr=type Pointer; // ?????
+    Pisl_id_to_id=type Pointer;
+    Pisl_id_to_pw_aff=type Pointer;
+    Pisl_map_to_basic_set=type Pointer;
+    Pisl_stride_info=type Pointer;
+
 
 // === Konventiert am: 5-11-26 16:55:29 ===
 

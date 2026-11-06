@@ -18,6 +18,7 @@ type
   Pisl_basic_set = type Pointer;
   Pisl_basic_set_list = type Pointer;
   Pisl_set = type Pointer;
+  PPisl_set = ^Pisl_set;
   Pisl_set_list = type Pointer;
 
 function isl_basic_set_list_get_ctx(list: Pisl_basic_set_list): Pisl_ctx; cdecl; external libisl;

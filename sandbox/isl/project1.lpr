@@ -20,28 +20,28 @@ uses
   union_map_type,
   aff,
   local_space,
-
-
+  schedule_type,
+  ast_type,
   ast,
   ast_build,
-  ast_type,
   constraint,
   fixed_box,
   flow,
   hash,
+  maybe_templ,
   hmap,
   id,
   ilp,
   lp,
-  map,
+  vec,
   mat,
-  maybe_templ,
+  map,
   obj,
-  polynomial,
+
   polynomial_type,
+  polynomial,
   schedule,
   schedule_node,
-  schedule_type,
   set_,                         // unit name
   stream,
   stride_info,
@@ -49,8 +49,8 @@ uses
   union_set,
   val,
   val_gmp,
-  vec,
   vertices,
+
   fp_isl;
 
   procedure main;
