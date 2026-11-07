@@ -18,22 +18,12 @@ type
   Tsize_t = SizeUInt;
   PFILE = type Pointer;
 
-  {$IFDEF linux}
-  var
-    stdin: PFILE; cvar; external libc;
-    stdout: PFILE; cvar; external libc;
-    stderr: PFILE; cvar; external libc;
-  {$ENDIF}
+procedure free(p: pointer); cdecl; external libc;
+function malloc(size: SizeUInt): pointer; cdecl; external libc;
 
-  {$IFDEF windows}
-  function stdin: PFILE; inline;
-  function stdout: PFILE; inline;
-  function stderr: PFILE; inline;
-  {$ENDIF}
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF FPC}
+{$PACKRECORDS C}
+{$ENDIF}
 
 type
   Pisl_options = type Pointer;
@@ -60,24 +50,5 @@ implementation
 {$DEFINE read_implementation}
 {$include fp_isl_includes.inc}
 {$UNDEF read_implementation}
-
-{$IFDEF windows}
-function __iob_func: PFILE; cdecl; external libc;
-
-function stdin: PFILE; inline;
-begin
-  Result := __iob_func + 0;
-end;
-
-function stdout: PFILE; inline;
-begin
-  Result := __iob_func + 48;
-end;
-
-function stderr: PFILE; inline;
-begin
-  Result := __iob_func + 96;
-end;
-{$ENDIF}
 
 end.
