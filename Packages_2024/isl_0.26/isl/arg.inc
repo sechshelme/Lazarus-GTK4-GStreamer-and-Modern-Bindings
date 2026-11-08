@@ -73,12 +73,12 @@ type
             default_value: longint;
             end);
         4: (l: record
-            default_value: longint;
-            default_selected: longint;
-            set_: function(opt: pointer; val: longint): longint; cdecl;
+            default_value: Tclong;
+            default_selected: Tclong;
+            set_: function(opt: pointer; val: Tclong): longint; cdecl;
             end);
         5: (ul: record
-            default_value: dword;
+            default_value: Tculong;
             end);
         6: (str: record
             default_value: Pchar;

@@ -14,6 +14,17 @@ const
   {$ENDIF}
 
 type
+  {$IFDEF Linux}
+  Tculong = uint64;
+  Tclong = int64;
+  {$ENDIF}
+  {$IFDEF windows}
+  Tculong = uint32;
+  Tclong = int32;
+  {$ENDIF}
+  Pculong = ^Tculong;
+  Pclong = ^Tclong;
+
   Tuint32_t = uint32;
   Tsize_t = SizeUInt;
   PFILE = type Pointer;

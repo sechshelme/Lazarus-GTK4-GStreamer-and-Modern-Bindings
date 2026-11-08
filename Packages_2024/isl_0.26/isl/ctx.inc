@@ -4,7 +4,7 @@
 type
   Pisl_stats = ^Tisl_stats;
   Tisl_stats = record
-    gbr_solved_lps: longint;
+    gbr_solved_lps: Tclong;
   end;
 
 type
@@ -55,8 +55,11 @@ type
 function isl_malloc_or_die(ctx: Pisl_ctx; size: Tsize_t): pointer; cdecl; external libisl;
 function isl_calloc_or_die(ctx: Pisl_ctx; nmemb: Tsize_t; size: Tsize_t): pointer; cdecl; external libisl;
 function isl_realloc_or_die(ctx: Pisl_ctx; ptr: pointer; size: Tsize_t): pointer; cdecl; external libisl;
+
 procedure isl_handle_error(ctx: Pisl_ctx; error: Tisl_error; msg: Pchar; file_: Pchar; line: longint); cdecl; external libisl;
+
 function isl_ctx_options(ctx: Pisl_ctx): Pisl_options; cdecl; external libisl;
+
 function isl_ctx_alloc_with_options(args: Pisl_args; opt: pointer): Pisl_ctx; cdecl; external libisl;
 function isl_ctx_alloc: Pisl_ctx; cdecl; external libisl;
 function isl_ctx_peek_options(ctx: Pisl_ctx; args: Pisl_args): pointer; cdecl; external libisl;
@@ -64,11 +67,13 @@ function isl_ctx_parse_options(ctx: Pisl_ctx; argc: longint; argv: PPchar; flags
 procedure isl_ctx_ref(ctx: Pisl_ctx); cdecl; external libisl;
 procedure isl_ctx_deref(ctx: Pisl_ctx); cdecl; external libisl;
 procedure isl_ctx_free(ctx: Pisl_ctx); cdecl; external libisl;
+
 procedure isl_ctx_abort(ctx: Pisl_ctx); cdecl; external libisl;
 procedure isl_ctx_resume(ctx: Pisl_ctx); cdecl; external libisl;
 function isl_ctx_aborted(ctx: Pisl_ctx): longint; cdecl; external libisl;
-procedure isl_ctx_set_max_operations(ctx: Pisl_ctx; max_operations: dword); cdecl; external libisl;
-function isl_ctx_get_max_operations(ctx: Pisl_ctx): dword; cdecl; external libisl;
+
+procedure isl_ctx_set_max_operations(ctx: Pisl_ctx; max_operations: Tculong); cdecl; external libisl;
+function isl_ctx_get_max_operations(ctx: Pisl_ctx): Tculong; cdecl; external libisl;
 procedure isl_ctx_reset_operations(ctx: Pisl_ctx); cdecl; external libisl;
 function isl_ctx_last_error(ctx: Pisl_ctx): Tisl_error; cdecl; external libisl;
 function isl_ctx_last_error_msg(ctx: Pisl_ctx): Pchar; cdecl; external libisl;

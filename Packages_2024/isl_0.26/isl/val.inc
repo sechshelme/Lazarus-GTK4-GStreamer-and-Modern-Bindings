@@ -62,26 +62,31 @@ function isl_multi_val_reset_range_tuple_id(multi: Pisl_multi_val): Pisl_multi_v
 function isl_multi_val_reset_tuple_id(multi: Pisl_multi_val; _type: Tisl_dim_type): Pisl_multi_val; cdecl; external libisl;
 function isl_multi_val_product(multi1: Pisl_multi_val; multi2: Pisl_multi_val): Pisl_multi_val; cdecl; external libisl;
 function isl_multi_val_splice(multi1: Pisl_multi_val; in_pos: dword; out_pos: dword; multi2: Pisl_multi_val): Pisl_multi_val; cdecl; external libisl;
+
 function isl_val_zero(ctx: Pisl_ctx): Pisl_val; cdecl; external libisl;
 function isl_val_one(ctx: Pisl_ctx): Pisl_val; cdecl; external libisl;
 function isl_val_negone(ctx: Pisl_ctx): Pisl_val; cdecl; external libisl;
 function isl_val_nan(ctx: Pisl_ctx): Pisl_val; cdecl; external libisl;
 function isl_val_infty(ctx: Pisl_ctx): Pisl_val; cdecl; external libisl;
 function isl_val_neginfty(ctx: Pisl_ctx): Pisl_val; cdecl; external libisl;
-function isl_val_int_from_si(ctx: Pisl_ctx; i: longint): Pisl_val; cdecl; external libisl;
-function isl_val_int_from_ui(ctx: Pisl_ctx; u: dword): Pisl_val; cdecl; external libisl;
+function isl_val_int_from_si(ctx: Pisl_ctx; i: Tclong): Pisl_val; cdecl; external libisl;
+function isl_val_int_from_ui(ctx: Pisl_ctx; u: Tculong): Pisl_val; cdecl; external libisl;
 function isl_val_int_from_chunks(ctx: Pisl_ctx; n: Tsize_t; size: Tsize_t; chunks: pointer): Pisl_val; cdecl; external libisl;
+
 function isl_val_copy(v: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_free(v: Pisl_val): Pisl_val; cdecl; external libisl;
+
 function isl_val_get_ctx(val: Pisl_val): Pisl_ctx; cdecl; external libisl;
 function isl_val_get_hash(val: Pisl_val): Tuint32_t; cdecl; external libisl;
-function isl_val_get_num_si(v: Pisl_val): longint; cdecl; external libisl;
-function isl_val_get_den_si(v: Pisl_val): longint; cdecl; external libisl;
+function isl_val_get_num_si(v: Pisl_val): Tclong; cdecl; external libisl;
+function isl_val_get_den_si(v: Pisl_val): Tclong; cdecl; external libisl;
 function isl_val_get_den_val(v: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_get_d(v: Pisl_val): double; cdecl; external libisl;
 function isl_val_n_abs_num_chunks(v: Pisl_val; size: Tsize_t): Tisl_size; cdecl; external libisl;
 function isl_val_get_abs_num_chunks(v: Pisl_val; size: Tsize_t; chunks: pointer): Tisl_stat; cdecl; external libisl;
-function isl_val_set_si(v: Pisl_val; i: longint): Pisl_val; cdecl; external libisl;
+
+function isl_val_set_si(v: Pisl_val; i: Tclong): Pisl_val; cdecl; external libisl;
+
 function isl_val_abs(v: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_neg(v: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_inv(v: Pisl_val): Pisl_val; cdecl; external libisl;
@@ -93,16 +98,17 @@ function isl_val_pow2(v: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_min(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_max(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_add(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
-function isl_val_add_ui(v1: Pisl_val; v2: dword): Pisl_val; cdecl; external libisl;
+function isl_val_add_ui(v1: Pisl_val; v2: Tculong): Pisl_val; cdecl; external libisl;
 function isl_val_sub(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
-function isl_val_sub_ui(v1: Pisl_val; v2: dword): Pisl_val; cdecl; external libisl;
+function isl_val_sub_ui(v1: Pisl_val; v2: Tculong): Pisl_val; cdecl; external libisl;
 function isl_val_mul(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
-function isl_val_mul_ui(v1: Pisl_val; v2: dword): Pisl_val; cdecl; external libisl;
+function isl_val_mul_ui(v1: Pisl_val; v2: Tculong): Pisl_val; cdecl; external libisl;
 function isl_val_div(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
-function isl_val_div_ui(v1: Pisl_val; v2: dword): Pisl_val; cdecl; external libisl;
+function isl_val_div_ui(v1: Pisl_val; v2: Tculong): Pisl_val; cdecl; external libisl;
 function isl_val_mod(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_gcd(v1: Pisl_val; v2: Pisl_val): Pisl_val; cdecl; external libisl;
 function isl_val_gcdext(v1: Pisl_val; v2: Pisl_val; x: PPisl_val; y: PPisl_val): Pisl_val; cdecl; external libisl;
+
 function isl_val_sgn(v: Pisl_val): longint; cdecl; external libisl;
 function isl_val_is_zero(v: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_is_one(v: Pisl_val): Tisl_bool; cdecl; external libisl;
@@ -116,14 +122,16 @@ function isl_val_is_rat(v: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_is_nan(v: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_is_infty(v: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_is_neginfty(v: Pisl_val): Tisl_bool; cdecl; external libisl;
-function isl_val_cmp_si(v: Pisl_val; i: longint): longint; cdecl; external libisl;
+
+function isl_val_cmp_si(v: Pisl_val; i: Tclong): longint; cdecl; external libisl;
+
 function isl_val_lt(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_le(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_gt(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
-function isl_val_gt_si(v: Pisl_val; i: longint): Tisl_bool; cdecl; external libisl;
+function isl_val_gt_si(v: Pisl_val; i: Tclong): Tisl_bool; cdecl; external libisl;
 function isl_val_ge(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_eq(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
-function isl_val_eq_si(v: Pisl_val; i: longint): Tisl_bool; cdecl; external libisl;
+function isl_val_eq_si(v: Pisl_val; i: Tclong): Tisl_bool; cdecl; external libisl;
 function isl_val_ne(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_abs_eq(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
 function isl_val_is_divisible_by(v1: Pisl_val; v2: Pisl_val): Tisl_bool; cdecl; external libisl;
