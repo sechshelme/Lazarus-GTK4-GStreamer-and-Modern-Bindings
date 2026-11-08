@@ -4,7 +4,7 @@ interface
 
 const
   {$IFDEF Linux}
-  libpcre2_8 = 'pcre2-8';
+  libisl = 'pcre2-8';
   {$ENDIF}
 
   {$IFDEF Windows}
@@ -15,6 +15,7 @@ const
   Tuint8_t = uint8;
   Puint8_t = ^Tuint8_t;
   PPuint8_t = ^Puint8_t;
+  PPPuint8_t = ^PPuint8_t;
   Tuint16_t = uint16;
   Puint16_t = ^Tuint16_t;
   PPuint16_t = ^Puint16_t;
@@ -39,6 +40,8 @@ const
   PPint64_t = ^Pint64_t;
 
   Tsize_t=SizeUInt;
+  Psize_t=^Tsize_t;
+  PPsize_t=^Psize_t;
 
   {$IFDEF FPC}
 {$PACKRECORDS C}
@@ -381,43 +384,19 @@ const
   PCRE2_UNSET= not (Tsize_t(0));
 
 type
-  Ppcre2_real_general_context_8 = type Pointer;
-  Tpcre2_real_general_context_8 = Tpcre2_general_context_8;
+  Ppcre2_code = type Pointer ;
+  PPpcre2_code=^Ppcre2_code;
+  Ppcre2_general_context = type Pointer;
+  Ppcre2_compile_context = type Pointer;
+  Ppcre2_convert_context = type Pointer;
+  Ppcre2_match_context = type Pointer;
+  Ppcre2_match_data = type Pointer;
+  Ppcre2_jit_stack = type Pointer;
 
-  Ppcre2_real_compile_context_8 = = type Pointer;
+  Tpcre2_jit_callback = function (para1:pointer):Ppcre2_jit_stack;cdecl;
 
-  Tpcre2_real_compile_context_8 = Tpcre2_compile_context_8;
-  Ppcre2_real_match_context_8 = = type Pointer;
-
-  Tpcre2_real_match_context_8 = Tpcre2_match_context_8;
-  Ppcre2_real_convert_context_8 = = type Pointer;
-
-  Tpcre2_real_convert_context_8 = Tpcre2_convert_context_8;
-  Ppcre2_real_code_8 = = type Pointer;
-
-  Tpcre2_real_code_8 = Tpcre2_code_8;
-  Ppcre2_real_match_data_8 = = type Pointer;
-
-  Tpcre2_real_match_data_8 = Tpcre2_match_data_8;
-  Ppcre2_real_jit_stack_8 = = type Pointer;
-
-  Tpcre2_real_jit_stack_8 = Tpcre2_jit_stack_8;
-  Tpcre2_real_code_8 = Tpcre2_code;
-  Tpcre2_real_general_context_8 = Tpcre2_general_context;
-  Tpcre2_real_compile_context_8 = Tpcre2_compile_context;
-  Tpcre2_real_convert_context_8 = Tpcre2_convert_context;
-  Tpcre2_real_match_context_8 = Tpcre2_match_context;
-  Tpcre2_real_match_data_8 = Tpcre2_match_data;
-  Tpcre2_real_jit_stack_8 = Tpcre2_jit_stack;
-
-  Ppcre2_jit_callback_8 = ^Tpcre2_jit_callback_8;
-  Tpcre2_jit_callback_8 = function (para1:pointer):Ppcre2_jit_stack_8;cdecl;
-
-  Ppcre2_jit_callback = ^Tpcre2_jit_callback;
-  Tpcre2_jit_callback = function (para1:pointer):Ppcre2_jit_stack_8;cdecl;
-
-  Ppcre2_callout_block_8 = ^Tpcre2_callout_block_8;
-  Tpcre2_callout_block_8 = record
+  Ppcre2_callout_block = ^Tpcre2_callout_block;
+  Tpcre2_callout_block = record
       version : Tuint32_t;
       callout_number : Tuint32_t;
       capture_top : Tuint32_t;
@@ -435,10 +414,9 @@ type
       callout_string : TPCRE2_SPTR;
       callout_flags : Tuint32_t;
     end;
-  Tpcre2_callout_block_8 = Tpcre2_callout_block;
 
-  Ppcre2_callout_enumerate_block_8 = ^Tpcre2_callout_enumerate_block_8;
-  Tpcre2_callout_enumerate_block_8 = record
+  Ppcre2_callout_enumerate_block = ^Tpcre2_callout_enumerate_block;
+  Tpcre2_callout_enumerate_block = record
       version : Tuint32_t;
       pattern_position : Tsize_t;
       next_item_length : Tsize_t;
@@ -447,10 +425,9 @@ type
       callout_string_length : Tsize_t;
       callout_string : TPCRE2_SPTR;
     end;
-  Tpcre2_callout_enumerate_block_8 = Tpcre2_callout_enumerate_block;
 
-  Ppcre2_substitute_callout_block_8 = ^Tpcre2_substitute_callout_block_8;
-  Tpcre2_substitute_callout_block_8 = record
+  Ppcre2_substitute_callout_block = ^Tpcre2_substitute_callout_block;
+  Tpcre2_substitute_callout_block = record
       version : Tuint32_t;
       input : TPCRE2_SPTR;
       output : TPCRE2_SPTR;
@@ -459,192 +436,116 @@ type
       oveccount : Tuint32_t;
       subscount : Tuint32_t;
     end;
-  Tpcre2_substitute_callout_block_8 = Tpcre2_substitute_callout_block;
-{ --- Aufgelöste Funktionsprototypen (8-Bit / UTF-8) ---  }
+
+  Tcontext_copy_func1=procedure (para1:Tsize_t; para2:pointer);cdecl;
+Pcontext_copy_func1=^Tcontext_copy_func1;
+  Tcontext_copy_func2=procedure (para1:pointer; para2:pointer);cdecl;
+
+  Trecursion_guard_func=function (para1:Tuint32_t; para2:pointer):longint;cdecl;
+  Tset_callout_func=   function (para1:Ppcre2_callout_block; para2:pointer):longint;cdecl;
+
+  Tset_substitute_callout_func=function (para1:Ppcre2_substitute_callout_block; para2:pointer):longint;cdecl;
+
+  Trecursion_memory_management_func1=      procedure (para1:Tsize_t; para2:pointer);cdecl;
+  Precursion_memory_management_func1=^Trecursion_memory_management_func1;
+  Trecursion_memory_management_func2=             procedure (para1:pointer; para2:pointer);cdecl;
+
+  Tcallout_enumerate_func=     function (para1:Ppcre2_callout_enumerate_block; para2:pointer):longint;cdecl;
 
 function pcre2_config_8(para1:Tuint32_t; para2:pointer):longint;cdecl;external libisl;
-const
-  pcre2_config = pcre2_config_8;  
 
-function pcre2_general_context_copy_8(para1:Ppcre2_general_context_8):Ppcre2_general_context_8;cdecl;external libisl;
-function pcre2_general_context_create_8(para1:Pprocedure (para1:Tsize_t; para2:pointer); para2:procedure (para1:pointer; para2:pointer); para3:pointer):Ppcre2_general_context_8;cdecl;external libisl;
-procedure pcre2_general_context_free_8(para1:Ppcre2_general_context_8);cdecl;external libisl;
-const
-  pcre2_general_context_copy = pcre2_general_context_copy_8;  
-  pcre2_general_context_create = pcre2_general_context_create_8;  
-  pcre2_general_context_free = pcre2_general_context_free_8;  
+function pcre2_general_context_copy_8(para1:Ppcre2_general_context):Ppcre2_general_context;cdecl;external libisl;
+function pcre2_general_context_create_8(para1:Pcontext_copy_func1; para2:Tcontext_copy_func2; para3:pointer):Ppcre2_general_context;cdecl;external libisl;
+procedure pcre2_general_context_free_8(para1:Ppcre2_general_context);cdecl;external libisl;
 
-function pcre2_compile_context_copy_8(para1:Ppcre2_compile_context_8):Ppcre2_compile_context_8;cdecl;external libisl;
-function pcre2_compile_context_create_8(para1:Ppcre2_general_context_8):Ppcre2_compile_context_8;cdecl;external libisl;
-procedure pcre2_compile_context_free_8(para1:Ppcre2_compile_context_8);cdecl;external libisl;
-function pcre2_set_bsr_8(para1:Ppcre2_compile_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_character_tables_8(para1:Ppcre2_compile_context_8; para2:Puint8_t):longint;cdecl;external libisl;
-function pcre2_set_compile_extra_options_8(para1:Ppcre2_compile_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_max_pattern_length_8(para1:Ppcre2_compile_context_8; para2:Tsize_t):longint;cdecl;external libisl;
-function pcre2_set_newline_8(para1:Ppcre2_compile_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_parens_nest_limit_8(para1:Ppcre2_compile_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_compile_recursion_guard_8(para1:Ppcre2_compile_context_8; para2:function (para1:Tuint32_t; para2:pointer):longint; para3:pointer):longint;cdecl;external libisl;
-const
-  pcre2_compile_context_copy = pcre2_compile_context_copy_8;  
-  pcre2_compile_context_create = pcre2_compile_context_create_8;  
-  pcre2_compile_context_free = pcre2_compile_context_free_8;  
-  pcre2_set_bsr = pcre2_set_bsr_8;  
-  pcre2_set_character_tables = pcre2_set_character_tables_8;  
-  pcre2_set_compile_extra_options = pcre2_set_compile_extra_options_8;  
-  pcre2_set_max_pattern_length = pcre2_set_max_pattern_length_8;  
-  pcre2_set_newline = pcre2_set_newline_8;  
-  pcre2_set_parens_nest_limit = pcre2_set_parens_nest_limit_8;  
-  pcre2_set_compile_recursion_guard = pcre2_set_compile_recursion_guard_8;  
+function pcre2_compile_context_copy_8(para1:Ppcre2_compile_context):Ppcre2_compile_context;cdecl;external libisl;
+function pcre2_compile_context_create_8(para1:Ppcre2_general_context):Ppcre2_compile_context;cdecl;external libisl;
+procedure pcre2_compile_context_free_8(para1:Ppcre2_compile_context);cdecl;external libisl;
+function pcre2_set_bsr_8(para1:Ppcre2_compile_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_character_tables_8(para1:Ppcre2_compile_context; para2:Puint8_t):longint;cdecl;external libisl;
+function pcre2_set_compile_extra_options_8(para1:Ppcre2_compile_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_max_pattern_length_8(para1:Ppcre2_compile_context; para2:Tsize_t):longint;cdecl;external libisl;
+function pcre2_set_newline_8(para1:Ppcre2_compile_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_parens_nest_limit_8(para1:Ppcre2_compile_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_compile_recursion_guard_8(para1:Ppcre2_compile_context; para2:Trecursion_guard_func; para3:pointer):longint;cdecl;external libisl;
 
-function pcre2_convert_context_copy_8(para1:Ppcre2_convert_context_8):Ppcre2_convert_context_8;cdecl;external libisl;
-function pcre2_convert_context_create_8(para1:Ppcre2_general_context_8):Ppcre2_convert_context_8;cdecl;external libisl;
-procedure pcre2_convert_context_free_8(para1:Ppcre2_convert_context_8);cdecl;external libisl;
-function pcre2_set_glob_escape_8(para1:Ppcre2_convert_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_glob_separator_8(para1:Ppcre2_convert_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-const
-  pcre2_convert_context_copy = pcre2_convert_context_copy_8;  
-  pcre2_convert_context_create = pcre2_convert_context_create_8;  
-  pcre2_convert_context_free = pcre2_convert_context_free_8;  
-  pcre2_set_glob_escape = pcre2_set_glob_escape_8;  
-  pcre2_set_glob_separator = pcre2_set_glob_separator_8;  
+function pcre2_convert_context_copy_8(para1:Ppcre2_convert_context):Ppcre2_convert_context;cdecl;external libisl;
+function pcre2_convert_context_create_8(para1:Ppcre2_general_context):Ppcre2_convert_context;cdecl;external libisl;
+procedure pcre2_convert_context_free_8(para1:Ppcre2_convert_context);cdecl;external libisl;
+function pcre2_set_glob_escape_8(para1:Ppcre2_convert_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_glob_separator_8(para1:Ppcre2_convert_context; para2:Tuint32_t):longint;cdecl;external libisl;
 
 function pcre2_pattern_convert_8(para1:TPCRE2_SPTR; para2:Tsize_t; para3:Tuint32_t; para4:PPuint8_t; para5:Psize_t; 
-           para6:Ppcre2_convert_context_8):longint;cdecl;external libisl;
+           para6:Ppcre2_convert_context):longint;cdecl;external libisl;
 procedure pcre2_converted_pattern_free_8(para1:Puint8_t);cdecl;external libisl;
-const
-  pcre2_pattern_convert = pcre2_pattern_convert_8;  
-  pcre2_converted_pattern_free = pcre2_converted_pattern_free_8;  
 
-function pcre2_match_context_copy_8(para1:Ppcre2_match_context_8):Ppcre2_match_context_8;cdecl;external libisl;
-function pcre2_match_context_create_8(para1:Ppcre2_general_context_8):Ppcre2_match_context_8;cdecl;external libisl;
-procedure pcre2_match_context_free_8(para1:Ppcre2_match_context_8);cdecl;external libisl;
-function pcre2_set_callout_8(para1:Ppcre2_match_context_8; para2:function (para1:Ppcre2_callout_block_8; para2:pointer):longint; para3:pointer):longint;cdecl;external libisl;
-function pcre2_set_substitute_callout_8(para1:Ppcre2_match_context_8; para2:function (para1:Ppcre2_substitute_callout_block_8; para2:pointer):longint; para3:pointer):longint;cdecl;external libisl;
-function pcre2_set_depth_limit_8(para1:Ppcre2_match_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_heap_limit_8(para1:Ppcre2_match_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_match_limit_8(para1:Ppcre2_match_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_offset_limit_8(para1:Ppcre2_match_context_8; para2:Tsize_t):longint;cdecl;external libisl;
-function pcre2_set_recursion_limit_8(para1:Ppcre2_match_context_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_set_recursion_memory_management_8(para1:Ppcre2_match_context_8; para2:Pprocedure (para1:Tsize_t; para2:pointer); para3:procedure (para1:pointer; para2:pointer); para4:pointer):longint;cdecl;external libisl;
-const
-  pcre2_match_context_copy = pcre2_match_context_copy_8;  
-  pcre2_match_context_create = pcre2_match_context_create_8;  
-  pcre2_match_context_free = pcre2_match_context_free_8;  
-  pcre2_set_callout = pcre2_set_callout_8;  
-  pcre2_set_substitute_callout = pcre2_set_substitute_callout_8;  
-  pcre2_set_depth_limit = pcre2_set_depth_limit_8;  
-  pcre2_set_heap_limit = pcre2_set_heap_limit_8;  
-  pcre2_set_match_limit = pcre2_set_match_limit_8;  
-  pcre2_set_offset_limit = pcre2_set_offset_limit_8;  
-  pcre2_set_recursion_limit = pcre2_set_recursion_limit_8;  
-  pcre2_set_recursion_memory_management = pcre2_set_recursion_memory_management_8;  
+function pcre2_match_context_copy_8(para1:Ppcre2_match_context):Ppcre2_match_context;cdecl;external libisl;
+function pcre2_match_context_create_8(para1:Ppcre2_general_context):Ppcre2_match_context;cdecl;external libisl;
+procedure pcre2_match_context_free_8(para1:Ppcre2_match_context);cdecl;external libisl;
+function pcre2_set_callout_8(para1:Ppcre2_match_context; para2:Tset_callout_func; para3:pointer):longint;cdecl;external libisl;
+function pcre2_set_substitute_callout_8(para1:Ppcre2_match_context; para2:Tset_substitute_callout_func; para3:pointer):longint;cdecl;external libisl;
+function pcre2_set_depth_limit_8(para1:Ppcre2_match_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_heap_limit_8(para1:Ppcre2_match_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_match_limit_8(para1:Ppcre2_match_context; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_set_offset_limit_8(para1:Ppcre2_match_context; para2:Tsize_t):longint;cdecl;external libisl;
+function pcre2_set_recursion_limit_8(para1:Ppcre2_match_context; para2:Tuint32_t):longint;cdecl;external libisl;
+
+function pcre2_set_recursion_memory_management_8(para1:Ppcre2_match_context; para2:Precursion_memory_management_func1; para3:Trecursion_memory_management_func2; para4:pointer):longint;cdecl;external libisl;
 
 function pcre2_compile_8(para1:TPCRE2_SPTR; para2:Tsize_t; para3:Tuint32_t; para4:Plongint; para5:Psize_t; 
-           para6:Ppcre2_compile_context_8):Ppcre2_code_8;cdecl;external libisl;
-procedure pcre2_code_free_8(para1:Ppcre2_code_8);cdecl;external libisl;
-function pcre2_code_copy_8(para1:Ppcre2_code_8):Ppcre2_code_8;cdecl;external libisl;
-function pcre2_code_copy_with_tables_8(para1:Ppcre2_code_8):Ppcre2_code_8;cdecl;external libisl;
-const
-  pcre2_compile = pcre2_compile_8;  
-  pcre2_code_free = pcre2_code_free_8;  
-  pcre2_code_copy = pcre2_code_copy_8;  
-  pcre2_code_copy_with_tables = pcre2_code_copy_with_tables_8;  
+           para6:Ppcre2_compile_context):Ppcre2_code;cdecl;external libisl;
+procedure pcre2_code_free_8(para1:Ppcre2_code);cdecl;external libisl;
+function pcre2_code_copy_8(para1:Ppcre2_code):Ppcre2_code;cdecl;external libisl;
+function pcre2_code_copy_with_tables_8(para1:Ppcre2_code):Ppcre2_code;cdecl;external libisl;
 
-function pcre2_pattern_info_8(para1:Ppcre2_code_8; para2:Tuint32_t; para3:pointer):longint;cdecl;external libisl;
-function pcre2_callout_enumerate_8(para1:Ppcre2_code_8; para2:function (para1:Ppcre2_callout_enumerate_block_8; para2:pointer):longint; para3:pointer):longint;cdecl;external libisl;
-const
-  pcre2_pattern_info = pcre2_pattern_info_8;  
-  pcre2_callout_enumerate = pcre2_callout_enumerate_8;  
+function pcre2_pattern_info_8(para1:Ppcre2_code; para2:Tuint32_t; para3:pointer):longint;cdecl;external libisl;
+function pcre2_callout_enumerate_8(para1:Ppcre2_code; para2:Tcallout_enumerate_func; para3:pointer):longint;cdecl;external libisl;
 
-function pcre2_match_data_create_8(para1:Tuint32_t; para2:Ppcre2_general_context_8):Ppcre2_match_data_8;cdecl;external libisl;
-function pcre2_match_data_create_from_pattern_8(para1:Ppcre2_code_8; para2:Ppcre2_general_context_8):Ppcre2_match_data_8;cdecl;external libisl;
-function pcre2_dfa_match_8(para1:Ppcre2_code_8; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
-           para6:Ppcre2_match_data_8; para7:Ppcre2_match_context_8; para8:Plongint; para9:Tsize_t):longint;cdecl;external libisl;
-function pcre2_match_8(para1:Ppcre2_code_8; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
-           para6:Ppcre2_match_data_8; para7:Ppcre2_match_context_8):longint;cdecl;external libisl;
-procedure pcre2_match_data_free_8(para1:Ppcre2_match_data_8);cdecl;external libisl;
-function pcre2_get_mark_8(para1:Ppcre2_match_data_8):TPCRE2_SPTR;cdecl;external libisl;
-function pcre2_get_match_data_size_8(para1:Ppcre2_match_data_8):Tsize_t;cdecl;external libisl;
-function pcre2_get_ovector_count_8(para1:Ppcre2_match_data_8):Tuint32_t;cdecl;external libisl;
-function pcre2_get_ovector_pointer_8(para1:Ppcre2_match_data_8):Psize_t;cdecl;external libisl;
-function pcre2_get_startchar_8(para1:Ppcre2_match_data_8):Tsize_t;cdecl;external libisl;
-const
-  pcre2_match_data_create = pcre2_match_data_create_8;  
-  pcre2_match_data_create_from_pattern = pcre2_match_data_create_from_pattern_8;  
-  pcre2_dfa_match = pcre2_dfa_match_8;  
-  pcre2_match = pcre2_match_8;  
-  pcre2_match_data_free = pcre2_match_data_free_8;  
-  pcre2_get_mark = pcre2_get_mark_8;  
-  pcre2_get_match_data_size = pcre2_get_match_data_size_8;  
-  pcre2_get_ovector_count = pcre2_get_ovector_count_8;  
-  pcre2_get_ovector_pointer = pcre2_get_ovector_pointer_8;  
-  pcre2_get_startchar = pcre2_get_startchar_8;  
+function pcre2_match_data_create_8(para1:Tuint32_t; para2:Ppcre2_general_context):Ppcre2_match_data;cdecl;external libisl;
+function pcre2_match_data_create_from_pattern_8(para1:Ppcre2_code; para2:Ppcre2_general_context):Ppcre2_match_data;cdecl;external libisl;
+function pcre2_dfa_match_8(para1:Ppcre2_code; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
+           para6:Ppcre2_match_data; para7:Ppcre2_match_context; para8:Plongint; para9:Tsize_t):longint;cdecl;external libisl;
+function pcre2_match_8(para1:Ppcre2_code; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
+           para6:Ppcre2_match_data; para7:Ppcre2_match_context):longint;cdecl;external libisl;
+procedure pcre2_match_data_free_8(para1:Ppcre2_match_data);cdecl;external libisl;
+function pcre2_get_mark_8(para1:Ppcre2_match_data):TPCRE2_SPTR;cdecl;external libisl;
+function pcre2_get_match_data_size_8(para1:Ppcre2_match_data):Tsize_t;cdecl;external libisl;
+function pcre2_get_ovector_count_8(para1:Ppcre2_match_data):Tuint32_t;cdecl;external libisl;
+function pcre2_get_ovector_pointer_8(para1:Ppcre2_match_data):Psize_t;cdecl;external libisl;
+function pcre2_get_startchar_8(para1:Ppcre2_match_data):Tsize_t;cdecl;external libisl;
 
-function pcre2_substring_copy_byname_8(para1:Ppcre2_match_data_8; para2:TPCRE2_SPTR; para3:Puint8_t; para4:Psize_t):longint;cdecl;external libisl;
-function pcre2_substring_copy_bynumber_8(para1:Ppcre2_match_data_8; para2:Tuint32_t; para3:Puint8_t; para4:Psize_t):longint;cdecl;external libisl;
+function pcre2_substring_copy_byname_8(para1:Ppcre2_match_data; para2:TPCRE2_SPTR; para3:Puint8_t; para4:Psize_t):longint;cdecl;external libisl;
+function pcre2_substring_copy_bynumber_8(para1:Ppcre2_match_data; para2:Tuint32_t; para3:Puint8_t; para4:Psize_t):longint;cdecl;external libisl;
 procedure pcre2_substring_free_8(para1:Puint8_t);cdecl;external libisl;
-function pcre2_substring_get_byname_8(para1:Ppcre2_match_data_8; para2:TPCRE2_SPTR; para3:PPuint8_t; para4:Psize_t):longint;cdecl;external libisl;
-function pcre2_substring_get_bynumber_8(para1:Ppcre2_match_data_8; para2:Tuint32_t; para3:PPuint8_t; para4:Psize_t):longint;cdecl;external libisl;
-function pcre2_substring_length_byname_8(para1:Ppcre2_match_data_8; para2:TPCRE2_SPTR; para3:Psize_t):longint;cdecl;external libisl;
-function pcre2_substring_length_bynumber_8(para1:Ppcre2_match_data_8; para2:Tuint32_t; para3:Psize_t):longint;cdecl;external libisl;
-function pcre2_substring_nametable_scan_8(para1:Ppcre2_code_8; para2:TPCRE2_SPTR; para3:PPCRE2_SPTR; para4:PPCRE2_SPTR):longint;cdecl;external libisl;
-function pcre2_substring_number_from_name_8(para1:Ppcre2_code_8; para2:TPCRE2_SPTR):longint;cdecl;external libisl;
+function pcre2_substring_get_byname_8(para1:Ppcre2_match_data; para2:TPCRE2_SPTR; para3:PPuint8_t; para4:Psize_t):longint;cdecl;external libisl;
+function pcre2_substring_get_bynumber_8(para1:Ppcre2_match_data; para2:Tuint32_t; para3:PPuint8_t; para4:Psize_t):longint;cdecl;external libisl;
+function pcre2_substring_length_byname_8(para1:Ppcre2_match_data; para2:TPCRE2_SPTR; para3:Psize_t):longint;cdecl;external libisl;
+function pcre2_substring_length_bynumber_8(para1:Ppcre2_match_data; para2:Tuint32_t; para3:Psize_t):longint;cdecl;external libisl;
+function pcre2_substring_nametable_scan_8(para1:Ppcre2_code; para2:TPCRE2_SPTR; para3:PPCRE2_SPTR; para4:PPCRE2_SPTR):longint;cdecl;external libisl;
+function pcre2_substring_number_from_name_8(para1:Ppcre2_code; para2:TPCRE2_SPTR):longint;cdecl;external libisl;
 procedure pcre2_substring_list_free_8(para1:PPCRE2_SPTR);cdecl;external libisl;
-function pcre2_substring_list_get_8(para1:Ppcre2_match_data_8; para2:PPPuint8_t; para3:PPsize_t):longint;cdecl;external libisl;
-const
-  pcre2_substring_copy_byname = pcre2_substring_copy_byname_8;  
-  pcre2_substring_copy_bynumber = pcre2_substring_copy_bynumber_8;  
-  pcre2_substring_free = pcre2_substring_free_8;  
-  pcre2_substring_get_byname = pcre2_substring_get_byname_8;  
-  pcre2_substring_get_bynumber = pcre2_substring_get_bynumber_8;  
-  pcre2_substring_length_byname = pcre2_substring_length_byname_8;  
-  pcre2_substring_length_bynumber = pcre2_substring_length_bynumber_8;  
-  pcre2_substring_nametable_scan = pcre2_substring_nametable_scan_8;  
-  pcre2_substring_number_from_name = pcre2_substring_number_from_name_8;  
-  pcre2_substring_list_free = pcre2_substring_list_free_8;  
-  pcre2_substring_list_get = pcre2_substring_list_get_8;  
+function pcre2_substring_list_get_8(para1:Ppcre2_match_data; para2:PPPuint8_t; para3:PPsize_t):longint;cdecl;external libisl;
 
-function pcre2_serialize_encode_8(para1:PPpcre2_code_8; para2:Tint32_t; para3:PPuint8_t; para4:Psize_t; para5:Ppcre2_general_context_8):Tint32_t;cdecl;external libisl;
-function pcre2_serialize_decode_8(para1:PPpcre2_code_8; para2:Tint32_t; para3:Puint8_t; para4:Ppcre2_general_context_8):Tint32_t;cdecl;external libisl;
+function pcre2_serialize_encode_8(para1:PPpcre2_code; para2:Tint32_t; para3:PPuint8_t; para4:Psize_t; para5:Ppcre2_general_context):Tint32_t;cdecl;external libisl;
+function pcre2_serialize_decode_8(para1:PPpcre2_code; para2:Tint32_t; para3:Puint8_t; para4:Ppcre2_general_context):Tint32_t;cdecl;external libisl;
 function pcre2_serialize_get_number_of_codes_8(para1:Puint8_t):Tint32_t;cdecl;external libisl;
 procedure pcre2_serialize_free_8(para1:Puint8_t);cdecl;external libisl;
-const
-  pcre2_serialize_encode = pcre2_serialize_encode_8;  
-  pcre2_serialize_decode = pcre2_serialize_decode_8;  
-  pcre2_serialize_get_number_of_codes = pcre2_serialize_get_number_of_codes_8;  
-  pcre2_serialize_free = pcre2_serialize_free_8;  
 
-function pcre2_substitute_8(para1:Ppcre2_code_8; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
-           para6:Ppcre2_match_data_8; para7:Ppcre2_match_context_8; para8:TPCRE2_SPTR; para9:Tsize_t; para10:Puint8_t; 
+function pcre2_substitute_8(para1:Ppcre2_code; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
+           para6:Ppcre2_match_data; para7:Ppcre2_match_context; para8:TPCRE2_SPTR; para9:Tsize_t; para10:Puint8_t; 
            para11:Psize_t):longint;cdecl;external libisl;
-const
-  pcre2_substitute = pcre2_substitute_8;  
 
-function pcre2_jit_compile_8(para1:Ppcre2_code_8; para2:Tuint32_t):longint;cdecl;external libisl;
-function pcre2_jit_match_8(para1:Ppcre2_code_8; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
-           para6:Ppcre2_match_data_8; para7:Ppcre2_match_context_8):longint;cdecl;external libisl;
-procedure pcre2_jit_free_unused_memory_8(para1:Ppcre2_general_context_8);cdecl;external libisl;
-function pcre2_jit_stack_create_8(para1:Tsize_t; para2:Tsize_t; para3:Ppcre2_general_context_8):Ppcre2_jit_stack_8;cdecl;external libisl;
-procedure pcre2_jit_stack_assign_8(para1:Ppcre2_match_context_8; para2:Tpcre2_jit_callback_8; para3:pointer);cdecl;external libisl;
-procedure pcre2_jit_stack_free_8(para1:Ppcre2_jit_stack_8);cdecl;external libisl;
-const
-  pcre2_jit_compile = pcre2_jit_compile_8;  
-  pcre2_jit_match = pcre2_jit_match_8;  
-  pcre2_jit_free_unused_memory = pcre2_jit_free_unused_memory_8;  
-  pcre2_jit_stack_create = pcre2_jit_stack_create_8;  
-  pcre2_jit_stack_assign = pcre2_jit_stack_assign_8;  
-  pcre2_jit_stack_free = pcre2_jit_stack_free_8;  
+function pcre2_jit_compile_8(para1:Ppcre2_code; para2:Tuint32_t):longint;cdecl;external libisl;
+function pcre2_jit_match_8(para1:Ppcre2_code; para2:TPCRE2_SPTR; para3:Tsize_t; para4:Tsize_t; para5:Tuint32_t; 
+           para6:Ppcre2_match_data; para7:Ppcre2_match_context):longint;cdecl;external libisl;
+procedure pcre2_jit_free_unused_memory_8(para1:Ppcre2_general_context);cdecl;external libisl;
+function pcre2_jit_stack_create_8(para1:Tsize_t; para2:Tsize_t; para3:Ppcre2_general_context):Ppcre2_jit_stack;cdecl;external libisl;
+procedure pcre2_jit_stack_assign_8(para1:Ppcre2_match_context; para2:Tpcre2_jit_callback; para3:pointer);cdecl;external libisl;
+procedure pcre2_jit_stack_free_8(para1:Ppcre2_jit_stack);cdecl;external libisl;
 
 function pcre2_get_error_message_8(para1:longint; para2:Puint8_t; para3:Tsize_t):longint;cdecl;external libisl;
-function pcre2_maketables_8(para1:Ppcre2_general_context_8):Puint8_t;cdecl;external libisl;
-procedure pcre2_maketables_free_8(para1:Ppcre2_general_context_8; para2:Puint8_t);cdecl;external libisl;
-const
-  pcre2_get_error_message = pcre2_get_error_message_8;  
-  pcre2_maketables = pcre2_maketables_8;  
-  pcre2_maketables_free = pcre2_maketables_free_8;  
-{ C++ end of extern C conditionnal removed }
-{$endif}
-{ PCRE2_H_IDEMPOTENT_GUARD  }
+function pcre2_maketables_8(para1:Ppcre2_general_context):Puint8_t;cdecl;external libisl;
+procedure pcre2_maketables_free_8(para1:Ppcre2_general_context; para2:Puint8_t);cdecl;external libisl;
 
 // === Konventiert am: 8-11-26 15:59:52 ===
 
