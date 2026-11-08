@@ -2,198 +2,127 @@ unit fp_pcre2_8;
 
 interface
 
-uses
-  fp_isl;
+const
+  {$IFDEF Linux}
+  libpcre2_8 = 'pcre2-8';
+  {$ENDIF}
 
-{$IFDEF FPC}
+  {$IFDEF Windows}
+  libpcre2_8 = 'libpcre2-8.dll';
+  {$ENDIF}
+
+  type
+  Tuint8_t = uint8;
+  Puint8_t = ^Tuint8_t;
+  PPuint8_t = ^Puint8_t;
+  Tuint16_t = uint16;
+  Puint16_t = ^Tuint16_t;
+  PPuint16_t = ^Puint16_t;
+  Tuint32_t = uint32;
+  Puint32_t = ^Tuint32_t;
+  PPuint32_t = ^Puint32_t;
+  Tuint64_t = uint64;
+  Puint64_t = ^Tuint64_t;
+  PPuint64_t = ^Puint64_t;
+
+  Tint8_t = int8;
+  Pint8_t = ^Tint8_t;
+  PPint8_t = ^Pint8_t;
+  Tint16_t = int16;
+  Pint16_t = ^Tint16_t;
+  PPint16_t = ^Pint16_t;
+  Tint32_t = int32;
+  Pint32_t = ^Tint32_t;
+  PPint32_t = ^Pint32_t;
+  Tint64_t = int64;
+  Pint64_t = ^Tint64_t;
+  PPint64_t = ^Pint64_t;
+
+  Tsize_t=SizeUInt;
+
+  {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
 
-{************************************************
-*       Perl-Compatible Regular Expressions      *
-************************************************ }
-{ Dies ist der konvertierte und voll aufgelöste öffentliche 
-   Header für die PCRE2 8-Bit (UTF-8) API.  }
-{$ifndef PCRE2_H_IDEMPOTENT_GUARD}
-{$define PCRE2_H_IDEMPOTENT_GUARD}
-{$include <limits.h>}
-{$include <stdlib.h>}
-{$include <inttypes.h>}
-{ C++ extern C conditionnal removed }
-
 const
   PCRE2_MAJOR = 10;  
   PCRE2_MINOR = 42;  
-{$define PCRE2_PRERELEASE}
-  PCRE2_DATE = '2022-12-11';  
-{ When an application links to a PCRE DLL in Windows, the symbols that are
-imported have to be identified as such. When building PCRE2, the appropriate
-export setting is defined in pcre2_internal.h, which includes this file. So we
-don't change existing definitions of PCRE2_EXP_DECL.  }
-{ When compiling with the MSVC compiler, it is sometimes necessary to include
-a "calling convention" before exported function names. (This is secondhand
-information; I know nothing about MSVC myself). For example, something like
-
-  void __cdecl function(....)
-
-might be needed. In order so make this easy, all the exported functions have
-PCRE2_CALL_CONVENTION just before their names. It is rarely needed; if not
-set, we ensure here that it has no effect.  }
-{$ifndef PCRE2_CALL_CONVENTION}
-{$define PCRE2_CALL_CONVENTION}
-{$endif}
-{ Have to include limits.h, stdlib.h, and inttypes.h to ensure that size_t and
-uint8_t, UCHAR_MAX, etc are defined. Some systems that do have inttypes.h do
-not have stdint.h, which is why we use inttypes.h, which according to the C
-standard is a superset of stdint.h. If inttypes.h is not available the build
-will break and the relevant values must be provided by some other means.  }
-{$include <limits.h>}
-{$include <stdlib.h>}
-{$include <inttypes.h>}
-{ Allow for C++ users compiling this directly.  }
-{ C++ extern C conditionnal removed }
-{ The following option bits can be passed to pcre2_compile(), pcre2_match(),
-or pcre2_dfa_match(). PCRE2_NO_UTF_CHECK affects only the function to which it
-is passed. Put these bits at the most significant end of the options word so
-others can be added next to them  }
 
 const
   PCRE2_ANCHORED = $80000000;  
   PCRE2_NO_UTF_CHECK = $40000000;  
-  PCRE2_ENDANCHORED = $20000000;  
-{ The following option bits can be passed only to pcre2_compile(). However,
-they may affect compilation, JIT compilation, and/or interpretive execution.
-The following tags indicate which:
+  PCRE2_ENDANCHORED = $20000000;
 
-C   alters what is compiled by pcre2_compile()
-J   alters what is compiled by pcre2_jit_compile()
-M   is inspected during pcre2_match() execution
-D   is inspected during pcre2_dfa_match() execution
- }
-{ C        }
-  PCRE2_ALLOW_EMPTY_CLASS = $00000001;  
-{ C        }
-  PCRE2_ALT_BSUX = $00000002;  
-{ C        }
-  PCRE2_AUTO_CALLOUT = $00000004;  
-{ C        }
-  PCRE2_CASELESS = $00000008;  
-{   J M D  }
-  PCRE2_DOLLAR_ENDONLY = $00000010;  
-{ C        }
-  PCRE2_DOTALL = $00000020;  
-{ C        }
-  PCRE2_DUPNAMES = $00000040;  
-{ C        }
-  PCRE2_EXTENDED = $00000080;  
-{   J M D  }
-  PCRE2_FIRSTLINE = $00000100;  
-{ C J M    }
-  PCRE2_MATCH_UNSET_BACKREF = $00000200;  
-{ C        }
-  PCRE2_MULTILINE = $00000400;  
-{ C        }
-  PCRE2_NEVER_UCP = $00000800;  
-{ C        }
-  PCRE2_NEVER_UTF = $00001000;  
-{ C        }
-  PCRE2_NO_AUTO_CAPTURE = $00002000;  
-{ C        }
-  PCRE2_NO_AUTO_POSSESS = $00004000;  
-{ C        }
-  PCRE2_NO_DOTSTAR_ANCHOR = $00008000;  
-{   J M D  }
-  PCRE2_NO_START_OPTIMIZE = $00010000;  
-{ C J M D  }
-  PCRE2_UCP = $00020000;  
-{ C        }
-  PCRE2_UNGREEDY = $00040000;  
-{ C J M D  }
-  PCRE2_UTF = $00080000;  
-{ C        }
-  PCRE2_NEVER_BACKSLASH_C = $00100000;  
-{   J M D  }
-  PCRE2_ALT_CIRCUMFLEX = $00200000;  
-{ C        }
-  PCRE2_ALT_VERBNAMES = $00400000;  
-{   J M D  }
-  PCRE2_USE_OFFSET_LIMIT = $00800000;  
-{ C        }
-  PCRE2_EXTENDED_MORE = $01000000;  
-{ C        }
-  PCRE2_LITERAL = $02000000;  
-{   J M D  }
-  PCRE2_MATCH_INVALID_UTF = $04000000;  
-{ An additional compile options word is available in the compile context.  }
-{ C  }
-  PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES = $00000001;  
-{ C  }
-  PCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL = $00000002;  
-{ C  }
-  PCRE2_EXTRA_MATCH_WORD = $00000004;  
-{ C  }
-  PCRE2_EXTRA_MATCH_LINE = $00000008;  
-{ C  }
-  PCRE2_EXTRA_ESCAPED_CR_IS_LF = $00000010;  
-{ C  }
-  PCRE2_EXTRA_ALT_BSUX = $00000020;  
-{ C  }
-  PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = $00000040;  
-{ These are for pcre2_jit_compile().  }
-{ For full matching  }
-  PCRE2_JIT_COMPLETE = $00000001;  
+  PCRE2_ALLOW_EMPTY_CLASS = $00000001;
+  PCRE2_ALT_BSUX = $00000002;
+  PCRE2_AUTO_CALLOUT = $00000004;
+  PCRE2_CASELESS = $00000008;
+  PCRE2_DOLLAR_ENDONLY = $00000010;
+  PCRE2_DOTALL = $00000020;
+  PCRE2_DUPNAMES = $00000040;
+  PCRE2_EXTENDED = $00000080;
+  PCRE2_FIRSTLINE = $00000100;
+  PCRE2_MATCH_UNSET_BACKREF = $00000200;
+  PCRE2_MULTILINE = $00000400;
+  PCRE2_NEVER_UCP = $00000800;
+  PCRE2_NEVER_UTF = $00001000;
+  PCRE2_NO_AUTO_CAPTURE = $00002000;
+  PCRE2_NO_AUTO_POSSESS = $00004000;
+  PCRE2_NO_DOTSTAR_ANCHOR = $00008000;
+  PCRE2_NO_START_OPTIMIZE = $00010000;
+  PCRE2_UCP = $00020000;
+  PCRE2_UNGREEDY = $00040000;
+  PCRE2_UTF = $00080000;
+  PCRE2_NEVER_BACKSLASH_C = $00100000;
+  PCRE2_ALT_CIRCUMFLEX = $00200000;
+  PCRE2_ALT_VERBNAMES = $00400000;
+  PCRE2_USE_OFFSET_LIMIT = $00800000;
+  PCRE2_EXTENDED_MORE = $01000000;
+  PCRE2_LITERAL = $02000000;
+  PCRE2_MATCH_INVALID_UTF = $04000000;
+
+  PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES = $00000001;
+  PCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL = $00000002;
+  PCRE2_EXTRA_MATCH_WORD = $00000004;
+  PCRE2_EXTRA_MATCH_LINE = $00000008;
+  PCRE2_EXTRA_ESCAPED_CR_IS_LF = $00000010;
+  PCRE2_EXTRA_ALT_BSUX = $00000020;
+  PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = $00000040;
+
+  PCRE2_JIT_COMPLETE = $00000001;
   PCRE2_JIT_PARTIAL_SOFT = $00000002;  
   PCRE2_JIT_PARTIAL_HARD = $00000004;  
   PCRE2_JIT_INVALID_UTF = $00000100;  
-{ These are for pcre2_match(), pcre2_dfa_match(), pcre2_jit_match(), and
-pcre2_substitute(). Some are allowed only for one of the functions, and in
-these cases it is noted below. Note that PCRE2_ANCHORED, PCRE2_ENDANCHORED and
-PCRE2_NO_UTF_CHECK can also be passed to these functions (though
-pcre2_jit_match() ignores the latter since it bypasses all sanity checks).  }
-  PCRE2_NOTBOL = $00000001;  
+
+  PCRE2_NOTBOL = $00000001;
   PCRE2_NOTEOL = $00000002;  
-{ ) These two must be kept  }
-  PCRE2_NOTEMPTY = $00000004;  
-{ ) adjacent to each other.  }
-  PCRE2_NOTEMPTY_ATSTART = $00000008;  
+  PCRE2_NOTEMPTY = $00000004;
+  PCRE2_NOTEMPTY_ATSTART = $00000008;
   PCRE2_PARTIAL_SOFT = $00000010;  
   PCRE2_PARTIAL_HARD = $00000020;  
-{ pcre2_dfa_match() only  }
-  PCRE2_DFA_RESTART = $00000040;  
-{ pcre2_dfa_match() only  }
-  PCRE2_DFA_SHORTEST = $00000080;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_GLOBAL = $00000100;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_EXTENDED = $00000200;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_UNSET_EMPTY = $00000400;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_UNKNOWN_UNSET = $00000800;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_OVERFLOW_LENGTH = $00001000;  
-{ Not for pcre2_dfa_match()  }
-  PCRE2_NO_JIT = $00002000;  
+  PCRE2_DFA_RESTART = $00000040;
+  PCRE2_DFA_SHORTEST = $00000080;
+  PCRE2_SUBSTITUTE_GLOBAL = $00000100;
+  PCRE2_SUBSTITUTE_EXTENDED = $00000200;
+  PCRE2_SUBSTITUTE_UNSET_EMPTY = $00000400;
+  PCRE2_SUBSTITUTE_UNKNOWN_UNSET = $00000800;
+  PCRE2_SUBSTITUTE_OVERFLOW_LENGTH = $00001000;
+  PCRE2_NO_JIT = $00002000;
   PCRE2_COPY_MATCHED_SUBJECT = $00004000;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_LITERAL = $00008000;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_MATCHED = $00010000;  
-{ pcre2_substitute() only  }
-  PCRE2_SUBSTITUTE_REPLACEMENT_ONLY = $00020000;  
-{ Options for pcre2_pattern_convert().  }
-  PCRE2_CONVERT_UTF = $00000001;  
+  PCRE2_SUBSTITUTE_LITERAL = $00008000;
+  PCRE2_SUBSTITUTE_MATCHED = $00010000;
+  PCRE2_SUBSTITUTE_REPLACEMENT_ONLY = $00020000;
+
+  PCRE2_CONVERT_UTF = $00000001;
   PCRE2_CONVERT_NO_UTF_CHECK = $00000002;  
   PCRE2_CONVERT_POSIX_BASIC = $00000004;  
   PCRE2_CONVERT_POSIX_EXTENDED = $00000008;  
   PCRE2_CONVERT_GLOB = $00000010;  
   PCRE2_CONVERT_GLOB_NO_WILD_SEPARATOR = $00000030;  
   PCRE2_CONVERT_GLOB_NO_STARSTAR = $00000050;  
-{ Newline and \R settings, for use in compile contexts. The newline values
-must be kept in step with values set in config.h and both sets must all be
-greater than zero.  }
-  PCRE2_NEWLINE_CR = 1;  
+
+  PCRE2_NEWLINE_CR = 1;
   PCRE2_NEWLINE_LF = 2;  
   PCRE2_NEWLINE_CRLF = 3;  
   PCRE2_NEWLINE_ANY = 4;  
@@ -201,9 +130,8 @@ greater than zero.  }
   PCRE2_NEWLINE_NUL = 6;  
   PCRE2_BSR_UNICODE = 1;  
   PCRE2_BSR_ANYCRLF = 2;  
-{ Error codes for pcre2_compile(). Some of these are also used by
-pcre2_pattern_convert().  }
-  PCRE2_ERROR_END_BACKSLASH = 101;  
+
+  PCRE2_ERROR_END_BACKSLASH = 101;
   PCRE2_ERROR_END_BACKSLASH_C = 102;  
   PCRE2_ERROR_UNKNOWN_ESCAPE = 103;  
   PCRE2_ERROR_QUANTIFIER_OUT_OF_ORDER = 104;  
@@ -261,8 +189,7 @@ pcre2_pattern_convert().  }
   PCRE2_ERROR_INTERNAL_UNKNOWN_NEWLINE = 156;  
   PCRE2_ERROR_BACKSLASH_G_SYNTAX = 157;  
   PCRE2_ERROR_PARENS_QUERY_R_MISSING_CLOSING = 158;  
-{ Error 159 is obsolete and should now never occur  }
-  PCRE2_ERROR_VERB_ARGUMENT_NOT_ALLOWED = 159;  
+  PCRE2_ERROR_VERB_ARGUMENT_NOT_ALLOWED = 159;
   PCRE2_ERROR_VERB_UNKNOWN = 160;  
   PCRE2_ERROR_SUBPATTERN_NUMBER_TOO_BIG = 161;  
   PCRE2_ERROR_SUBPATTERN_NAME_EXPECTED = 162;  
@@ -303,11 +230,10 @@ pcre2_pattern_convert().  }
   PCRE2_ERROR_TOO_MANY_CAPTURES = 197;  
   PCRE2_ERROR_CONDITION_ATOMIC_ASSERTION_EXPECTED = 198;  
   PCRE2_ERROR_BACKSLASH_K_IN_LOOKAROUND = 199;  
-{ "Expected" matching error codes: no match and partial match.  }
-  PCRE2_ERROR_NOMATCH = -(1);  
+
+  PCRE2_ERROR_NOMATCH = -(1);
   PCRE2_ERROR_PARTIAL = -(2);  
-{ Error codes for UTF-8 validity checks  }
-  PCRE2_ERROR_UTF8_ERR1 = -(3);  
+  PCRE2_ERROR_UTF8_ERR1 = -(3);
   PCRE2_ERROR_UTF8_ERR2 = -(4);  
   PCRE2_ERROR_UTF8_ERR3 = -(5);  
   PCRE2_ERROR_UTF8_ERR4 = -(6);  
@@ -328,28 +254,20 @@ pcre2_pattern_convert().  }
   PCRE2_ERROR_UTF8_ERR19 = -(21);  
   PCRE2_ERROR_UTF8_ERR20 = -(22);  
   PCRE2_ERROR_UTF8_ERR21 = -(23);  
-{ Error codes for UTF-16 validity checks  }
-  PCRE2_ERROR_UTF16_ERR1 = -(24);  
+  PCRE2_ERROR_UTF16_ERR1 = -(24);
   PCRE2_ERROR_UTF16_ERR2 = -(25);  
   PCRE2_ERROR_UTF16_ERR3 = -(26);  
-{ Error codes for UTF-32 validity checks  }
-  PCRE2_ERROR_UTF32_ERR1 = -(27);  
+  PCRE2_ERROR_UTF32_ERR1 = -(27);
   PCRE2_ERROR_UTF32_ERR2 = -(28);  
-{ Miscellaneous error codes for pcre2[_dfa]_match(), substring extraction
-functions, context functions, and serializing functions. They are in numerical
-order. Originally they were in alphabetical order too, but now that PCRE2 is
-released, the numbers must not be changed.  }
-  PCRE2_ERROR_BADDATA = -(29);  
-{ Name was changed  }
-  PCRE2_ERROR_MIXEDTABLES = -(30);  
+  PCRE2_ERROR_BADDATA = -(29);
+  PCRE2_ERROR_MIXEDTABLES = -(30);
   PCRE2_ERROR_BADMAGIC = -(31);  
   PCRE2_ERROR_BADMODE = -(32);  
   PCRE2_ERROR_BADOFFSET = -(33);  
   PCRE2_ERROR_BADOPTION = -(34);  
   PCRE2_ERROR_BADREPLACEMENT = -(35);  
   PCRE2_ERROR_BADUTFOFFSET = -(36);  
-{ Never used by PCRE2 itself  }
-  PCRE2_ERROR_CALLOUT = -(37);  
+  PCRE2_ERROR_CALLOUT = -(37);
   PCRE2_ERROR_DFA_BADRESTART = -(38);  
   PCRE2_ERROR_DFA_RECURSE = -(39);  
   PCRE2_ERROR_DFA_UCOND = -(40);  
@@ -366,8 +284,7 @@ released, the numbers must not be changed.  }
   PCRE2_ERROR_NULL = -(51);  
   PCRE2_ERROR_RECURSELOOP = -(52);  
   PCRE2_ERROR_DEPTHLIMIT = -(53);  
-{ Obsolete synonym  }
-  PCRE2_ERROR_RECURSIONLIMIT = -(53);  
+  PCRE2_ERROR_RECURSIONLIMIT = -(53);
   PCRE2_ERROR_UNAVAILABLE = -(54);  
   PCRE2_ERROR_UNSET = -(55);  
   PCRE2_ERROR_BADOFFSETLIMIT = -(56);  
@@ -381,8 +298,8 @@ released, the numbers must not be changed.  }
   PCRE2_ERROR_CONVERT_SYNTAX = -(64);  
   PCRE2_ERROR_INTERNAL_DUPMATCH = -(65);  
   PCRE2_ERROR_DFA_UINVALID_UTF = -(66);  
-{ Request types for pcre2_pattern_info()  }
-  PCRE2_INFO_ALLOPTIONS = 0;  
+
+  PCRE2_INFO_ALLOPTIONS = 0;
   PCRE2_INFO_ARGOPTIONS = 1;  
   PCRE2_INFO_BACKREFMAX = 2;  
   PCRE2_INFO_BSR = 3;  
@@ -404,15 +321,14 @@ released, the numbers must not be changed.  }
   PCRE2_INFO_NAMETABLE = 19;  
   PCRE2_INFO_NEWLINE = 20;  
   PCRE2_INFO_DEPTHLIMIT = 21;  
-{ Obsolete synonym  }
-  PCRE2_INFO_RECURSIONLIMIT = 21;  
+  PCRE2_INFO_RECURSIONLIMIT = 21;
   PCRE2_INFO_SIZE = 22;  
   PCRE2_INFO_HASBACKSLASHC = 23;  
   PCRE2_INFO_FRAMESIZE = 24;  
   PCRE2_INFO_HEAPLIMIT = 25;  
   PCRE2_INFO_EXTRAOPTIONS = 26;  
-{ Request types for pcre2_config().  }
-  PCRE2_CONFIG_BSR = 0;  
+
+  PCRE2_CONFIG_BSR = 0;
   PCRE2_CONFIG_JIT = 1;  
   PCRE2_CONFIG_JITTARGET = 2;  
   PCRE2_CONFIG_LINKSIZE = 3;  
@@ -420,10 +336,8 @@ released, the numbers must not be changed.  }
   PCRE2_CONFIG_NEWLINE = 5;  
   PCRE2_CONFIG_PARENSLIMIT = 6;  
   PCRE2_CONFIG_DEPTHLIMIT = 7;  
-{ Obsolete synonym  }
-  PCRE2_CONFIG_RECURSIONLIMIT = 7;  
-{ Obsolete  }
-  PCRE2_CONFIG_STACKRECURSE = 8;  
+  PCRE2_CONFIG_RECURSIONLIMIT = 7;
+  PCRE2_CONFIG_STACKRECURSE = 8;
   PCRE2_CONFIG_UNICODE = 9;  
   PCRE2_CONFIG_UNICODE_VERSION = 10;  
   PCRE2_CONFIG_VERSION = 11;  
@@ -431,8 +345,7 @@ released, the numbers must not be changed.  }
   PCRE2_CONFIG_NEVER_BACKSLASH_C = 13;  
   PCRE2_CONFIG_COMPILED_WIDTHS = 14;  
   PCRE2_CONFIG_TABLES_LENGTH = 15;  
-{ ===========================00 }
-{ --- Basis-Datentypen für 8-Bit (UTF-8) ---  }
+
 type
   PPCRE2_UCHAR8 = ^TPCRE2_UCHAR8;
   TPCRE2_UCHAR8 = Tuint8_t;
@@ -458,58 +371,35 @@ type
   PPCRE2_SPTR = ^TPCRE2_SPTR;
   TPCRE2_SPTR = Puint8_t;
 
+  TPCRE2_SIZE = Tsize_t;
+
+
 const
-  PCRE2_SIZE = size_t;  
-  PCRE2_SIZE_MAX = SIZE_MAX;  
+  PCRE2_SIZE_MAX = 18446744073709551615;
 
-{ was #define dname def_expr }
-function PCRE2_ZERO_TERMINATED : longint; { return type might be wrong }
+  PCRE2_ZERO_TERMINATED= not (Tsize_t(0));
+  PCRE2_UNSET= not (Tsize_t(0));
 
-{ was #define dname def_expr }
-function PCRE2_UNSET : longint; { return type might be wrong }
-
-{ --- Strukturdefinitionen für 8-Bit ---  }
 type
-  Ppcre2_real_general_context_8 = ^Tpcre2_real_general_context_8;
-  Tpcre2_real_general_context_8 = record
-      {undefined structure}
-    end;
-
+  Ppcre2_real_general_context_8 = type Pointer;
   Tpcre2_real_general_context_8 = Tpcre2_general_context_8;
-  Ppcre2_real_compile_context_8 = ^Tpcre2_real_compile_context_8;
-  Tpcre2_real_compile_context_8 = record
-      {undefined structure}
-    end;
+
+  Ppcre2_real_compile_context_8 = = type Pointer;
 
   Tpcre2_real_compile_context_8 = Tpcre2_compile_context_8;
-  Ppcre2_real_match_context_8 = ^Tpcre2_real_match_context_8;
-  Tpcre2_real_match_context_8 = record
-      {undefined structure}
-    end;
+  Ppcre2_real_match_context_8 = = type Pointer;
 
   Tpcre2_real_match_context_8 = Tpcre2_match_context_8;
-  Ppcre2_real_convert_context_8 = ^Tpcre2_real_convert_context_8;
-  Tpcre2_real_convert_context_8 = record
-      {undefined structure}
-    end;
+  Ppcre2_real_convert_context_8 = = type Pointer;
 
   Tpcre2_real_convert_context_8 = Tpcre2_convert_context_8;
-  Ppcre2_real_code_8 = ^Tpcre2_real_code_8;
-  Tpcre2_real_code_8 = record
-      {undefined structure}
-    end;
+  Ppcre2_real_code_8 = = type Pointer;
 
   Tpcre2_real_code_8 = Tpcre2_code_8;
-  Ppcre2_real_match_data_8 = ^Tpcre2_real_match_data_8;
-  Tpcre2_real_match_data_8 = record
-      {undefined structure}
-    end;
+  Ppcre2_real_match_data_8 = = type Pointer;
 
   Tpcre2_real_match_data_8 = Tpcre2_match_data_8;
-  Ppcre2_real_jit_stack_8 = ^Tpcre2_real_jit_stack_8;
-  Tpcre2_real_jit_stack_8 = record
-      {undefined structure}
-    end;
+  Ppcre2_real_jit_stack_8 = = type Pointer;
 
   Tpcre2_real_jit_stack_8 = Tpcre2_jit_stack_8;
   Tpcre2_real_code_8 = Tpcre2_code;
@@ -761,18 +651,6 @@ const
 
 implementation
 
-
-{ was #define dname def_expr }
-function PCRE2_ZERO_TERMINATED : longint; { return type might be wrong }
-  begin
-    PCRE2_ZERO_TERMINATED:= not (Tsize_t(0));
-  end;
-
-{ was #define dname def_expr }
-function PCRE2_UNSET : longint; { return type might be wrong }
-  begin
-    PCRE2_UNSET:= not (Tsize_t(0));
-  end;
 
 
 end.
