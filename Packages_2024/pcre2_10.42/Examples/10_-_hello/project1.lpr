@@ -10,7 +10,7 @@ uses
     re: Ppcre2_code;
     errornumber, rc: longint;
     erroroffset: Tsize_t;
-    buffer: PByte;
+    buffer: pbyte;
     match_data: Ppcre2_match_data;
     ovector: Psize_t;
 

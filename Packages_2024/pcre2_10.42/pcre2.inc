@@ -1,5 +1,20 @@
 
 const
+  {$IFDEF Linux}
+  libpcre2_8 = 'pcre2-8';
+  libpcre2_16 = 'pcre2-16';
+  libpcre2_32 = 'pcre2-32';
+  libpcre2_posix = 'pcre2-posix';
+  {$ENDIF}
+
+  {$IFDEF Windows}
+  libpcre2_8 = 'libpcre2-8.dll';
+  libpcre2_16 = 'libpcre2-16.dll';
+  libpcre2_32 = 'libpcre2-32.dll';
+  libpcre2_posix = 'libpcre2-posix-0.dll';
+  {$ENDIF}
+
+const
   PCRE2_MAJOR = 10;
   PCRE2_MINOR = 42;
 
@@ -427,7 +442,7 @@ type
 
   Tcallout_enumerate_func = function(para1: Ppcre2_callout_enumerate_block; para2: pointer): longint; cdecl;
 
-
+  // ==== pcre2posix.h
 
 const
   REG_ICASE = $0001;

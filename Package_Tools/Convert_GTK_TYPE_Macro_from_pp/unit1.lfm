@@ -1,12 +1,12 @@
 object Form1: TForm1
-  Left = 469
+  Left = 94
   Height = 889
-  Top = 298
+  Top = 309
   Width = 623
   Caption = 'Form1'
   ClientHeight = 889
   ClientWidth = 623
-  LCLVersion = '4.99.0.0'
+  LCLVersion = '5.99.0.0'
   OnCreate = FormCreate
   object Convert: TButton
     Left = 535
@@ -34,12 +34,12 @@ object Form1: TForm1
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 175
+    ClientHeight = 179
     ClientWidth = 242
     TabOrder = 1
     object CheckBox1: TCheckBox
       Left = 6
-      Height = 23
+      Height = 24
       Top = 6
       Width = 230
       Caption = 'CheckBox1'
@@ -50,7 +50,7 @@ object Form1: TForm1
     object CheckBox2: TCheckBox
       Left = 6
       Height = 24
-      Top = 29
+      Top = 30
       Width = 230
       Caption = 'CheckBox2'
       Checked = True
@@ -59,8 +59,8 @@ object Form1: TForm1
     end
     object CheckBox3: TCheckBox
       Left = 6
-      Height = 23
-      Top = 53
+      Height = 24
+      Top = 54
       Width = 230
       Caption = 'CheckBox3'
       Checked = True
@@ -70,7 +70,7 @@ object Form1: TForm1
     object CheckBox4: TCheckBox
       Left = 6
       Height = 23
-      Top = 76
+      Top = 78
       Width = 230
       Caption = 'CheckBox4'
       Checked = True
@@ -79,8 +79,8 @@ object Form1: TForm1
     end
     object CheckBox5: TCheckBox
       Left = 6
-      Height = 23
-      Top = 99
+      Height = 24
+      Top = 101
       Width = 230
       Caption = 'CheckBox5'
       Checked = True
@@ -90,7 +90,7 @@ object Form1: TForm1
     object CheckBox6: TCheckBox
       Left = 6
       Height = 24
-      Top = 122
+      Top = 125
       Width = 230
       Caption = 'CheckBox6'
       Checked = True
@@ -99,8 +99,8 @@ object Form1: TForm1
     end
     object CheckBox7: TCheckBox
       Left = 6
-      Height = 23
-      Top = 146
+      Height = 24
+      Top = 149
       Width = 230
       Caption = 'CheckBox7'
       TabOrder = 6
@@ -128,7 +128,7 @@ object Form1: TForm1
     Width = 239
     Anchors = [akTop, akRight]
     Caption = 'Nativ'
-    ClientHeight = 95
+    ClientHeight = 99
     ClientWidth = 233
     TabOrder = 3
     object Button1: TButton
@@ -179,12 +179,12 @@ object Form1: TForm1
     Width = 248
     Anchors = [akTop, akRight, akBottom]
     Caption = 'external'
-    ClientHeight = 434
+    ClientHeight = 438
     ClientWidth = 242
     TabOrder = 4
     object ListBox1: TListBox
       Left = 0
-      Height = 434
+      Height = 438
       Top = 0
       Width = 242
       Align = alClient
