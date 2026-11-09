@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="6">
+    <CompatibilityMode Value="False"/>
+    <Name Value="fp_pcre_package"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="fp_pcre2_8.pas"/>
+        <UnitName Value="fp_pcre2_8"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_pcre2_16.pas"/>
+        <UnitName Value="fp_pcre2_16"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_pcre2_32.pas"/>
+        <UnitName Value="fp_pcre2_32"/>
+      </Item>
+      <Item>
+        <Filename Value="pcre2.inc"/>
+        <Type Value="Include"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
