@@ -1094,6 +1094,13 @@ end;
 
 // ====
 
+function GEE_TYPE_FUTURE_ERROR: TGType;
+begin
+  Result := gee_future_error_get_type;
+end;
+
+// ====
+
 function GEE_TYPE_HASHABLE: TGType;
 begin
   Result := gee_hashable_get_type;

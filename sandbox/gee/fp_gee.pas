@@ -5,6 +5,15 @@ interface
 uses
   fp_glib2;
 
+const
+  {$IFDEF Linux}
+  libgee = 'gee-0.8 ';
+  {$ENDIF}
+
+  {$IFDEF Windows}
+  {$FATAL  no supported}
+  {$ENDIF}
+
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
@@ -13,9 +22,7 @@ uses
 const
   GEE_QUEUE_UNBOUNDED_CAPACITY = -(1);  
 
-type
-  TGeeForallFunc = function (g:Tgpointer; user_data:Tgpointer):Tgboolean;cdecl;
-
+  type
   PGeeTraversableStream = ^TGeeTraversableStream;
   TGeeTraversableStream =  Longint;
   Const
@@ -25,23 +32,6 @@ type
     GEE_TRAVERSABLE_STREAM_WAIT = 3;
 
 type
-  TGeeStreamFunc = function (state:TGeeTraversableStream; g:PGeeLazy; lazy:PPGeeLazy; user_data:Tgpointer):TGeeTraversableStream;cdecl;
-
-type
-  TGeeFoldFunc = function (g:Tgpointer; a:Tgpointer; user_data:Tgpointer):Tgpointer;cdecl;
-  TGeeMapFunc = function (g:Tgpointer; user_data:Tgpointer):Tgpointer;cdecl;
-  TGeePredicate = function (g:Tgconstpointer; user_data:Tgpointer):Tgboolean;cdecl;
-  TGeeFlatMapFunc = function (g:Tgpointer; user_data:Tgpointer):PGeeIterator;cdecl;
-
-
-type
-  TGeeFoldMapFunc = function (k:Tgconstpointer; v:Tgconstpointer; a:Tgpointer; user_data:Tgpointer):Tgpointer;cdecl;
-  TGeeForallMapFunc = function (k:Tgconstpointer; v:Tgconstpointer; user_data:Tgpointer):Tgboolean;cdecl;
-
-type
-  TGeeEqualDataFunc = function (a:Tgconstpointer; b:Tgconstpointer; user_data:Tgpointer):Tgboolean;cdecl;
-
-type
   PGeeConcurrentSetRangeType = ^TGeeConcurrentSetRangeType;
   TGeeConcurrentSetRangeType =  Longint;
   Const
@@ -49,17 +39,6 @@ type
     GEE_CONCURRENT_SET_RANGE_TYPE_TAIL = 1;
     GEE_CONCURRENT_SET_RANGE_TYPE_BOUNDED = 2;
     GEE_CONCURRENT_SET_RANGE_TYPE_EMPTY = 3;
-
-type
-  TGeeHashDataFunc = function (v:Tgconstpointer; user_data:Tgpointer):Tguint;cdecl;
-
-function GEE_TYPE_FUTURE_ERROR : longint; { return type might be wrong }
-
-type
-  TGeeFutureMapFunc = function (value:Tgconstpointer; user_data:Tgpointer):Tgpointer;cdecl;
-  TGeeFutureLightMapFunc = function (value:Tgconstpointer; user_data:Tgpointer):Tgconstpointer;cdecl;
-  TGeeFutureZipFunc = function (a:Tgconstpointer; b:Tgconstpointer; user_data:Tgpointer):Tgpointer;cdecl;
-  TGeeFutureFlatMapFunc = function (value:Tgconstpointer; user_data:Tgpointer):PGeeFuture;cdecl;
 
 type
   PGeeHazardPointerPolicy = ^TGeeHazardPointerPolicy;
@@ -80,16 +59,71 @@ type
     GEE_HAZARD_POINTER_RELEASE_POLICY_MAIN_LOOP = 1;
 
 type
-  TGeeUnfoldFunc = function (user_data:Tgpointer):PGeeLazy;cdecl;
-  TGeeLazyFunc = function (user_data:Tgpointer):Tgpointer;cdecl;
+  PGeeIterator=type Pointer;
+  PPGeeIterator=^PGeeIterator;
+  PGeeTraversable=type Pointer;
+  PGeeIterable=type Pointer;
+  PGeeCollection=type Pointer;
+  PGeeListIterator=type Pointer;
+  PGeeList=type Pointer;
+  PGeeBidirIterator=type Pointer;
+  PGeeBidirListIterator=type Pointer;
+  PGeeBidirList=type Pointer;
+  PGeeSet=type Pointer;
+  PGeeSortedSet=type Pointer;
+  PGeeBidirSortedSet=type Pointer;
+  PGeeMapIterator=type Pointer;
+  PGeeFuture=type Pointer;
+  PGeeMap=type Pointer;
+  PGeeSortedMap=type Pointer;
+  PGeeBidirMapIterator=type Pointer;
+  PGeeBidirSortedMap=type Pointer;
+  PGeeMultiSet=type Pointer;
+  PGeeMultiMap=type Pointer;
+  PGeeQueue=type Pointer;
+  PGeeDeque=type Pointer;
+  PGeeComparable=type Pointer;
+  PGeeHashable=type Pointer;
+  PGeeHazardPointerFreeNode=type Pointer;
 
-type
+  type
+    PGeeLazyPrivate=type Pointer;
+  PPGeeLazy = ^PGeeLazy;
+  PGeeLazy = ^TGeeLazy;
+  TGeeLazy = record
+      parent_instance : TGTypeInstance;
+      ref_count : longint;
+      priv : PGeeLazyPrivate;
+    end;
+
+  PGeeLazyClass = ^TGeeLazyClass;
+  TGeeLazyClass = record
+      parent_class : TGTypeClass;
+      finalize : procedure (self:PGeeLazy);cdecl;
+    end;
+
+  TGeeForallFunc = function (g:Tgpointer; user_data:Tgpointer):Tgboolean;cdecl;
+  TGeeStreamFunc = function (state:TGeeTraversableStream; g:PGeeLazy; lazy:PPGeeLazy; user_data:Tgpointer):TGeeTraversableStream;cdecl;
+  TGeeFoldFunc = function (g:Tgpointer; a:Tgpointer; user_data:Tgpointer):Tgpointer;cdecl;
+  TGeeMapFunc = function (g:Tgpointer; user_data:Tgpointer):Tgpointer;cdecl;
+  TGeePredicate = function (g:Tgconstpointer; user_data:Tgpointer):Tgboolean;cdecl;
+  TGeeFlatMapFunc = function (g:Tgpointer; user_data:Tgpointer):PGeeIterator;cdecl;
+  TGeeFoldMapFunc = function (k:Tgconstpointer; v:Tgconstpointer; a:Tgpointer; user_data:Tgpointer):Tgpointer;cdecl;
+  TGeeForallMapFunc = function (k:Tgconstpointer; v:Tgconstpointer; user_data:Tgpointer):Tgboolean;cdecl;
+  TGeeEqualDataFunc = function (a:Tgconstpointer; b:Tgconstpointer; user_data:Tgpointer):Tgboolean;cdecl;
+  TGeeHashDataFunc = function (v:Tgconstpointer; user_data:Tgpointer):Tguint;cdecl;
+    TGeeFutureMapFunc = function (value:Tgconstpointer; user_data:Tgpointer):Tgpointer;cdecl;
+    TGeeFutureLightMapFunc = function (value:Tgconstpointer; user_data:Tgpointer):Tgconstpointer;cdecl;
+    TGeeFutureZipFunc = function (a:Tgconstpointer; b:Tgconstpointer; user_data:Tgpointer):Tgpointer;cdecl;
+    TGeeFutureFlatMapFunc = function (value:Tgconstpointer; user_data:Tgpointer):PGeeFuture;cdecl;
+    TGeeUnfoldFunc = function (user_data:Tgpointer):PGeeLazy;cdecl;
+  TGeeLazyFunc = function (user_data:Tgpointer):Tgpointer;cdecl;
   TGeeTask = function (user_data:Tgpointer):Tgpointer;cdecl;
 
 type
   PGeeIteratorIface = ^TGeeIteratorIface;
   TGeeIteratorIface = record
-      parent_iface : TGTypeInterface;cdecl;
+      parent_iface : TGTypeInterface;
       next : function (self:PGeeIterator):Tgboolean;cdecl;
       has_next : function (self:PGeeIterator):Tgboolean;cdecl;
       get : function (self:PGeeIterator):Tgpointer;cdecl;
@@ -97,6 +131,11 @@ type
       get_valid : function (self:PGeeIterator):Tgboolean;cdecl;
       get_read_only : function (self:PGeeIterator):Tgboolean;cdecl;
     end;
+
+
+
+
+
 
   PGeeTraversableIface = ^TGeeTraversableIface;
   TGeeTraversableIface = record
@@ -155,14 +194,15 @@ type
       get_is_empty : function (self:PGeeCollection):Tgboolean;cdecl;
       get_read_only : function (self:PGeeCollection):Tgboolean;cdecl;
       get_read_only_view : function (self:PGeeCollection):PGeeCollection;cdecl;
-      add_all_array : function (self:PGeeCollection; array:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;
-      contains_all_array : function (self:PGeeCollection; array:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;
-      remove_all_array : function (self:PGeeCollection; array:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;
+      add_all_array : function (self:PGeeCollection; arr:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;
+      contains_all_array : function (self:PGeeCollection; arr:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;
+      remove_all_array : function (self:PGeeCollection; arr:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;
       add_all_iterator : function (self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;
       contains_all_iterator : function (self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;
       remove_all_iterator : function (self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;
     end;
 
+  PGeeAbstractCollectionPrivate=type Pointer;
   PGeeAbstractCollection = ^TGeeAbstractCollection;
   TGeeAbstractCollection = record
       parent_instance : TGObject;
@@ -196,7 +236,7 @@ type
   PGeeListIteratorIface = ^TGeeListIteratorIface;
   TGeeListIteratorIface = record
       parent_iface : TGTypeInterface;
-      set : procedure (self:PGeeListIterator; item:Tgconstpointer);cdecl;
+      set_ : procedure (self:PGeeListIterator; item:Tgconstpointer);cdecl;
       add : procedure (self:PGeeListIterator; item:Tgconstpointer);cdecl;
       index : function (self:PGeeListIterator):Tgint;cdecl;
     end;
@@ -209,7 +249,7 @@ type
       get_g_destroy_func : function (self:PGeeList):TGDestroyNotify;cdecl;
       list_iterator : function (self:PGeeList):PGeeListIterator;cdecl;
       get : function (self:PGeeList; index:Tgint):Tgpointer;cdecl;
-      set : procedure (self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;
+      set_ : procedure (self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;
       index_of : function (self:PGeeList; item:Tgconstpointer):Tgint;cdecl;
       insert : procedure (self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;
       remove_at : function (self:PGeeList; index:Tgint):Tgpointer;cdecl;
@@ -221,6 +261,7 @@ type
       get_read_only_view : function (self:PGeeList):PGeeList;cdecl;
     end;
 
+  PGeeAbstractListPrivate=type Pointer;
   PGeeAbstractList = ^TGeeAbstractList;
   TGeeAbstractList = record
       parent_instance : TGeeAbstractCollection;
@@ -232,7 +273,7 @@ type
       parent_class : TGeeAbstractCollectionClass;
       list_iterator : function (self:PGeeAbstractList):PGeeListIterator;cdecl;
       get : function (self:PGeeAbstractList; index:Tgint):Tgpointer;cdecl;
-      set : procedure (self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;
+      set_ : procedure (self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;
       index_of : function (self:PGeeAbstractList; item:Tgconstpointer):Tgint;cdecl;
       insert : procedure (self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;
       remove_at : function (self:PGeeAbstractList; index:Tgint):Tgpointer;cdecl;
@@ -281,6 +322,7 @@ type
       get_read_only_view : function (self:PGeeBidirList):PGeeBidirList;cdecl;
     end;
 
+  PGeeAbstractBidirListPrivate=type Pointer;
   PGeeAbstractBidirList = ^TGeeAbstractBidirList;
   TGeeAbstractBidirList = record
       parent_instance : TGeeAbstractList;
@@ -313,6 +355,7 @@ type
       get_read_only_view : function (self:PGeeSet):PGeeSet;cdecl;
     end;
 
+  PGeeAbstractSetPrivate=type Pointer;
   PGeeAbstractSet = ^TGeeAbstractSet;
   TGeeAbstractSet = record
       parent_instance : TGeeAbstractCollection;
@@ -350,10 +393,11 @@ type
       ceil : function (self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;
       head_set : function (self:PGeeSortedSet; before:Tgconstpointer):PGeeSortedSet;cdecl;
       tail_set : function (self:PGeeSortedSet; after:Tgconstpointer):PGeeSortedSet;cdecl;
-      sub_set : function (self:PGeeSortedSet; from:Tgconstpointer; to:Tgconstpointer):PGeeSortedSet;cdecl;
+      sub_set : function (self:PGeeSortedSet; from:Tgconstpointer; to_:Tgconstpointer):PGeeSortedSet;cdecl;
       get_read_only_view : function (self:PGeeSortedSet):PGeeSortedSet;cdecl;
     end;
 
+  PGeeAbstractSortedSetPrivate=type Pointer;
   PGeeAbstractSortedSet = ^TGeeAbstractSortedSet;
   TGeeAbstractSortedSet = record
       parent_instance : TGeeAbstractSet;
@@ -372,7 +416,7 @@ type
       ceil : function (self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;
       head_set : function (self:PGeeAbstractSortedSet; before:Tgconstpointer):PGeeSortedSet;cdecl;
       tail_set : function (self:PGeeAbstractSortedSet; after:Tgconstpointer):PGeeSortedSet;cdecl;
-      sub_set : function (self:PGeeAbstractSortedSet; from:Tgconstpointer; to:Tgconstpointer):PGeeSortedSet;cdecl;
+      sub_set : function (self:PGeeAbstractSortedSet; from:Tgconstpointer; to_:Tgconstpointer):PGeeSortedSet;cdecl;
       reserved0 : procedure (self:PGeeAbstractSortedSet);cdecl;
       reserved1 : procedure (self:PGeeAbstractSortedSet);cdecl;
       reserved2 : procedure (self:PGeeAbstractSortedSet);cdecl;
@@ -396,6 +440,7 @@ type
       get_read_only_view : function (self:PGeeBidirSortedSet):PGeeBidirSortedSet;cdecl;
     end;
 
+  PGeeAbstractBidirSortedSetPrivate=type Pointer;
   PGeeAbstractBidirSortedSet = ^TGeeAbstractBidirSortedSet;
   TGeeAbstractBidirSortedSet = record
       parent_instance : TGeeAbstractSortedSet;
@@ -454,7 +499,7 @@ type
       has_key : function (self:PGeeMap; key:Tgconstpointer):Tgboolean;cdecl;
       has : function (self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;
       get : function (self:PGeeMap; key:Tgconstpointer):Tgpointer;cdecl;
-      set : procedure (self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;
+      set_ : procedure (self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;
       unset : function (self:PGeeMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;
       clear : procedure (self:PGeeMap);cdecl;
       map_iterator : function (self:PGeeMap):PGeeMapIterator;cdecl;
@@ -470,6 +515,7 @@ type
       get_read_only_view : function (self:PGeeMap):PGeeMap;cdecl;
     end;
 
+  PGeeAbstractMapPrivate=type Pointer;
   PGeeAbstractMap = ^TGeeAbstractMap;
   TGeeAbstractMap = record
       parent_instance : TGObject;
@@ -482,7 +528,7 @@ type
       has_key : function (self:PGeeAbstractMap; key:Tgconstpointer):Tgboolean;cdecl;
       has : function (self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;
       get : function (self:PGeeAbstractMap; key:Tgconstpointer):Tgpointer;cdecl;
-      set : procedure (self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;
+      set_ : procedure (self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;
       unset : function (self:PGeeAbstractMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;
       map_iterator : function (self:PGeeAbstractMap):PGeeMapIterator;cdecl;
       clear : procedure (self:PGeeAbstractMap);cdecl;
@@ -518,6 +564,7 @@ type
       get_read_only_view : function (self:PGeeSortedMap):PGeeSortedMap;cdecl;
     end;
 
+  PGeeAbstractSortedMapPrivate=type Pointer;
   PGeeAbstractSortedMap = ^TGeeAbstractSortedMap;
   TGeeAbstractSortedMap = record
       parent_instance : TGeeAbstractMap;
@@ -572,6 +619,7 @@ type
       get_read_only_view : function (self:PGeeBidirSortedMap):PGeeBidirSortedMap;cdecl;
     end;
 
+  PGeeAbstractBidirSortedMapPrivate=type Pointer;
   PGeeAbstractBidirSortedMap = ^TGeeAbstractBidirSortedMap;
   TGeeAbstractBidirSortedMap = record
       parent_instance : TGeeAbstractSortedMap;
@@ -619,7 +667,7 @@ type
       get_values : function (self:PGeeMultiMap):PGeeCollection;cdecl;
       contains : function (self:PGeeMultiMap; key:Tgconstpointer):Tgboolean;cdecl;
       get : function (self:PGeeMultiMap; key:Tgconstpointer):PGeeCollection;cdecl;
-      set : procedure (self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;
+      set_ : procedure (self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;
       remove : function (self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;
       remove_all : function (self:PGeeMultiMap; key:Tgconstpointer):Tgboolean;cdecl;
       clear : procedure (self:PGeeMultiMap);cdecl;
@@ -629,6 +677,7 @@ type
       get_read_only_view : function (self:PGeeMultiMap):PGeeMultiMap;cdecl;
     end;
 
+  PGeeAbstractMultiMapPrivate=type Pointer;
   PGeeAbstractMultiMap = ^TGeeAbstractMultiMap;
   TGeeAbstractMultiMap = record
       parent_instance : TGObject;
@@ -654,6 +703,7 @@ type
       get_read_only_view : function (self:PGeeAbstractMultiMap):PGeeMultiMap;cdecl;
     end;
 
+  PGeeAbstractMultiSetPrivate=type Pointer;
   PGeeAbstractMultiSet = ^TGeeAbstractMultiSet;
   TGeeAbstractMultiSet = record
       parent_instance : TGeeAbstractCollection;
@@ -691,6 +741,7 @@ type
       get_is_full : function (self:PGeeQueue):Tgboolean;cdecl;
     end;
 
+  PGeeAbstractQueuePrivate=type Pointer;
   PGeeAbstractQueue = ^TGeeAbstractQueue;
   TGeeAbstractQueue = record
       parent_instance : TGeeAbstractCollection;
@@ -717,6 +768,7 @@ type
       get_is_full : function (self:PGeeAbstractQueue):Tgboolean;cdecl;
     end;
 
+  PGeeArrayListPrivate=type Pointer;
   PGeeArrayList = ^TGeeArrayList;
   TGeeArrayList = record
       parent_instance : TGeeAbstractBidirList;
@@ -748,6 +800,7 @@ type
       drain_tail : function (self:PGeeDeque; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;
     end;
 
+  PGeeArrayQueuePrivate=type Pointer;
   PGeeArrayQueue = ^TGeeArrayQueue;
   TGeeArrayQueue = record
       parent_instance : TGeeAbstractQueue;
@@ -762,9 +815,10 @@ type
   PGeeComparableIface = ^TGeeComparableIface;
   TGeeComparableIface = record
       parent_iface : TGTypeInterface;
-      compare_to : function (self:PGeeComparable; object:Tgconstpointer):Tgint;cdecl;
+      compare_to : function (self:PGeeComparable; obj:Tgconstpointer):Tgint;cdecl;
     end;
 
+  PGeeConcurrentListPrivate=type Pointer;
   PGeeConcurrentList = ^TGeeConcurrentList;
   TGeeConcurrentList = record
       parent_instance : TGeeAbstractList;
@@ -776,6 +830,7 @@ type
       parent_class : TGeeAbstractListClass;
     end;
 
+  PGeeConcurrentSetPrivate=type Pointer;
   PGeeConcurrentSet = ^TGeeConcurrentSet;
   TGeeConcurrentSet = record
       parent_instance : TGeeAbstractSortedSet;
@@ -793,10 +848,6 @@ type
   Const
     GEE_FUTURE_ERROR_ABANDON_PROMISE = 0;
     GEE_FUTURE_ERROR_EXCEPTION = 1;
-
-
-{ was #define dname def_expr }
-function GEE_FUTURE_ERROR : longint; { return type might be wrong }
 
 type
   PGeeFutureIface = ^TGeeFutureIface;
@@ -828,9 +879,10 @@ type
   TGeeHashableIface = record
       parent_iface : TGTypeInterface;
       hash : function (self:PGeeHashable):Tguint;cdecl;
-      equal_to : function (self:PGeeHashable; object:Tgconstpointer):Tgboolean;cdecl;
+      equal_to : function (self:PGeeHashable; obj:Tgconstpointer):Tgboolean;cdecl;
     end;
 
+  PGeeHashMapPrivate=type Pointer;
   PGeeHashMap = ^TGeeHashMap;
   TGeeHashMap = record
       parent_instance : TGeeAbstractMap;
@@ -842,6 +894,7 @@ type
       parent_class : TGeeAbstractMapClass;
     end;
 
+  PGeeHashMultiMapPrivate=type Pointer;
   PGeeHashMultiMap = ^TGeeHashMultiMap;
   TGeeHashMultiMap = record
       parent_instance : TGeeAbstractMultiMap;
@@ -853,6 +906,7 @@ type
       parent_class : TGeeAbstractMultiMapClass;
     end;
 
+  PGeeHashMultiSetPrivate=type Pointer;
   PGeeHashMultiSet = ^TGeeHashMultiSet;
   TGeeHashMultiSet = record
       parent_instance : TGeeAbstractMultiSet;
@@ -864,6 +918,7 @@ type
       parent_class : TGeeAbstractMultiSetClass;
     end;
 
+  PGeeHashSetPrivate=type Pointer;
   PGeeHashSet = ^TGeeHashSet;
   TGeeHashSet = record
       parent_instance : TGeeAbstractSet;
@@ -875,6 +930,7 @@ type
       parent_class : TGeeAbstractSetClass;
     end;
 
+  PGeeHazardPointerNode=type Pointer;
   PGeeHazardPointer = ^TGeeHazardPointer;
   TGeeHazardPointer = record
       _node : PGeeHazardPointerNode;
@@ -887,19 +943,7 @@ type
       _policy : PGeeHazardPointerPolicy;
     end;
 
-  PGeeLazy = ^TGeeLazy;
-  TGeeLazy = record
-      parent_instance : TGTypeInstance;
-      ref_count : longint;
-      priv : PGeeLazyPrivate;
-    end;
-
-  PGeeLazyClass = ^TGeeLazyClass;
-  TGeeLazyClass = record
-      parent_class : TGTypeClass;
-      finalize : procedure (self:PGeeLazy);cdecl;
-    end;
-
+  PGeeLinkedListPrivate=type Pointer;
   PGeeLinkedList = ^TGeeLinkedList;
   TGeeLinkedList = record
       parent_instance : TGeeAbstractBidirList;
@@ -911,6 +955,7 @@ type
       parent_class : TGeeAbstractBidirListClass;
     end;
 
+  PGeeMapEntryPrivate=type Pointer;
   PGeeMapEntry = ^TGeeMapEntry;
   TGeeMapEntry = record
       parent_instance : TGObject;
@@ -926,6 +971,7 @@ type
       get_read_only : function (self:PGeeMapEntry):Tgboolean;cdecl;
     end;
 
+  PGeePriorityQueuePrivate=type Pointer;
   PGeePriorityQueue = ^TGeePriorityQueue;
   TGeePriorityQueue = record
       parent_instance : TGeeAbstractQueue;
@@ -937,6 +983,7 @@ type
       parent_class : TGeeAbstractQueueClass;
     end;
 
+  PGeePromisePrivate=type Pointer;
   PGeePromise = ^TGeePromise;
   TGeePromise = record
       parent_instance : TGTypeInstance;
@@ -950,6 +997,7 @@ type
       finalize : procedure (self:PGeePromise);cdecl;
     end;
 
+  PGeeTreeMapPrivate=type Pointer;
   PGeeTreeMap = ^TGeeTreeMap;
   TGeeTreeMap = record
       parent_instance : TGeeAbstractBidirSortedMap;
@@ -961,6 +1009,7 @@ type
       parent_class : TGeeAbstractBidirSortedMapClass;
     end;
 
+  PGeeTreeMultiMapPrivate=type Pointer;
   PGeeTreeMultiMap = ^TGeeTreeMultiMap;
   TGeeTreeMultiMap = record
       parent_instance : TGeeAbstractMultiMap;
@@ -972,6 +1021,7 @@ type
       parent_class : TGeeAbstractMultiMapClass;
     end;
 
+  PGeeTreeMultiSetPrivate=type Pointer;
   PGeeTreeMultiSet = ^TGeeTreeMultiSet;
   TGeeTreeMultiSet = record
       parent_instance : TGeeAbstractMultiSet;
@@ -983,6 +1033,7 @@ type
       parent_class : TGeeAbstractMultiSetClass;
     end;
 
+  PGeeTreeSetPrivate=type Pointer;
   PGeeTreeSet = ^TGeeTreeSet;
   TGeeTreeSet = record
       parent_instance : TGeeAbstractBidirSortedSet;
@@ -994,6 +1045,7 @@ type
       parent_class : TGeeAbstractBidirSortedSetClass;
     end;
 
+  PGeeUnrolledLinkedListPrivate=type Pointer;
   PGeeUnrolledLinkedList = ^TGeeUnrolledLinkedList;
   TGeeUnrolledLinkedList = record
       parent_instance : TGeeAbstractBidirList;
@@ -1005,2714 +1057,3402 @@ type
       parent_class : TGeeAbstractBidirListClass;
     end;
 
-function gee_traversable_stream_get_type:TGType;cdecl;external libexttextcat;
-function gee_lazy_ref(instance:Tgpointer):Tgpointer;cdecl;external libexttextcat;
-procedure gee_lazy_unref(instance:Tgpointer);cdecl;external libexttextcat;
-function gee_param_spec_lazy(name:Pgchar; nick:Pgchar; blurb:Pgchar; object_type:TGType; flags:TGParamFlags):PGParamSpec;cdecl;external libexttextcat;
-procedure gee_value_set_lazy(value:PGValue; v_object:Tgpointer);cdecl;external libexttextcat;
-procedure gee_value_take_lazy(value:PGValue; v_object:Tgpointer);cdecl;external libexttextcat;
-function gee_value_get_lazy(value:PGValue):Tgpointer;cdecl;external libexttextcat;
-function gee_lazy_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeLazy, gee_lazy_unref) }
-function gee_iterator_get_type:TGType;cdecl;external libexttextcat;
-function gee_traversable_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTraversable, g_object_unref) }
-function gee_iterable_get_type:TGType;cdecl;external libexttextcat;
-function gee_collection_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_collection_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractCollection, g_object_unref) }
-function gee_list_iterator_get_type:TGType;cdecl;external libexttextcat;
-function gee_list_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_list_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractList, g_object_unref) }
-function gee_bidir_iterator_get_type:TGType;cdecl;external libexttextcat;
-function gee_bidir_list_iterator_get_type:TGType;cdecl;external libexttextcat;
-function gee_bidir_list_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_bidir_list_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirList, g_object_unref) }
-function gee_abstract_bidir_list_bidir_list_iterator(self:PGeeAbstractBidirList):PGeeBidirListIterator;cdecl;external libexttextcat;
-function gee_abstract_bidir_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractBidirList;cdecl;external libexttextcat;
-function gee_abstract_bidir_list_get_read_only_view(self:PGeeAbstractBidirList):PGeeBidirList;cdecl;external libexttextcat;
-function gee_set_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSet, g_object_unref) }
-function gee_sorted_set_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSortedSet, g_object_unref) }
-function gee_bidir_sorted_set_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_bidir_sorted_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirSortedSet, g_object_unref) }
-function gee_abstract_bidir_sorted_set_bidir_iterator(self:PGeeAbstractBidirSortedSet):PGeeBidirIterator;cdecl;external libexttextcat;
-function gee_abstract_bidir_sorted_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractBidirSortedSet;cdecl;external libexttextcat;
-function gee_abstract_bidir_sorted_set_get_read_only_view(self:PGeeAbstractBidirSortedSet):PGeeBidirSortedSet;cdecl;external libexttextcat;
-function gee_map_iterator_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMapIterator, g_object_unref) }
-function gee_map_entry_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMapEntry, g_object_unref) }
-function gee_map_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMap, g_object_unref) }
-function gee_sorted_map_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_sorted_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSortedMap, g_object_unref) }
-function gee_bidir_map_iterator_get_type:TGType;cdecl;external libexttextcat;
-function gee_bidir_sorted_map_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_bidir_sorted_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirSortedMap, g_object_unref) }
-function gee_abstract_bidir_sorted_map_bidir_map_iterator(self:PGeeAbstractBidirSortedMap):PGeeBidirMapIterator;cdecl;external libexttextcat;
+function gee_traversable_stream_get_type:TGType;cdecl;external libgee;
+function gee_lazy_ref(instance:Tgpointer):Tgpointer;cdecl;external libgee;
+procedure gee_lazy_unref(instance:Tgpointer);cdecl;external libgee;
+function gee_param_spec_lazy(name:Pgchar; nick:Pgchar; blurb:Pgchar; object_type:TGType; flags:TGParamFlags):PGParamSpec;cdecl;external libgee;
+procedure gee_value_set_lazy(value:PGValue; v_object:Tgpointer);cdecl;external libgee;
+procedure gee_value_take_lazy(value:PGValue; v_object:Tgpointer);cdecl;external libgee;
+function gee_value_get_lazy(value:PGValue):Tgpointer;cdecl;external libgee;
+function gee_lazy_get_type:TGType;cdecl;external libgee;
+function gee_iterator_get_type:TGType;cdecl;external libgee;
+function gee_traversable_get_type:TGType;cdecl;external libgee;
+function gee_iterable_get_type:TGType;cdecl;external libgee;
+function gee_collection_get_type:TGType;cdecl;external libgee;
+function gee_abstract_collection_get_type:TGType;cdecl;external libgee;
+function gee_list_iterator_get_type:TGType;cdecl;external libgee;
+function gee_list_get_type:TGType;cdecl;external libgee;
+function gee_abstract_list_get_type:TGType;cdecl;external libgee;
+function gee_bidir_iterator_get_type:TGType;cdecl;external libgee;
+function gee_bidir_list_iterator_get_type:TGType;cdecl;external libgee;
+function gee_bidir_list_get_type:TGType;cdecl;external libgee;
+function gee_abstract_bidir_list_get_type:TGType;cdecl;external libgee;
+function gee_abstract_bidir_list_bidir_list_iterator(self:PGeeAbstractBidirList):PGeeBidirListIterator;cdecl;external libgee;
+function gee_abstract_bidir_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractBidirList;cdecl;external libgee;
+function gee_abstract_bidir_list_get_read_only_view(self:PGeeAbstractBidirList):PGeeBidirList;cdecl;external libgee;
+function gee_set_get_type:TGType;cdecl;external libgee;
+function gee_abstract_set_get_type:TGType;cdecl;external libgee;
+function gee_sorted_set_get_type:TGType;cdecl;external libgee;
+function gee_abstract_sorted_set_get_type:TGType;cdecl;external libgee;
+function gee_bidir_sorted_set_get_type:TGType;cdecl;external libgee;
+function gee_abstract_bidir_sorted_set_get_type:TGType;cdecl;external libgee;
+function gee_abstract_bidir_sorted_set_bidir_iterator(self:PGeeAbstractBidirSortedSet):PGeeBidirIterator;cdecl;external libgee;
+function gee_abstract_bidir_sorted_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractBidirSortedSet;cdecl;external libgee;
+function gee_abstract_bidir_sorted_set_get_read_only_view(self:PGeeAbstractBidirSortedSet):PGeeBidirSortedSet;cdecl;external libgee;
+function gee_map_iterator_get_type:TGType;cdecl;external libgee;
+function gee_map_entry_get_type:TGType;cdecl;external libgee;
+function gee_map_get_type:TGType;cdecl;external libgee;
+function gee_abstract_map_get_type:TGType;cdecl;external libgee;
+function gee_sorted_map_get_type:TGType;cdecl;external libgee;
+function gee_abstract_sorted_map_get_type:TGType;cdecl;external libgee;
+function gee_bidir_map_iterator_get_type:TGType;cdecl;external libgee;
+function gee_bidir_sorted_map_get_type:TGType;cdecl;external libgee;
+function gee_abstract_bidir_sorted_map_get_type:TGType;cdecl;external libgee;
+function gee_abstract_bidir_sorted_map_bidir_map_iterator(self:PGeeAbstractBidirSortedMap):PGeeBidirMapIterator;cdecl;external libgee;
 function gee_abstract_bidir_sorted_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
-           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeAbstractBidirSortedMap;cdecl;external libexttextcat;
-function gee_abstract_bidir_sorted_map_get_read_only_view(self:PGeeAbstractBidirSortedMap):PGeeBidirSortedMap;cdecl;external libexttextcat;
-function gee_abstract_collection_contains(self:PGeeAbstractCollection; item:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_collection_add(self:PGeeAbstractCollection; item:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_collection_remove(self:PGeeAbstractCollection; item:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-procedure gee_abstract_collection_clear(self:PGeeAbstractCollection);cdecl;external libexttextcat;
-function gee_abstract_collection_iterator(self:PGeeAbstractCollection):PGeeIterator;cdecl;external libexttextcat;
-function gee_abstract_collection_foreach(self:PGeeAbstractCollection; f:TGeeForallFunc; f_target:Tgpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_collection_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractCollection;cdecl;external libexttextcat;
-function gee_abstract_collection_get_size(self:PGeeAbstractCollection):Tgint;cdecl;external libexttextcat;
-function gee_abstract_collection_get_read_only(self:PGeeAbstractCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_collection_get_read_only_view(self:PGeeAbstractCollection):PGeeCollection;cdecl;external libexttextcat;
-function gee_abstract_list_list_iterator(self:PGeeAbstractList):PGeeListIterator;cdecl;external libexttextcat;
-function gee_abstract_list_get(self:PGeeAbstractList; index:Tgint):Tgpointer;cdecl;external libexttextcat;
-procedure gee_abstract_list_set(self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;external libexttextcat;
-function gee_abstract_list_index_of(self:PGeeAbstractList; item:Tgconstpointer):Tgint;cdecl;external libexttextcat;
-procedure gee_abstract_list_insert(self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;external libexttextcat;
-function gee_abstract_list_remove_at(self:PGeeAbstractList; index:Tgint):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_list_slice(self:PGeeAbstractList; start:Tgint; stop:Tgint):PGeeList;cdecl;external libexttextcat;
-function gee_abstract_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractList;cdecl;external libexttextcat;
-function gee_abstract_list_get_read_only_view(self:PGeeAbstractList):PGeeList;cdecl;external libexttextcat;
-function gee_abstract_map_has_key(self:PGeeAbstractMap; key:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_map_has(self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_map_get(self:PGeeAbstractMap; key:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-procedure gee_abstract_map_set(self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;external libexttextcat;
-function gee_abstract_map_unset(self:PGeeAbstractMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_map_map_iterator(self:PGeeAbstractMap):PGeeMapIterator;cdecl;external libexttextcat;
-procedure gee_abstract_map_clear(self:PGeeAbstractMap);cdecl;external libexttextcat;
-function gee_abstract_map_foreach(self:PGeeAbstractMap; f:TGeeForallFunc; f_target:Tgpointer):Tgboolean;cdecl;external libexttextcat;
+           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeAbstractBidirSortedMap;cdecl;external libgee;
+function gee_abstract_bidir_sorted_map_get_read_only_view(self:PGeeAbstractBidirSortedMap):PGeeBidirSortedMap;cdecl;external libgee;
+function gee_abstract_collection_contains(self:PGeeAbstractCollection; item:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_abstract_collection_add(self:PGeeAbstractCollection; item:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_abstract_collection_remove(self:PGeeAbstractCollection; item:Tgconstpointer):Tgboolean;cdecl;external libgee;
+procedure gee_abstract_collection_clear(self:PGeeAbstractCollection);cdecl;external libgee;
+function gee_abstract_collection_iterator(self:PGeeAbstractCollection):PGeeIterator;cdecl;external libgee;
+function gee_abstract_collection_foreach(self:PGeeAbstractCollection; f:TGeeForallFunc; f_target:Tgpointer):Tgboolean;cdecl;external libgee;
+function gee_abstract_collection_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractCollection;cdecl;external libgee;
+function gee_abstract_collection_get_size(self:PGeeAbstractCollection):Tgint;cdecl;external libgee;
+function gee_abstract_collection_get_read_only(self:PGeeAbstractCollection):Tgboolean;cdecl;external libgee;
+function gee_abstract_collection_get_read_only_view(self:PGeeAbstractCollection):PGeeCollection;cdecl;external libgee;
+function gee_abstract_list_list_iterator(self:PGeeAbstractList):PGeeListIterator;cdecl;external libgee;
+function gee_abstract_list_get(self:PGeeAbstractList; index:Tgint):Tgpointer;cdecl;external libgee;
+procedure gee_abstract_list_set(self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;external libgee;
+function gee_abstract_list_index_of(self:PGeeAbstractList; item:Tgconstpointer):Tgint;cdecl;external libgee;
+procedure gee_abstract_list_insert(self:PGeeAbstractList; index:Tgint; item:Tgconstpointer);cdecl;external libgee;
+function gee_abstract_list_remove_at(self:PGeeAbstractList; index:Tgint):Tgpointer;cdecl;external libgee;
+function gee_abstract_list_slice(self:PGeeAbstractList; start:Tgint; stop:Tgint):PGeeList;cdecl;external libgee;
+function gee_abstract_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractList;cdecl;external libgee;
+function gee_abstract_list_get_read_only_view(self:PGeeAbstractList):PGeeList;cdecl;external libgee;
+function gee_abstract_map_has_key(self:PGeeAbstractMap; key:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_abstract_map_has(self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_abstract_map_get(self:PGeeAbstractMap; key:Tgconstpointer):Tgpointer;cdecl;external libgee;
+procedure gee_abstract_map_set(self:PGeeAbstractMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;external libgee;
+function gee_abstract_map_unset(self:PGeeAbstractMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;external libgee;
+function gee_abstract_map_map_iterator(self:PGeeAbstractMap):PGeeMapIterator;cdecl;external libgee;
+procedure gee_abstract_map_clear(self:PGeeAbstractMap);cdecl;external libgee;
+function gee_abstract_map_foreach(self:PGeeAbstractMap; f:TGeeForallFunc; f_target:Tgpointer):Tgboolean;cdecl;external libgee;
 function gee_abstract_map_stream(self:PGeeAbstractMap; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeStreamFunc; 
-           f_target:Tgpointer; f_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libexttextcat;
+           f_target:Tgpointer; f_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libgee;
 function gee_abstract_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
-           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeAbstractMap;cdecl;external libexttextcat;
-function gee_abstract_map_get_size(self:PGeeAbstractMap):Tgint;cdecl;external libexttextcat;
-function gee_abstract_map_get_read_only(self:PGeeAbstractMap):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_map_get_keys(self:PGeeAbstractMap):PGeeSet;cdecl;external libexttextcat;
-function gee_abstract_map_get_values(self:PGeeAbstractMap):PGeeCollection;cdecl;external libexttextcat;
-function gee_abstract_map_get_entries(self:PGeeAbstractMap):PGeeSet;cdecl;external libexttextcat;
-function gee_abstract_map_get_read_only_view(self:PGeeAbstractMap):PGeeMap;cdecl;external libexttextcat;
-function gee_multi_set_get_type:TGType;cdecl;external libexttextcat;
-function gee_multi_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMultiMap, g_object_unref) }
-function gee_abstract_multi_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMultiMap, g_object_unref) }
-function gee_abstract_multi_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
-           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify; storage_map:PGeeMap):PGeeAbstractMultiMap;cdecl;external libexttextcat;
-function gee_abstract_multi_map_create_value_storage(self:PGeeAbstractMultiMap):PGeeCollection;cdecl;external libexttextcat;
-function gee_abstract_multi_map_create_multi_key_set(self:PGeeAbstractMultiMap):PGeeMultiSet;cdecl;external libexttextcat;
-function gee_abstract_multi_map_get_value_equal_func(self:PGeeAbstractMultiMap; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_abstract_multi_map_get_read_only_view(self:PGeeAbstractMultiMap):PGeeMultiMap;cdecl;external libexttextcat;
-function gee_abstract_multi_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMultiSet, g_object_unref) }
-function gee_abstract_multi_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; storage_map:PGeeMap):PGeeAbstractMultiSet;cdecl;external libexttextcat;
-function gee_abstract_multi_set_get_read_only_view(self:PGeeAbstractMultiSet):PGeeMultiSet;cdecl;external libexttextcat;
-function gee_queue_get_type:TGType;cdecl;external libexttextcat;
-function gee_abstract_queue_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractQueue, g_object_unref) }
-function gee_abstract_queue_peek(self:PGeeAbstractQueue):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_queue_poll(self:PGeeAbstractQueue):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_queue_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractQueue;cdecl;external libexttextcat;
-function gee_abstract_queue_get_capacity(self:PGeeAbstractQueue):Tgint;cdecl;external libexttextcat;
-function gee_abstract_queue_get_remaining_capacity(self:PGeeAbstractQueue):Tgint;cdecl;external libexttextcat;
-function gee_abstract_queue_get_is_full(self:PGeeAbstractQueue):Tgboolean;cdecl;external libexttextcat;
-function gee_abstract_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractSet;cdecl;external libexttextcat;
-function gee_abstract_set_get_read_only_view(self:PGeeAbstractSet):PGeeSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_map_head_map(self:PGeeAbstractSortedMap; before:Tgconstpointer):PGeeSortedMap;cdecl;external libexttextcat;
-function gee_abstract_sorted_map_tail_map(self:PGeeAbstractSortedMap; after:Tgconstpointer):PGeeSortedMap;cdecl;external libexttextcat;
-function gee_abstract_sorted_map_sub_map(self:PGeeAbstractSortedMap; before:Tgconstpointer; after:Tgconstpointer):PGeeSortedMap;cdecl;external libexttextcat;
+           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeAbstractMap;cdecl;external libgee;
+function gee_abstract_map_get_size(self:PGeeAbstractMap):Tgint;cdecl;external libgee;
+function gee_abstract_map_get_read_only(self:PGeeAbstractMap):Tgboolean;cdecl;external libgee;
+function gee_abstract_map_get_keys(self:PGeeAbstractMap):PGeeSet;cdecl;external libgee;
+function gee_abstract_map_get_values(self:PGeeAbstractMap):PGeeCollection;cdecl;external libgee;
+function gee_abstract_map_get_entries(self:PGeeAbstractMap):PGeeSet;cdecl;external libgee;
+function gee_abstract_map_get_read_only_view(self:PGeeAbstractMap):PGeeMap;cdecl;external libgee;
+function gee_multi_set_get_type:TGType;cdecl;external libgee;
+function gee_multi_map_get_type:TGType;cdecl;external libgee;
+function gee_abstract_multi_map_get_type:TGType;cdecl;external libgee;
+function gee_abstract_multi_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType;
+           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify; storage_map:PGeeMap):PGeeAbstractMultiMap;cdecl;external libgee;
+function gee_abstract_multi_map_create_value_storage(self:PGeeAbstractMultiMap):PGeeCollection;cdecl;external libgee;
+function gee_abstract_multi_map_create_multi_key_set(self:PGeeAbstractMultiMap):PGeeMultiSet;cdecl;external libgee;
+function gee_abstract_multi_map_get_value_equal_func(self:PGeeAbstractMultiMap; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_abstract_multi_map_get_read_only_view(self:PGeeAbstractMultiMap):PGeeMultiMap;cdecl;external libgee;
+function gee_abstract_multi_set_get_type:TGType;cdecl;external libgee;
+function gee_abstract_multi_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; storage_map:PGeeMap):PGeeAbstractMultiSet;cdecl;external libgee;
+function gee_abstract_multi_set_get_read_only_view(self:PGeeAbstractMultiSet):PGeeMultiSet;cdecl;external libgee;
+function gee_queue_get_type:TGType;cdecl;external libgee;
+function gee_abstract_queue_get_type:TGType;cdecl;external libgee;
+function gee_abstract_queue_peek(self:PGeeAbstractQueue):Tgpointer;cdecl;external libgee;
+function gee_abstract_queue_poll(self:PGeeAbstractQueue):Tgpointer;cdecl;external libgee;
+function gee_abstract_queue_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractQueue;cdecl;external libgee;
+function gee_abstract_queue_get_capacity(self:PGeeAbstractQueue):Tgint;cdecl;external libgee;
+function gee_abstract_queue_get_remaining_capacity(self:PGeeAbstractQueue):Tgint;cdecl;external libgee;
+function gee_abstract_queue_get_is_full(self:PGeeAbstractQueue):Tgboolean;cdecl;external libgee;
+function gee_abstract_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractSet;cdecl;external libgee;
+function gee_abstract_set_get_read_only_view(self:PGeeAbstractSet):PGeeSet;cdecl;external libgee;
+function gee_abstract_sorted_map_head_map(self:PGeeAbstractSortedMap; before:Tgconstpointer):PGeeSortedMap;cdecl;external libgee;
+function gee_abstract_sorted_map_tail_map(self:PGeeAbstractSortedMap; after:Tgconstpointer):PGeeSortedMap;cdecl;external libgee;
+function gee_abstract_sorted_map_sub_map(self:PGeeAbstractSortedMap; before:Tgconstpointer; after:Tgconstpointer):PGeeSortedMap;cdecl;external libgee;
 function gee_abstract_sorted_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
-           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeAbstractSortedMap;cdecl;external libexttextcat;
-function gee_abstract_sorted_map_get_ascending_keys(self:PGeeAbstractSortedMap):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_map_get_ascending_entries(self:PGeeAbstractSortedMap):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_first(self:PGeeAbstractSortedSet):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_last(self:PGeeAbstractSortedSet):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_iterator_at(self:PGeeAbstractSortedSet; element:Tgconstpointer):PGeeIterator;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_lower(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_higher(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_floor(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_ceil(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_head_set(self:PGeeAbstractSortedSet; before:Tgconstpointer):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_tail_set(self:PGeeAbstractSortedSet; after:Tgconstpointer):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_sub_set(self:PGeeAbstractSortedSet; from:Tgconstpointer; to:Tgconstpointer):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractSortedSet;cdecl;external libexttextcat;
-function gee_abstract_sorted_set_get_read_only_view(self:PGeeAbstractSortedSet):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_array_list_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeArrayList, g_object_unref) }
-function gee_array_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; 
-           equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libexttextcat;
+           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeAbstractSortedMap;cdecl;external libgee;
+function gee_abstract_sorted_map_get_ascending_keys(self:PGeeAbstractSortedMap):PGeeSortedSet;cdecl;external libgee;
+function gee_abstract_sorted_map_get_ascending_entries(self:PGeeAbstractSortedMap):PGeeSortedSet;cdecl;external libgee;
+function gee_abstract_sorted_set_first(self:PGeeAbstractSortedSet):Tgpointer;cdecl;external libgee;
+function gee_abstract_sorted_set_last(self:PGeeAbstractSortedSet):Tgpointer;cdecl;external libgee;
+function gee_abstract_sorted_set_iterator_at(self:PGeeAbstractSortedSet; element:Tgconstpointer):PGeeIterator;cdecl;external libgee;
+function gee_abstract_sorted_set_lower(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_abstract_sorted_set_higher(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_abstract_sorted_set_floor(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_abstract_sorted_set_ceil(self:PGeeAbstractSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_abstract_sorted_set_head_set(self:PGeeAbstractSortedSet; before:Tgconstpointer):PGeeSortedSet;cdecl;external libgee;
+function gee_abstract_sorted_set_tail_set(self:PGeeAbstractSortedSet; after:Tgconstpointer):PGeeSortedSet;cdecl;external libgee;
+function gee_abstract_sorted_set_sub_set(self:PGeeAbstractSortedSet; from:Tgconstpointer; to_:Tgconstpointer):PGeeSortedSet;cdecl;external libgee;
+function gee_abstract_sorted_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeAbstractSortedSet;cdecl;external libgee;
+function gee_abstract_sorted_set_get_read_only_view(self:PGeeAbstractSortedSet):PGeeSortedSet;cdecl;external libgee;
+function gee_array_list_get_type:TGType;cdecl;external libgee;
+function gee_array_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer;
+           equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libgee;
 function gee_array_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; 
-           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libexttextcat;
+           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libgee;
 function gee_array_list_new_wrap(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; items:Pgpointer; items_length1:Tgint; 
-           equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libexttextcat;
+           equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libgee;
 function gee_array_list_construct_wrap(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; items:Pgpointer; 
-           items_length1:Tgint; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libexttextcat;
-function gee_array_list_add_all(self:PGeeArrayList; collection:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_array_list_get_equal_func(self:PGeeArrayList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_deque_get_type:TGType;cdecl;external libexttextcat;
-function gee_array_queue_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeArrayQueue, g_object_unref) }
-function gee_array_queue_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; 
-           equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayQueue;cdecl;external libexttextcat;
+           items_length1:Tgint; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayList;cdecl;external libgee;
+function gee_array_list_add_all(self:PGeeArrayList; collection:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_array_list_get_equal_func(self:PGeeArrayList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_deque_get_type:TGType;cdecl;external libgee;
+function gee_array_queue_get_type:TGType;cdecl;external libgee;
+function gee_array_queue_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer;
+           equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayQueue;cdecl;external libgee;
 function gee_array_queue_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; 
-           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayQueue;cdecl;external libexttextcat;
-function gee_array_queue_get_equal_func(self:PGeeArrayQueue; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_array_queue_get_is_empty(self:PGeeArrayQueue):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_iterator_previous(self:PGeeBidirIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_iterator_has_previous(self:PGeeBidirIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_iterator_first(self:PGeeBidirIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_iterator_last(self:PGeeBidirIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_list_bidir_list_iterator(self:PGeeBidirList):PGeeBidirListIterator;cdecl;external libexttextcat;
-function gee_bidir_list_get_read_only_view(self:PGeeBidirList):PGeeBidirList;cdecl;external libexttextcat;
-procedure gee_bidir_list_iterator_insert(self:PGeeBidirListIterator; item:Tgconstpointer);cdecl;external libexttextcat;
-function gee_bidir_map_iterator_previous(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_map_iterator_has_previous(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_map_iterator_first(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_map_iterator_last(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_bidir_sorted_set_bidir_iterator(self:PGeeBidirSortedSet):PGeeBidirIterator;cdecl;external libexttextcat;
-function gee_bidir_sorted_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeBidirSortedSet;cdecl;external libexttextcat;
-function gee_bidir_sorted_set_get_read_only_view(self:PGeeBidirSortedSet):PGeeBidirSortedSet;cdecl;external libexttextcat;
-function gee_bidir_sorted_map_bidir_map_iterator(self:PGeeBidirSortedMap):PGeeBidirMapIterator;cdecl;external libexttextcat;
+           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeArrayQueue;cdecl;external libgee;
+function gee_array_queue_get_equal_func(self:PGeeArrayQueue; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_array_queue_get_is_empty(self:PGeeArrayQueue):Tgboolean;cdecl;external libgee;
+function gee_bidir_iterator_previous(self:PGeeBidirIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_iterator_has_previous(self:PGeeBidirIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_iterator_first(self:PGeeBidirIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_iterator_last(self:PGeeBidirIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_list_bidir_list_iterator(self:PGeeBidirList):PGeeBidirListIterator;cdecl;external libgee;
+function gee_bidir_list_get_read_only_view(self:PGeeBidirList):PGeeBidirList;cdecl;external libgee;
+procedure gee_bidir_list_iterator_insert(self:PGeeBidirListIterator; item:Tgconstpointer);cdecl;external libgee;
+function gee_bidir_map_iterator_previous(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_map_iterator_has_previous(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_map_iterator_first(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_map_iterator_last(self:PGeeBidirMapIterator):Tgboolean;cdecl;external libgee;
+function gee_bidir_sorted_set_bidir_iterator(self:PGeeBidirSortedSet):PGeeBidirIterator;cdecl;external libgee;
+function gee_bidir_sorted_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeBidirSortedSet;cdecl;external libgee;
+function gee_bidir_sorted_set_get_read_only_view(self:PGeeBidirSortedSet):PGeeBidirSortedSet;cdecl;external libgee;
+function gee_bidir_sorted_map_bidir_map_iterator(self:PGeeBidirSortedMap):PGeeBidirMapIterator;cdecl;external libgee;
 function gee_bidir_sorted_map_empty(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
-           v_destroy_func:TGDestroyNotify):PGeeBidirSortedMap;cdecl;external libexttextcat;
-function gee_bidir_sorted_map_get_read_only_view(self:PGeeBidirSortedMap):PGeeBidirSortedMap;cdecl;external libexttextcat;
-function gee_collection_contains(self:PGeeCollection; item:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_add(self:PGeeCollection; item:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_remove(self:PGeeCollection; item:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-procedure gee_collection_clear(self:PGeeCollection);cdecl;external libexttextcat;
-function gee_collection_add_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_contains_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_remove_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_retain_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_to_array(self:PGeeCollection; result_length1:Pgint):Pgpointer;cdecl;external libexttextcat;
-function gee_collection_add_all_array(self:PGeeCollection; array:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_contains_all_array(self:PGeeCollection; array:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_remove_all_array(self:PGeeCollection; array:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_add_all_iterator(self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_contains_all_iterator(self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_remove_all_iterator(self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeCollection;cdecl;external libexttextcat;
-function gee_collection_get_size(self:PGeeCollection):Tgint;cdecl;external libexttextcat;
-function gee_collection_get_is_empty(self:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_get_read_only(self:PGeeCollection):Tgboolean;cdecl;external libexttextcat;
-function gee_collection_get_read_only_view(self:PGeeCollection):PGeeCollection;cdecl;external libexttextcat;
-function gee_comparable_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeComparable, g_object_unref) }
-function gee_comparable_compare_to(self:PGeeComparable; object:Tgconstpointer):Tgint;cdecl;external libexttextcat;
-function gee_concurrent_list_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeConcurrentList, g_object_unref) }
-function gee_concurrent_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; 
-           equal_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentList;cdecl;external libexttextcat;
+           v_destroy_func:TGDestroyNotify):PGeeBidirSortedMap;cdecl;external libgee;
+function gee_bidir_sorted_map_get_read_only_view(self:PGeeBidirSortedMap):PGeeBidirSortedMap;cdecl;external libgee;
+function gee_collection_contains(self:PGeeCollection; item:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_collection_add(self:PGeeCollection; item:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_collection_remove(self:PGeeCollection; item:Tgconstpointer):Tgboolean;cdecl;external libgee;
+procedure gee_collection_clear(self:PGeeCollection);cdecl;external libgee;
+function gee_collection_add_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_collection_contains_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_collection_remove_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_collection_retain_all(self:PGeeCollection; collection:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_collection_to_array(self:PGeeCollection; result_length1:Pgint):Pgpointer;cdecl;external libgee;
+function gee_collection_add_all_array(self:PGeeCollection; arr:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;external libgee;
+function gee_collection_contains_all_array(self:PGeeCollection; arr:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;external libgee;
+function gee_collection_remove_all_array(self:PGeeCollection; arr:Pgpointer; array_length1:Tgint):Tgboolean;cdecl;external libgee;
+function gee_collection_add_all_iterator(self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;external libgee;
+function gee_collection_contains_all_iterator(self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;external libgee;
+function gee_collection_remove_all_iterator(self:PGeeCollection; iter:PGeeIterator):Tgboolean;cdecl;external libgee;
+function gee_collection_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeCollection;cdecl;external libgee;
+function gee_collection_get_size(self:PGeeCollection):Tgint;cdecl;external libgee;
+function gee_collection_get_is_empty(self:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_collection_get_read_only(self:PGeeCollection):Tgboolean;cdecl;external libgee;
+function gee_collection_get_read_only_view(self:PGeeCollection):PGeeCollection;cdecl;external libgee;
+function gee_comparable_get_type:TGType;cdecl;external libgee;
+function gee_comparable_compare_to(self:PGeeComparable; obj:Tgconstpointer):Tgint;cdecl;external libgee;
+function gee_concurrent_list_get_type:TGType;cdecl;external libgee;
+function gee_concurrent_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer;
+           equal_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentList;cdecl;external libgee;
 function gee_concurrent_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; 
-           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentList;cdecl;external libexttextcat;
-function gee_concurrent_list_get_equal_func(self:PGeeConcurrentList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_concurrent_list_get_is_empty(self:PGeeConcurrentList):Tgboolean;cdecl;external libexttextcat;
-function gee_concurrent_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeConcurrentSet, g_object_unref) }
-function gee_concurrent_set_range_type_get_type:TGType;cdecl;external libexttextcat;
+           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentList;cdecl;external libgee;
+function gee_concurrent_list_get_equal_func(self:PGeeConcurrentList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_concurrent_list_get_is_empty(self:PGeeConcurrentList):Tgboolean;cdecl;external libgee;
+function gee_concurrent_set_get_type:TGType;cdecl;external libgee;
+function gee_concurrent_set_range_type_get_type:TGType;cdecl;external libgee;
 function gee_concurrent_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer; 
-           compare_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentSet;cdecl;external libexttextcat;
+           compare_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentSet;cdecl;external libgee;
 function gee_concurrent_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; 
-           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentSet;cdecl;external libexttextcat;
-function gee_deque_offer_head(self:PGeeDeque; element:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_deque_peek_head(self:PGeeDeque):Tgpointer;cdecl;external libexttextcat;
-function gee_deque_poll_head(self:PGeeDeque):Tgpointer;cdecl;external libexttextcat;
-function gee_deque_drain_head(self:PGeeDeque; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libexttextcat;
-function gee_deque_offer_tail(self:PGeeDeque; element:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_deque_peek_tail(self:PGeeDeque):Tgpointer;cdecl;external libexttextcat;
-function gee_deque_poll_tail(self:PGeeDeque):Tgpointer;cdecl;external libexttextcat;
-function gee_deque_drain_tail(self:PGeeDeque; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libexttextcat;
-function gee_functions_get_equal_func_for(t:TGType; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_functions_get_hash_func_for(t:TGType; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGeeHashDataFunc;cdecl;external libexttextcat;
-function gee_functions_get_compare_func_for(t:TGType; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_future_error_quark:TGQuark;cdecl;external libexttextcat;
-function gee_future_error_get_type:TGType;cdecl;external libexttextcat;
-function gee_future_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeFuture, g_object_unref) }
-function gee_future_wait(self:PGeeFuture; error:PPGError):Tgconstpointer;cdecl;external libexttextcat;
-function gee_future_wait_until(self:PGeeFuture; end_time:Tgint64; value:Pgconstpointer; error:PPGError):Tgboolean;cdecl;external libexttextcat;
-procedure gee_future_wait_async(self:PGeeFuture; _callback_:TGAsyncReadyCallback; _user_data_:Tgpointer);cdecl;external libexttextcat;
-function gee_future_wait_finish(self:PGeeFuture; _res_:PGAsyncResult; error:PPGError):Tgconstpointer;cdecl;external libexttextcat;
+           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeeConcurrentSet;cdecl;external libgee;
+function gee_deque_offer_head(self:PGeeDeque; element:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_deque_peek_head(self:PGeeDeque):Tgpointer;cdecl;external libgee;
+function gee_deque_poll_head(self:PGeeDeque):Tgpointer;cdecl;external libgee;
+function gee_deque_drain_head(self:PGeeDeque; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libgee;
+function gee_deque_offer_tail(self:PGeeDeque; element:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_deque_peek_tail(self:PGeeDeque):Tgpointer;cdecl;external libgee;
+function gee_deque_poll_tail(self:PGeeDeque):Tgpointer;cdecl;external libgee;
+function gee_deque_drain_tail(self:PGeeDeque; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libgee;
+function gee_functions_get_equal_func_for(t:TGType; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_functions_get_hash_func_for(t:TGType; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGeeHashDataFunc;cdecl;external libgee;
+function gee_functions_get_compare_func_for(t:TGType; result_target:Pgpointer; result_target_destroy_notify:PGDestroyNotify):TGCompareDataFunc;cdecl;external libgee;
+function gee_future_error_quark:TGQuark;cdecl;external libgee;
+function gee_future_error_get_type:TGType;cdecl;external libgee;
+function gee_future_get_type:TGType;cdecl;external libgee;
+function gee_future_wait(self:PGeeFuture; error:PPGError):Tgconstpointer;cdecl;external libgee;
+function gee_future_wait_until(self:PGeeFuture; end_time:Tgint64; value:Pgconstpointer; error:PPGError):Tgboolean;cdecl;external libgee;
+procedure gee_future_wait_async(self:PGeeFuture; _callback_:TGAsyncReadyCallback; _user_data_:Tgpointer);cdecl;external libgee;
+function gee_future_wait_finish(self:PGeeFuture; _res_:PGAsyncResult; error:PPGError):Tgconstpointer;cdecl;external libgee;
 function gee_future_map(self:PGeeFuture; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; func:TGeeFutureMapFunc; 
-           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeFuture;cdecl;external libexttextcat;
+           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeFuture;cdecl;external libgee;
 function gee_future_light_map_fixed(self:PGeeFuture; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; func:TGeeFutureLightMapFunc; 
-           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeFuture;cdecl;external libexttextcat;
+           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeFuture;cdecl;external libgee;
 function gee_future_light_map(self:PGeeFuture; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; func:TGeeFutureLightMapFunc; 
-           func_target:Tgpointer):PGeeFuture;cdecl;external libexttextcat;
+           func_target:Tgpointer):PGeeFuture;cdecl;external libgee;
 function gee_future_zip(self:PGeeFuture; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; b_type:TGType; 
-           b_dup_func:TGBoxedCopyFunc; b_destroy_func:TGDestroyNotify; zip_func:TGeeFutureZipFunc; zip_func_target:Tgpointer; second:PGeeFuture):PGeeFuture;cdecl;external libexttextcat;
+           b_dup_func:TGBoxedCopyFunc; b_destroy_func:TGDestroyNotify; zip_func:TGeeFutureZipFunc; zip_func_target:Tgpointer; second:PGeeFuture):PGeeFuture;cdecl;external libgee;
 function gee_future_flat_map(self:PGeeFuture; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; func:TGeeFutureFlatMapFunc; 
-           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeFuture;cdecl;external libexttextcat;
-function gee_future_get_value(self:PGeeFuture):Tgconstpointer;cdecl;external libexttextcat;
-function gee_future_get_ready(self:PGeeFuture):Tgboolean;cdecl;external libexttextcat;
-function gee_future_get_exception(self:PGeeFuture):PGError;cdecl;external libexttextcat;
-function gee_hashable_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashable, g_object_unref) }
-function gee_hashable_hash(self:PGeeHashable):Tguint;cdecl;external libexttextcat;
-function gee_hashable_equal_to(self:PGeeHashable; object:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_hash_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMap, g_object_unref) }
-function gee_hash_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
+           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeFuture;cdecl;external libgee;
+function gee_future_get_value(self:PGeeFuture):Tgconstpointer;cdecl;external libgee;
+function gee_future_get_ready(self:PGeeFuture):Tgboolean;cdecl;external libgee;
+function gee_future_get_exception(self:PGeeFuture):PGError;cdecl;external libgee;
+function gee_hashable_get_type:TGType;cdecl;external libgee;
+function gee_hashable_hash(self:PGeeHashable):Tguint;cdecl;external libgee;
+function gee_hashable_equal_to(self:PGeeHashable; obj:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_hash_map_get_type:TGType;cdecl;external libgee;
+function gee_hash_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc;
            v_destroy_func:TGDestroyNotify; key_hash_func:TGeeHashDataFunc; key_hash_func_target:Tgpointer; key_hash_func_target_destroy_notify:TGDestroyNotify; key_equal_func:TGeeEqualDataFunc; 
-           key_equal_func_target:Tgpointer; key_equal_func_target_destroy_notify:TGDestroyNotify; value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMap;cdecl;external libexttextcat;
+           key_equal_func_target:Tgpointer; key_equal_func_target_destroy_notify:TGDestroyNotify; value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMap;cdecl;external libgee;
 function gee_hash_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
            v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify; key_hash_func:TGeeHashDataFunc; key_hash_func_target:Tgpointer; key_hash_func_target_destroy_notify:TGDestroyNotify; 
            key_equal_func:TGeeEqualDataFunc; key_equal_func_target:Tgpointer; key_equal_func_target_destroy_notify:TGDestroyNotify; value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; 
-           value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMap;cdecl;external libexttextcat;
-function gee_hash_map_get_key_hash_func(self:PGeeHashMap; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libexttextcat;
-function gee_hash_map_get_key_equal_func(self:PGeeHashMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_hash_map_get_value_equal_func(self:PGeeHashMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_hash_multi_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMultiMap, g_object_unref) }
-function gee_hash_multi_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
+           value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMap;cdecl;external libgee;
+function gee_hash_map_get_key_hash_func(self:PGeeHashMap; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libgee;
+function gee_hash_map_get_key_equal_func(self:PGeeHashMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_hash_map_get_value_equal_func(self:PGeeHashMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_hash_multi_map_get_type:TGType;cdecl;external libgee;
+function gee_hash_multi_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc;
            v_destroy_func:TGDestroyNotify; key_hash_func:TGeeHashDataFunc; key_hash_func_target:Tgpointer; key_hash_func_target_destroy_notify:TGDestroyNotify; key_equal_func:TGeeEqualDataFunc; 
            key_equal_func_target:Tgpointer; key_equal_func_target_destroy_notify:TGDestroyNotify; value_hash_func:TGeeHashDataFunc; value_hash_func_target:Tgpointer; value_hash_func_target_destroy_notify:TGDestroyNotify; 
-           value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiMap;cdecl;external libexttextcat;
+           value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiMap;cdecl;external libgee;
 function gee_hash_multi_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
            v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify; key_hash_func:TGeeHashDataFunc; key_hash_func_target:Tgpointer; key_hash_func_target_destroy_notify:TGDestroyNotify; 
            key_equal_func:TGeeEqualDataFunc; key_equal_func_target:Tgpointer; key_equal_func_target_destroy_notify:TGDestroyNotify; value_hash_func:TGeeHashDataFunc; value_hash_func_target:Tgpointer; 
-           value_hash_func_target_destroy_notify:TGDestroyNotify; value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiMap;cdecl;external libexttextcat;
-function gee_hash_multi_map_get_key_hash_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libexttextcat;
-function gee_hash_multi_map_get_key_equal_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_hash_multi_map_get_value_hash_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libexttextcat;
-function gee_hash_multi_map_get_value_equal_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_hash_multi_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMultiSet, g_object_unref) }
-function gee_hash_multi_set_new_fixed(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; hash_func_target:Tgpointer; 
-           hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiSet;cdecl;external libexttextcat;
+           value_hash_func_target_destroy_notify:TGDestroyNotify; value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiMap;cdecl;external libgee;
+function gee_hash_multi_map_get_key_hash_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libgee;
+function gee_hash_multi_map_get_key_equal_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_hash_multi_map_get_value_hash_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libgee;
+function gee_hash_multi_map_get_value_equal_func(self:PGeeHashMultiMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_hash_multi_set_get_type:TGType;cdecl;external libgee;
+function gee_hash_multi_set_new_fixed(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; hash_func_target:Tgpointer;
+           hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiSet;cdecl;external libgee;
 function gee_hash_multi_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; 
-           hash_func_target:Tgpointer; hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiSet;cdecl;external libexttextcat;
+           hash_func_target:Tgpointer; hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashMultiSet;cdecl;external libgee;
 function gee_hash_multi_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; hash_func_target:Tgpointer; 
-           equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer):PGeeHashMultiSet;cdecl;external libexttextcat;
-{xxxxxxxxxxxx G_GNUC_DEPRECATED ; }
-function gee_hash_multi_set_construct_broken(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; 
-           hash_func_target:Tgpointer; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer):PGeeHashMultiSet;cdecl;external libexttextcat;
-{xxxxxxxxxxxx G_GNUC_DEPRECATED ; }
-function gee_hash_multi_set_get_hash_func(self:PGeeHashMultiSet; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libexttextcat;
-function gee_hash_multi_set_get_equal_func(self:PGeeHashMultiSet; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_hash_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashSet, g_object_unref) }
-function gee_hash_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; hash_func_target:Tgpointer; 
-           hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashSet;cdecl;external libexttextcat;
+           equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer):PGeeHashMultiSet;cdecl;external libgee;   deprecated;
+function gee_hash_multi_set_construct_broken(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc;
+           hash_func_target:Tgpointer; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer):PGeeHashMultiSet;cdecl;external libgee;deprecated;
+function gee_hash_multi_set_get_hash_func(self:PGeeHashMultiSet; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libgee;
+function gee_hash_multi_set_get_equal_func(self:PGeeHashMultiSet; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_hash_set_get_type:TGType;cdecl;external libgee;
+function gee_hash_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; hash_func_target:Tgpointer;
+           hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashSet;cdecl;external libgee;
 function gee_hash_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; hash_func:TGeeHashDataFunc; 
-           hash_func_target:Tgpointer; hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashSet;cdecl;external libexttextcat;
-function gee_hash_set_get_hash_func(self:PGeeHashSet; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libexttextcat;
-function gee_hash_set_get_equal_func(self:PGeeHashSet; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-procedure gee_hazard_pointer_free(self:PGeeHazardPointer);cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointer, gee_hazard_pointer_free) }
-procedure gee_hazard_pointer_node_free(self:PGeeHazardPointerNode);cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerNode, gee_hazard_pointer_node_free) }
-function gee_hazard_pointer_policy_get_type:TGType;cdecl;external libexttextcat;
-function gee_hazard_pointer_policy_is_concrete(self:TGeeHazardPointerPolicy):Tgboolean;cdecl;external libexttextcat;
-function gee_hazard_pointer_policy_is_blocking(self:TGeeHazardPointerPolicy):Tgboolean;cdecl;external libexttextcat;
-function gee_hazard_pointer_policy_is_safe(self:TGeeHazardPointerPolicy):Tgboolean;cdecl;external libexttextcat;
-function gee_hazard_pointer_policy_to_concrete(self:TGeeHazardPointerPolicy):TGeeHazardPointerPolicy;cdecl;external libexttextcat;
-function gee_hazard_pointer_release_policy_get_type:TGType;cdecl;external libexttextcat;
-function gee_hazard_pointer_new(ptr:Pgconstpointer):PGeeHazardPointer;cdecl;external libexttextcat;
+           hash_func_target:Tgpointer; hash_func_target_destroy_notify:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeHashSet;cdecl;external libgee;
+function gee_hash_set_get_hash_func(self:PGeeHashSet; result_target:Pgpointer):TGeeHashDataFunc;cdecl;external libgee;
+function gee_hash_set_get_equal_func(self:PGeeHashSet; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+procedure gee_hazard_pointer_free(self:PGeeHazardPointer);cdecl;external libgee;
+procedure gee_hazard_pointer_node_free(self:PGeeHazardPointerNode);cdecl;external libgee;
+function gee_hazard_pointer_policy_get_type:TGType;cdecl;external libgee;
+function gee_hazard_pointer_policy_is_concrete(self:TGeeHazardPointerPolicy):Tgboolean;cdecl;external libgee;
+function gee_hazard_pointer_policy_is_blocking(self:TGeeHazardPointerPolicy):Tgboolean;cdecl;external libgee;
+function gee_hazard_pointer_policy_is_safe(self:TGeeHazardPointerPolicy):Tgboolean;cdecl;external libgee;
+function gee_hazard_pointer_policy_to_concrete(self:TGeeHazardPointerPolicy):TGeeHazardPointerPolicy;cdecl;external libgee;
+function gee_hazard_pointer_release_policy_get_type:TGType;cdecl;external libgee;
+function gee_hazard_pointer_new(ptr:Pgconstpointer):PGeeHazardPointer;cdecl;external libgee;
 function gee_hazard_pointer_get_hazard_pointer(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; aptr:PPgconstpointer; mask:Tgsize; 
-           mask_out:Pgsize):PGeeHazardPointer;cdecl;external libexttextcat;
+           mask_out:Pgsize):PGeeHazardPointer;cdecl;external libgee;
 function gee_hazard_pointer_get_pointer(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; aptr:PPgconstpointer; mask:Tgsize; 
-           mask_out:Pgsize):Tgpointer;cdecl;external libexttextcat;
+           mask_out:Pgsize):Tgpointer;cdecl;external libgee;
 function gee_hazard_pointer_exchange_hazard_pointer(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; aptr:PPgconstpointer; new_ptr:Tgpointer; 
-           mask:Tgsize; new_mask:Tgsize; old_mask:Pgsize):PGeeHazardPointer;cdecl;external libexttextcat;
+           mask:Tgsize; new_mask:Tgsize; old_mask:Pgsize):PGeeHazardPointer;cdecl;external libgee;
 procedure gee_hazard_pointer_set_pointer(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; aptr:PPgconstpointer; new_ptr:Tgpointer; 
-            mask:Tgsize; new_mask:Tgsize);cdecl;external libexttextcat;
+            mask:Tgsize; new_mask:Tgsize);cdecl;external libgee;
 function gee_hazard_pointer_exchange_pointer(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; aptr:PPgconstpointer; new_ptr:Tgpointer; 
-           mask:Tgsize; new_mask:Tgsize; old_mask:Pgsize):Tgpointer;cdecl;external libexttextcat;
+           mask:Tgsize; new_mask:Tgsize; old_mask:Pgsize):Tgpointer;cdecl;external libgee;
 function gee_hazard_pointer_compare_and_exchange_pointer(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; aptr:PPgconstpointer; old_ptr:Tgconstpointer; 
-           _new_ptr:Tgpointer; mask:Tgsize; old_mask:Tgsize; new_mask:Tgsize):Tgboolean;cdecl;external libexttextcat;
-function gee_hazard_pointer_get(self:PGeeHazardPointer; other_thread:Tgboolean):Tgconstpointer;cdecl;external libexttextcat;
-procedure gee_hazard_pointer_release(self:PGeeHazardPointer; notify:TGDestroyNotify);cdecl;external libexttextcat;
-procedure gee_hazard_pointer_set_default_policy(policy:TGeeHazardPointerPolicy);cdecl;external libexttextcat;
-procedure gee_hazard_pointer_set_thread_exit_policy(policy:TGeeHazardPointerPolicy);cdecl;external libexttextcat;
-function gee_hazard_pointer_set_release_policy(policy:TGeeHazardPointerReleasePolicy):Tgboolean;cdecl;external libexttextcat;
-procedure gee_hazard_pointer_context_free(self:PGeeHazardPointerContext);cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerContext, gee_hazard_pointer_context_free) }
-procedure gee_hazard_pointer_free_node_free(self:PGeeHazardPointerFreeNode);cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerFreeNode, gee_hazard_pointer_free_node_free) }
-function gee_hazard_pointer_context_new(policy:PGeeHazardPointerPolicy):PGeeHazardPointerContext;cdecl;external libexttextcat;
-procedure gee_hazard_pointer_context_try_free(self:PGeeHazardPointerContext);cdecl;external libexttextcat;
-procedure gee_hazard_pointer_context_free_all(self:PGeeHazardPointerContext);cdecl;external libexttextcat;
-procedure gee_hazard_pointer_context_try_release(self:PGeeHazardPointerContext);cdecl;external libexttextcat;
-procedure gee_hazard_pointer_context_release(self:PGeeHazardPointerContext);cdecl;external libexttextcat;
-function gee_iterable_iterator(self:PGeeIterable):PGeeIterator;cdecl;external libexttextcat;
-function gee_iterator_next(self:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_iterator_has_next(self:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_iterator_get(self:PGeeIterator):Tgpointer;cdecl;external libexttextcat;
-procedure gee_iterator_remove(self:PGeeIterator);cdecl;external libexttextcat;
+           _new_ptr:Tgpointer; mask:Tgsize; old_mask:Tgsize; new_mask:Tgsize):Tgboolean;cdecl;external libgee;
+function gee_hazard_pointer_get(self:PGeeHazardPointer; other_thread:Tgboolean):Tgconstpointer;cdecl;external libgee;
+procedure gee_hazard_pointer_release(self:PGeeHazardPointer; notify:TGDestroyNotify);cdecl;external libgee;
+procedure gee_hazard_pointer_set_default_policy(policy:TGeeHazardPointerPolicy);cdecl;external libgee;
+procedure gee_hazard_pointer_set_thread_exit_policy(policy:TGeeHazardPointerPolicy);cdecl;external libgee;
+function gee_hazard_pointer_set_release_policy(policy:TGeeHazardPointerReleasePolicy):Tgboolean;cdecl;external libgee;
+procedure gee_hazard_pointer_context_free(self:PGeeHazardPointerContext);cdecl;external libgee;
+procedure gee_hazard_pointer_free_node_free(self:PGeeHazardPointerFreeNode);cdecl;external libgee;
+function gee_hazard_pointer_context_new(policy:PGeeHazardPointerPolicy):PGeeHazardPointerContext;cdecl;external libgee;
+procedure gee_hazard_pointer_context_try_free(self:PGeeHazardPointerContext);cdecl;external libgee;
+procedure gee_hazard_pointer_context_free_all(self:PGeeHazardPointerContext);cdecl;external libgee;
+procedure gee_hazard_pointer_context_try_release(self:PGeeHazardPointerContext);cdecl;external libgee;
+procedure gee_hazard_pointer_context_release(self:PGeeHazardPointerContext);cdecl;external libgee;
+function gee_iterable_iterator(self:PGeeIterable):PGeeIterator;cdecl;external libgee;
+function gee_iterator_next(self:PGeeIterator):Tgboolean;cdecl;external libgee;
+function gee_iterator_has_next(self:PGeeIterator):Tgboolean;cdecl;external libgee;
+function gee_iterator_get(self:PGeeIterator):Tgpointer;cdecl;external libgee;
+procedure gee_iterator_remove(self:PGeeIterator);cdecl;external libgee;
 function gee_iterator_unfold(a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeUnfoldFunc; f_target:Tgpointer; 
-           f_target_destroy_notify:TGDestroyNotify; current:PGeeLazy):PGeeIterator;cdecl;external libexttextcat;
-function gee_iterator_concat(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; iters:PGeeIterator):PGeeIterator;cdecl;external libexttextcat;
-function gee_iterator_get_valid(self:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_iterator_get_read_only(self:PGeeIterator):Tgboolean;cdecl;external libexttextcat;
+           f_target_destroy_notify:TGDestroyNotify; current:PGeeLazy):PGeeIterator;cdecl;external libgee;
+function gee_iterator_concat(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; iters:PGeeIterator):PGeeIterator;cdecl;external libgee;
+function gee_iterator_get_valid(self:PGeeIterator):Tgboolean;cdecl;external libgee;
+function gee_iterator_get_read_only(self:PGeeIterator):Tgboolean;cdecl;external libgee;
 function gee_lazy_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; func:TGeeLazyFunc; func_target:Tgpointer; 
-           func_target_destroy_notify:TGDestroyNotify):PGeeLazy;cdecl;external libexttextcat;
+           func_target_destroy_notify:TGDestroyNotify):PGeeLazy;cdecl;external libgee;
 function gee_lazy_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; func:TGeeLazyFunc; 
-           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeLazy;cdecl;external libexttextcat;
-function gee_lazy_new_from_value(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; item:Tgconstpointer):PGeeLazy;cdecl;external libexttextcat;
-function gee_lazy_construct_from_value(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; item:Tgconstpointer):PGeeLazy;cdecl;external libexttextcat;
-procedure gee_lazy_eval(self:PGeeLazy);cdecl;external libexttextcat;
-function gee_lazy_get(self:PGeeLazy):Tgpointer;cdecl;external libexttextcat;
-function gee_lazy_get_value(self:PGeeLazy):Tgconstpointer;cdecl;external libexttextcat;
-function gee_lazy_get_future(self:PGeeLazy):PGeeFuture;cdecl;external libexttextcat;
-function gee_linked_list_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeLinkedList, g_object_unref) }
-function gee_linked_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; 
-           equal_func_target_destroy_notify:TGDestroyNotify):PGeeLinkedList;cdecl;external libexttextcat;
+           func_target:Tgpointer; func_target_destroy_notify:TGDestroyNotify):PGeeLazy;cdecl;external libgee;
+function gee_lazy_new_from_value(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; item:Tgconstpointer):PGeeLazy;cdecl;external libgee;
+function gee_lazy_construct_from_value(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; item:Tgconstpointer):PGeeLazy;cdecl;external libgee;
+procedure gee_lazy_eval(self:PGeeLazy);cdecl;external libgee;
+function gee_lazy_get(self:PGeeLazy):Tgpointer;cdecl;external libgee;
+function gee_lazy_get_value(self:PGeeLazy):Tgconstpointer;cdecl;external libgee;
+function gee_lazy_get_future(self:PGeeLazy):PGeeFuture;cdecl;external libgee;
+function gee_linked_list_get_type:TGType;cdecl;external libgee;
+function gee_linked_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer;
+           equal_func_target_destroy_notify:TGDestroyNotify):PGeeLinkedList;cdecl;external libgee;
 function gee_linked_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; 
-           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeLinkedList;cdecl;external libexttextcat;
-function gee_linked_list_first(self:PGeeLinkedList):Tgpointer;cdecl;external libexttextcat;
-function gee_linked_list_last(self:PGeeLinkedList):Tgpointer;cdecl;external libexttextcat;
-function gee_linked_list_get_equal_func(self:PGeeLinkedList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_list_list_iterator(self:PGeeList):PGeeListIterator;cdecl;external libexttextcat;
-function gee_list_get(self:PGeeList; index:Tgint):Tgpointer;cdecl;external libexttextcat;
-procedure gee_list_set(self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;external libexttextcat;
-function gee_list_index_of(self:PGeeList; item:Tgconstpointer):Tgint;cdecl;external libexttextcat;
-procedure gee_list_insert(self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;external libexttextcat;
-function gee_list_remove_at(self:PGeeList; index:Tgint):Tgpointer;cdecl;external libexttextcat;
-function gee_list_slice(self:PGeeList; start:Tgint; stop:Tgint):PGeeList;cdecl;external libexttextcat;
-function gee_list_first(self:PGeeList):Tgpointer;cdecl;external libexttextcat;
-function gee_list_last(self:PGeeList):Tgpointer;cdecl;external libexttextcat;
-procedure gee_list_insert_all(self:PGeeList; index:Tgint; collection:PGeeCollection);cdecl;external libexttextcat;
-procedure gee_list_sort(self:PGeeList; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify);cdecl;external libexttextcat;
-function gee_list_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeList;cdecl;external libexttextcat;
-function gee_list_get_read_only_view(self:PGeeList):PGeeList;cdecl;external libexttextcat;
-procedure gee_list_iterator_set(self:PGeeListIterator; item:Tgconstpointer);cdecl;external libexttextcat;
-procedure gee_list_iterator_add(self:PGeeListIterator; item:Tgconstpointer);cdecl;external libexttextcat;
-function gee_list_iterator_index(self:PGeeListIterator):Tgint;cdecl;external libexttextcat;
-function gee_map_has_key(self:PGeeMap; key:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_map_contains(self:PGeeMap; key:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-{xxxxxxxxxxxx G_GNUC_DEPRECATED ; }
-function gee_map_has(self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_map_get(self:PGeeMap; key:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-procedure gee_map_set(self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;external libexttextcat;
-function gee_map_unset(self:PGeeMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_map_remove(self:PGeeMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;external libexttextcat;
-{xxxxxxxxxxxx G_GNUC_DEPRECATED ; }
-procedure gee_map_clear(self:PGeeMap);cdecl;external libexttextcat;
-function gee_map_map_iterator(self:PGeeMap):PGeeMapIterator;cdecl;external libexttextcat;
-procedure gee_map_set_all(self:PGeeMap; map:PGeeMap);cdecl;external libexttextcat;
-function gee_map_unset_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libexttextcat;
-function gee_map_remove_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libexttextcat;
-{xxxxxxxxxxxx G_GNUC_DEPRECATED ; }
-function gee_map_has_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libexttextcat;
-function gee_map_contains_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libexttextcat;
-{xxxxxxxxxxxx G_GNUC_DEPRECATED ; }
-function gee_map_empty(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
-           v_destroy_func:TGDestroyNotify):PGeeMap;cdecl;external libexttextcat;
-function gee_map_get_size(self:PGeeMap):Tgint;cdecl;external libexttextcat;
-function gee_map_get_is_empty(self:PGeeMap):Tgboolean;cdecl;external libexttextcat;
-function gee_map_get_read_only(self:PGeeMap):Tgboolean;cdecl;external libexttextcat;
-function gee_map_get_keys(self:PGeeMap):PGeeSet;cdecl;external libexttextcat;
-function gee_map_get_values(self:PGeeMap):PGeeCollection;cdecl;external libexttextcat;
-function gee_map_get_entries(self:PGeeMap):PGeeSet;cdecl;external libexttextcat;
-function gee_map_get_read_only_view(self:PGeeMap):PGeeMap;cdecl;external libexttextcat;
-function gee_map_get_key_type(self:PGeeMap):TGType;cdecl;external libexttextcat;
-function gee_map_get_value_type(self:PGeeMap):TGType;cdecl;external libexttextcat;
+           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeLinkedList;cdecl;external libgee;
+function gee_linked_list_first(self:PGeeLinkedList):Tgpointer;cdecl;external libgee;
+function gee_linked_list_last(self:PGeeLinkedList):Tgpointer;cdecl;external libgee;
+function gee_linked_list_get_equal_func(self:PGeeLinkedList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_list_list_iterator(self:PGeeList):PGeeListIterator;cdecl;external libgee;
+function gee_list_get(self:PGeeList; index:Tgint):Tgpointer;cdecl;external libgee;
+procedure gee_list_set(self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;external libgee;
+function gee_list_index_of(self:PGeeList; item:Tgconstpointer):Tgint;cdecl;external libgee;
+procedure gee_list_insert(self:PGeeList; index:Tgint; item:Tgconstpointer);cdecl;external libgee;
+function gee_list_remove_at(self:PGeeList; index:Tgint):Tgpointer;cdecl;external libgee;
+function gee_list_slice(self:PGeeList; start:Tgint; stop:Tgint):PGeeList;cdecl;external libgee;
+function gee_list_first(self:PGeeList):Tgpointer;cdecl;external libgee;
+function gee_list_last(self:PGeeList):Tgpointer;cdecl;external libgee;
+procedure gee_list_insert_all(self:PGeeList; index:Tgint; collection:PGeeCollection);cdecl;external libgee;
+procedure gee_list_sort(self:PGeeList; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify);cdecl;external libgee;
+function gee_list_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeList;cdecl;external libgee;
+function gee_list_get_read_only_view(self:PGeeList):PGeeList;cdecl;external libgee;
+procedure gee_list_iterator_set(self:PGeeListIterator; item:Tgconstpointer);cdecl;external libgee;
+procedure gee_list_iterator_add(self:PGeeListIterator; item:Tgconstpointer);cdecl;external libgee;
+function gee_list_iterator_index(self:PGeeListIterator):Tgint;cdecl;external libgee;
+function gee_map_has_key(self:PGeeMap; key:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_map_contains(self:PGeeMap; key:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_map_has(self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;external libgee;deprecated;
+function gee_map_get(self:PGeeMap; key:Tgconstpointer):Tgpointer;cdecl;external libgee;
+procedure gee_map_set(self:PGeeMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;external libgee;
+function gee_map_unset(self:PGeeMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;external libgee;
+function gee_map_remove(self:PGeeMap; key:Tgconstpointer; value:Pgpointer):Tgboolean;cdecl;external libgee;
+procedure gee_map_clear(self:PGeeMap);cdecl;external libgee;deprecated;
+function gee_map_map_iterator(self:PGeeMap):PGeeMapIterator;cdecl;external libgee;
+procedure gee_map_set_all(self:PGeeMap; map:PGeeMap);cdecl;external libgee;
+function gee_map_unset_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libgee;
+function gee_map_remove_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libgee;
+function gee_map_has_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libgee;deprecated;
+function gee_map_contains_all(self:PGeeMap; map:PGeeMap):Tgboolean;cdecl;external libgee;
+function gee_map_empty(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc;
+           v_destroy_func:TGDestroyNotify):PGeeMap;cdecl;external libgee;deprecated;
+function gee_map_get_size(self:PGeeMap):Tgint;cdecl;external libgee;
+function gee_map_get_is_empty(self:PGeeMap):Tgboolean;cdecl;external libgee;
+function gee_map_get_read_only(self:PGeeMap):Tgboolean;cdecl;external libgee;
+function gee_map_get_keys(self:PGeeMap):PGeeSet;cdecl;external libgee;
+function gee_map_get_values(self:PGeeMap):PGeeCollection;cdecl;external libgee;
+function gee_map_get_entries(self:PGeeMap):PGeeSet;cdecl;external libgee;
+function gee_map_get_read_only_view(self:PGeeMap):PGeeMap;cdecl;external libgee;
+function gee_map_get_key_type(self:PGeeMap):TGType;cdecl;external libgee;
+function gee_map_get_value_type(self:PGeeMap):TGType;cdecl;external libgee;
 function gee_map_entry_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
-           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeMapEntry;cdecl;external libexttextcat;
-function gee_map_entry_get_key(self:PGeeMapEntry):Tgconstpointer;cdecl;external libexttextcat;
-function gee_map_entry_get_value(self:PGeeMapEntry):Tgconstpointer;cdecl;external libexttextcat;
-procedure gee_map_entry_set_value(self:PGeeMapEntry; value:Tgconstpointer);cdecl;external libexttextcat;
-function gee_map_entry_get_read_only(self:PGeeMapEntry):Tgboolean;cdecl;external libexttextcat;
-function gee_map_iterator_next(self:PGeeMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_map_iterator_has_next(self:PGeeMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_map_iterator_get_key(self:PGeeMapIterator):Tgpointer;cdecl;external libexttextcat;
-function gee_map_iterator_get_value(self:PGeeMapIterator):Tgpointer;cdecl;external libexttextcat;
-procedure gee_map_iterator_set_value(self:PGeeMapIterator; value:Tgconstpointer);cdecl;external libexttextcat;
-procedure gee_map_iterator_unset(self:PGeeMapIterator);cdecl;external libexttextcat;
+           v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify):PGeeMapEntry;cdecl;external libgee;
+function gee_map_entry_get_key(self:PGeeMapEntry):Tgconstpointer;cdecl;external libgee;
+function gee_map_entry_get_value(self:PGeeMapEntry):Tgconstpointer;cdecl;external libgee;
+procedure gee_map_entry_set_value(self:PGeeMapEntry; value:Tgconstpointer);cdecl;external libgee;
+function gee_map_entry_get_read_only(self:PGeeMapEntry):Tgboolean;cdecl;external libgee;
+function gee_map_iterator_next(self:PGeeMapIterator):Tgboolean;cdecl;external libgee;
+function gee_map_iterator_has_next(self:PGeeMapIterator):Tgboolean;cdecl;external libgee;
+function gee_map_iterator_get_key(self:PGeeMapIterator):Tgpointer;cdecl;external libgee;
+function gee_map_iterator_get_value(self:PGeeMapIterator):Tgpointer;cdecl;external libgee;
+procedure gee_map_iterator_set_value(self:PGeeMapIterator; value:Tgconstpointer);cdecl;external libgee;
+procedure gee_map_iterator_unset(self:PGeeMapIterator);cdecl;external libgee;
 function gee_map_iterator_fold(self:PGeeMapIterator; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeFoldMapFunc; 
-           f_target:Tgpointer; seed:Tgpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_map_iterator_foreach(self:PGeeMapIterator; f:TGeeForallMapFunc; f_target:Tgpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_map_iterator_get_valid(self:PGeeMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_map_iterator_get_mutable(self:PGeeMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_map_iterator_get_read_only(self:PGeeMapIterator):Tgboolean;cdecl;external libexttextcat;
-function gee_multi_map_get_keys(self:PGeeMultiMap):PGeeSet;cdecl;external libexttextcat;
-function gee_multi_map_get_all_keys(self:PGeeMultiMap):PGeeMultiSet;cdecl;external libexttextcat;
-function gee_multi_map_get_values(self:PGeeMultiMap):PGeeCollection;cdecl;external libexttextcat;
-function gee_multi_map_contains(self:PGeeMultiMap; key:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_multi_map_get(self:PGeeMultiMap; key:Tgconstpointer):PGeeCollection;cdecl;external libexttextcat;
-procedure gee_multi_map_set(self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;external libexttextcat;
-function gee_multi_map_remove(self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_multi_map_remove_all(self:PGeeMultiMap; key:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-procedure gee_multi_map_clear(self:PGeeMultiMap);cdecl;external libexttextcat;
-function gee_multi_map_map_iterator(self:PGeeMultiMap):PGeeMapIterator;cdecl;external libexttextcat;
-function gee_multi_map_get_size(self:PGeeMultiMap):Tgint;cdecl;external libexttextcat;
-function gee_multi_map_get_read_only(self:PGeeMultiMap):Tgboolean;cdecl;external libexttextcat;
-function gee_multi_map_get_key_type(self:PGeeMultiMap):TGType;cdecl;external libexttextcat;
-function gee_multi_map_get_value_type(self:PGeeMultiMap):TGType;cdecl;external libexttextcat;
-function gee_multi_map_get_read_only_view(self:PGeeMultiMap):PGeeMultiMap;cdecl;external libexttextcat;
-function gee_multi_set_count(self:PGeeMultiSet; item:Tgconstpointer):Tgint;cdecl;external libexttextcat;
-function gee_multi_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeSet;cdecl;external libexttextcat;
-function gee_multi_set_get_read_only_view(self:PGeeMultiSet):PGeeMultiSet;cdecl;external libexttextcat;
-function gee_priority_queue_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeePriorityQueue, g_object_unref) }
-function gee_priority_queue_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer; 
-           compare_func_target_destroy_notify:TGDestroyNotify):PGeePriorityQueue;cdecl;external libexttextcat;
+           f_target:Tgpointer; seed:Tgpointer):Tgpointer;cdecl;external libgee;
+function gee_map_iterator_foreach(self:PGeeMapIterator; f:TGeeForallMapFunc; f_target:Tgpointer):Tgboolean;cdecl;external libgee;
+function gee_map_iterator_get_valid(self:PGeeMapIterator):Tgboolean;cdecl;external libgee;
+function gee_map_iterator_get_mutable(self:PGeeMapIterator):Tgboolean;cdecl;external libgee;
+function gee_map_iterator_get_read_only(self:PGeeMapIterator):Tgboolean;cdecl;external libgee;
+function gee_multi_map_get_keys(self:PGeeMultiMap):PGeeSet;cdecl;external libgee;
+function gee_multi_map_get_all_keys(self:PGeeMultiMap):PGeeMultiSet;cdecl;external libgee;
+function gee_multi_map_get_values(self:PGeeMultiMap):PGeeCollection;cdecl;external libgee;
+function gee_multi_map_contains(self:PGeeMultiMap; key:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_multi_map_get(self:PGeeMultiMap; key:Tgconstpointer):PGeeCollection;cdecl;external libgee;
+procedure gee_multi_map_set(self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer);cdecl;external libgee;
+function gee_multi_map_remove(self:PGeeMultiMap; key:Tgconstpointer; value:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_multi_map_remove_all(self:PGeeMultiMap; key:Tgconstpointer):Tgboolean;cdecl;external libgee;
+procedure gee_multi_map_clear(self:PGeeMultiMap);cdecl;external libgee;
+function gee_multi_map_map_iterator(self:PGeeMultiMap):PGeeMapIterator;cdecl;external libgee;
+function gee_multi_map_get_size(self:PGeeMultiMap):Tgint;cdecl;external libgee;
+function gee_multi_map_get_read_only(self:PGeeMultiMap):Tgboolean;cdecl;external libgee;
+function gee_multi_map_get_key_type(self:PGeeMultiMap):TGType;cdecl;external libgee;
+function gee_multi_map_get_value_type(self:PGeeMultiMap):TGType;cdecl;external libgee;
+function gee_multi_map_get_read_only_view(self:PGeeMultiMap):PGeeMultiMap;cdecl;external libgee;
+function gee_multi_set_count(self:PGeeMultiSet; item:Tgconstpointer):Tgint;cdecl;external libgee;
+function gee_multi_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeSet;cdecl;external libgee;
+function gee_multi_set_get_read_only_view(self:PGeeMultiSet):PGeeMultiSet;cdecl;external libgee;
+function gee_priority_queue_get_type:TGType;cdecl;external libgee;
+function gee_priority_queue_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer;
+           compare_func_target_destroy_notify:TGDestroyNotify):PGeePriorityQueue;cdecl;external libgee;
 function gee_priority_queue_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; 
-           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeePriorityQueue;cdecl;external libexttextcat;
-function gee_priority_queue_offer(self:PGeePriorityQueue; element:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_priority_queue_drain(self:PGeePriorityQueue; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libexttextcat;
-function gee_priority_queue_get_compare_func(self:PGeePriorityQueue; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_promise_ref(instance:Tgpointer):Tgpointer;cdecl;external libexttextcat;
-procedure gee_promise_unref(instance:Tgpointer);cdecl;external libexttextcat;
-function gee_param_spec_promise(name:Pgchar; nick:Pgchar; blurb:Pgchar; object_type:TGType; flags:TGParamFlags):PGParamSpec;cdecl;external libexttextcat;
-procedure gee_value_set_promise(value:PGValue; v_object:Tgpointer);cdecl;external libexttextcat;
-procedure gee_value_take_promise(value:PGValue; v_object:Tgpointer);cdecl;external libexttextcat;
-function gee_value_get_promise(value:PGValue):Tgpointer;cdecl;external libexttextcat;
-function gee_promise_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeePromise, gee_promise_unref) }
-function gee_promise_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeePromise;cdecl;external libexttextcat;
-function gee_promise_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeePromise;cdecl;external libexttextcat;
-procedure gee_promise_set_value(self:PGeePromise; value:Tgpointer);cdecl;external libexttextcat;
-procedure gee_promise_set_exception(self:PGeePromise; exception:PGError);cdecl;external libexttextcat;
-function gee_promise_get_future(self:PGeePromise):PGeeFuture;cdecl;external libexttextcat;
-function gee_queue_offer(self:PGeeQueue; element:Tgconstpointer):Tgboolean;cdecl;external libexttextcat;
-function gee_queue_peek(self:PGeeQueue):Tgpointer;cdecl;external libexttextcat;
-function gee_queue_poll(self:PGeeQueue):Tgpointer;cdecl;external libexttextcat;
-function gee_queue_drain(self:PGeeQueue; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libexttextcat;
-function gee_queue_get_capacity(self:PGeeQueue):Tgint;cdecl;external libexttextcat;
-function gee_queue_get_remaining_capacity(self:PGeeQueue):Tgint;cdecl;external libexttextcat;
-function gee_queue_get_is_full(self:PGeeQueue):Tgboolean;cdecl;external libexttextcat;
-function gee_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeSet;cdecl;external libexttextcat;
-function gee_set_get_read_only_view(self:PGeeSet):PGeeSet;cdecl;external libexttextcat;
-function gee_sorted_map_head_map(self:PGeeSortedMap; before:Tgconstpointer):PGeeSortedMap;cdecl;external libexttextcat;
-function gee_sorted_map_tail_map(self:PGeeSortedMap; after:Tgconstpointer):PGeeSortedMap;cdecl;external libexttextcat;
-function gee_sorted_map_sub_map(self:PGeeSortedMap; before:Tgconstpointer; after:Tgconstpointer):PGeeSortedMap;cdecl;external libexttextcat;
+           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeePriorityQueue;cdecl;external libgee;
+function gee_priority_queue_offer(self:PGeePriorityQueue; element:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_priority_queue_drain(self:PGeePriorityQueue; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libgee;
+function gee_priority_queue_get_compare_func(self:PGeePriorityQueue; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libgee;
+function gee_promise_ref(instance:Tgpointer):Tgpointer;cdecl;external libgee;
+procedure gee_promise_unref(instance:Tgpointer);cdecl;external libgee;
+function gee_param_spec_promise(name:Pgchar; nick:Pgchar; blurb:Pgchar; object_type:TGType; flags:TGParamFlags):PGParamSpec;cdecl;external libgee;
+procedure gee_value_set_promise(value:PGValue; v_object:Tgpointer);cdecl;external libgee;
+procedure gee_value_take_promise(value:PGValue; v_object:Tgpointer);cdecl;external libgee;
+function gee_value_get_promise(value:PGValue):Tgpointer;cdecl;external libgee;
+function gee_promise_get_type:TGType;cdecl;external libgee;
+function gee_promise_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeePromise;cdecl;external libgee;
+function gee_promise_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeePromise;cdecl;external libgee;
+procedure gee_promise_set_value(self:PGeePromise; value:Tgpointer);cdecl;external libgee;
+procedure gee_promise_set_exception(self:PGeePromise; exception:PGError);cdecl;external libgee;
+function gee_promise_get_future(self:PGeePromise):PGeeFuture;cdecl;external libgee;
+function gee_queue_offer(self:PGeeQueue; element:Tgconstpointer):Tgboolean;cdecl;external libgee;
+function gee_queue_peek(self:PGeeQueue):Tgpointer;cdecl;external libgee;
+function gee_queue_poll(self:PGeeQueue):Tgpointer;cdecl;external libgee;
+function gee_queue_drain(self:PGeeQueue; recipient:PGeeCollection; amount:Tgint):Tgint;cdecl;external libgee;
+function gee_queue_get_capacity(self:PGeeQueue):Tgint;cdecl;external libgee;
+function gee_queue_get_remaining_capacity(self:PGeeQueue):Tgint;cdecl;external libgee;
+function gee_queue_get_is_full(self:PGeeQueue):Tgboolean;cdecl;external libgee;
+function gee_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeSet;cdecl;external libgee;
+function gee_set_get_read_only_view(self:PGeeSet):PGeeSet;cdecl;external libgee;
+function gee_sorted_map_head_map(self:PGeeSortedMap; before:Tgconstpointer):PGeeSortedMap;cdecl;external libgee;
+function gee_sorted_map_tail_map(self:PGeeSortedMap; after:Tgconstpointer):PGeeSortedMap;cdecl;external libgee;
+function gee_sorted_map_sub_map(self:PGeeSortedMap; before:Tgconstpointer; after:Tgconstpointer):PGeeSortedMap;cdecl;external libgee;
 function gee_sorted_map_empty(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
-           v_destroy_func:TGDestroyNotify):PGeeMap;cdecl;external libexttextcat;
-function gee_sorted_map_get_ascending_keys(self:PGeeSortedMap):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_sorted_map_get_ascending_entries(self:PGeeSortedMap):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_sorted_map_get_read_only_view(self:PGeeSortedMap):PGeeSortedMap;cdecl;external libexttextcat;
-function gee_sorted_set_first(self:PGeeSortedSet):Tgpointer;cdecl;external libexttextcat;
-function gee_sorted_set_last(self:PGeeSortedSet):Tgpointer;cdecl;external libexttextcat;
-function gee_sorted_set_iterator_at(self:PGeeSortedSet; element:Tgconstpointer):PGeeIterator;cdecl;external libexttextcat;
-function gee_sorted_set_lower(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_sorted_set_higher(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_sorted_set_floor(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_sorted_set_ceil(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libexttextcat;
-function gee_sorted_set_head_set(self:PGeeSortedSet; before:Tgconstpointer):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_sorted_set_tail_set(self:PGeeSortedSet; after:Tgconstpointer):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_sorted_set_sub_set(self:PGeeSortedSet; from:Tgconstpointer; to:Tgconstpointer):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_sorted_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeSortedSet;cdecl;external libexttextcat;
-function gee_sorted_set_get_read_only_view(self:PGeeSortedSet):PGeeSortedSet;cdecl;external libexttextcat;
+           v_destroy_func:TGDestroyNotify):PGeeMap;cdecl;external libgee;
+function gee_sorted_map_get_ascending_keys(self:PGeeSortedMap):PGeeSortedSet;cdecl;external libgee;
+function gee_sorted_map_get_ascending_entries(self:PGeeSortedMap):PGeeSortedSet;cdecl;external libgee;
+function gee_sorted_map_get_read_only_view(self:PGeeSortedMap):PGeeSortedMap;cdecl;external libgee;
+function gee_sorted_set_first(self:PGeeSortedSet):Tgpointer;cdecl;external libgee;
+function gee_sorted_set_last(self:PGeeSortedSet):Tgpointer;cdecl;external libgee;
+function gee_sorted_set_iterator_at(self:PGeeSortedSet; element:Tgconstpointer):PGeeIterator;cdecl;external libgee;
+function gee_sorted_set_lower(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_sorted_set_higher(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_sorted_set_floor(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_sorted_set_ceil(self:PGeeSortedSet; element:Tgconstpointer):Tgpointer;cdecl;external libgee;
+function gee_sorted_set_head_set(self:PGeeSortedSet; before:Tgconstpointer):PGeeSortedSet;cdecl;external libgee;
+function gee_sorted_set_tail_set(self:PGeeSortedSet; after:Tgconstpointer):PGeeSortedSet;cdecl;external libgee;
+function gee_sorted_set_sub_set(self:PGeeSortedSet; from:Tgconstpointer; to_:Tgconstpointer):PGeeSortedSet;cdecl;external libgee;
+function gee_sorted_set_empty(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify):PGeeSortedSet;cdecl;external libgee;
+function gee_sorted_set_get_read_only_view(self:PGeeSortedSet):PGeeSortedSet;cdecl;external libgee;
 function gee_task(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; task:TGeeTask; task_target:Tgpointer; 
-           error:PPGError):PGeeFuture;cdecl;external libexttextcat;
-procedure gee_async_task(_callback_:TGAsyncReadyCallback; _user_data_:Tgpointer);cdecl;external libexttextcat;
-procedure gee_async_task_finish(_res_:PGAsyncResult; error:PPGError);cdecl;external libexttextcat;
-function gee_traversable_foreach(self:PGeeTraversable; f:TGeeForallFunc; f_target:Tgpointer):Tgboolean;cdecl;external libexttextcat;
+           error:PPGError):PGeeFuture;cdecl;external libgee;
+procedure gee_async_task(_callback_:TGAsyncReadyCallback; _user_data_:Tgpointer);cdecl;external libgee;
+procedure gee_async_task_finish(_res_:PGAsyncResult; error:PPGError);cdecl;external libgee;
+function gee_traversable_foreach(self:PGeeTraversable; f:TGeeForallFunc; f_target:Tgpointer):Tgboolean;cdecl;external libgee;
 function gee_traversable_stream(self:PGeeTraversable; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeStreamFunc; 
-           f_target:Tgpointer; f_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libexttextcat;
+           f_target:Tgpointer; f_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libgee;
 function gee_traversable_fold(self:PGeeTraversable; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeFoldFunc; 
-           f_target:Tgpointer; seed:Tgpointer):Tgpointer;cdecl;external libexttextcat;
+           f_target:Tgpointer; seed:Tgpointer):Tgpointer;cdecl;external libgee;
 function gee_traversable_map(self:PGeeTraversable; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeMapFunc; 
-           f_target:Tgpointer):PGeeIterator;cdecl;external libexttextcat;
+           f_target:Tgpointer):PGeeIterator;cdecl;external libgee;
 function gee_traversable_scan(self:PGeeTraversable; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeFoldFunc; 
-           f_target:Tgpointer; seed:Tgpointer):PGeeIterator;cdecl;external libexttextcat;
-function gee_traversable_filter(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libexttextcat;
-function gee_traversable_chop(self:PGeeTraversable; offset:Tgint; length:Tgint):PGeeIterator;cdecl;external libexttextcat;
+           f_target:Tgpointer; seed:Tgpointer):PGeeIterator;cdecl;external libgee;
+function gee_traversable_filter(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libgee;
+function gee_traversable_chop(self:PGeeTraversable; offset:Tgint; length:Tgint):PGeeIterator;cdecl;external libgee;
 function gee_traversable_flat_map(self:PGeeTraversable; a_type:TGType; a_dup_func:TGBoxedCopyFunc; a_destroy_func:TGDestroyNotify; f:TGeeFlatMapFunc; 
-           f_target:Tgpointer; f_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libexttextcat;
-function gee_traversable_tee(self:PGeeTraversable; forks:Tguint; result_length1:Pgint):^PGeeIterator;cdecl;external libexttextcat;
-function gee_traversable_first_match(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):Tgpointer;cdecl;external libexttextcat;
-function gee_traversable_any_match(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):Tgboolean;cdecl;external libexttextcat;
-function gee_traversable_all_match(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):Tgboolean;cdecl;external libexttextcat;
-function gee_traversable_max(self:PGeeTraversable; compare:TGCompareDataFunc; compare_target:Tgpointer; compare_target_destroy_notify:TGDestroyNotify):Tgpointer;cdecl;external libexttextcat;
-function gee_traversable_min(self:PGeeTraversable; compare:TGCompareDataFunc; compare_target:Tgpointer; compare_target_destroy_notify:TGDestroyNotify):Tgpointer;cdecl;external libexttextcat;
-function gee_traversable_order_by(self:PGeeTraversable; compare:TGCompareDataFunc; compare_target:Tgpointer; compare_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libexttextcat;
-function gee_traversable_get_element_type(self:PGeeTraversable):TGType;cdecl;external libexttextcat;
-function gee_tree_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMap, g_object_unref) }
-function gee_tree_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
+           f_target:Tgpointer; f_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libgee;
+function gee_traversable_tee(self:PGeeTraversable; forks:Tguint; result_length1:Pgint):PPGeeIterator;cdecl;external libgee;
+function gee_traversable_first_match(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):Tgpointer;cdecl;external libgee;
+function gee_traversable_any_match(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):Tgboolean;cdecl;external libgee;
+function gee_traversable_all_match(self:PGeeTraversable; pred:TGeePredicate; pred_target:Tgpointer; pred_target_destroy_notify:TGDestroyNotify):Tgboolean;cdecl;external libgee;
+function gee_traversable_max(self:PGeeTraversable; compare:TGCompareDataFunc; compare_target:Tgpointer; compare_target_destroy_notify:TGDestroyNotify):Tgpointer;cdecl;external libgee;
+function gee_traversable_min(self:PGeeTraversable; compare:TGCompareDataFunc; compare_target:Tgpointer; compare_target_destroy_notify:TGDestroyNotify):Tgpointer;cdecl;external libgee;
+function gee_traversable_order_by(self:PGeeTraversable; compare:TGCompareDataFunc; compare_target:Tgpointer; compare_target_destroy_notify:TGDestroyNotify):PGeeIterator;cdecl;external libgee;
+function gee_traversable_get_element_type(self:PGeeTraversable):TGType;cdecl;external libgee;
+function gee_tree_map_get_type:TGType;cdecl;external libgee;
+function gee_tree_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc;
            v_destroy_func:TGDestroyNotify; key_compare_func:TGCompareDataFunc; key_compare_func_target:Tgpointer; key_compare_func_target_destroy_notify:TGDestroyNotify; value_equal_func:TGeeEqualDataFunc; 
-           value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMap;cdecl;external libexttextcat;
+           value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMap;cdecl;external libgee;
 function gee_tree_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
            v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify; key_compare_func:TGCompareDataFunc; key_compare_func_target:Tgpointer; key_compare_func_target_destroy_notify:TGDestroyNotify; 
-           value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMap;cdecl;external libexttextcat;
-function gee_tree_map_get_key_compare_func(self:PGeeTreeMap; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_tree_map_get_value_equal_func(self:PGeeTreeMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-function gee_tree_multi_map_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMultiMap, g_object_unref) }
-function gee_tree_multi_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc; 
+           value_equal_func:TGeeEqualDataFunc; value_equal_func_target:Tgpointer; value_equal_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMap;cdecl;external libgee;
+function gee_tree_map_get_key_compare_func(self:PGeeTreeMap; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libgee;
+function gee_tree_map_get_value_equal_func(self:PGeeTreeMap; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
+function gee_tree_multi_map_get_type:TGType;cdecl;external libgee;
+function gee_tree_multi_map_new(k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; v_dup_func:TGBoxedCopyFunc;
            v_destroy_func:TGDestroyNotify; key_compare_func:TGCompareDataFunc; key_compare_func_target:Tgpointer; key_compare_func_target_destroy_notify:TGDestroyNotify; value_compare_func:TGCompareDataFunc; 
-           value_compare_func_target:Tgpointer; value_compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiMap;cdecl;external libexttextcat;
+           value_compare_func_target:Tgpointer; value_compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiMap;cdecl;external libgee;
 function gee_tree_multi_map_construct(object_type:TGType; k_type:TGType; k_dup_func:TGBoxedCopyFunc; k_destroy_func:TGDestroyNotify; v_type:TGType; 
            v_dup_func:TGBoxedCopyFunc; v_destroy_func:TGDestroyNotify; key_compare_func:TGCompareDataFunc; key_compare_func_target:Tgpointer; key_compare_func_target_destroy_notify:TGDestroyNotify; 
-           value_compare_func:TGCompareDataFunc; value_compare_func_target:Tgpointer; value_compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiMap;cdecl;external libexttextcat;
-function gee_tree_multi_map_get_key_compare_func(self:PGeeTreeMultiMap; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_tree_multi_map_get_value_compare_func(self:PGeeTreeMultiMap; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_tree_multi_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMultiSet, g_object_unref) }
-function gee_tree_multi_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer; 
-           compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiSet;cdecl;external libexttextcat;
+           value_compare_func:TGCompareDataFunc; value_compare_func_target:Tgpointer; value_compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiMap;cdecl;external libgee;
+function gee_tree_multi_map_get_key_compare_func(self:PGeeTreeMultiMap; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libgee;
+function gee_tree_multi_map_get_value_compare_func(self:PGeeTreeMultiMap; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libgee;
+function gee_tree_multi_set_get_type:TGType;cdecl;external libgee;
+function gee_tree_multi_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer;
+           compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiSet;cdecl;external libgee;
 function gee_tree_multi_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; 
-           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiSet;cdecl;external libexttextcat;
-function gee_tree_multi_set_get_compare_func(self:PGeeTreeMultiSet; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_tree_set_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeSet, g_object_unref) }
-function gee_tree_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer; 
-           compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeSet;cdecl;external libexttextcat;
+           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeMultiSet;cdecl;external libgee;
+function gee_tree_multi_set_get_compare_func(self:PGeeTreeMultiSet; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libgee;
+function gee_tree_set_get_type:TGType;cdecl;external libgee;
+function gee_tree_set_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; compare_func_target:Tgpointer;
+           compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeSet;cdecl;external libgee;
 function gee_tree_set_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; compare_func:TGCompareDataFunc; 
-           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeSet;cdecl;external libexttextcat;
-function gee_tree_set_get_compare_func(self:PGeeTreeSet; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libexttextcat;
-function gee_unrolled_linked_list_get_type:TGType;cdecl;external libexttextcat;
-{ G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeUnrolledLinkedList, g_object_unref) }
-function gee_unrolled_linked_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer; 
-           equal_func_target_destroy_notify:TGDestroyNotify):PGeeUnrolledLinkedList;cdecl;external libexttextcat;
+           compare_func_target:Tgpointer; compare_func_target_destroy_notify:TGDestroyNotify):PGeeTreeSet;cdecl;external libgee;
+function gee_tree_set_get_compare_func(self:PGeeTreeSet; result_target:Pgpointer):TGCompareDataFunc;cdecl;external libgee;
+function gee_unrolled_linked_list_get_type:TGType;cdecl;external libgee;
+function gee_unrolled_linked_list_new(g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; equal_func_target:Tgpointer;
+           equal_func_target_destroy_notify:TGDestroyNotify):PGeeUnrolledLinkedList;cdecl;external libgee;
 function gee_unrolled_linked_list_construct(object_type:TGType; g_type:TGType; g_dup_func:TGBoxedCopyFunc; g_destroy_func:TGDestroyNotify; equal_func:TGeeEqualDataFunc; 
-           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeUnrolledLinkedList;cdecl;external libexttextcat;
-function gee_unrolled_linked_list_get_equal_func(self:PGeeUnrolledLinkedList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libexttextcat;
-{$endif}
+           equal_func_target:Tgpointer; equal_func_target_destroy_notify:TGDestroyNotify):PGeeUnrolledLinkedList;cdecl;external libgee;
+function gee_unrolled_linked_list_get_equal_func(self:PGeeUnrolledLinkedList; result_target:Pgpointer):TGeeEqualDataFunc;cdecl;external libgee;
 
 // === Konventiert am: 10-11-26 16:09:35 ===
 
+function GEE_FUTURE_ERROR : TGQuark;
+
+// ====
+
+function GEE_TYPE_TRAVERSABLE: TGType;
+function GEE_TRAVERSABLE(obj: Pointer): PGeeTraversable;
+function GEE_IS_TRAVERSABLE(obj: Pointer): Tgboolean;
+function GEE_TRAVERSABLE_GET_IFACE(inst: Pointer): PGeeTraversableIface;
+
+function GEE_TYPE_TRAVERSABLE_STREAM: TGType;
+
+// ====
+
+function GEE_TYPE_LAZY: TGType;
+function GEE_LAZY(obj: Pointer): PGeeLazy;
+function GEE_LAZY_CLASS(klass: Pointer): PGeeLazyClass;
+function GEE_IS_LAZY(obj: Pointer): Tgboolean;
+function GEE_IS_LAZY_CLASS(klass: Pointer): Tgboolean;
+function GEE_LAZY_GET_CLASS(obj: Pointer): PGeeLazyClass;
+
+// ====
+
+function GEE_TYPE_ITERATOR: TGType;
+function GEE_ITERATOR(obj: Pointer): PGeeIterator;
+function GEE_IS_ITERATOR(obj: Pointer): Tgboolean;
+function GEE_ITERATOR_GET_IFACE(inst: Pointer): PGeeIteratorIface;
+
+// ====
+
+function GEE_TYPE_ITERABLE: TGType;
+function GEE_ITERABLE(obj: Pointer): PGeeIterable;
+function GEE_IS_ITERABLE(obj: Pointer): Tgboolean;
+function GEE_ITERABLE_GET_IFACE(inst: Pointer): PGeeIterableIface;
+
+// ====
+
+function GEE_TYPE_COLLECTION: TGType;
+function GEE_COLLECTION(obj: Pointer): PGeeCollection;
+function GEE_IS_COLLECTION(obj: Pointer): Tgboolean;
+function GEE_COLLECTION_GET_IFACE(inst: Pointer): PGeeCollectionIface;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_COLLECTION: TGType;
+function GEE_ABSTRACT_COLLECTION(obj: Pointer): PGeeAbstractCollection;
+function GEE_ABSTRACT_COLLECTION_CLASS(klass: Pointer): PGeeAbstractCollectionClass;
+function GEE_IS_ABSTRACT_COLLECTION(obj: Pointer): Tgboolean;
+function GEE_IS_ABSTRACT_COLLECTION_CLASS(klass: Pointer): Tgboolean;
+function GEE_ABSTRACT_COLLECTION_GET_CLASS(obj: Pointer): PGeeAbstractCollectionClass;
+
+// ====
+
+function GEE_TYPE_LIST: TGType;
+function GEE_LIST(obj: Pointer): PGeeList;
+function GEE_IS_LIST(obj: Pointer): Tgboolean;
+function GEE_LIST_GET_IFACE(inst: Pointer): PGeeListIface;
+
+// ====
+
+function GEE_TYPE_LIST_ITERATOR: TGType;
+function GEE_LIST_ITERATOR(obj: Pointer): PGeeListIterator;
+function GEE_IS_LIST_ITERATOR(obj: Pointer): Tgboolean;
+function GEE_LIST_ITERATOR_GET_IFACE(inst: Pointer): PGeeListIteratorIface;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_LIST: TGType;
+function GEE_ABSTRACT_LIST(obj: Pointer): PGeeAbstractList;
+function GEE_ABSTRACT_LIST_CLASS(klass: Pointer): PGeeAbstractListClass;
+function GEE_IS_ABSTRACT_LIST(obj: Pointer): Tgboolean;
+function GEE_IS_ABSTRACT_LIST_CLASS(klass: Pointer): Tgboolean;
+function GEE_ABSTRACT_LIST_GET_CLASS(obj: Pointer): PGeeAbstractListClass;
+
+// ====
+
+function GEE_TYPE_BIDIR_LIST: TGType;
+function GEE_BIDIR_LIST(obj: Pointer): PGeeBidirList;
+function GEE_IS_BIDIR_LIST(obj: Pointer): Tgboolean;
+function GEE_BIDIR_LIST_GET_IFACE(inst: Pointer): PGeeBidirListInterface;
+
+// ====
+
+function GEE_TYPE_BIDIR_LIST_ITERATOR: TGType;
+begin
+  Result := gee_bidir_list_iterator_get_type;
+end;
+
+function GEE_BIDIR_LIST_ITERATOR(obj: Pointer): PGeeBidirListIterator;
+begin
+  Result := PGeeBidirListIterator(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_LIST_ITERATOR));
+end;
+
+function GEE_IS_BIDIR_LIST_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_LIST_ITERATOR);
+end;
+
+function GEE_BIDIR_LIST_ITERATOR_GET_IFACE(inst: Pointer): PGeeBidirListIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_LIST_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_ITERATOR: TGType;
+begin
+  Result := gee_bidir_iterator_get_type;
+end;
+
+function GEE_BIDIR_ITERATOR(obj: Pointer): PGeeBidirIterator;
+begin
+  Result := PGeeBidirIterator(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_ITERATOR));
+end;
+
+function GEE_IS_BIDIR_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_ITERATOR);
+end;
+
+function GEE_BIDIR_ITERATOR_GET_IFACE(inst: Pointer): PGeeBidirIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_BIDIR_LIST: TGType;
+begin
+  Result := gee_abstract_bidir_list_get_type;
+end;
+
+function GEE_ABSTRACT_BIDIR_LIST(obj: Pointer): PGeeAbstractBidirList;
+begin
+  Result := PGeeAbstractBidirList(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_BIDIR_LIST));
+end;
+
+function GEE_ABSTRACT_BIDIR_LIST_CLASS(klass: Pointer): PGeeAbstractBidirListClass;
+begin
+  Result := PGeeAbstractBidirListClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_BIDIR_LIST));
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_BIDIR_LIST);
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_BIDIR_LIST);
+end;
+
+function GEE_ABSTRACT_BIDIR_LIST_GET_CLASS(obj: Pointer): PGeeAbstractBidirListClass;
+begin
+  Result := PGeeAbstractBidirListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_SET: TGType;
+begin
+  Result := gee_set_get_type;
+end;
+
+function GEE_SET(obj: Pointer): PGeeSet;
+begin
+  Result := PGeeSet(g_type_check_instance_cast(obj, GEE_TYPE_SET));
+end;
+
+function GEE_IS_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_SET);
+end;
+
+function GEE_SET_GET_IFACE(inst: Pointer): PGeeSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_SET: TGType;
+begin
+  Result := gee_abstract_set_get_type;
+end;
+
+function GEE_ABSTRACT_SET(obj: Pointer): PGeeAbstractSet;
+begin
+  Result := PGeeAbstractSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_SET));
+end;
+
+function GEE_ABSTRACT_SET_CLASS(klass: Pointer): PGeeAbstractSetClass;
+begin
+  Result := PGeeAbstractSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_SET));
+end;
+
+function GEE_IS_ABSTRACT_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_SET);
+end;
+
+function GEE_IS_ABSTRACT_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_SET);
+end;
+
+function GEE_ABSTRACT_SET_GET_CLASS(obj: Pointer): PGeeAbstractSetClass;
+begin
+  Result := PGeeAbstractSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_SORTED_SET: TGType;
+begin
+  Result := gee_sorted_set_get_type;
+end;
+
+function GEE_SORTED_SET_CLASS(klass: Pointer): PGeeSortedSetClass;
+begin
+  Result := PGeeSortedSetClass(g_type_check_class_cast(klass, GEE_TYPE_SORTED_SET));
+end;
+
+function GEE_IS_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_SORTED_SET);
+end;
+
+function GEE_SORTED_SET_GET_IFACE(inst: Pointer): PGeeSortedSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_SORTED_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_SORTED_SET: TGType;
+begin
+  Result := gee_abstract_sorted_set_get_type;
+end;
+
+function GEE_ABSTRACT_SORTED_SET(obj: Pointer): PGeeAbstractSortedSet;
+begin
+  Result := PGeeAbstractSortedSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_SORTED_SET));
+end;
+
+function GEE_ABSTRACT_SORTED_SET_CLASS(klass: Pointer): PGeeAbstractSortedSetClass;
+begin
+  Result := PGeeAbstractSortedSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_SORTED_SET));
+end;
+
+function GEE_IS_ABSTRACT_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_SORTED_SET);
+end;
+
+function GEE_IS_ABSTRACT_SORTED_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_SORTED_SET);
+end;
+
+function GEE_ABSTRACT_SORTED_SET_GET_CLASS(obj: Pointer): PGeeAbstractSortedSetClass;
+begin
+  Result := PGeeAbstractSortedSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_SORTED_SET: TGType;
+begin
+  Result := gee_bidir_sorted_set_get_type;
+end;
+
+function GEE_BIDIR_SORTED_SET(obj: Pointer): PGeeBidirSortedSet;
+begin
+  Result := PGeeBidirSortedSet(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_SORTED_SET));
+end;
+
+function GEE_IS_BIDIR_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_SORTED_SET);
+end;
+
+function GEE_BIDIR_SORTED_SET_GET_IFACE(inst: Pointer): PGeeBidirSortedSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_SORTED_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET: TGType;
+begin
+  Result := gee_abstract_bidir_sorted_set_get_type;
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_SET(obj: Pointer): PGeeAbstractBidirSortedSet;
+begin
+  Result := PGeeAbstractBidirSortedSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET));
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_SET_CLASS(klass: Pointer): PGeeAbstractBidirSortedSetClass;
+begin
+  Result := PGeeAbstractBidirSortedSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET));
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET);
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET);
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_SET_GET_CLASS(obj: Pointer): PGeeAbstractBidirSortedSetClass;
+begin
+  Result := PGeeAbstractBidirSortedSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_MAP: TGType;
+begin
+  Result := gee_map_get_type;
+end;
+
+function GEE_MAP(obj: Pointer): PGeeMap;
+begin
+  Result := PGeeMap(g_type_check_instance_cast(obj, GEE_TYPE_MAP));
+end;
+
+function GEE_IS_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MAP);
+end;
+
+function GEE_MAP_GET_IFACE(inst: Pointer): PGeeMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_MAP_ITERATOR: TGType;
+begin
+  Result := gee_map_iterator_get_type;
+end;
+
+function GEE_MAP_ITERATOR(obj: Pointer): PGeeMapIterator;
+begin
+  Result := PGeeMapIterator(g_type_check_instance_cast(obj, GEE_TYPE_MAP_ITERATOR));
+end;
+
+function GEE_IS_MAP_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MAP_ITERATOR);
+end;
+
+function GEE_MAP_ITERATOR_GET_IFACE(inst: Pointer): PGeeMapIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MAP_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_MAP_ENTRY: TGType;
+begin
+  Result := gee_map_entry_get_type;
+end;
+
+function GEE_MAP_ENTRY(obj: Pointer): PGeeMapEntry;
+begin
+  Result := PGeeMapEntry(g_type_check_instance_cast(obj, GEE_TYPE_MAP_ENTRY));
+end;
+
+function GEE_MAP_ENTRY_CLASS(klass: Pointer): PGeeMapEntryClass;
+begin
+  Result := PGeeMapEntryClass(g_type_check_class_cast(klass, GEE_TYPE_MAP_ENTRY));
+end;
+
+function GEE_IS_MAP_ENTRY(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MAP_ENTRY);
+end;
+
+function GEE_IS_MAP_ENTRY_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_MAP_ENTRY);
+end;
+
+function GEE_MAP_ENTRY_GET_CLASS(obj: Pointer): PGeeMapEntryClass;
+begin
+  Result := PGeeMapEntryClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_MAP: TGType;
+begin
+  Result := gee_abstract_map_get_type;
+end;
+
+function GEE_ABSTRACT_MAP(obj: Pointer): PGeeAbstractMap;
+begin
+  Result := PGeeAbstractMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_MAP));
+end;
+
+function GEE_ABSTRACT_MAP_CLASS(klass: Pointer): PGeeAbstractMapClass;
+begin
+  Result := PGeeAbstractMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_MAP));
+end;
+
+function GEE_IS_ABSTRACT_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_MAP);
+end;
+
+function GEE_IS_ABSTRACT_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_MAP);
+end;
+
+function GEE_ABSTRACT_MAP_GET_CLASS(obj: Pointer): PGeeAbstractMapClass;
+begin
+  Result := PGeeAbstractMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_SORTED_MAP: TGType;
+begin
+  Result := gee_sorted_map_get_type;
+end;
+
+function GEE_SORTED_MAP(obj: Pointer): PGeeSortedMap;
+begin
+  Result := PGeeSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_SORTED_MAP));
+end;
+
+function GEE_IS_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_SORTED_MAP);
+end;
+
+function GEE_SORTED_MAP_GET_IFACE(inst: Pointer): PGeeSortedMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_SORTED_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_SORTED_MAP: TGType;
+begin
+  Result := gee_abstract_sorted_map_get_type;
+end;
+
+function GEE_ABSTRACT_SORTED_MAP(obj: Pointer): PGeeAbstractSortedMap;
+begin
+  Result := PGeeAbstractSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_SORTED_MAP));
+end;
+
+function GEE_ABSTRACT_SORTED_MAP_CLASS(klass: Pointer): PGeeAbstractSortedMapClass;
+begin
+  Result := PGeeAbstractSortedMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_SORTED_MAP));
+end;
+
+function GEE_IS_ABSTRACT_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_SORTED_MAP);
+end;
+
+function GEE_IS_ABSTRACT_SORTED_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_SORTED_MAP);
+end;
+
+function GEE_ABSTRACT_SORTED_MAP_GET_CLASS(obj: Pointer): PGeeAbstractSortedMapClass;
+begin
+  Result := PGeeAbstractSortedMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_SORTED_MAP: TGType;
+begin
+  Result := gee_bidir_sorted_map_get_type;
+end;
+
+function GEE_BIDIR_SORTED_MAP(obj: Pointer): PGeeBidirSortedMap;
+begin
+  Result := PGeeBidirSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_SORTED_MAP));
+end;
+
+function GEE_IS_BIDIR_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_SORTED_MAP);
+end;
+
+function GEE_BIDIR_SORTED_MAP_GET_IFACE(inst: Pointer): PGeeBidirSortedMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_SORTED_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_MAP_ITERATOR: TGType;
+begin
+  Result := gee_bidir_map_iterator_get_type;
+end;
+
+function GEE_BIDIR_MAP_ITERATOR(obj: Pointer): PGeeBidirMapIterator;
+begin
+  Result := PGeeBidirMapIterator(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_MAP_ITERATOR));
+end;
+
+function GEE_IS_BIDIR_MAP_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_MAP_ITERATOR);
+end;
+
+function GEE_BIDIR_MAP_ITERATOR_GET_IFACE(inst: Pointer): PGeeBidirMapIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_MAP_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP: TGType;
+begin
+  Result := gee_abstract_bidir_sorted_map_get_type;
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_MAP(obj: Pointer): PGeeAbstractBidirSortedMap;
+begin
+  Result := PGeeAbstractBidirSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP));
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_MAP_CLASS(klass: Pointer): PGeeAbstractBidirSortedMapClass;
+begin
+  Result := PGeeAbstractBidirSortedMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP));
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP);
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP);
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_MAP_GET_CLASS(obj: Pointer): PGeeAbstractBidirSortedMapClass;
+begin
+  Result := PGeeAbstractBidirSortedMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_MULTI_MAP: TGType;
+begin
+  Result := gee_multi_map_get_type;
+end;
+
+function GEE_MULTI_MAP(obj: Pointer): PGeeMultiMap;
+begin
+  Result := PGeeMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_MULTI_MAP));
+end;
+
+function GEE_IS_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MULTI_MAP);
+end;
+
+function GEE_MULTI_MAP_GET_IFACE(inst: Pointer): PGeeMultiMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MULTI_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_MULTI_SET: TGType;
+begin
+  Result := gee_multi_set_get_type;
+end;
+
+function GEE_MULTI_SET(obj: Pointer): PGeeMultiSet;
+begin
+  Result := PGeeMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_MULTI_SET));
+end;
+
+function GEE_IS_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MULTI_SET);
+end;
+
+function GEE_MULTI_SET_GET_IFACE(inst: Pointer): PGeeMultiSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MULTI_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_MULTI_MAP: TGType;
+begin
+  Result := gee_abstract_multi_map_get_type;
+end;
+
+function GEE_ABSTRACT_MULTI_MAP(obj: Pointer): PGeeAbstractMultiMap;
+begin
+  Result := PGeeAbstractMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_MULTI_MAP));
+end;
+
+function GEE_ABSTRACT_MULTI_MAP_CLASS(klass: Pointer): PGeeAbstractMultiMapClass;
+begin
+  Result := PGeeAbstractMultiMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_MULTI_MAP));
+end;
+
+function GEE_IS_ABSTRACT_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_MULTI_MAP);
+end;
+
+function GEE_IS_ABSTRACT_MULTI_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_MULTI_MAP);
+end;
+
+function GEE_ABSTRACT_MULTI_MAP_GET_CLASS(obj: Pointer): PGeeAbstractMultiMapClass;
+begin
+  Result := PGeeAbstractMultiMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_MULTI_SET: TGType;
+begin
+  Result := gee_abstract_multi_set_get_type;
+end;
+
+function GEE_ABSTRACT_MULTI_SET(obj: Pointer): PGeeAbstractMultiSet;
+begin
+  Result := PGeeAbstractMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_MULTI_SET));
+end;
+
+function GEE_ABSTRACT_MULTI_SET_CLASS(klass: Pointer): PGeeAbstractMultiSetClass;
+begin
+  Result := PGeeAbstractMultiSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_MULTI_SET));
+end;
+
+function GEE_IS_ABSTRACT_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_MULTI_SET);
+end;
+
+function GEE_IS_ABSTRACT_MULTI_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_MULTI_SET);
+end;
+
+function GEE_ABSTRACT_MULTI_SET_GET_CLASS(obj: Pointer): PGeeAbstractMultiSetClass;
+begin
+  Result := PGeeAbstractMultiSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_QUEUE: TGType;
+begin
+  Result := gee_queue_get_type;
+end;
+
+function GEE_QUEUE(obj: Pointer): PGeeQueue;
+begin
+  Result := PGeeQueue(g_type_check_instance_cast(obj, GEE_TYPE_QUEUE));
+end;
+
+function GEE_IS_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_QUEUE);
+end;
+
+function GEE_QUEUE_GET_IFACE(inst: Pointer): PGeeQueueInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_QUEUE);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_QUEUE: TGType;
+begin
+  Result := gee_abstract_queue_get_type;
+end;
+
+function GEE_ABSTRACT_QUEUE(obj: Pointer): PGeeAbstractQueue;
+begin
+  Result := PGeeAbstractQueue(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_QUEUE));
+end;
+
+function GEE_ABSTRACT_QUEUE_CLASS(klass: Pointer): PGeeAbstractQueueClass;
+begin
+  Result := PGeeAbstractQueueClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_QUEUE));
+end;
+
+function GEE_IS_ABSTRACT_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_QUEUE);
+end;
+
+function GEE_IS_ABSTRACT_QUEUE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_QUEUE);
+end;
+
+function GEE_ABSTRACT_QUEUE_GET_CLASS(obj: Pointer): PGeeAbstractQueueClass;
+begin
+  Result := PGeeAbstractQueueClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ARRAY_LIST: TGType;
+begin
+  Result := gee_array_list_get_type;
+end;
+
+function GEE_ARRAY_LIST(obj: Pointer): PGeeArrayList;
+begin
+  Result := PGeeArrayList(g_type_check_instance_cast(obj, GEE_TYPE_ARRAY_LIST));
+end;
+
+function GEE_ARRAY_LIST_CLASS(klass: Pointer): PGeeArrayListClass;
+begin
+  Result := PGeeArrayListClass(g_type_check_class_cast(klass, GEE_TYPE_ARRAY_LIST));
+end;
+
+function GEE_IS_ARRAY_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ARRAY_LIST);
+end;
+
+function GEE_IS_ARRAY_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ARRAY_LIST);
+end;
+
+function GEE_ARRAY_LIST_GET_CLASS(obj: Pointer): PGeeArrayListClass;
+begin
+  Result := PGeeArrayListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_DEQUE: TGType;
+begin
+  Result := gee_deque_get_type;
+end;
+
+function GEE_DEQUE(obj: Pointer): PGeeDeque;
+begin
+  Result := PGeeDeque(g_type_check_instance_cast(obj, GEE_TYPE_DEQUE));
+end;
+
+function GEE_IS_DEQUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_DEQUE);
+end;
+
+function GEE_DEQUE_GET_IFACE(inst: Pointer): PGeeDequeInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_DEQUE);
+end;
+
+// ====
+
+function GEE_TYPE_ARRAY_QUEUE: TGType;
+begin
+  Result := gee_array_queue_get_type;
+end;
+
+function GEE_ARRAY_QUEUE(obj: Pointer): PGeeArrayQueue;
+begin
+  Result := PGeeArrayQueue(g_type_check_instance_cast(obj, GEE_TYPE_ARRAY_QUEUE));
+end;
+
+function GEE_ARRAY_QUEUE_CLASS(klass: Pointer): PGeeArrayQueueClass;
+begin
+  Result := PGeeArrayQueueClass(g_type_check_class_cast(klass, GEE_TYPE_ARRAY_QUEUE));
+end;
+
+function GEE_IS_ARRAY_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ARRAY_QUEUE);
+end;
+
+function GEE_IS_ARRAY_QUEUE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ARRAY_QUEUE);
+end;
+
+function GEE_ARRAY_QUEUE_GET_CLASS(obj: Pointer): PGeeArrayQueueClass;
+begin
+  Result := PGeeArrayQueueClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_COMPARABLE: TGType;
+begin
+  Result := gee_comparable_get_type;
+end;
+
+function GEE_COMPARABLE(obj: Pointer): PGeeComparable;
+begin
+  Result := PGeeComparable(g_type_check_instance_cast(obj, GEE_TYPE_COMPARABLE));
+end;
+
+function GEE_IS_COMPARABLE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_COMPARABLE);
+end;
+
+function GEE_COMPARABLE_GET_IFACE(inst: Pointer): PGeeComparableInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_COMPARABLE);
+end;
+
+// ====
+
+function GEE_TYPE_CONCURRENT_LIST: TGType;
+begin
+  Result := gee_concurrent_list_get_type;
+end;
+
+function GEE_CONCURRENT_LIST(obj: Pointer): PGeeConcurrentList;
+begin
+  Result := PGeeConcurrentList(g_type_check_instance_cast(obj, GEE_TYPE_CONCURRENT_LIST));
+end;
+
+function GEE_CONCURRENT_LIST_CLASS(klass: Pointer): PGeeConcurrentListClass;
+begin
+  Result := PGeeConcurrentListClass(g_type_check_class_cast(klass, GEE_TYPE_CONCURRENT_LIST));
+end;
+
+function GEE_IS_CONCURRENT_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_CONCURRENT_LIST);
+end;
+
+function GEE_IS_CONCURRENT_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_CONCURRENT_LIST);
+end;
+
+function GEE_CONCURRENT_LIST_GET_CLASS(obj: Pointer): PGeeConcurrentListClass;
+begin
+  Result := PGeeConcurrentListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+
+function GEE_TYPE_CONCURRENT_SET: TGType;
+begin
+  Result := gee_concurrent_set_get_type;
+end;
+
+function GEE_CONCURRENT_SET(obj: Pointer): PGeeConcurrentSet;
+begin
+  Result := PGeeConcurrentSet(g_type_check_instance_cast(obj, GEE_TYPE_CONCURRENT_SET));
+end;
+
+function GEE_CONCURRENT_SET_CLASS(klass: Pointer): PGeeConcurrentSetClass;
+begin
+  Result := PGeeConcurrentSetClass(g_type_check_class_cast(klass, GEE_TYPE_CONCURRENT_SET));
+end;
+
+function GEE_IS_CONCURRENT_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_CONCURRENT_SET);
+end;
+
+function GEE_IS_CONCURRENT_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_CONCURRENT_SET);
+end;
+
+function GEE_CONCURRENT_SET_GET_CLASS(obj: Pointer): PGeeConcurrentSetClass;
+begin
+  Result := PGeeConcurrentSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+
+function GEE_TYPE_CONCURRENT_SET_RANGE_TYPE: TGType;
+begin
+  Result := gee_concurrent_set_range_type_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_FUTURE: TGType;
+begin
+  Result := gee_future_get_type;
+end;
+
+function GEE_FUTURE(obj: Pointer): PGeeFuture;
+begin
+  Result := PGeeFuture(g_type_check_instance_cast(obj, GEE_TYPE_FUTURE));
+end;
+
+function GEE_IS_FUTURE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_FUTURE);
+end;
+
+function GEE_FUTURE_GET_IFACE(inst: Pointer): PGeeFutureInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_FUTURE);
+end;
+
+// ====
+
+function GEE_TYPE_FUTURE_ERROR: TGType;
+begin
+  Result := gee_future_error_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_HASHABLE: TGType;
+begin
+  Result := gee_hashable_get_type;
+end;
+
+function GEE_HASHABLE(obj: Pointer): PGeeHashable;
+begin
+  Result := PGeeHashable(g_type_check_instance_cast(obj, GEE_TYPE_HASHABLE));
+end;
+
+function GEE_IS_HASHABLE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASHABLE);
+end;
+
+function GEE_HASHABLE_GET_IFACE(inst: Pointer): PGeeHashableInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_HASHABLE);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_MAP: TGType;
+begin
+  Result := gee_hash_map_get_type;
+end;
+
+function GEE_HASH_MAP(obj: Pointer): PGeeHashMap;
+begin
+  Result := PGeeHashMap(g_type_check_instance_cast(obj, GEE_TYPE_HASH_MAP));
+end;
+
+function GEE_HASH_MAP_CLASS(klass: Pointer): PGeeHashMapClass;
+begin
+  Result := PGeeHashMapClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_MAP));
+end;
+
+function GEE_IS_HASH_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_MAP);
+end;
+
+function GEE_IS_HASH_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_MAP);
+end;
+
+function GEE_HASH_MAP_GET_CLASS(obj: Pointer): PGeeHashMapClass;
+begin
+  Result := PGeeHashMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_MULTI_MAP: TGType;
+begin
+  Result := gee_hash_multi_map_get_type;
+end;
+
+function GEE_HASH_MULTI_MAP(obj: Pointer): PGeeHashMultiMap;
+begin
+  Result := PGeeHashMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_HASH_MULTI_MAP));
+end;
+
+function GEE_HASH_MULTI_MAP_CLASS(klass: Pointer): PGeeHashMultiMapClass;
+begin
+  Result := PGeeHashMultiMapClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_MULTI_MAP));
+end;
+
+function GEE_IS_HASH_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_MULTI_MAP);
+end;
+
+function GEE_IS_HASH_MULTI_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_MULTI_MAP);
+end;
+
+function GEE_HASH_MULTI_MAP_GET_CLASS(obj: Pointer): PGeeHashMultiMapClass;
+begin
+  Result := PGeeHashMultiMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_MULTI_SET: TGType;
+begin
+  Result := gee_hash_multi_set_get_type;
+end;
+
+function GEE_HASH_MULTI_SET(obj: Pointer): PGeeHashMultiSet;
+begin
+  Result := PGeeHashMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_HASH_MULTI_SET));
+end;
+
+function GEE_HASH_MULTI_SET_CLASS(klass: Pointer): PGeeHashMultiSetClass;
+begin
+  Result := PGeeHashMultiSetClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_MULTI_SET));
+end;
+
+function GEE_IS_HASH_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_MULTI_SET);
+end;
+
+function GEE_IS_HASH_MULTI_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_MULTI_SET);
+end;
+
+function GEE_HASH_MULTI_SET_GET_CLASS(obj: Pointer): PGeeHashMultiSetClass;
+begin
+  Result := PGeeHashMultiSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_SET: TGType;
+begin
+  Result := gee_hash_set_get_type;
+end;
+
+function GEE_HASH_SET(obj: Pointer): PGeeHashSet;
+begin
+  Result := PGeeHashSet(g_type_check_instance_cast(obj, GEE_TYPE_HASH_SET));
+end;
+
+function GEE_HASH_SET_CLASS(klass: Pointer): PGeeHashSetClass;
+begin
+  Result := PGeeHashSetClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_SET));
+end;
+
+function GEE_IS_HASH_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_SET);
+end;
+
+function GEE_IS_HASH_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_SET);
+end;
+
+function GEE_HASH_SET_GET_CLASS(obj: Pointer): PGeeHashSetClass;
+begin
+  Result := PGeeHashSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HAZARD_POINTER_POLICY: TGType;
+begin
+  Result := gee_hazard_pointer_policy_get_type;
+end;
+
+// =====
+
+function GEE_TYPE_HAZARD_POINTER_RELEASE_POLICY: TGType;
+begin
+  Result := gee_hazard_pointer_release_policy_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_LINKED_LIST: TGType;
+begin
+  Result := gee_linked_list_get_type;
+end;
+
+function GEE_LINKED_LIST(obj: Pointer): PGeeLinkedList;
+begin
+  Result := PGeeLinkedList(g_type_check_instance_cast(obj, GEE_TYPE_LINKED_LIST));
+end;
+
+function GEE_LINKED_LIST_CLASS(klass: Pointer): PGeeLinkedListClass;
+begin
+  Result := PGeeLinkedListClass(g_type_check_class_cast(klass, GEE_TYPE_LINKED_LIST));
+end;
+
+function GEE_IS_LINKED_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_LINKED_LIST);
+end;
+
+function GEE_IS_LINKED_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_LINKED_LIST);
+end;
+
+function GEE_LINKED_LIST_GET_CLASS(obj: Pointer): PGeeLinkedListClass;
+begin
+  Result := PGeeLinkedListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_PRIORITY_QUEUE: TGType;
+begin
+  Result := gee_priority_queue_get_type;
+end;
+
+function GEE_PRIORITY_QUEUE(obj: Pointer): PGeePriorityQueue;
+begin
+  Result := PGeePriorityQueue(g_type_check_instance_cast(obj, GEE_TYPE_PRIORITY_QUEUE));
+end;
+
+function GEE_PRIORITY_QUEUE_CLASS(klass: Pointer): PGeePriorityQueueClass;
+begin
+  Result := PGeePriorityQueueClass(g_type_check_class_cast(klass, GEE_TYPE_PRIORITY_QUEUE));
+end;
+
+function GEE_IS_PRIORITY_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_PRIORITY_QUEUE);
+end;
+
+function GEE_IS_PRIORITY_QUEUE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_PRIORITY_QUEUE);
+end;
+
+function GEE_PRIORITY_QUEUE_GET_CLASS(obj: Pointer): PGeePriorityQueueClass;
+begin
+  Result := PGeePriorityQueueClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_PROMISE: TGType;
+begin
+  Result := gee_promise_get_type;
+end;
+
+function GEE_PROMISE(obj: Pointer): PGeePromise;
+begin
+  Result := PGeePromise(g_type_check_instance_cast(obj, GEE_TYPE_PROMISE));
+end;
+
+function GEE_PROMISE_CLASS(klass: Pointer): PGeePromiseClass;
+begin
+  Result := PGeePromiseClass(g_type_check_class_cast(klass, GEE_TYPE_PROMISE));
+end;
+
+function GEE_IS_PROMISE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_PROMISE);
+end;
+
+function GEE_IS_PROMISE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_PROMISE);
+end;
+
+function GEE_PROMISE_GET_CLASS(obj: Pointer): PGeePromiseClass;
+begin
+  Result := PGeePromiseClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_MAP: TGType;
+begin
+  Result := gee_tree_map_get_type;
+end;
+
+function GEE_TREE_MAP(obj: Pointer): PGeeTreeMap;
+begin
+  Result := PGeeTreeMap(g_type_check_instance_cast(obj, GEE_TYPE_TREE_MAP));
+end;
+
+function GEE_TREE_MAP_CLASS(klass: Pointer): PGeeTreeMapClass;
+begin
+  Result := PGeeTreeMapClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_MAP));
+end;
+
+function GEE_IS_TREE_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_MAP);
+end;
+
+function GEE_IS_TREE_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_MAP);
+end;
+
+function GEE_TREE_MAP_GET_CLASS(obj: Pointer): PGeeTreeMapClass;
+begin
+  Result := PGeeTreeMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_MULTI_MAP: TGType;
+begin
+  Result := gee_tree_multi_map_get_type;
+end;
+
+function GEE_TREE_MULTI_MAP(obj: Pointer): PGeeTreeMultiMap;
+begin
+  Result := PGeeTreeMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_TREE_MULTI_MAP));
+end;
+
+function GEE_TREE_MULTI_MAP_CLASS(klass: Pointer): PGeeTreeMultiMapClass;
+begin
+  Result := PGeeTreeMultiMapClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_MULTI_MAP));
+end;
+
+function GEE_IS_TREE_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_MULTI_MAP);
+end;
+
+function GEE_IS_TREE_MULTI_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_MULTI_MAP);
+end;
+
+function GEE_TREE_MULTI_MAP_GET_CLASS(obj: Pointer): PGeeTreeMultiMapClass;
+begin
+  Result := PGeeTreeMultiMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_MULTI_SET: TGType;
+begin
+  Result := gee_tree_multi_set_get_type;
+end;
+
+function GEE_TREE_MULTI_SET(obj: Pointer): PGeeTreeMultiSet;
+begin
+  Result := PGeeTreeMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_TREE_MULTI_SET));
+end;
+
+function GEE_TREE_MULTI_SET_CLASS(klass: Pointer): PGeeTreeMultiSetClass;
+begin
+  Result := PGeeTreeMultiSetClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_MULTI_SET));
+end;
+
+function GEE_IS_TREE_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_MULTI_SET);
+end;
+
+function GEE_IS_TREE_MULTI_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_MULTI_SET);
+end;
+
+function GEE_TREE_MULTI_SET_GET_CLASS(obj: Pointer): PGeeTreeMultiSetClass;
+begin
+  Result := PGeeTreeMultiSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_SET: TGType;
+begin
+  Result := gee_tree_set_get_type;
+end;
+
+function GEE_TREE_SET(obj: Pointer): PGeeTreeSet;
+begin
+  Result := PGeeTreeSet(g_type_check_instance_cast(obj, GEE_TYPE_TREE_SET));
+end;
+
+function GEE_TREE_SET_CLASS(klass: Pointer): PGeeTreeSetClass;
+begin
+  Result := PGeeTreeSetClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_SET));
+end;
+
+function GEE_IS_TREE_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_SET);
+end;
+
+function GEE_IS_TREE_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_SET);
+end;
+
+function GEE_TREE_SET_GET_CLASS(obj: Pointer): PGeeTreeSetClass;
+begin
+  Result := PGeeTreeSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_UNROLLED_LINKED_LIST: TGType;
+begin
+  Result := gee_unrolled_linked_list_get_type;
+end;
+
+function GEE_UNROLLED_LINKED_LIST(obj: Pointer): PGeeUnrolledLinkedList;
+begin
+  Result := PGeeUnrolledLinkedList(g_type_check_instance_cast(obj, GEE_TYPE_UNROLLED_LINKED_LIST));
+end;
+
+function GEE_UNROLLED_LINKED_LIST_CLASS(klass: Pointer): PGeeUnrolledLinkedListClass;
+begin
+  Result := PGeeUnrolledLinkedListClass(g_type_check_class_cast(klass, GEE_TYPE_UNROLLED_LINKED_LIST));
+end;
+
+function GEE_IS_UNROLLED_LINKED_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_UNROLLED_LINKED_LIST);
+end;
+
+function GEE_IS_UNROLLED_LINKED_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_UNROLLED_LINKED_LIST);
+end;
+
+function GEE_UNROLLED_LINKED_LIST_GET_CLASS(obj: Pointer): PGeeUnrolledLinkedListClass;
+begin
+  Result := PGeeUnrolledLinkedListClass(PGTypeInstance(obj)^.g_class);
+end;
 
 implementation
 
-
-{ was #define dname def_expr }
-function GEE_TYPE_TRAVERSABLE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_TRAVERSABLE:=gee_traversable_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TRAVERSABLE(obj : longint) : longint;
-begin
-  GEE_TRAVERSABLE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_TRAVERSABLE,GeeTraversable);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TRAVERSABLE(obj : longint) : longint;
-begin
-  GEE_IS_TRAVERSABLE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_TRAVERSABLE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TRAVERSABLE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_TRAVERSABLE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_TRAVERSABLE,GeeTraversableIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TRAVERSABLE_TYPE_STREAM : longint; { return type might be wrong }
-  begin
-    GEE_TRAVERSABLE_TYPE_STREAM:=gee_traversable_stream_get_type;
-  end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_LAZY : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_LAZY:=gee_lazy_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LAZY(obj : longint) : longint;
-begin
-  GEE_LAZY:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_LAZY,GeeLazy);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LAZY_CLASS(klass : longint) : longint;
-begin
-  GEE_LAZY_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_LAZY,GeeLazyClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_LAZY(obj : longint) : longint;
-begin
-  GEE_IS_LAZY:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_LAZY);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_LAZY_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_LAZY_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_LAZY);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LAZY_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_LAZY_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_LAZY,GeeLazyClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ITERATOR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ITERATOR:=gee_iterator_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ITERATOR(obj : longint) : longint;
-begin
-  GEE_ITERATOR:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ITERATOR,GeeIterator);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ITERATOR(obj : longint) : longint;
-begin
-  GEE_IS_ITERATOR:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ITERATOR);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ITERATOR_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_ITERATOR_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_ITERATOR,GeeIteratorIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ITERABLE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ITERABLE:=gee_iterable_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ITERABLE(obj : longint) : longint;
-begin
-  GEE_ITERABLE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ITERABLE,GeeIterable);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ITERABLE(obj : longint) : longint;
-begin
-  GEE_IS_ITERABLE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ITERABLE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ITERABLE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_ITERABLE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_ITERABLE,GeeIterableIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_COLLECTION : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_COLLECTION:=gee_collection_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_COLLECTION(obj : longint) : longint;
-begin
-  GEE_COLLECTION:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_COLLECTION,GeeCollection);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_COLLECTION(obj : longint) : longint;
-begin
-  GEE_IS_COLLECTION:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_COLLECTION);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_COLLECTION_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_COLLECTION_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_COLLECTION,GeeCollectionIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_COLLECTION : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_COLLECTION:=gee_abstract_collection_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_COLLECTION(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_COLLECTION:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_COLLECTION,GeeAbstractCollection);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_COLLECTION_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_COLLECTION_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_COLLECTION,GeeAbstractCollectionClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_COLLECTION(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_COLLECTION:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_COLLECTION);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_COLLECTION_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_COLLECTION_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_COLLECTION);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_COLLECTION_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_COLLECTION_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_COLLECTION,GeeAbstractCollectionClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_LIST:=gee_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LIST(obj : longint) : longint;
-begin
-  GEE_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_LIST,GeeList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_LIST(obj : longint) : longint;
-begin
-  GEE_IS_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LIST_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_LIST_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_LIST,GeeListIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_LIST_ITERATOR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_LIST_ITERATOR:=gee_list_iterator_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LIST_ITERATOR(obj : longint) : longint;
-begin
-  GEE_LIST_ITERATOR:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_LIST_ITERATOR,GeeListIterator);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_LIST_ITERATOR(obj : longint) : longint;
-begin
-  GEE_IS_LIST_ITERATOR:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_LIST_ITERATOR);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LIST_ITERATOR_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_LIST_ITERATOR_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_LIST_ITERATOR,GeeListIteratorIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_LIST:=gee_abstract_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_LIST(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_LIST,GeeAbstractList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_LIST_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_LIST,GeeAbstractListClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_LIST(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_LIST_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_LIST_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_LIST_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_LIST,GeeAbstractListClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_BIDIR_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_BIDIR_LIST:=gee_bidir_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_LIST(obj : longint) : longint;
-begin
-  GEE_BIDIR_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_BIDIR_LIST,GeeBidirList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_BIDIR_LIST(obj : longint) : longint;
-begin
-  GEE_IS_BIDIR_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_BIDIR_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_LIST_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_BIDIR_LIST_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_BIDIR_LIST,GeeBidirListIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_BIDIR_LIST_ITERATOR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_BIDIR_LIST_ITERATOR:=gee_bidir_list_iterator_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_LIST_ITERATOR(obj : longint) : longint;
-begin
-  GEE_BIDIR_LIST_ITERATOR:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_BIDIR_LIST_ITERATOR,GeeBidirListIterator);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_BIDIR_LIST_ITERATOR(obj : longint) : longint;
-begin
-  GEE_IS_BIDIR_LIST_ITERATOR:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_BIDIR_LIST_ITERATOR);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_LIST_ITERATOR_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_BIDIR_LIST_ITERATOR_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_BIDIR_LIST_ITERATOR,GeeBidirListIteratorIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_BIDIR_ITERATOR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_BIDIR_ITERATOR:=gee_bidir_iterator_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_ITERATOR(obj : longint) : longint;
-begin
-  GEE_BIDIR_ITERATOR:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_BIDIR_ITERATOR,GeeBidirIterator);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_BIDIR_ITERATOR(obj : longint) : longint;
-begin
-  GEE_IS_BIDIR_ITERATOR:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_BIDIR_ITERATOR);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_ITERATOR_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_BIDIR_ITERATOR_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_BIDIR_ITERATOR,GeeBidirIteratorIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_BIDIR_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_BIDIR_LIST:=gee_abstract_bidir_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_LIST(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_BIDIR_LIST,GeeAbstractBidirList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_LIST_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_BIDIR_LIST,GeeAbstractBidirListClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_BIDIR_LIST(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_BIDIR_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_BIDIR_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_BIDIR_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_BIDIR_LIST_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_BIDIR_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_LIST_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_LIST_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_BIDIR_LIST,GeeAbstractBidirListClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_SET:=gee_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_SET(obj : longint) : longint;
-begin
-  GEE_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_SET,GeeSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_SET(obj : longint) : longint;
-begin
-  GEE_IS_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_SET_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_SET_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_SET,GeeSetIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_SET:=gee_abstract_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SET(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_SET,GeeAbstractSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_SET,GeeAbstractSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_SET(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_SET,GeeAbstractSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_SORTED_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_SORTED_SET:=gee_sorted_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_SORTED_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_SORTED_SET,GeeSortedSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_IS_SORTED_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_SORTED_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_SORTED_SET_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_SORTED_SET_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_SORTED_SET,GeeSortedSetIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_SORTED_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_SORTED_SET:=gee_abstract_sorted_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_SORTED_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_SORTED_SET,GeeAbstractSortedSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SORTED_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_SORTED_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_SORTED_SET,GeeAbstractSortedSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_SORTED_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_SORTED_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_SORTED_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_SORTED_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_SORTED_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SORTED_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_SORTED_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_SORTED_SET,GeeAbstractSortedSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_BIDIR_SORTED_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_BIDIR_SORTED_SET:=gee_bidir_sorted_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_BIDIR_SORTED_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_BIDIR_SORTED_SET,GeeBidirSortedSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_BIDIR_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_IS_BIDIR_SORTED_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_BIDIR_SORTED_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_SORTED_SET_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_BIDIR_SORTED_SET_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_BIDIR_SORTED_SET,GeeBidirSortedSetIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET:=gee_abstract_bidir_sorted_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_SORTED_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET,GeeAbstractBidirSortedSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_SORTED_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_SORTED_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET,GeeAbstractBidirSortedSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_BIDIR_SORTED_SET(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_BIDIR_SORTED_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_BIDIR_SORTED_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_BIDIR_SORTED_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_SORTED_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_SORTED_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET,GeeAbstractBidirSortedSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_MAP:=gee_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP(obj : longint) : longint;
-begin
-  GEE_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_MAP,GeeMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_MAP(obj : longint) : longint;
-begin
-  GEE_IS_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_MAP_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_MAP,GeeMapIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_MAP_ITERATOR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_MAP_ITERATOR:=gee_map_iterator_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_ITERATOR(obj : longint) : longint;
-begin
-  GEE_MAP_ITERATOR:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_MAP_ITERATOR,GeeMapIterator);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_MAP_ITERATOR(obj : longint) : longint;
-begin
-  GEE_IS_MAP_ITERATOR:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_MAP_ITERATOR);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_ITERATOR_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_MAP_ITERATOR_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_MAP_ITERATOR,GeeMapIteratorIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_MAP_TYPE_ENTRY : longint; { return type might be wrong }
-  begin
-    GEE_MAP_TYPE_ENTRY:=gee_map_entry_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_ENTRY(obj : longint) : longint;
-begin
-  GEE_MAP_ENTRY:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_MAP_TYPE_ENTRY,GeeMapEntry);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_ENTRY_CLASS(klass : longint) : longint;
-begin
-  GEE_MAP_ENTRY_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_MAP_TYPE_ENTRY,GeeMapEntryClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_IS_ENTRY(obj : longint) : longint;
-begin
-  GEE_MAP_IS_ENTRY:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_MAP_TYPE_ENTRY);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_IS_ENTRY_CLASS(klass : longint) : longint;
-begin
-  GEE_MAP_IS_ENTRY_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_MAP_TYPE_ENTRY);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MAP_ENTRY_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_MAP_ENTRY_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_MAP_TYPE_ENTRY,GeeMapEntryClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_MAP:=gee_abstract_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MAP(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_MAP,GeeAbstractMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_MAP,GeeAbstractMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_MAP(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_MAP,GeeAbstractMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_SORTED_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_SORTED_MAP:=gee_sorted_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_SORTED_MAP,GeeSortedMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_IS_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_SORTED_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_SORTED_MAP_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_SORTED_MAP_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_SORTED_MAP,GeeSortedMapIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_SORTED_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_SORTED_MAP:=gee_abstract_sorted_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_SORTED_MAP,GeeAbstractSortedMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SORTED_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_SORTED_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_SORTED_MAP,GeeAbstractSortedMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_SORTED_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_SORTED_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_SORTED_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_SORTED_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_SORTED_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_SORTED_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_SORTED_MAP,GeeAbstractSortedMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_BIDIR_SORTED_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_BIDIR_SORTED_MAP:=gee_bidir_sorted_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_BIDIR_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_BIDIR_SORTED_MAP,GeeBidirSortedMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_BIDIR_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_IS_BIDIR_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_BIDIR_SORTED_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_SORTED_MAP_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_BIDIR_SORTED_MAP_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_BIDIR_SORTED_MAP,GeeBidirSortedMapIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_BIDIR_MAP_ITERATOR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_BIDIR_MAP_ITERATOR:=gee_bidir_map_iterator_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_MAP_ITERATOR(obj : longint) : longint;
-begin
-  GEE_BIDIR_MAP_ITERATOR:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_BIDIR_MAP_ITERATOR,GeeBidirMapIterator);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_BIDIR_MAP_ITERATOR(obj : longint) : longint;
-begin
-  GEE_IS_BIDIR_MAP_ITERATOR:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_BIDIR_MAP_ITERATOR);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_BIDIR_MAP_ITERATOR_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_BIDIR_MAP_ITERATOR_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_BIDIR_MAP_ITERATOR,GeeBidirMapIteratorIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP:=gee_abstract_bidir_sorted_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP,GeeAbstractBidirSortedMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_SORTED_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_SORTED_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP,GeeAbstractBidirSortedMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_BIDIR_SORTED_MAP(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_BIDIR_SORTED_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_BIDIR_SORTED_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_BIDIR_SORTED_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_BIDIR_SORTED_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_BIDIR_SORTED_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP,GeeAbstractBidirSortedMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_MULTI_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_MULTI_MAP:=gee_multi_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_MULTI_MAP,GeeMultiMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_IS_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MULTI_MAP_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_MULTI_MAP_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_MULTI_MAP,GeeMultiMapIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_MULTI_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_MULTI_SET:=gee_multi_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_MULTI_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_MULTI_SET,GeeMultiSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_IS_MULTI_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_MULTI_SET_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_MULTI_SET_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_MULTI_SET,GeeMultiSetIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_MULTI_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_MULTI_MAP:=gee_abstract_multi_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_MULTI_MAP,GeeAbstractMultiMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MULTI_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_MULTI_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_MULTI_MAP,GeeAbstractMultiMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_MULTI_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_MULTI_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MULTI_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_MULTI_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_MULTI_MAP,GeeAbstractMultiMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_MULTI_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_MULTI_SET:=gee_abstract_multi_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_MULTI_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_MULTI_SET,GeeAbstractMultiSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MULTI_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_MULTI_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_MULTI_SET,GeeAbstractMultiSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_MULTI_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_MULTI_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_MULTI_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_MULTI_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_MULTI_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_MULTI_SET,GeeAbstractMultiSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_QUEUE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_QUEUE:=gee_queue_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_QUEUE(obj : longint) : longint;
-begin
-  GEE_QUEUE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_QUEUE,GeeQueue);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_QUEUE(obj : longint) : longint;
-begin
-  GEE_IS_QUEUE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_QUEUE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_QUEUE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_QUEUE,GeeQueueIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ABSTRACT_QUEUE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ABSTRACT_QUEUE:=gee_abstract_queue_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_QUEUE(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_QUEUE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ABSTRACT_QUEUE,GeeAbstractQueue);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_QUEUE_CLASS(klass : longint) : longint;
-begin
-  GEE_ABSTRACT_QUEUE_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ABSTRACT_QUEUE,GeeAbstractQueueClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_QUEUE(obj : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_QUEUE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ABSTRACT_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ABSTRACT_QUEUE_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ABSTRACT_QUEUE_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ABSTRACT_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ABSTRACT_QUEUE_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ABSTRACT_QUEUE_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ABSTRACT_QUEUE,GeeAbstractQueueClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ARRAY_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ARRAY_LIST:=gee_array_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ARRAY_LIST(obj : longint) : longint;
-begin
-  GEE_ARRAY_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ARRAY_LIST,GeeArrayList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ARRAY_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_ARRAY_LIST_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ARRAY_LIST,GeeArrayListClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ARRAY_LIST(obj : longint) : longint;
-begin
-  GEE_IS_ARRAY_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ARRAY_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ARRAY_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ARRAY_LIST_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ARRAY_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ARRAY_LIST_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ARRAY_LIST_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ARRAY_LIST,GeeArrayListClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_DEQUE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_DEQUE:=gee_deque_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_DEQUE(obj : longint) : longint;
-begin
-  GEE_DEQUE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_DEQUE,GeeDeque);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_DEQUE(obj : longint) : longint;
-begin
-  GEE_IS_DEQUE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_DEQUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_DEQUE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_DEQUE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_DEQUE,GeeDequeIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_ARRAY_QUEUE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_ARRAY_QUEUE:=gee_array_queue_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ARRAY_QUEUE(obj : longint) : longint;
-begin
-  GEE_ARRAY_QUEUE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_ARRAY_QUEUE,GeeArrayQueue);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ARRAY_QUEUE_CLASS(klass : longint) : longint;
-begin
-  GEE_ARRAY_QUEUE_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_ARRAY_QUEUE,GeeArrayQueueClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ARRAY_QUEUE(obj : longint) : longint;
-begin
-  GEE_IS_ARRAY_QUEUE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_ARRAY_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_ARRAY_QUEUE_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_ARRAY_QUEUE_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_ARRAY_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_ARRAY_QUEUE_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_ARRAY_QUEUE_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_ARRAY_QUEUE,GeeArrayQueueClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_COMPARABLE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_COMPARABLE:=gee_comparable_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_COMPARABLE(obj : longint) : longint;
-begin
-  GEE_COMPARABLE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_COMPARABLE,GeeComparable);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_COMPARABLE(obj : longint) : longint;
-begin
-  GEE_IS_COMPARABLE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_COMPARABLE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_COMPARABLE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_COMPARABLE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_COMPARABLE,GeeComparableIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_CONCURRENT_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_CONCURRENT_LIST:=gee_concurrent_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_CONCURRENT_LIST(obj : longint) : longint;
-begin
-  GEE_CONCURRENT_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_CONCURRENT_LIST,GeeConcurrentList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_CONCURRENT_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_CONCURRENT_LIST_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_CONCURRENT_LIST,GeeConcurrentListClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_CONCURRENT_LIST(obj : longint) : longint;
-begin
-  GEE_IS_CONCURRENT_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_CONCURRENT_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_CONCURRENT_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_CONCURRENT_LIST_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_CONCURRENT_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_CONCURRENT_LIST_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_CONCURRENT_LIST_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_CONCURRENT_LIST,GeeConcurrentListClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_CONCURRENT_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_CONCURRENT_SET:=gee_concurrent_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_CONCURRENT_SET(obj : longint) : longint;
-begin
-  GEE_CONCURRENT_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_CONCURRENT_SET,GeeConcurrentSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_CONCURRENT_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_CONCURRENT_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_CONCURRENT_SET,GeeConcurrentSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_CONCURRENT_SET(obj : longint) : longint;
-begin
-  GEE_IS_CONCURRENT_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_CONCURRENT_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_CONCURRENT_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_CONCURRENT_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_CONCURRENT_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_CONCURRENT_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_CONCURRENT_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_CONCURRENT_SET,GeeConcurrentSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_CONCURRENT_SET_TYPE_RANGE_TYPE : longint; { return type might be wrong }
-  begin
-    GEE_CONCURRENT_SET_TYPE_RANGE_TYPE:=gee_concurrent_set_range_type_get_type;
-  end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_FUTURE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_FUTURE:=gee_future_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_FUTURE(obj : longint) : longint;
-begin
-  GEE_FUTURE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_FUTURE,GeeFuture);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_FUTURE(obj : longint) : longint;
-begin
-  GEE_IS_FUTURE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_FUTURE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_FUTURE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_FUTURE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_FUTURE,GeeFutureIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_FUTURE_ERROR : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_FUTURE_ERROR:=gee_future_error_get_type;
-  end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_HASHABLE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_HASHABLE:=gee_hashable_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASHABLE(obj : longint) : longint;
-begin
-  GEE_HASHABLE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_HASHABLE,GeeHashable);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASHABLE(obj : longint) : longint;
-begin
-  GEE_IS_HASHABLE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_HASHABLE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASHABLE_GET_INTERFACE(obj : longint) : longint;
-begin
-  GEE_HASHABLE_GET_INTERFACE:=G_TYPE_INSTANCE_GET_INTERFACE(obj,GEE_TYPE_HASHABLE,GeeHashableIface);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_HASH_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_HASH_MAP:=gee_hash_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MAP(obj : longint) : longint;
-begin
-  GEE_HASH_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_HASH_MAP,GeeHashMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_HASH_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_HASH_MAP,GeeHashMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_MAP(obj : longint) : longint;
-begin
-  GEE_IS_HASH_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_HASH_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_HASH_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_HASH_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_HASH_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_HASH_MAP,GeeHashMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_HASH_MULTI_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_HASH_MULTI_MAP:=gee_hash_multi_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_HASH_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_HASH_MULTI_MAP,GeeHashMultiMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MULTI_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_HASH_MULTI_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_HASH_MULTI_MAP,GeeHashMultiMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_IS_HASH_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_HASH_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_MULTI_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_HASH_MULTI_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_HASH_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MULTI_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_HASH_MULTI_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_HASH_MULTI_MAP,GeeHashMultiMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_HASH_MULTI_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_HASH_MULTI_SET:=gee_hash_multi_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_HASH_MULTI_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_HASH_MULTI_SET,GeeHashMultiSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MULTI_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_HASH_MULTI_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_HASH_MULTI_SET,GeeHashMultiSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_IS_HASH_MULTI_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_HASH_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_MULTI_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_HASH_MULTI_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_HASH_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_MULTI_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_HASH_MULTI_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_HASH_MULTI_SET,GeeHashMultiSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_HASH_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_HASH_SET:=gee_hash_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_SET(obj : longint) : longint;
-begin
-  GEE_HASH_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_HASH_SET,GeeHashSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_HASH_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_HASH_SET,GeeHashSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_SET(obj : longint) : longint;
-begin
-  GEE_IS_HASH_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_HASH_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_HASH_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_HASH_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_HASH_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_HASH_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_HASH_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_HASH_SET,GeeHashSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_HAZARD_POINTER_TYPE_POLICY : longint; { return type might be wrong }
-  begin
-    GEE_HAZARD_POINTER_TYPE_POLICY:=gee_hazard_pointer_policy_get_type;
-  end;
-
-{ was #define dname def_expr }
-function GEE_HAZARD_POINTER_TYPE_RELEASE_POLICY : longint; { return type might be wrong }
-  begin
-    GEE_HAZARD_POINTER_TYPE_RELEASE_POLICY:=gee_hazard_pointer_release_policy_get_type;
-  end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_LINKED_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_LINKED_LIST:=gee_linked_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LINKED_LIST(obj : longint) : longint;
-begin
-  GEE_LINKED_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_LINKED_LIST,GeeLinkedList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LINKED_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_LINKED_LIST_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_LINKED_LIST,GeeLinkedListClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_LINKED_LIST(obj : longint) : longint;
-begin
-  GEE_IS_LINKED_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_LINKED_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_LINKED_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_LINKED_LIST_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_LINKED_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_LINKED_LIST_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_LINKED_LIST_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_LINKED_LIST,GeeLinkedListClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_PRIORITY_QUEUE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_PRIORITY_QUEUE:=gee_priority_queue_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_PRIORITY_QUEUE(obj : longint) : longint;
-begin
-  GEE_PRIORITY_QUEUE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_PRIORITY_QUEUE,GeePriorityQueue);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_PRIORITY_QUEUE_CLASS(klass : longint) : longint;
-begin
-  GEE_PRIORITY_QUEUE_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_PRIORITY_QUEUE,GeePriorityQueueClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_PRIORITY_QUEUE(obj : longint) : longint;
-begin
-  GEE_IS_PRIORITY_QUEUE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_PRIORITY_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_PRIORITY_QUEUE_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_PRIORITY_QUEUE_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_PRIORITY_QUEUE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_PRIORITY_QUEUE_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_PRIORITY_QUEUE_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_PRIORITY_QUEUE,GeePriorityQueueClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_PROMISE : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_PROMISE:=gee_promise_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_PROMISE(obj : longint) : longint;
-begin
-  GEE_PROMISE:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_PROMISE,GeePromise);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_PROMISE_CLASS(klass : longint) : longint;
-begin
-  GEE_PROMISE_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_PROMISE,GeePromiseClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_PROMISE(obj : longint) : longint;
-begin
-  GEE_IS_PROMISE:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_PROMISE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_PROMISE_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_PROMISE_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_PROMISE);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_PROMISE_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_PROMISE_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_PROMISE,GeePromiseClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_TREE_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_TREE_MAP:=gee_tree_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MAP(obj : longint) : longint;
-begin
-  GEE_TREE_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_TREE_MAP,GeeTreeMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_TREE_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_TREE_MAP,GeeTreeMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_MAP(obj : longint) : longint;
-begin
-  GEE_IS_TREE_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_TREE_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_TREE_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_TREE_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_TREE_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_TREE_MAP,GeeTreeMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_TREE_MULTI_MAP : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_TREE_MULTI_MAP:=gee_tree_multi_map_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_TREE_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_TREE_MULTI_MAP,GeeTreeMultiMap);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MULTI_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_TREE_MULTI_MAP_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_TREE_MULTI_MAP,GeeTreeMultiMapClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_MULTI_MAP(obj : longint) : longint;
-begin
-  GEE_IS_TREE_MULTI_MAP:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_TREE_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_MULTI_MAP_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_TREE_MULTI_MAP_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_TREE_MULTI_MAP);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MULTI_MAP_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_TREE_MULTI_MAP_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_TREE_MULTI_MAP,GeeTreeMultiMapClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_TREE_MULTI_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_TREE_MULTI_SET:=gee_tree_multi_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_TREE_MULTI_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_TREE_MULTI_SET,GeeTreeMultiSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MULTI_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_TREE_MULTI_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_TREE_MULTI_SET,GeeTreeMultiSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_MULTI_SET(obj : longint) : longint;
-begin
-  GEE_IS_TREE_MULTI_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_TREE_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_MULTI_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_TREE_MULTI_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_TREE_MULTI_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_MULTI_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_TREE_MULTI_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_TREE_MULTI_SET,GeeTreeMultiSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_TREE_SET : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_TREE_SET:=gee_tree_set_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_SET(obj : longint) : longint;
-begin
-  GEE_TREE_SET:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_TREE_SET,GeeTreeSet);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_TREE_SET_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_TREE_SET,GeeTreeSetClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_SET(obj : longint) : longint;
-begin
-  GEE_IS_TREE_SET:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_TREE_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_TREE_SET_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_TREE_SET_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_TREE_SET);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_TREE_SET_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_TREE_SET_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_TREE_SET,GeeTreeSetClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_TYPE_UNROLLED_LINKED_LIST : longint; { return type might be wrong }
-  begin
-    GEE_TYPE_UNROLLED_LINKED_LIST:=gee_unrolled_linked_list_get_type;
-  end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_UNROLLED_LINKED_LIST(obj : longint) : longint;
-begin
-  GEE_UNROLLED_LINKED_LIST:=G_TYPE_CHECK_INSTANCE_CAST(obj,GEE_TYPE_UNROLLED_LINKED_LIST,GeeUnrolledLinkedList);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_UNROLLED_LINKED_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_UNROLLED_LINKED_LIST_CLASS:=G_TYPE_CHECK_CLASS_CAST(klass,GEE_TYPE_UNROLLED_LINKED_LIST,GeeUnrolledLinkedListClass);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_UNROLLED_LINKED_LIST(obj : longint) : longint;
-begin
-  GEE_IS_UNROLLED_LINKED_LIST:=G_TYPE_CHECK_INSTANCE_TYPE(obj,GEE_TYPE_UNROLLED_LINKED_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_IS_UNROLLED_LINKED_LIST_CLASS(klass : longint) : longint;
-begin
-  GEE_IS_UNROLLED_LINKED_LIST_CLASS:=G_TYPE_CHECK_CLASS_TYPE(klass,GEE_TYPE_UNROLLED_LINKED_LIST);
-end;
-
-{ was #define dname(params) para_def_expr }
-{ argument types are unknown }
-{ return type might be wrong }   
-function GEE_UNROLLED_LINKED_LIST_GET_CLASS(obj : longint) : longint;
-begin
-  GEE_UNROLLED_LINKED_LIST_GET_CLASS:=G_TYPE_INSTANCE_GET_CLASS(obj,GEE_TYPE_UNROLLED_LINKED_LIST,GeeUnrolledLinkedListClass);
-end;
-
-{ was #define dname def_expr }
-function GEE_FUTURE_ERROR : longint; { return type might be wrong }
+function GEE_FUTURE_ERROR: TGQuark;
   begin
     GEE_FUTURE_ERROR:=gee_future_error_quark;
   end;
 
+// ====
+
+
+function GEE_TYPE_TRAVERSABLE: TGType;
+begin
+  Result := gee_traversable_get_type;
+end;
+
+function GEE_TRAVERSABLE(obj: Pointer): PGeeTraversable;
+begin
+  Result := PGeeTraversable(g_type_check_instance_cast(obj, GEE_TYPE_TRAVERSABLE));
+end;
+
+function GEE_IS_TRAVERSABLE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TRAVERSABLE);
+end;
+
+function GEE_TRAVERSABLE_GET_IFACE(inst: Pointer): PGeeTraversableInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_TRAVERSABLE);
+end;
+
+
+function GEE_TYPE_TRAVERSABLE_STREAM: TGType;
+begin
+  Result := gee_traversable_stream_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_LAZY: TGType;
+begin
+  Result := gee_lazy_get_type;
+end;
+
+function GEE_LAZY(obj: Pointer): PGeeLazy;
+begin
+  Result := PGeeLazy(g_type_check_instance_cast(obj, GEE_TYPE_LAZY));
+end;
+
+function GEE_LAZY_CLASS(klass: Pointer): PGeeLazyClass;
+begin
+  Result := PGeeLazyClass(g_type_check_class_cast(klass, GEE_TYPE_LAZY));
+end;
+
+function GEE_IS_LAZY(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_LAZY);
+end;
+
+function GEE_IS_LAZY_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_LAZY);
+end;
+
+function GEE_LAZY_GET_CLASS(obj: Pointer): PGeeLazyClass;
+begin
+  Result := PGeeLazyClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ITERATOR: TGType;
+begin
+  Result := gee_iterator_get_type;
+end;
+
+function GEE_ITERATOR(obj: Pointer): PGeeIterator;
+begin
+  Result := PGeeIterator(g_type_check_instance_cast(obj, GEE_TYPE_ITERATOR));
+end;
+
+function GEE_IS_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ITERATOR);
+end;
+
+function GEE_ITERATOR_GET_IFACE(inst: Pointer): PGeeIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_ITERABLE: TGType;
+begin
+  Result := gee_iterable_get_type;
+end;
+
+function GEE_ITERABLE(obj: Pointer): PGeeIterable;
+begin
+  Result := PGeeIterable(g_type_check_instance_cast(obj, GEE_TYPE_ITERABLE));
+end;
+
+function GEE_IS_ITERABLE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ITERABLE);
+end;
+
+function GEE_ITERABLE_GET_IFACE(inst: Pointer): PGeeIterableInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_ITERABLE);
+end;
+
+// ====
+
+function GEE_TYPE_COLLECTION: TGType;
+begin
+  Result := gee_collection_get_type;
+end;
+
+function GEE_COLLECTION(obj: Pointer): PGeeCollection;
+begin
+  Result := PGeeCollection(g_type_check_instance_cast(obj, GEE_TYPE_COLLECTION));
+end;
+
+function GEE_IS_COLLECTION(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_COLLECTION);
+end;
+
+function GEE_COLLECTION_GET_IFACE(inst: Pointer): PGeeCollectionInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_COLLECTION);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_COLLECTION: TGType;
+begin
+  Result := gee_abstract_collection_get_type;
+end;
+
+function GEE_ABSTRACT_COLLECTION(obj: Pointer): PGeeAbstractCollection;
+begin
+  Result := PGeeAbstractCollection(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_COLLECTION));
+end;
+
+function GEE_ABSTRACT_COLLECTION_CLASS(klass: Pointer): PGeeAbstractCollectionClass;
+begin
+  Result := PGeeAbstractCollectionClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_COLLECTION));
+end;
+
+function GEE_IS_ABSTRACT_COLLECTION(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_COLLECTION);
+end;
+
+function GEE_IS_ABSTRACT_COLLECTION_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_COLLECTION);
+end;
+
+function GEE_ABSTRACT_COLLECTION_GET_CLASS(obj: Pointer): PGeeAbstractCollectionClass;
+begin
+  Result := PGeeAbstractCollectionClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_LIST: TGType;
+begin
+  Result := gee_list_get_type;
+end;
+
+function GEE_LIST(obj: Pointer): PGeeList;
+begin
+  Result := PGeeList(g_type_check_instance_cast(obj, GEE_TYPE_LIST));
+end;
+
+function GEE_IS_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_LIST);
+end;
+
+function GEE_LIST_GET_IFACE(inst: Pointer): PGeeListInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_LIST);
+end;
+
+// ====
+
+function GEE_TYPE_LIST_ITERATOR: TGType;
+begin
+  Result := gee_list_iterator_get_type;
+end;
+
+function GEE_LIST_ITERATOR(obj: Pointer): PGeeListIterator;
+begin
+  Result := PGeeListIterator(g_type_check_instance_cast(obj, GEE_TYPE_LIST_ITERATOR));
+end;
+
+function GEE_IS_LIST_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_LIST_ITERATOR);
+end;
+
+function GEE_LIST_ITERATOR_GET_IFACE(inst: Pointer): PGeeListIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_LIST_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_LIST: TGType;
+begin
+  Result := gee_abstract_list_get_type;
+end;
+
+function GEE_ABSTRACT_LIST(obj: Pointer): PGeeAbstractList;
+begin
+  Result := PGeeAbstractList(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_LIST));
+end;
+
+function GEE_ABSTRACT_LIST_CLASS(klass: Pointer): PGeeAbstractListClass;
+begin
+  Result := PGeeAbstractListClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_LIST));
+end;
+
+function GEE_IS_ABSTRACT_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_LIST);
+end;
+
+function GEE_IS_ABSTRACT_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_LIST);
+end;
+
+function GEE_ABSTRACT_LIST_GET_CLASS(obj: Pointer): PGeeAbstractListClass;
+begin
+  Result := PGeeAbstractListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_LIST: TGType;
+begin
+  Result := gee_bidir_list_get_type;
+end;
+
+function GEE_BIDIR_LIST(obj: Pointer): PGeeBidirList;
+begin
+  Result := PGeeBidirList(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_LIST));
+end;
+
+function GEE_IS_BIDIR_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_LIST);
+end;
+
+function GEE_BIDIR_LIST_GET_IFACE(inst: Pointer): PGeeBidirListInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_LIST);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_LIST_ITERATOR: TGType;
+begin
+  Result := gee_bidir_list_iterator_get_type;
+end;
+
+function GEE_BIDIR_LIST_ITERATOR(obj: Pointer): PGeeBidirListIterator;
+begin
+  Result := PGeeBidirListIterator(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_LIST_ITERATOR));
+end;
+
+function GEE_IS_BIDIR_LIST_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_LIST_ITERATOR);
+end;
+
+function GEE_BIDIR_LIST_ITERATOR_GET_IFACE(inst: Pointer): PGeeBidirListIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_LIST_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_ITERATOR: TGType;
+begin
+  Result := gee_bidir_iterator_get_type;
+end;
+
+function GEE_BIDIR_ITERATOR(obj: Pointer): PGeeBidirIterator;
+begin
+  Result := PGeeBidirIterator(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_ITERATOR));
+end;
+
+function GEE_IS_BIDIR_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_ITERATOR);
+end;
+
+function GEE_BIDIR_ITERATOR_GET_IFACE(inst: Pointer): PGeeBidirIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_BIDIR_LIST: TGType;
+begin
+  Result := gee_abstract_bidir_list_get_type;
+end;
+
+function GEE_ABSTRACT_BIDIR_LIST(obj: Pointer): PGeeAbstractBidirList;
+begin
+  Result := PGeeAbstractBidirList(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_BIDIR_LIST));
+end;
+
+function GEE_ABSTRACT_BIDIR_LIST_CLASS(klass: Pointer): PGeeAbstractBidirListClass;
+begin
+  Result := PGeeAbstractBidirListClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_BIDIR_LIST));
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_BIDIR_LIST);
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_BIDIR_LIST);
+end;
+
+function GEE_ABSTRACT_BIDIR_LIST_GET_CLASS(obj: Pointer): PGeeAbstractBidirListClass;
+begin
+  Result := PGeeAbstractBidirListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_SET: TGType;
+begin
+  Result := gee_set_get_type;
+end;
+
+function GEE_SET(obj: Pointer): PGeeSet;
+begin
+  Result := PGeeSet(g_type_check_instance_cast(obj, GEE_TYPE_SET));
+end;
+
+function GEE_IS_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_SET);
+end;
+
+function GEE_SET_GET_IFACE(inst: Pointer): PGeeSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_SET: TGType;
+begin
+  Result := gee_abstract_set_get_type;
+end;
+
+function GEE_ABSTRACT_SET(obj: Pointer): PGeeAbstractSet;
+begin
+  Result := PGeeAbstractSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_SET));
+end;
+
+function GEE_ABSTRACT_SET_CLASS(klass: Pointer): PGeeAbstractSetClass;
+begin
+  Result := PGeeAbstractSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_SET));
+end;
+
+function GEE_IS_ABSTRACT_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_SET);
+end;
+
+function GEE_IS_ABSTRACT_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_SET);
+end;
+
+function GEE_ABSTRACT_SET_GET_CLASS(obj: Pointer): PGeeAbstractSetClass;
+begin
+  Result := PGeeAbstractSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_SORTED_SET: TGType;
+begin
+  Result := gee_sorted_set_get_type;
+end;
+
+function GEE_SORTED_SET_CLASS(klass: Pointer): PGeeSortedSetClass;
+begin
+  Result := PGeeSortedSetClass(g_type_check_class_cast(klass, GEE_TYPE_SORTED_SET));
+end;
+
+function GEE_IS_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_SORTED_SET);
+end;
+
+function GEE_SORTED_SET_GET_IFACE(inst: Pointer): PGeeSortedSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_SORTED_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_SORTED_SET: TGType;
+begin
+  Result := gee_abstract_sorted_set_get_type;
+end;
+
+function GEE_ABSTRACT_SORTED_SET(obj: Pointer): PGeeAbstractSortedSet;
+begin
+  Result := PGeeAbstractSortedSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_SORTED_SET));
+end;
+
+function GEE_ABSTRACT_SORTED_SET_CLASS(klass: Pointer): PGeeAbstractSortedSetClass;
+begin
+  Result := PGeeAbstractSortedSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_SORTED_SET));
+end;
+
+function GEE_IS_ABSTRACT_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_SORTED_SET);
+end;
+
+function GEE_IS_ABSTRACT_SORTED_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_SORTED_SET);
+end;
+
+function GEE_ABSTRACT_SORTED_SET_GET_CLASS(obj: Pointer): PGeeAbstractSortedSetClass;
+begin
+  Result := PGeeAbstractSortedSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_SORTED_SET: TGType;
+begin
+  Result := gee_bidir_sorted_set_get_type;
+end;
+
+function GEE_BIDIR_SORTED_SET(obj: Pointer): PGeeBidirSortedSet;
+begin
+  Result := PGeeBidirSortedSet(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_SORTED_SET));
+end;
+
+function GEE_IS_BIDIR_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_SORTED_SET);
+end;
+
+function GEE_BIDIR_SORTED_SET_GET_IFACE(inst: Pointer): PGeeBidirSortedSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_SORTED_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET: TGType;
+begin
+  Result := gee_abstract_bidir_sorted_set_get_type;
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_SET(obj: Pointer): PGeeAbstractBidirSortedSet;
+begin
+  Result := PGeeAbstractBidirSortedSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET));
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_SET_CLASS(klass: Pointer): PGeeAbstractBidirSortedSetClass;
+begin
+  Result := PGeeAbstractBidirSortedSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET));
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET);
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_SET);
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_SET_GET_CLASS(obj: Pointer): PGeeAbstractBidirSortedSetClass;
+begin
+  Result := PGeeAbstractBidirSortedSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_MAP: TGType;
+begin
+  Result := gee_map_get_type;
+end;
+
+function GEE_MAP(obj: Pointer): PGeeMap;
+begin
+  Result := PGeeMap(g_type_check_instance_cast(obj, GEE_TYPE_MAP));
+end;
+
+function GEE_IS_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MAP);
+end;
+
+function GEE_MAP_GET_IFACE(inst: Pointer): PGeeMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_MAP_ITERATOR: TGType;
+begin
+  Result := gee_map_iterator_get_type;
+end;
+
+function GEE_MAP_ITERATOR(obj: Pointer): PGeeMapIterator;
+begin
+  Result := PGeeMapIterator(g_type_check_instance_cast(obj, GEE_TYPE_MAP_ITERATOR));
+end;
+
+function GEE_IS_MAP_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MAP_ITERATOR);
+end;
+
+function GEE_MAP_ITERATOR_GET_IFACE(inst: Pointer): PGeeMapIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MAP_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_MAP_ENTRY: TGType;
+begin
+  Result := gee_map_entry_get_type;
+end;
+
+function GEE_MAP_ENTRY(obj: Pointer): PGeeMapEntry;
+begin
+  Result := PGeeMapEntry(g_type_check_instance_cast(obj, GEE_TYPE_MAP_ENTRY));
+end;
+
+function GEE_MAP_ENTRY_CLASS(klass: Pointer): PGeeMapEntryClass;
+begin
+  Result := PGeeMapEntryClass(g_type_check_class_cast(klass, GEE_TYPE_MAP_ENTRY));
+end;
+
+function GEE_IS_MAP_ENTRY(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MAP_ENTRY);
+end;
+
+function GEE_IS_MAP_ENTRY_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_MAP_ENTRY);
+end;
+
+function GEE_MAP_ENTRY_GET_CLASS(obj: Pointer): PGeeMapEntryClass;
+begin
+  Result := PGeeMapEntryClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_MAP: TGType;
+begin
+  Result := gee_abstract_map_get_type;
+end;
+
+function GEE_ABSTRACT_MAP(obj: Pointer): PGeeAbstractMap;
+begin
+  Result := PGeeAbstractMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_MAP));
+end;
+
+function GEE_ABSTRACT_MAP_CLASS(klass: Pointer): PGeeAbstractMapClass;
+begin
+  Result := PGeeAbstractMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_MAP));
+end;
+
+function GEE_IS_ABSTRACT_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_MAP);
+end;
+
+function GEE_IS_ABSTRACT_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_MAP);
+end;
+
+function GEE_ABSTRACT_MAP_GET_CLASS(obj: Pointer): PGeeAbstractMapClass;
+begin
+  Result := PGeeAbstractMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_SORTED_MAP: TGType;
+begin
+  Result := gee_sorted_map_get_type;
+end;
+
+function GEE_SORTED_MAP(obj: Pointer): PGeeSortedMap;
+begin
+  Result := PGeeSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_SORTED_MAP));
+end;
+
+function GEE_IS_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_SORTED_MAP);
+end;
+
+function GEE_SORTED_MAP_GET_IFACE(inst: Pointer): PGeeSortedMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_SORTED_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_SORTED_MAP: TGType;
+begin
+  Result := gee_abstract_sorted_map_get_type;
+end;
+
+function GEE_ABSTRACT_SORTED_MAP(obj: Pointer): PGeeAbstractSortedMap;
+begin
+  Result := PGeeAbstractSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_SORTED_MAP));
+end;
+
+function GEE_ABSTRACT_SORTED_MAP_CLASS(klass: Pointer): PGeeAbstractSortedMapClass;
+begin
+  Result := PGeeAbstractSortedMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_SORTED_MAP));
+end;
+
+function GEE_IS_ABSTRACT_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_SORTED_MAP);
+end;
+
+function GEE_IS_ABSTRACT_SORTED_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_SORTED_MAP);
+end;
+
+function GEE_ABSTRACT_SORTED_MAP_GET_CLASS(obj: Pointer): PGeeAbstractSortedMapClass;
+begin
+  Result := PGeeAbstractSortedMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_SORTED_MAP: TGType;
+begin
+  Result := gee_bidir_sorted_map_get_type;
+end;
+
+function GEE_BIDIR_SORTED_MAP(obj: Pointer): PGeeBidirSortedMap;
+begin
+  Result := PGeeBidirSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_SORTED_MAP));
+end;
+
+function GEE_IS_BIDIR_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_SORTED_MAP);
+end;
+
+function GEE_BIDIR_SORTED_MAP_GET_IFACE(inst: Pointer): PGeeBidirSortedMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_SORTED_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_BIDIR_MAP_ITERATOR: TGType;
+begin
+  Result := gee_bidir_map_iterator_get_type;
+end;
+
+function GEE_BIDIR_MAP_ITERATOR(obj: Pointer): PGeeBidirMapIterator;
+begin
+  Result := PGeeBidirMapIterator(g_type_check_instance_cast(obj, GEE_TYPE_BIDIR_MAP_ITERATOR));
+end;
+
+function GEE_IS_BIDIR_MAP_ITERATOR(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_BIDIR_MAP_ITERATOR);
+end;
+
+function GEE_BIDIR_MAP_ITERATOR_GET_IFACE(inst: Pointer): PGeeBidirMapIteratorInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_BIDIR_MAP_ITERATOR);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP: TGType;
+begin
+  Result := gee_abstract_bidir_sorted_map_get_type;
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_MAP(obj: Pointer): PGeeAbstractBidirSortedMap;
+begin
+  Result := PGeeAbstractBidirSortedMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP));
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_MAP_CLASS(klass: Pointer): PGeeAbstractBidirSortedMapClass;
+begin
+  Result := PGeeAbstractBidirSortedMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP));
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP);
+end;
+
+function GEE_IS_ABSTRACT_BIDIR_SORTED_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_BIDIR_SORTED_MAP);
+end;
+
+function GEE_ABSTRACT_BIDIR_SORTED_MAP_GET_CLASS(obj: Pointer): PGeeAbstractBidirSortedMapClass;
+begin
+  Result := PGeeAbstractBidirSortedMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_MULTI_MAP: TGType;
+begin
+  Result := gee_multi_map_get_type;
+end;
+
+function GEE_MULTI_MAP(obj: Pointer): PGeeMultiMap;
+begin
+  Result := PGeeMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_MULTI_MAP));
+end;
+
+function GEE_IS_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MULTI_MAP);
+end;
+
+function GEE_MULTI_MAP_GET_IFACE(inst: Pointer): PGeeMultiMapInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MULTI_MAP);
+end;
+
+// ====
+
+function GEE_TYPE_MULTI_SET: TGType;
+begin
+  Result := gee_multi_set_get_type;
+end;
+
+function GEE_MULTI_SET(obj: Pointer): PGeeMultiSet;
+begin
+  Result := PGeeMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_MULTI_SET));
+end;
+
+function GEE_IS_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_MULTI_SET);
+end;
+
+function GEE_MULTI_SET_GET_IFACE(inst: Pointer): PGeeMultiSetInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_MULTI_SET);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_MULTI_MAP: TGType;
+begin
+  Result := gee_abstract_multi_map_get_type;
+end;
+
+function GEE_ABSTRACT_MULTI_MAP(obj: Pointer): PGeeAbstractMultiMap;
+begin
+  Result := PGeeAbstractMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_MULTI_MAP));
+end;
+
+function GEE_ABSTRACT_MULTI_MAP_CLASS(klass: Pointer): PGeeAbstractMultiMapClass;
+begin
+  Result := PGeeAbstractMultiMapClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_MULTI_MAP));
+end;
+
+function GEE_IS_ABSTRACT_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_MULTI_MAP);
+end;
+
+function GEE_IS_ABSTRACT_MULTI_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_MULTI_MAP);
+end;
+
+function GEE_ABSTRACT_MULTI_MAP_GET_CLASS(obj: Pointer): PGeeAbstractMultiMapClass;
+begin
+  Result := PGeeAbstractMultiMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_MULTI_SET: TGType;
+begin
+  Result := gee_abstract_multi_set_get_type;
+end;
+
+function GEE_ABSTRACT_MULTI_SET(obj: Pointer): PGeeAbstractMultiSet;
+begin
+  Result := PGeeAbstractMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_MULTI_SET));
+end;
+
+function GEE_ABSTRACT_MULTI_SET_CLASS(klass: Pointer): PGeeAbstractMultiSetClass;
+begin
+  Result := PGeeAbstractMultiSetClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_MULTI_SET));
+end;
+
+function GEE_IS_ABSTRACT_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_MULTI_SET);
+end;
+
+function GEE_IS_ABSTRACT_MULTI_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_MULTI_SET);
+end;
+
+function GEE_ABSTRACT_MULTI_SET_GET_CLASS(obj: Pointer): PGeeAbstractMultiSetClass;
+begin
+  Result := PGeeAbstractMultiSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_QUEUE: TGType;
+begin
+  Result := gee_queue_get_type;
+end;
+
+function GEE_QUEUE(obj: Pointer): PGeeQueue;
+begin
+  Result := PGeeQueue(g_type_check_instance_cast(obj, GEE_TYPE_QUEUE));
+end;
+
+function GEE_IS_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_QUEUE);
+end;
+
+function GEE_QUEUE_GET_IFACE(inst: Pointer): PGeeQueueInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_QUEUE);
+end;
+
+// ====
+
+function GEE_TYPE_ABSTRACT_QUEUE: TGType;
+begin
+  Result := gee_abstract_queue_get_type;
+end;
+
+function GEE_ABSTRACT_QUEUE(obj: Pointer): PGeeAbstractQueue;
+begin
+  Result := PGeeAbstractQueue(g_type_check_instance_cast(obj, GEE_TYPE_ABSTRACT_QUEUE));
+end;
+
+function GEE_ABSTRACT_QUEUE_CLASS(klass: Pointer): PGeeAbstractQueueClass;
+begin
+  Result := PGeeAbstractQueueClass(g_type_check_class_cast(klass, GEE_TYPE_ABSTRACT_QUEUE));
+end;
+
+function GEE_IS_ABSTRACT_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ABSTRACT_QUEUE);
+end;
+
+function GEE_IS_ABSTRACT_QUEUE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ABSTRACT_QUEUE);
+end;
+
+function GEE_ABSTRACT_QUEUE_GET_CLASS(obj: Pointer): PGeeAbstractQueueClass;
+begin
+  Result := PGeeAbstractQueueClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_ARRAY_LIST: TGType;
+begin
+  Result := gee_array_list_get_type;
+end;
+
+function GEE_ARRAY_LIST(obj: Pointer): PGeeArrayList;
+begin
+  Result := PGeeArrayList(g_type_check_instance_cast(obj, GEE_TYPE_ARRAY_LIST));
+end;
+
+function GEE_ARRAY_LIST_CLASS(klass: Pointer): PGeeArrayListClass;
+begin
+  Result := PGeeArrayListClass(g_type_check_class_cast(klass, GEE_TYPE_ARRAY_LIST));
+end;
+
+function GEE_IS_ARRAY_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ARRAY_LIST);
+end;
+
+function GEE_IS_ARRAY_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ARRAY_LIST);
+end;
+
+function GEE_ARRAY_LIST_GET_CLASS(obj: Pointer): PGeeArrayListClass;
+begin
+  Result := PGeeArrayListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_DEQUE: TGType;
+begin
+  Result := gee_deque_get_type;
+end;
+
+function GEE_DEQUE(obj: Pointer): PGeeDeque;
+begin
+  Result := PGeeDeque(g_type_check_instance_cast(obj, GEE_TYPE_DEQUE));
+end;
+
+function GEE_IS_DEQUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_DEQUE);
+end;
+
+function GEE_DEQUE_GET_IFACE(inst: Pointer): PGeeDequeInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_DEQUE);
+end;
+
+// ====
+
+function GEE_TYPE_ARRAY_QUEUE: TGType;
+begin
+  Result := gee_array_queue_get_type;
+end;
+
+function GEE_ARRAY_QUEUE(obj: Pointer): PGeeArrayQueue;
+begin
+  Result := PGeeArrayQueue(g_type_check_instance_cast(obj, GEE_TYPE_ARRAY_QUEUE));
+end;
+
+function GEE_ARRAY_QUEUE_CLASS(klass: Pointer): PGeeArrayQueueClass;
+begin
+  Result := PGeeArrayQueueClass(g_type_check_class_cast(klass, GEE_TYPE_ARRAY_QUEUE));
+end;
+
+function GEE_IS_ARRAY_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_ARRAY_QUEUE);
+end;
+
+function GEE_IS_ARRAY_QUEUE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_ARRAY_QUEUE);
+end;
+
+function GEE_ARRAY_QUEUE_GET_CLASS(obj: Pointer): PGeeArrayQueueClass;
+begin
+  Result := PGeeArrayQueueClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_COMPARABLE: TGType;
+begin
+  Result := gee_comparable_get_type;
+end;
+
+function GEE_COMPARABLE(obj: Pointer): PGeeComparable;
+begin
+  Result := PGeeComparable(g_type_check_instance_cast(obj, GEE_TYPE_COMPARABLE));
+end;
+
+function GEE_IS_COMPARABLE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_COMPARABLE);
+end;
+
+function GEE_COMPARABLE_GET_IFACE(inst: Pointer): PGeeComparableInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_COMPARABLE);
+end;
+
+// ====
+
+function GEE_TYPE_CONCURRENT_LIST: TGType;
+begin
+  Result := gee_concurrent_list_get_type;
+end;
+
+function GEE_CONCURRENT_LIST(obj: Pointer): PGeeConcurrentList;
+begin
+  Result := PGeeConcurrentList(g_type_check_instance_cast(obj, GEE_TYPE_CONCURRENT_LIST));
+end;
+
+function GEE_CONCURRENT_LIST_CLASS(klass: Pointer): PGeeConcurrentListClass;
+begin
+  Result := PGeeConcurrentListClass(g_type_check_class_cast(klass, GEE_TYPE_CONCURRENT_LIST));
+end;
+
+function GEE_IS_CONCURRENT_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_CONCURRENT_LIST);
+end;
+
+function GEE_IS_CONCURRENT_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_CONCURRENT_LIST);
+end;
+
+function GEE_CONCURRENT_LIST_GET_CLASS(obj: Pointer): PGeeConcurrentListClass;
+begin
+  Result := PGeeConcurrentListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+
+function GEE_TYPE_CONCURRENT_SET: TGType;
+begin
+  Result := gee_concurrent_set_get_type;
+end;
+
+function GEE_CONCURRENT_SET(obj: Pointer): PGeeConcurrentSet;
+begin
+  Result := PGeeConcurrentSet(g_type_check_instance_cast(obj, GEE_TYPE_CONCURRENT_SET));
+end;
+
+function GEE_CONCURRENT_SET_CLASS(klass: Pointer): PGeeConcurrentSetClass;
+begin
+  Result := PGeeConcurrentSetClass(g_type_check_class_cast(klass, GEE_TYPE_CONCURRENT_SET));
+end;
+
+function GEE_IS_CONCURRENT_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_CONCURRENT_SET);
+end;
+
+function GEE_IS_CONCURRENT_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_CONCURRENT_SET);
+end;
+
+function GEE_CONCURRENT_SET_GET_CLASS(obj: Pointer): PGeeConcurrentSetClass;
+begin
+  Result := PGeeConcurrentSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+
+function GEE_TYPE_CONCURRENT_SET_RANGE_TYPE: TGType;
+begin
+  Result := gee_concurrent_set_range_type_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_FUTURE: TGType;
+begin
+  Result := gee_future_get_type;
+end;
+
+function GEE_FUTURE(obj: Pointer): PGeeFuture;
+begin
+  Result := PGeeFuture(g_type_check_instance_cast(obj, GEE_TYPE_FUTURE));
+end;
+
+function GEE_IS_FUTURE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_FUTURE);
+end;
+
+function GEE_FUTURE_GET_IFACE(inst: Pointer): PGeeFutureInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_FUTURE);
+end;
+
+// ====
+
+function GEE_TYPE_FUTURE_ERROR: TGType;
+begin
+  Result := gee_future_error_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_HASHABLE: TGType;
+begin
+  Result := gee_hashable_get_type;
+end;
+
+function GEE_HASHABLE(obj: Pointer): PGeeHashable;
+begin
+  Result := PGeeHashable(g_type_check_instance_cast(obj, GEE_TYPE_HASHABLE));
+end;
+
+function GEE_IS_HASHABLE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASHABLE);
+end;
+
+function GEE_HASHABLE_GET_IFACE(inst: Pointer): PGeeHashableInterface;
+begin
+  Result := g_type_interface_peek(inst, GEE_TYPE_HASHABLE);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_MAP: TGType;
+begin
+  Result := gee_hash_map_get_type;
+end;
+
+function GEE_HASH_MAP(obj: Pointer): PGeeHashMap;
+begin
+  Result := PGeeHashMap(g_type_check_instance_cast(obj, GEE_TYPE_HASH_MAP));
+end;
+
+function GEE_HASH_MAP_CLASS(klass: Pointer): PGeeHashMapClass;
+begin
+  Result := PGeeHashMapClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_MAP));
+end;
+
+function GEE_IS_HASH_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_MAP);
+end;
+
+function GEE_IS_HASH_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_MAP);
+end;
+
+function GEE_HASH_MAP_GET_CLASS(obj: Pointer): PGeeHashMapClass;
+begin
+  Result := PGeeHashMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_MULTI_MAP: TGType;
+begin
+  Result := gee_hash_multi_map_get_type;
+end;
+
+function GEE_HASH_MULTI_MAP(obj: Pointer): PGeeHashMultiMap;
+begin
+  Result := PGeeHashMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_HASH_MULTI_MAP));
+end;
+
+function GEE_HASH_MULTI_MAP_CLASS(klass: Pointer): PGeeHashMultiMapClass;
+begin
+  Result := PGeeHashMultiMapClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_MULTI_MAP));
+end;
+
+function GEE_IS_HASH_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_MULTI_MAP);
+end;
+
+function GEE_IS_HASH_MULTI_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_MULTI_MAP);
+end;
+
+function GEE_HASH_MULTI_MAP_GET_CLASS(obj: Pointer): PGeeHashMultiMapClass;
+begin
+  Result := PGeeHashMultiMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_MULTI_SET: TGType;
+begin
+  Result := gee_hash_multi_set_get_type;
+end;
+
+function GEE_HASH_MULTI_SET(obj: Pointer): PGeeHashMultiSet;
+begin
+  Result := PGeeHashMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_HASH_MULTI_SET));
+end;
+
+function GEE_HASH_MULTI_SET_CLASS(klass: Pointer): PGeeHashMultiSetClass;
+begin
+  Result := PGeeHashMultiSetClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_MULTI_SET));
+end;
+
+function GEE_IS_HASH_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_MULTI_SET);
+end;
+
+function GEE_IS_HASH_MULTI_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_MULTI_SET);
+end;
+
+function GEE_HASH_MULTI_SET_GET_CLASS(obj: Pointer): PGeeHashMultiSetClass;
+begin
+  Result := PGeeHashMultiSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HASH_SET: TGType;
+begin
+  Result := gee_hash_set_get_type;
+end;
+
+function GEE_HASH_SET(obj: Pointer): PGeeHashSet;
+begin
+  Result := PGeeHashSet(g_type_check_instance_cast(obj, GEE_TYPE_HASH_SET));
+end;
+
+function GEE_HASH_SET_CLASS(klass: Pointer): PGeeHashSetClass;
+begin
+  Result := PGeeHashSetClass(g_type_check_class_cast(klass, GEE_TYPE_HASH_SET));
+end;
+
+function GEE_IS_HASH_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_HASH_SET);
+end;
+
+function GEE_IS_HASH_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_HASH_SET);
+end;
+
+function GEE_HASH_SET_GET_CLASS(obj: Pointer): PGeeHashSetClass;
+begin
+  Result := PGeeHashSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_HAZARD_POINTER_POLICY: TGType;
+begin
+  Result := gee_hazard_pointer_policy_get_type;
+end;
+
+// =====
+
+function GEE_TYPE_HAZARD_POINTER_RELEASE_POLICY: TGType;
+begin
+  Result := gee_hazard_pointer_release_policy_get_type;
+end;
+
+// ====
+
+function GEE_TYPE_LINKED_LIST: TGType;
+begin
+  Result := gee_linked_list_get_type;
+end;
+
+function GEE_LINKED_LIST(obj: Pointer): PGeeLinkedList;
+begin
+  Result := PGeeLinkedList(g_type_check_instance_cast(obj, GEE_TYPE_LINKED_LIST));
+end;
+
+function GEE_LINKED_LIST_CLASS(klass: Pointer): PGeeLinkedListClass;
+begin
+  Result := PGeeLinkedListClass(g_type_check_class_cast(klass, GEE_TYPE_LINKED_LIST));
+end;
+
+function GEE_IS_LINKED_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_LINKED_LIST);
+end;
+
+function GEE_IS_LINKED_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_LINKED_LIST);
+end;
+
+function GEE_LINKED_LIST_GET_CLASS(obj: Pointer): PGeeLinkedListClass;
+begin
+  Result := PGeeLinkedListClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_PRIORITY_QUEUE: TGType;
+begin
+  Result := gee_priority_queue_get_type;
+end;
+
+function GEE_PRIORITY_QUEUE(obj: Pointer): PGeePriorityQueue;
+begin
+  Result := PGeePriorityQueue(g_type_check_instance_cast(obj, GEE_TYPE_PRIORITY_QUEUE));
+end;
+
+function GEE_PRIORITY_QUEUE_CLASS(klass: Pointer): PGeePriorityQueueClass;
+begin
+  Result := PGeePriorityQueueClass(g_type_check_class_cast(klass, GEE_TYPE_PRIORITY_QUEUE));
+end;
+
+function GEE_IS_PRIORITY_QUEUE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_PRIORITY_QUEUE);
+end;
+
+function GEE_IS_PRIORITY_QUEUE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_PRIORITY_QUEUE);
+end;
+
+function GEE_PRIORITY_QUEUE_GET_CLASS(obj: Pointer): PGeePriorityQueueClass;
+begin
+  Result := PGeePriorityQueueClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_PROMISE: TGType;
+begin
+  Result := gee_promise_get_type;
+end;
+
+function GEE_PROMISE(obj: Pointer): PGeePromise;
+begin
+  Result := PGeePromise(g_type_check_instance_cast(obj, GEE_TYPE_PROMISE));
+end;
+
+function GEE_PROMISE_CLASS(klass: Pointer): PGeePromiseClass;
+begin
+  Result := PGeePromiseClass(g_type_check_class_cast(klass, GEE_TYPE_PROMISE));
+end;
+
+function GEE_IS_PROMISE(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_PROMISE);
+end;
+
+function GEE_IS_PROMISE_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_PROMISE);
+end;
+
+function GEE_PROMISE_GET_CLASS(obj: Pointer): PGeePromiseClass;
+begin
+  Result := PGeePromiseClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_MAP: TGType;
+begin
+  Result := gee_tree_map_get_type;
+end;
+
+function GEE_TREE_MAP(obj: Pointer): PGeeTreeMap;
+begin
+  Result := PGeeTreeMap(g_type_check_instance_cast(obj, GEE_TYPE_TREE_MAP));
+end;
+
+function GEE_TREE_MAP_CLASS(klass: Pointer): PGeeTreeMapClass;
+begin
+  Result := PGeeTreeMapClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_MAP));
+end;
+
+function GEE_IS_TREE_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_MAP);
+end;
+
+function GEE_IS_TREE_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_MAP);
+end;
+
+function GEE_TREE_MAP_GET_CLASS(obj: Pointer): PGeeTreeMapClass;
+begin
+  Result := PGeeTreeMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_MULTI_MAP: TGType;
+begin
+  Result := gee_tree_multi_map_get_type;
+end;
+
+function GEE_TREE_MULTI_MAP(obj: Pointer): PGeeTreeMultiMap;
+begin
+  Result := PGeeTreeMultiMap(g_type_check_instance_cast(obj, GEE_TYPE_TREE_MULTI_MAP));
+end;
+
+function GEE_TREE_MULTI_MAP_CLASS(klass: Pointer): PGeeTreeMultiMapClass;
+begin
+  Result := PGeeTreeMultiMapClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_MULTI_MAP));
+end;
+
+function GEE_IS_TREE_MULTI_MAP(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_MULTI_MAP);
+end;
+
+function GEE_IS_TREE_MULTI_MAP_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_MULTI_MAP);
+end;
+
+function GEE_TREE_MULTI_MAP_GET_CLASS(obj: Pointer): PGeeTreeMultiMapClass;
+begin
+  Result := PGeeTreeMultiMapClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_MULTI_SET: TGType;
+begin
+  Result := gee_tree_multi_set_get_type;
+end;
+
+function GEE_TREE_MULTI_SET(obj: Pointer): PGeeTreeMultiSet;
+begin
+  Result := PGeeTreeMultiSet(g_type_check_instance_cast(obj, GEE_TYPE_TREE_MULTI_SET));
+end;
+
+function GEE_TREE_MULTI_SET_CLASS(klass: Pointer): PGeeTreeMultiSetClass;
+begin
+  Result := PGeeTreeMultiSetClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_MULTI_SET));
+end;
+
+function GEE_IS_TREE_MULTI_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_MULTI_SET);
+end;
+
+function GEE_IS_TREE_MULTI_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_MULTI_SET);
+end;
+
+function GEE_TREE_MULTI_SET_GET_CLASS(obj: Pointer): PGeeTreeMultiSetClass;
+begin
+  Result := PGeeTreeMultiSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_TREE_SET: TGType;
+begin
+  Result := gee_tree_set_get_type;
+end;
+
+function GEE_TREE_SET(obj: Pointer): PGeeTreeSet;
+begin
+  Result := PGeeTreeSet(g_type_check_instance_cast(obj, GEE_TYPE_TREE_SET));
+end;
+
+function GEE_TREE_SET_CLASS(klass: Pointer): PGeeTreeSetClass;
+begin
+  Result := PGeeTreeSetClass(g_type_check_class_cast(klass, GEE_TYPE_TREE_SET));
+end;
+
+function GEE_IS_TREE_SET(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_TREE_SET);
+end;
+
+function GEE_IS_TREE_SET_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_TREE_SET);
+end;
+
+function GEE_TREE_SET_GET_CLASS(obj: Pointer): PGeeTreeSetClass;
+begin
+  Result := PGeeTreeSetClass(PGTypeInstance(obj)^.g_class);
+end;
+
+// ====
+
+function GEE_TYPE_UNROLLED_LINKED_LIST: TGType;
+begin
+  Result := gee_unrolled_linked_list_get_type;
+end;
+
+function GEE_UNROLLED_LINKED_LIST(obj: Pointer): PGeeUnrolledLinkedList;
+begin
+  Result := PGeeUnrolledLinkedList(g_type_check_instance_cast(obj, GEE_TYPE_UNROLLED_LINKED_LIST));
+end;
+
+function GEE_UNROLLED_LINKED_LIST_CLASS(klass: Pointer): PGeeUnrolledLinkedListClass;
+begin
+  Result := PGeeUnrolledLinkedListClass(g_type_check_class_cast(klass, GEE_TYPE_UNROLLED_LINKED_LIST));
+end;
+
+function GEE_IS_UNROLLED_LINKED_LIST(obj: Pointer): Tgboolean;
+begin
+  Result := g_type_check_instance_is_a(obj, GEE_TYPE_UNROLLED_LINKED_LIST);
+end;
+
+function GEE_IS_UNROLLED_LINKED_LIST_CLASS(klass: Pointer): Tgboolean;
+begin
+  Result := g_type_check_class_is_a(klass, GEE_TYPE_UNROLLED_LINKED_LIST);
+end;
+
+function GEE_UNROLLED_LINKED_LIST_GET_CLASS(obj: Pointer): PGeeUnrolledLinkedListClass;
+begin
+  Result := PGeeUnrolledLinkedListClass(PGTypeInstance(obj)^.g_class);
+end;
 
 end.

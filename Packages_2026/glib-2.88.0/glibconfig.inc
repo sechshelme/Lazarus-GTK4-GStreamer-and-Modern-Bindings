@@ -64,6 +64,7 @@ type
   Tgpointer = pointer;
   Pgpointer = ^Tgpointer;
 
+  PPgconstpointer = ^Pgconstpointer;
   Pgconstpointer = ^Tgconstpointer;
   Tgconstpointer = pointer;
 
