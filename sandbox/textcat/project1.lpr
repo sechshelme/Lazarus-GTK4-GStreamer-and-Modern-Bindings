@@ -16,6 +16,9 @@ uses fp_exttextcat;
       'Bonjour tout le monde, comment ça va aujourd''hui?',
       'Hola, qué tal? Esto es una prueba de detección.',
       'This is a short text, aber mit ein bisschen Deutsch gemischt.',
+      'Улыбнись, ведь жизнь прекрасна!',
+      '千里之行，始于足下。',
+      'ابتسم، فالْحَيَاةُ جَمِيلَةٌ.',
       'Hi');
 
   begin

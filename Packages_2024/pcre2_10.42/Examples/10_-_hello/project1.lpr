@@ -4,9 +4,10 @@ uses
   fp_pcre2_8;
 
   procedure main;
-  var
-    pattern, subject: PChar;
-    subject_length: SizeInt;
+  const
+    pattern = '03';
+    subject = 'Das Ereigniss war am 03. Januar 2023!';
+ var
     re: Ppcre2_code;
     errornumber, rc: longint;
     erroroffset: Tsize_t;
@@ -15,13 +16,7 @@ uses
     ovector: Psize_t;
 
   begin
-    pattern := '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}';
-
-    subject := 'Hallo, meine E-Mail lautet tux@example.com und hier ist Text.';
-    subject_length := Length(subject);
-
     re := pcre2_compile(pattern, PCRE2_ZERO_TERMINATED, 0, @errornumber, @erroroffset, nil);
-
     if re = nil then begin
       Getmem(buffer, 256);
       pcre2_get_error_message(errornumber, pbyte(buffer), 256);
@@ -31,8 +26,7 @@ uses
     end;
 
     match_data := pcre2_match_data_create_from_pattern(re, nil);
-    rc := pcre2_match(re, subject, subject_length, 0, 0, match_data, nil);
-
+    rc := pcre2_match(re, subject, Length(subject), 0, 0, match_data, nil);
     if rc < 0 then begin
       if rc = PCRE2_ERROR_NOMATCH then begin
         WriteLn('Keinen Treffer gefunden.');
@@ -45,6 +39,7 @@ uses
       WriteLn('Treffer gefunden von Zeichen ', ovector[0], ' bis ', ovector[1]);
       WriteLn('Gefundener Text: ', Copy((subject), ovector[0] + 1, ovector[1] - ovector[0]));
     end;
+
     pcre2_match_data_free(match_data);
     pcre2_code_free(re);
   end;
