@@ -7,6 +7,17 @@
 #include <glib.h>
 #include <gio/gio.h>
 
+G_BEGIN_DECLS
+
+#if !defined(VALA_EXTERN)
+#if defined(_MSC_VER)
+#define VALA_EXTERN __declspec(dllexport) extern
+#elif __GNUC__ >= 4
+#define VALA_EXTERN __attribute__((visibility("default"))) extern
+#else
+#define VALA_EXTERN extern
+#endif
+#endif
 #define GEE_QUEUE_UNBOUNDED_CAPACITY -1
 
 #define GEE_TYPE_TRAVERSABLE (gee_traversable_get_type ())
@@ -1304,7 +1315,7 @@ struct _GeeHazardPointerContext {
 
 struct _GeeLazy {
 	GTypeInstance parent_instance;
-	 int ref_count;
+	volatile int ref_count;
 	GeeLazyPrivate * priv;
 };
 
@@ -1346,7 +1357,7 @@ struct _GeePriorityQueueClass {
 
 struct _GeePromise {
 	GTypeInstance parent_instance;
-	 int ref_count;
+	volatile int ref_count;
 	GeePromisePrivate * priv;
 };
 
@@ -1400,164 +1411,164 @@ struct _GeeUnrolledLinkedListClass {
 	GeeAbstractBidirListClass parent_class;
 };
 
-extern GType gee_traversable_stream_get_type (void)  ;
-extern gpointer gee_lazy_ref (gpointer instance);
-extern void gee_lazy_unref (gpointer instance);
-extern GParamSpec* gee_param_spec_lazy (const gchar* name,
+VALA_EXTERN GType gee_traversable_stream_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN gpointer gee_lazy_ref (gpointer instance);
+VALA_EXTERN void gee_lazy_unref (gpointer instance);
+VALA_EXTERN GParamSpec* gee_param_spec_lazy (const gchar* name,
                                  const gchar* nick,
                                  const gchar* blurb,
                                  GType object_type,
                                  GParamFlags flags);
-extern void gee_value_set_lazy (GValue* value,
+VALA_EXTERN void gee_value_set_lazy (GValue* value,
                          gpointer v_object);
-extern void gee_value_take_lazy (GValue* value,
+VALA_EXTERN void gee_value_take_lazy (GValue* value,
                           gpointer v_object);
-extern gpointer gee_value_get_lazy (const GValue* value);
-extern GType gee_lazy_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeLazy, gee_lazy_unref)
-extern GType gee_iterator_get_type (void)  ;
-extern GType gee_traversable_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTraversable, g_object_unref)
-extern GType gee_iterable_get_type (void)  ;
-extern GType gee_collection_get_type (void)  ;
-extern GType gee_abstract_collection_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractCollection, g_object_unref)
-extern GType gee_list_iterator_get_type (void)  ;
-extern GType gee_list_get_type (void)  ;
-extern GType gee_abstract_list_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractList, g_object_unref)
-extern GType gee_bidir_iterator_get_type (void)  ;
-extern GType gee_bidir_list_iterator_get_type (void)  ;
-extern GType gee_bidir_list_get_type (void)  ;
-extern GType gee_abstract_bidir_list_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirList, g_object_unref)
-extern GeeBidirListIterator* gee_abstract_bidir_list_bidir_list_iterator (GeeAbstractBidirList* self);
-extern GeeAbstractBidirList* gee_abstract_bidir_list_construct (GType object_type,
+VALA_EXTERN gpointer gee_value_get_lazy (const GValue* value);
+VALA_EXTERN GType gee_lazy_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeLazy, gee_lazy_unref)
+VALA_EXTERN GType gee_iterator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_traversable_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTraversable, g_object_unref)
+VALA_EXTERN GType gee_iterable_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_collection_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_collection_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractCollection, g_object_unref)
+VALA_EXTERN GType gee_list_iterator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_list_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_list_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractList, g_object_unref)
+VALA_EXTERN GType gee_bidir_iterator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_bidir_list_iterator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_bidir_list_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_bidir_list_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirList, g_object_unref)
+VALA_EXTERN GeeBidirListIterator* gee_abstract_bidir_list_bidir_list_iterator (GeeAbstractBidirList* self);
+VALA_EXTERN GeeAbstractBidirList* gee_abstract_bidir_list_construct (GType object_type,
                                                          GType g_type,
                                                          GBoxedCopyFunc g_dup_func,
                                                          GDestroyNotify g_destroy_func);
-extern GeeBidirList* gee_abstract_bidir_list_get_read_only_view (GeeAbstractBidirList* self);
-extern GType gee_set_get_type (void)  ;
-extern GType gee_abstract_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSet, g_object_unref)
-extern GType gee_sorted_set_get_type (void)  ;
-extern GType gee_abstract_sorted_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSortedSet, g_object_unref)
-extern GType gee_bidir_sorted_set_get_type (void)  ;
-extern GType gee_abstract_bidir_sorted_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirSortedSet, g_object_unref)
-extern GeeBidirIterator* gee_abstract_bidir_sorted_set_bidir_iterator (GeeAbstractBidirSortedSet* self);
-extern GeeAbstractBidirSortedSet* gee_abstract_bidir_sorted_set_construct (GType object_type,
+VALA_EXTERN GeeBidirList* gee_abstract_bidir_list_get_read_only_view (GeeAbstractBidirList* self);
+VALA_EXTERN GType gee_set_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSet, g_object_unref)
+VALA_EXTERN GType gee_sorted_set_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_sorted_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSortedSet, g_object_unref)
+VALA_EXTERN GType gee_bidir_sorted_set_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_bidir_sorted_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirSortedSet, g_object_unref)
+VALA_EXTERN GeeBidirIterator* gee_abstract_bidir_sorted_set_bidir_iterator (GeeAbstractBidirSortedSet* self);
+VALA_EXTERN GeeAbstractBidirSortedSet* gee_abstract_bidir_sorted_set_construct (GType object_type,
                                                                     GType g_type,
                                                                     GBoxedCopyFunc g_dup_func,
                                                                     GDestroyNotify g_destroy_func);
-extern GeeBidirSortedSet* gee_abstract_bidir_sorted_set_get_read_only_view (GeeAbstractBidirSortedSet* self);
-extern GType gee_map_iterator_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMapIterator, g_object_unref)
-extern GType gee_map_entry_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMapEntry, g_object_unref)
-extern GType gee_map_get_type (void)  ;
-extern GType gee_abstract_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMap, g_object_unref)
-extern GType gee_sorted_map_get_type (void)  ;
-extern GType gee_abstract_sorted_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSortedMap, g_object_unref)
-extern GType gee_bidir_map_iterator_get_type (void)  ;
-extern GType gee_bidir_sorted_map_get_type (void)  ;
-extern GType gee_abstract_bidir_sorted_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirSortedMap, g_object_unref)
-extern GeeBidirMapIterator* gee_abstract_bidir_sorted_map_bidir_map_iterator (GeeAbstractBidirSortedMap* self);
-extern GeeAbstractBidirSortedMap* gee_abstract_bidir_sorted_map_construct (GType object_type,
+VALA_EXTERN GeeBidirSortedSet* gee_abstract_bidir_sorted_set_get_read_only_view (GeeAbstractBidirSortedSet* self);
+VALA_EXTERN GType gee_map_iterator_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMapIterator, g_object_unref)
+VALA_EXTERN GType gee_map_entry_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMapEntry, g_object_unref)
+VALA_EXTERN GType gee_map_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMap, g_object_unref)
+VALA_EXTERN GType gee_sorted_map_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_sorted_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractSortedMap, g_object_unref)
+VALA_EXTERN GType gee_bidir_map_iterator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_bidir_sorted_map_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_bidir_sorted_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractBidirSortedMap, g_object_unref)
+VALA_EXTERN GeeBidirMapIterator* gee_abstract_bidir_sorted_map_bidir_map_iterator (GeeAbstractBidirSortedMap* self);
+VALA_EXTERN GeeAbstractBidirSortedMap* gee_abstract_bidir_sorted_map_construct (GType object_type,
                                                                     GType k_type,
                                                                     GBoxedCopyFunc k_dup_func,
                                                                     GDestroyNotify k_destroy_func,
                                                                     GType v_type,
                                                                     GBoxedCopyFunc v_dup_func,
                                                                     GDestroyNotify v_destroy_func);
-extern GeeBidirSortedMap* gee_abstract_bidir_sorted_map_get_read_only_view (GeeAbstractBidirSortedMap* self);
-extern gboolean gee_abstract_collection_contains (GeeAbstractCollection* self,
+VALA_EXTERN GeeBidirSortedMap* gee_abstract_bidir_sorted_map_get_read_only_view (GeeAbstractBidirSortedMap* self);
+VALA_EXTERN gboolean gee_abstract_collection_contains (GeeAbstractCollection* self,
                                            gconstpointer item);
-extern gboolean gee_abstract_collection_add (GeeAbstractCollection* self,
+VALA_EXTERN gboolean gee_abstract_collection_add (GeeAbstractCollection* self,
                                       gconstpointer item);
-extern gboolean gee_abstract_collection_remove (GeeAbstractCollection* self,
+VALA_EXTERN gboolean gee_abstract_collection_remove (GeeAbstractCollection* self,
                                          gconstpointer item);
-extern void gee_abstract_collection_clear (GeeAbstractCollection* self);
-extern GeeIterator* gee_abstract_collection_iterator (GeeAbstractCollection* self);
-extern gboolean gee_abstract_collection_foreach (GeeAbstractCollection* self,
+VALA_EXTERN void gee_abstract_collection_clear (GeeAbstractCollection* self);
+VALA_EXTERN GeeIterator* gee_abstract_collection_iterator (GeeAbstractCollection* self);
+VALA_EXTERN gboolean gee_abstract_collection_foreach (GeeAbstractCollection* self,
                                           GeeForallFunc f,
                                           gpointer f_target);
-extern GeeAbstractCollection* gee_abstract_collection_construct (GType object_type,
+VALA_EXTERN GeeAbstractCollection* gee_abstract_collection_construct (GType object_type,
                                                           GType g_type,
                                                           GBoxedCopyFunc g_dup_func,
                                                           GDestroyNotify g_destroy_func);
-extern gint gee_abstract_collection_get_size (GeeAbstractCollection* self);
-extern gboolean gee_abstract_collection_get_read_only (GeeAbstractCollection* self);
-extern GeeCollection* gee_abstract_collection_get_read_only_view (GeeAbstractCollection* self);
-extern GeeListIterator* gee_abstract_list_list_iterator (GeeAbstractList* self);
-extern gpointer gee_abstract_list_get (GeeAbstractList* self,
+VALA_EXTERN gint gee_abstract_collection_get_size (GeeAbstractCollection* self);
+VALA_EXTERN gboolean gee_abstract_collection_get_read_only (GeeAbstractCollection* self);
+VALA_EXTERN GeeCollection* gee_abstract_collection_get_read_only_view (GeeAbstractCollection* self);
+VALA_EXTERN GeeListIterator* gee_abstract_list_list_iterator (GeeAbstractList* self);
+VALA_EXTERN gpointer gee_abstract_list_get (GeeAbstractList* self,
                                 gint index);
-extern void gee_abstract_list_set (GeeAbstractList* self,
+VALA_EXTERN void gee_abstract_list_set (GeeAbstractList* self,
                             gint index,
                             gconstpointer item);
-extern gint gee_abstract_list_index_of (GeeAbstractList* self,
+VALA_EXTERN gint gee_abstract_list_index_of (GeeAbstractList* self,
                                  gconstpointer item);
-extern void gee_abstract_list_insert (GeeAbstractList* self,
+VALA_EXTERN void gee_abstract_list_insert (GeeAbstractList* self,
                                gint index,
                                gconstpointer item);
-extern gpointer gee_abstract_list_remove_at (GeeAbstractList* self,
+VALA_EXTERN gpointer gee_abstract_list_remove_at (GeeAbstractList* self,
                                       gint index);
-extern GeeList* gee_abstract_list_slice (GeeAbstractList* self,
+VALA_EXTERN GeeList* gee_abstract_list_slice (GeeAbstractList* self,
                                   gint start,
                                   gint stop);
-extern GeeAbstractList* gee_abstract_list_construct (GType object_type,
+VALA_EXTERN GeeAbstractList* gee_abstract_list_construct (GType object_type,
                                               GType g_type,
                                               GBoxedCopyFunc g_dup_func,
                                               GDestroyNotify g_destroy_func);
-extern GeeList* gee_abstract_list_get_read_only_view (GeeAbstractList* self);
-extern gboolean gee_abstract_map_has_key (GeeAbstractMap* self,
+VALA_EXTERN GeeList* gee_abstract_list_get_read_only_view (GeeAbstractList* self);
+VALA_EXTERN gboolean gee_abstract_map_has_key (GeeAbstractMap* self,
                                    gconstpointer key);
-extern gboolean gee_abstract_map_has (GeeAbstractMap* self,
+VALA_EXTERN gboolean gee_abstract_map_has (GeeAbstractMap* self,
                                gconstpointer key,
                                gconstpointer value);
-extern gpointer gee_abstract_map_get (GeeAbstractMap* self,
+VALA_EXTERN gpointer gee_abstract_map_get (GeeAbstractMap* self,
                                gconstpointer key);
-extern void gee_abstract_map_set (GeeAbstractMap* self,
+VALA_EXTERN void gee_abstract_map_set (GeeAbstractMap* self,
                            gconstpointer key,
                            gconstpointer value);
-extern gboolean gee_abstract_map_unset (GeeAbstractMap* self,
+VALA_EXTERN gboolean gee_abstract_map_unset (GeeAbstractMap* self,
                                  gconstpointer key,
                                  gpointer* value);
-extern GeeMapIterator* gee_abstract_map_map_iterator (GeeAbstractMap* self);
-extern void gee_abstract_map_clear (GeeAbstractMap* self);
-extern gboolean gee_abstract_map_foreach (GeeAbstractMap* self,
+VALA_EXTERN GeeMapIterator* gee_abstract_map_map_iterator (GeeAbstractMap* self);
+VALA_EXTERN void gee_abstract_map_clear (GeeAbstractMap* self);
+VALA_EXTERN gboolean gee_abstract_map_foreach (GeeAbstractMap* self,
                                    GeeForallFunc f,
                                    gpointer f_target);
-extern GeeIterator* gee_abstract_map_stream (GeeAbstractMap* self,
+VALA_EXTERN GeeIterator* gee_abstract_map_stream (GeeAbstractMap* self,
                                       GType a_type,
                                       GBoxedCopyFunc a_dup_func,
                                       GDestroyNotify a_destroy_func,
                                       GeeStreamFunc f,
                                       gpointer f_target,
                                       GDestroyNotify f_target_destroy_notify);
-extern GeeAbstractMap* gee_abstract_map_construct (GType object_type,
+VALA_EXTERN GeeAbstractMap* gee_abstract_map_construct (GType object_type,
                                             GType k_type,
                                             GBoxedCopyFunc k_dup_func,
                                             GDestroyNotify k_destroy_func,
                                             GType v_type,
                                             GBoxedCopyFunc v_dup_func,
                                             GDestroyNotify v_destroy_func);
-extern gint gee_abstract_map_get_size (GeeAbstractMap* self);
-extern gboolean gee_abstract_map_get_read_only (GeeAbstractMap* self);
-extern GeeSet* gee_abstract_map_get_keys (GeeAbstractMap* self);
-extern GeeCollection* gee_abstract_map_get_values (GeeAbstractMap* self);
-extern GeeSet* gee_abstract_map_get_entries (GeeAbstractMap* self);
-extern GeeMap* gee_abstract_map_get_read_only_view (GeeAbstractMap* self);
-extern GType gee_multi_set_get_type (void)  ;
-extern GType gee_multi_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMultiMap, g_object_unref)
-extern GType gee_abstract_multi_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMultiMap, g_object_unref)
-extern GeeAbstractMultiMap* gee_abstract_multi_map_construct (GType object_type,
+VALA_EXTERN gint gee_abstract_map_get_size (GeeAbstractMap* self);
+VALA_EXTERN gboolean gee_abstract_map_get_read_only (GeeAbstractMap* self);
+VALA_EXTERN GeeSet* gee_abstract_map_get_keys (GeeAbstractMap* self);
+VALA_EXTERN GeeCollection* gee_abstract_map_get_values (GeeAbstractMap* self);
+VALA_EXTERN GeeSet* gee_abstract_map_get_entries (GeeAbstractMap* self);
+VALA_EXTERN GeeMap* gee_abstract_map_get_read_only_view (GeeAbstractMap* self);
+VALA_EXTERN GType gee_multi_set_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_multi_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeMultiMap, g_object_unref)
+VALA_EXTERN GType gee_abstract_multi_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMultiMap, g_object_unref)
+VALA_EXTERN GeeAbstractMultiMap* gee_abstract_multi_map_construct (GType object_type,
                                                        GType k_type,
                                                        GBoxedCopyFunc k_dup_func,
                                                        GDestroyNotify k_destroy_func,
@@ -1565,93 +1576,93 @@ extern GeeAbstractMultiMap* gee_abstract_multi_map_construct (GType object_type,
                                                        GBoxedCopyFunc v_dup_func,
                                                        GDestroyNotify v_destroy_func,
                                                        GeeMap* storage_map);
-extern GeeCollection* gee_abstract_multi_map_create_value_storage (GeeAbstractMultiMap* self);
-extern GeeMultiSet* gee_abstract_multi_map_create_multi_key_set (GeeAbstractMultiMap* self);
-extern GeeEqualDataFunc gee_abstract_multi_map_get_value_equal_func (GeeAbstractMultiMap* self,
+VALA_EXTERN GeeCollection* gee_abstract_multi_map_create_value_storage (GeeAbstractMultiMap* self);
+VALA_EXTERN GeeMultiSet* gee_abstract_multi_map_create_multi_key_set (GeeAbstractMultiMap* self);
+VALA_EXTERN GeeEqualDataFunc gee_abstract_multi_map_get_value_equal_func (GeeAbstractMultiMap* self,
                                                               gpointer* result_target,
                                                               GDestroyNotify* result_target_destroy_notify);
-extern GeeMultiMap* gee_abstract_multi_map_get_read_only_view (GeeAbstractMultiMap* self);
-extern GType gee_abstract_multi_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMultiSet, g_object_unref)
-extern GeeAbstractMultiSet* gee_abstract_multi_set_construct (GType object_type,
+VALA_EXTERN GeeMultiMap* gee_abstract_multi_map_get_read_only_view (GeeAbstractMultiMap* self);
+VALA_EXTERN GType gee_abstract_multi_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractMultiSet, g_object_unref)
+VALA_EXTERN GeeAbstractMultiSet* gee_abstract_multi_set_construct (GType object_type,
                                                        GType g_type,
                                                        GBoxedCopyFunc g_dup_func,
                                                        GDestroyNotify g_destroy_func,
                                                        GeeMap* storage_map);
-extern GeeMultiSet* gee_abstract_multi_set_get_read_only_view (GeeAbstractMultiSet* self);
-extern GType gee_queue_get_type (void)  ;
-extern GType gee_abstract_queue_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractQueue, g_object_unref)
-extern gpointer gee_abstract_queue_peek (GeeAbstractQueue* self);
-extern gpointer gee_abstract_queue_poll (GeeAbstractQueue* self);
-extern GeeAbstractQueue* gee_abstract_queue_construct (GType object_type,
+VALA_EXTERN GeeMultiSet* gee_abstract_multi_set_get_read_only_view (GeeAbstractMultiSet* self);
+VALA_EXTERN GType gee_queue_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_abstract_queue_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeAbstractQueue, g_object_unref)
+VALA_EXTERN gpointer gee_abstract_queue_peek (GeeAbstractQueue* self);
+VALA_EXTERN gpointer gee_abstract_queue_poll (GeeAbstractQueue* self);
+VALA_EXTERN GeeAbstractQueue* gee_abstract_queue_construct (GType object_type,
                                                 GType g_type,
                                                 GBoxedCopyFunc g_dup_func,
                                                 GDestroyNotify g_destroy_func);
-extern gint gee_abstract_queue_get_capacity (GeeAbstractQueue* self);
-extern gint gee_abstract_queue_get_remaining_capacity (GeeAbstractQueue* self);
-extern gboolean gee_abstract_queue_get_is_full (GeeAbstractQueue* self);
-extern GeeAbstractSet* gee_abstract_set_construct (GType object_type,
+VALA_EXTERN gint gee_abstract_queue_get_capacity (GeeAbstractQueue* self);
+VALA_EXTERN gint gee_abstract_queue_get_remaining_capacity (GeeAbstractQueue* self);
+VALA_EXTERN gboolean gee_abstract_queue_get_is_full (GeeAbstractQueue* self);
+VALA_EXTERN GeeAbstractSet* gee_abstract_set_construct (GType object_type,
                                             GType g_type,
                                             GBoxedCopyFunc g_dup_func,
                                             GDestroyNotify g_destroy_func);
-extern GeeSet* gee_abstract_set_get_read_only_view (GeeAbstractSet* self);
-extern GeeSortedMap* gee_abstract_sorted_map_head_map (GeeAbstractSortedMap* self,
+VALA_EXTERN GeeSet* gee_abstract_set_get_read_only_view (GeeAbstractSet* self);
+VALA_EXTERN GeeSortedMap* gee_abstract_sorted_map_head_map (GeeAbstractSortedMap* self,
                                                 gconstpointer before);
-extern GeeSortedMap* gee_abstract_sorted_map_tail_map (GeeAbstractSortedMap* self,
+VALA_EXTERN GeeSortedMap* gee_abstract_sorted_map_tail_map (GeeAbstractSortedMap* self,
                                                 gconstpointer after);
-extern GeeSortedMap* gee_abstract_sorted_map_sub_map (GeeAbstractSortedMap* self,
+VALA_EXTERN GeeSortedMap* gee_abstract_sorted_map_sub_map (GeeAbstractSortedMap* self,
                                                gconstpointer before,
                                                gconstpointer after);
-extern GeeAbstractSortedMap* gee_abstract_sorted_map_construct (GType object_type,
+VALA_EXTERN GeeAbstractSortedMap* gee_abstract_sorted_map_construct (GType object_type,
                                                          GType k_type,
                                                          GBoxedCopyFunc k_dup_func,
                                                          GDestroyNotify k_destroy_func,
                                                          GType v_type,
                                                          GBoxedCopyFunc v_dup_func,
                                                          GDestroyNotify v_destroy_func);
-extern GeeSortedSet* gee_abstract_sorted_map_get_ascending_keys (GeeAbstractSortedMap* self);
-extern GeeSortedSet* gee_abstract_sorted_map_get_ascending_entries (GeeAbstractSortedMap* self);
-extern gpointer gee_abstract_sorted_set_first (GeeAbstractSortedSet* self);
-extern gpointer gee_abstract_sorted_set_last (GeeAbstractSortedSet* self);
-extern GeeIterator* gee_abstract_sorted_set_iterator_at (GeeAbstractSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_abstract_sorted_map_get_ascending_keys (GeeAbstractSortedMap* self);
+VALA_EXTERN GeeSortedSet* gee_abstract_sorted_map_get_ascending_entries (GeeAbstractSortedMap* self);
+VALA_EXTERN gpointer gee_abstract_sorted_set_first (GeeAbstractSortedSet* self);
+VALA_EXTERN gpointer gee_abstract_sorted_set_last (GeeAbstractSortedSet* self);
+VALA_EXTERN GeeIterator* gee_abstract_sorted_set_iterator_at (GeeAbstractSortedSet* self,
                                                   gconstpointer element);
-extern gpointer gee_abstract_sorted_set_lower (GeeAbstractSortedSet* self,
+VALA_EXTERN gpointer gee_abstract_sorted_set_lower (GeeAbstractSortedSet* self,
                                         gconstpointer element);
-extern gpointer gee_abstract_sorted_set_higher (GeeAbstractSortedSet* self,
+VALA_EXTERN gpointer gee_abstract_sorted_set_higher (GeeAbstractSortedSet* self,
                                          gconstpointer element);
-extern gpointer gee_abstract_sorted_set_floor (GeeAbstractSortedSet* self,
+VALA_EXTERN gpointer gee_abstract_sorted_set_floor (GeeAbstractSortedSet* self,
                                         gconstpointer element);
-extern gpointer gee_abstract_sorted_set_ceil (GeeAbstractSortedSet* self,
+VALA_EXTERN gpointer gee_abstract_sorted_set_ceil (GeeAbstractSortedSet* self,
                                        gconstpointer element);
-extern GeeSortedSet* gee_abstract_sorted_set_head_set (GeeAbstractSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_abstract_sorted_set_head_set (GeeAbstractSortedSet* self,
                                                 gconstpointer before);
-extern GeeSortedSet* gee_abstract_sorted_set_tail_set (GeeAbstractSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_abstract_sorted_set_tail_set (GeeAbstractSortedSet* self,
                                                 gconstpointer after);
-extern GeeSortedSet* gee_abstract_sorted_set_sub_set (GeeAbstractSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_abstract_sorted_set_sub_set (GeeAbstractSortedSet* self,
                                                gconstpointer from,
                                                gconstpointer to);
-extern GeeAbstractSortedSet* gee_abstract_sorted_set_construct (GType object_type,
+VALA_EXTERN GeeAbstractSortedSet* gee_abstract_sorted_set_construct (GType object_type,
                                                          GType g_type,
                                                          GBoxedCopyFunc g_dup_func,
                                                          GDestroyNotify g_destroy_func);
-extern GeeSortedSet* gee_abstract_sorted_set_get_read_only_view (GeeAbstractSortedSet* self);
-extern GType gee_array_list_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeArrayList, g_object_unref)
-extern GeeArrayList* gee_array_list_new (GType g_type,
+VALA_EXTERN GeeSortedSet* gee_abstract_sorted_set_get_read_only_view (GeeAbstractSortedSet* self);
+VALA_EXTERN GType gee_array_list_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeArrayList, g_object_unref)
+VALA_EXTERN GeeArrayList* gee_array_list_new (GType g_type,
                                   GBoxedCopyFunc g_dup_func,
                                   GDestroyNotify g_destroy_func,
                                   GeeEqualDataFunc equal_func,
                                   gpointer equal_func_target,
                                   GDestroyNotify equal_func_target_destroy_notify);
-extern GeeArrayList* gee_array_list_construct (GType object_type,
+VALA_EXTERN GeeArrayList* gee_array_list_construct (GType object_type,
                                         GType g_type,
                                         GBoxedCopyFunc g_dup_func,
                                         GDestroyNotify g_destroy_func,
                                         GeeEqualDataFunc equal_func,
                                         gpointer equal_func_target,
                                         GDestroyNotify equal_func_target_destroy_notify);
-extern GeeArrayList* gee_array_list_new_wrap (GType g_type,
+VALA_EXTERN GeeArrayList* gee_array_list_new_wrap (GType g_type,
                                        GBoxedCopyFunc g_dup_func,
                                        GDestroyNotify g_destroy_func,
                                        gpointer* items,
@@ -1659,7 +1670,7 @@ extern GeeArrayList* gee_array_list_new_wrap (GType g_type,
                                        GeeEqualDataFunc equal_func,
                                        gpointer equal_func_target,
                                        GDestroyNotify equal_func_target_destroy_notify);
-extern GeeArrayList* gee_array_list_construct_wrap (GType object_type,
+VALA_EXTERN GeeArrayList* gee_array_list_construct_wrap (GType object_type,
                                              GType g_type,
                                              GBoxedCopyFunc g_dup_func,
                                              GDestroyNotify g_destroy_func,
@@ -1668,191 +1679,191 @@ extern GeeArrayList* gee_array_list_construct_wrap (GType object_type,
                                              GeeEqualDataFunc equal_func,
                                              gpointer equal_func_target,
                                              GDestroyNotify equal_func_target_destroy_notify);
-extern gboolean gee_array_list_add_all (GeeArrayList* self,
+VALA_EXTERN gboolean gee_array_list_add_all (GeeArrayList* self,
                                  GeeCollection* collection);
-extern GeeEqualDataFunc gee_array_list_get_equal_func (GeeArrayList* self,
+VALA_EXTERN GeeEqualDataFunc gee_array_list_get_equal_func (GeeArrayList* self,
                                                 gpointer* result_target);
-extern GType gee_deque_get_type (void)  ;
-extern GType gee_array_queue_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeArrayQueue, g_object_unref)
-extern GeeArrayQueue* gee_array_queue_new (GType g_type,
+VALA_EXTERN GType gee_deque_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_array_queue_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeArrayQueue, g_object_unref)
+VALA_EXTERN GeeArrayQueue* gee_array_queue_new (GType g_type,
                                     GBoxedCopyFunc g_dup_func,
                                     GDestroyNotify g_destroy_func,
                                     GeeEqualDataFunc equal_func,
                                     gpointer equal_func_target,
                                     GDestroyNotify equal_func_target_destroy_notify);
-extern GeeArrayQueue* gee_array_queue_construct (GType object_type,
+VALA_EXTERN GeeArrayQueue* gee_array_queue_construct (GType object_type,
                                           GType g_type,
                                           GBoxedCopyFunc g_dup_func,
                                           GDestroyNotify g_destroy_func,
                                           GeeEqualDataFunc equal_func,
                                           gpointer equal_func_target,
                                           GDestroyNotify equal_func_target_destroy_notify);
-extern GeeEqualDataFunc gee_array_queue_get_equal_func (GeeArrayQueue* self,
+VALA_EXTERN GeeEqualDataFunc gee_array_queue_get_equal_func (GeeArrayQueue* self,
                                                  gpointer* result_target);
-extern gboolean gee_array_queue_get_is_empty (GeeArrayQueue* self);
-extern gboolean gee_bidir_iterator_previous (GeeBidirIterator* self);
-extern gboolean gee_bidir_iterator_has_previous (GeeBidirIterator* self);
-extern gboolean gee_bidir_iterator_first (GeeBidirIterator* self);
-extern gboolean gee_bidir_iterator_last (GeeBidirIterator* self);
-extern GeeBidirListIterator* gee_bidir_list_bidir_list_iterator (GeeBidirList* self);
-extern GeeBidirList* gee_bidir_list_get_read_only_view (GeeBidirList* self);
-extern void gee_bidir_list_iterator_insert (GeeBidirListIterator* self,
+VALA_EXTERN gboolean gee_array_queue_get_is_empty (GeeArrayQueue* self);
+VALA_EXTERN gboolean gee_bidir_iterator_previous (GeeBidirIterator* self);
+VALA_EXTERN gboolean gee_bidir_iterator_has_previous (GeeBidirIterator* self);
+VALA_EXTERN gboolean gee_bidir_iterator_first (GeeBidirIterator* self);
+VALA_EXTERN gboolean gee_bidir_iterator_last (GeeBidirIterator* self);
+VALA_EXTERN GeeBidirListIterator* gee_bidir_list_bidir_list_iterator (GeeBidirList* self);
+VALA_EXTERN GeeBidirList* gee_bidir_list_get_read_only_view (GeeBidirList* self);
+VALA_EXTERN void gee_bidir_list_iterator_insert (GeeBidirListIterator* self,
                                      gconstpointer item);
-extern gboolean gee_bidir_map_iterator_previous (GeeBidirMapIterator* self);
-extern gboolean gee_bidir_map_iterator_has_previous (GeeBidirMapIterator* self);
-extern gboolean gee_bidir_map_iterator_first (GeeBidirMapIterator* self);
-extern gboolean gee_bidir_map_iterator_last (GeeBidirMapIterator* self);
-extern GeeBidirIterator* gee_bidir_sorted_set_bidir_iterator (GeeBidirSortedSet* self);
-extern GeeBidirSortedSet* gee_bidir_sorted_set_empty (GType g_type,
+VALA_EXTERN gboolean gee_bidir_map_iterator_previous (GeeBidirMapIterator* self);
+VALA_EXTERN gboolean gee_bidir_map_iterator_has_previous (GeeBidirMapIterator* self);
+VALA_EXTERN gboolean gee_bidir_map_iterator_first (GeeBidirMapIterator* self);
+VALA_EXTERN gboolean gee_bidir_map_iterator_last (GeeBidirMapIterator* self);
+VALA_EXTERN GeeBidirIterator* gee_bidir_sorted_set_bidir_iterator (GeeBidirSortedSet* self);
+VALA_EXTERN GeeBidirSortedSet* gee_bidir_sorted_set_empty (GType g_type,
                                                GBoxedCopyFunc g_dup_func,
                                                GDestroyNotify g_destroy_func);
-extern GeeBidirSortedSet* gee_bidir_sorted_set_get_read_only_view (GeeBidirSortedSet* self);
-extern GeeBidirMapIterator* gee_bidir_sorted_map_bidir_map_iterator (GeeBidirSortedMap* self);
-extern GeeBidirSortedMap* gee_bidir_sorted_map_empty (GType k_type,
+VALA_EXTERN GeeBidirSortedSet* gee_bidir_sorted_set_get_read_only_view (GeeBidirSortedSet* self);
+VALA_EXTERN GeeBidirMapIterator* gee_bidir_sorted_map_bidir_map_iterator (GeeBidirSortedMap* self);
+VALA_EXTERN GeeBidirSortedMap* gee_bidir_sorted_map_empty (GType k_type,
                                                GBoxedCopyFunc k_dup_func,
                                                GDestroyNotify k_destroy_func,
                                                GType v_type,
                                                GBoxedCopyFunc v_dup_func,
                                                GDestroyNotify v_destroy_func);
-extern GeeBidirSortedMap* gee_bidir_sorted_map_get_read_only_view (GeeBidirSortedMap* self);
-extern gboolean gee_collection_contains (GeeCollection* self,
+VALA_EXTERN GeeBidirSortedMap* gee_bidir_sorted_map_get_read_only_view (GeeBidirSortedMap* self);
+VALA_EXTERN gboolean gee_collection_contains (GeeCollection* self,
                                   gconstpointer item);
-extern gboolean gee_collection_add (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_add (GeeCollection* self,
                              gconstpointer item);
-extern gboolean gee_collection_remove (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_remove (GeeCollection* self,
                                 gconstpointer item);
-extern void gee_collection_clear (GeeCollection* self);
-extern gboolean gee_collection_add_all (GeeCollection* self,
+VALA_EXTERN void gee_collection_clear (GeeCollection* self);
+VALA_EXTERN gboolean gee_collection_add_all (GeeCollection* self,
                                  GeeCollection* collection);
-extern gboolean gee_collection_contains_all (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_contains_all (GeeCollection* self,
                                       GeeCollection* collection);
-extern gboolean gee_collection_remove_all (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_remove_all (GeeCollection* self,
                                     GeeCollection* collection);
-extern gboolean gee_collection_retain_all (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_retain_all (GeeCollection* self,
                                     GeeCollection* collection);
-extern gpointer* gee_collection_to_array (GeeCollection* self,
+VALA_EXTERN gpointer* gee_collection_to_array (GeeCollection* self,
                                    gint* result_length1);
-extern gboolean gee_collection_add_all_array (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_add_all_array (GeeCollection* self,
                                        gpointer* array,
                                        gint array_length1);
-extern gboolean gee_collection_contains_all_array (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_contains_all_array (GeeCollection* self,
                                             gpointer* array,
                                             gint array_length1);
-extern gboolean gee_collection_remove_all_array (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_remove_all_array (GeeCollection* self,
                                           gpointer* array,
                                           gint array_length1);
-extern gboolean gee_collection_add_all_iterator (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_add_all_iterator (GeeCollection* self,
                                           GeeIterator* iter);
-extern gboolean gee_collection_contains_all_iterator (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_contains_all_iterator (GeeCollection* self,
                                                GeeIterator* iter);
-extern gboolean gee_collection_remove_all_iterator (GeeCollection* self,
+VALA_EXTERN gboolean gee_collection_remove_all_iterator (GeeCollection* self,
                                              GeeIterator* iter);
-extern GeeCollection* gee_collection_empty (GType g_type,
+VALA_EXTERN GeeCollection* gee_collection_empty (GType g_type,
                                      GBoxedCopyFunc g_dup_func,
                                      GDestroyNotify g_destroy_func);
-extern gint gee_collection_get_size (GeeCollection* self);
-extern gboolean gee_collection_get_is_empty (GeeCollection* self);
-extern gboolean gee_collection_get_read_only (GeeCollection* self);
-extern GeeCollection* gee_collection_get_read_only_view (GeeCollection* self);
-extern GType gee_comparable_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeComparable, g_object_unref)
-extern gint gee_comparable_compare_to (GeeComparable* self,
+VALA_EXTERN gint gee_collection_get_size (GeeCollection* self);
+VALA_EXTERN gboolean gee_collection_get_is_empty (GeeCollection* self);
+VALA_EXTERN gboolean gee_collection_get_read_only (GeeCollection* self);
+VALA_EXTERN GeeCollection* gee_collection_get_read_only_view (GeeCollection* self);
+VALA_EXTERN GType gee_comparable_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeComparable, g_object_unref)
+VALA_EXTERN gint gee_comparable_compare_to (GeeComparable* self,
                                 gconstpointer object);
-extern GType gee_concurrent_list_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeConcurrentList, g_object_unref)
-extern GeeConcurrentList* gee_concurrent_list_new (GType g_type,
+VALA_EXTERN GType gee_concurrent_list_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeConcurrentList, g_object_unref)
+VALA_EXTERN GeeConcurrentList* gee_concurrent_list_new (GType g_type,
                                             GBoxedCopyFunc g_dup_func,
                                             GDestroyNotify g_destroy_func,
                                             GeeEqualDataFunc equal_func,
                                             gpointer equal_func_target,
                                             GDestroyNotify equal_func_target_destroy_notify);
-extern GeeConcurrentList* gee_concurrent_list_construct (GType object_type,
+VALA_EXTERN GeeConcurrentList* gee_concurrent_list_construct (GType object_type,
                                                   GType g_type,
                                                   GBoxedCopyFunc g_dup_func,
                                                   GDestroyNotify g_destroy_func,
                                                   GeeEqualDataFunc equal_func,
                                                   gpointer equal_func_target,
                                                   GDestroyNotify equal_func_target_destroy_notify);
-extern GeeEqualDataFunc gee_concurrent_list_get_equal_func (GeeConcurrentList* self,
+VALA_EXTERN GeeEqualDataFunc gee_concurrent_list_get_equal_func (GeeConcurrentList* self,
                                                      gpointer* result_target);
-extern gboolean gee_concurrent_list_get_is_empty (GeeConcurrentList* self);
-extern GType gee_concurrent_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeConcurrentSet, g_object_unref)
-extern GType gee_concurrent_set_range_type_get_type (void)  ;
-extern GeeConcurrentSet* gee_concurrent_set_new (GType g_type,
+VALA_EXTERN gboolean gee_concurrent_list_get_is_empty (GeeConcurrentList* self);
+VALA_EXTERN GType gee_concurrent_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeConcurrentSet, g_object_unref)
+VALA_EXTERN GType gee_concurrent_set_range_type_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GeeConcurrentSet* gee_concurrent_set_new (GType g_type,
                                           GBoxedCopyFunc g_dup_func,
                                           GDestroyNotify g_destroy_func,
                                           GCompareDataFunc compare_func,
                                           gpointer compare_func_target,
                                           GDestroyNotify compare_func_target_destroy_notify);
-extern GeeConcurrentSet* gee_concurrent_set_construct (GType object_type,
+VALA_EXTERN GeeConcurrentSet* gee_concurrent_set_construct (GType object_type,
                                                 GType g_type,
                                                 GBoxedCopyFunc g_dup_func,
                                                 GDestroyNotify g_destroy_func,
                                                 GCompareDataFunc compare_func,
                                                 gpointer compare_func_target,
                                                 GDestroyNotify compare_func_target_destroy_notify);
-extern gboolean gee_deque_offer_head (GeeDeque* self,
+VALA_EXTERN gboolean gee_deque_offer_head (GeeDeque* self,
                                gconstpointer element);
-extern gpointer gee_deque_peek_head (GeeDeque* self);
-extern gpointer gee_deque_poll_head (GeeDeque* self);
-extern gint gee_deque_drain_head (GeeDeque* self,
+VALA_EXTERN gpointer gee_deque_peek_head (GeeDeque* self);
+VALA_EXTERN gpointer gee_deque_poll_head (GeeDeque* self);
+VALA_EXTERN gint gee_deque_drain_head (GeeDeque* self,
                            GeeCollection* recipient,
                            gint amount);
-extern gboolean gee_deque_offer_tail (GeeDeque* self,
+VALA_EXTERN gboolean gee_deque_offer_tail (GeeDeque* self,
                                gconstpointer element);
-extern gpointer gee_deque_peek_tail (GeeDeque* self);
-extern gpointer gee_deque_poll_tail (GeeDeque* self);
-extern gint gee_deque_drain_tail (GeeDeque* self,
+VALA_EXTERN gpointer gee_deque_peek_tail (GeeDeque* self);
+VALA_EXTERN gpointer gee_deque_poll_tail (GeeDeque* self);
+VALA_EXTERN gint gee_deque_drain_tail (GeeDeque* self,
                            GeeCollection* recipient,
                            gint amount);
-extern GeeEqualDataFunc gee_functions_get_equal_func_for (GType t,
+VALA_EXTERN GeeEqualDataFunc gee_functions_get_equal_func_for (GType t,
                                                    gpointer* result_target,
                                                    GDestroyNotify* result_target_destroy_notify);
-extern GeeHashDataFunc gee_functions_get_hash_func_for (GType t,
+VALA_EXTERN GeeHashDataFunc gee_functions_get_hash_func_for (GType t,
                                                  gpointer* result_target,
                                                  GDestroyNotify* result_target_destroy_notify);
-extern GCompareDataFunc gee_functions_get_compare_func_for (GType t,
+VALA_EXTERN GCompareDataFunc gee_functions_get_compare_func_for (GType t,
                                                      gpointer* result_target,
                                                      GDestroyNotify* result_target_destroy_notify);
-extern GQuark gee_future_error_quark (void);
-extern GType gee_future_error_get_type (void)  ;
-extern GType gee_future_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeFuture, g_object_unref)
-extern gconstpointer gee_future_wait (GeeFuture* self,
+VALA_EXTERN GQuark gee_future_error_quark (void);
+VALA_EXTERN GType gee_future_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gee_future_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeFuture, g_object_unref)
+VALA_EXTERN gconstpointer gee_future_wait (GeeFuture* self,
                                GError** error);
-extern gboolean gee_future_wait_until (GeeFuture* self,
+VALA_EXTERN gboolean gee_future_wait_until (GeeFuture* self,
                                 gint64 end_time,
                                 gconstpointer* value,
                                 GError** error);
-extern void gee_future_wait_async (GeeFuture* self,
+VALA_EXTERN void gee_future_wait_async (GeeFuture* self,
                             GAsyncReadyCallback _callback_,
                             gpointer _user_data_);
-extern gconstpointer gee_future_wait_finish (GeeFuture* self,
+VALA_EXTERN gconstpointer gee_future_wait_finish (GeeFuture* self,
                                       GAsyncResult* _res_,
                                       GError** error);
-extern GeeFuture* gee_future_map (GeeFuture* self,
+VALA_EXTERN GeeFuture* gee_future_map (GeeFuture* self,
                            GType a_type,
                            GBoxedCopyFunc a_dup_func,
                            GDestroyNotify a_destroy_func,
                            GeeFutureMapFunc func,
                            gpointer func_target,
                            GDestroyNotify func_target_destroy_notify);
-extern GeeFuture* gee_future_light_map_fixed (GeeFuture* self,
+VALA_EXTERN GeeFuture* gee_future_light_map_fixed (GeeFuture* self,
                                        GType a_type,
                                        GBoxedCopyFunc a_dup_func,
                                        GDestroyNotify a_destroy_func,
                                        GeeFutureLightMapFunc func,
                                        gpointer func_target,
                                        GDestroyNotify func_target_destroy_notify);
-extern GeeFuture* gee_future_light_map (GeeFuture* self,
+VALA_EXTERN GeeFuture* gee_future_light_map (GeeFuture* self,
                                  GType a_type,
                                  GBoxedCopyFunc a_dup_func,
                                  GDestroyNotify a_destroy_func,
                                  GeeFutureLightMapFunc func,
                                  gpointer func_target);
-extern GeeFuture* gee_future_zip (GeeFuture* self,
+VALA_EXTERN GeeFuture* gee_future_zip (GeeFuture* self,
                            GType a_type,
                            GBoxedCopyFunc a_dup_func,
                            GDestroyNotify a_destroy_func,
@@ -1862,24 +1873,24 @@ extern GeeFuture* gee_future_zip (GeeFuture* self,
                            GeeFutureZipFunc zip_func,
                            gpointer zip_func_target,
                            GeeFuture* second);
-extern GeeFuture* gee_future_flat_map (GeeFuture* self,
+VALA_EXTERN GeeFuture* gee_future_flat_map (GeeFuture* self,
                                 GType a_type,
                                 GBoxedCopyFunc a_dup_func,
                                 GDestroyNotify a_destroy_func,
                                 GeeFutureFlatMapFunc func,
                                 gpointer func_target,
                                 GDestroyNotify func_target_destroy_notify);
-extern gconstpointer gee_future_get_value (GeeFuture* self);
-extern gboolean gee_future_get_ready (GeeFuture* self);
-extern GError* gee_future_get_exception (GeeFuture* self);
-extern GType gee_hashable_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashable, g_object_unref)
-extern guint gee_hashable_hash (GeeHashable* self);
-extern gboolean gee_hashable_equal_to (GeeHashable* self,
+VALA_EXTERN gconstpointer gee_future_get_value (GeeFuture* self);
+VALA_EXTERN gboolean gee_future_get_ready (GeeFuture* self);
+VALA_EXTERN GError* gee_future_get_exception (GeeFuture* self);
+VALA_EXTERN GType gee_hashable_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashable, g_object_unref)
+VALA_EXTERN guint gee_hashable_hash (GeeHashable* self);
+VALA_EXTERN gboolean gee_hashable_equal_to (GeeHashable* self,
                                 gconstpointer object);
-extern GType gee_hash_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMap, g_object_unref)
-extern GeeHashMap* gee_hash_map_new (GType k_type,
+VALA_EXTERN GType gee_hash_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMap, g_object_unref)
+VALA_EXTERN GeeHashMap* gee_hash_map_new (GType k_type,
                               GBoxedCopyFunc k_dup_func,
                               GDestroyNotify k_destroy_func,
                               GType v_type,
@@ -1894,7 +1905,7 @@ extern GeeHashMap* gee_hash_map_new (GType k_type,
                               GeeEqualDataFunc value_equal_func,
                               gpointer value_equal_func_target,
                               GDestroyNotify value_equal_func_target_destroy_notify);
-extern GeeHashMap* gee_hash_map_construct (GType object_type,
+VALA_EXTERN GeeHashMap* gee_hash_map_construct (GType object_type,
                                     GType k_type,
                                     GBoxedCopyFunc k_dup_func,
                                     GDestroyNotify k_destroy_func,
@@ -1910,15 +1921,15 @@ extern GeeHashMap* gee_hash_map_construct (GType object_type,
                                     GeeEqualDataFunc value_equal_func,
                                     gpointer value_equal_func_target,
                                     GDestroyNotify value_equal_func_target_destroy_notify);
-extern GeeHashDataFunc gee_hash_map_get_key_hash_func (GeeHashMap* self,
+VALA_EXTERN GeeHashDataFunc gee_hash_map_get_key_hash_func (GeeHashMap* self,
                                                 gpointer* result_target);
-extern GeeEqualDataFunc gee_hash_map_get_key_equal_func (GeeHashMap* self,
+VALA_EXTERN GeeEqualDataFunc gee_hash_map_get_key_equal_func (GeeHashMap* self,
                                                   gpointer* result_target);
-extern GeeEqualDataFunc gee_hash_map_get_value_equal_func (GeeHashMap* self,
+VALA_EXTERN GeeEqualDataFunc gee_hash_map_get_value_equal_func (GeeHashMap* self,
                                                     gpointer* result_target);
-extern GType gee_hash_multi_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMultiMap, g_object_unref)
-extern GeeHashMultiMap* gee_hash_multi_map_new (GType k_type,
+VALA_EXTERN GType gee_hash_multi_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMultiMap, g_object_unref)
+VALA_EXTERN GeeHashMultiMap* gee_hash_multi_map_new (GType k_type,
                                          GBoxedCopyFunc k_dup_func,
                                          GDestroyNotify k_destroy_func,
                                          GType v_type,
@@ -1936,7 +1947,7 @@ extern GeeHashMultiMap* gee_hash_multi_map_new (GType k_type,
                                          GeeEqualDataFunc value_equal_func,
                                          gpointer value_equal_func_target,
                                          GDestroyNotify value_equal_func_target_destroy_notify);
-extern GeeHashMultiMap* gee_hash_multi_map_construct (GType object_type,
+VALA_EXTERN GeeHashMultiMap* gee_hash_multi_map_construct (GType object_type,
                                                GType k_type,
                                                GBoxedCopyFunc k_dup_func,
                                                GDestroyNotify k_destroy_func,
@@ -1955,17 +1966,17 @@ extern GeeHashMultiMap* gee_hash_multi_map_construct (GType object_type,
                                                GeeEqualDataFunc value_equal_func,
                                                gpointer value_equal_func_target,
                                                GDestroyNotify value_equal_func_target_destroy_notify);
-extern GeeHashDataFunc gee_hash_multi_map_get_key_hash_func (GeeHashMultiMap* self,
+VALA_EXTERN GeeHashDataFunc gee_hash_multi_map_get_key_hash_func (GeeHashMultiMap* self,
                                                       gpointer* result_target);
-extern GeeEqualDataFunc gee_hash_multi_map_get_key_equal_func (GeeHashMultiMap* self,
+VALA_EXTERN GeeEqualDataFunc gee_hash_multi_map_get_key_equal_func (GeeHashMultiMap* self,
                                                         gpointer* result_target);
-extern GeeHashDataFunc gee_hash_multi_map_get_value_hash_func (GeeHashMultiMap* self,
+VALA_EXTERN GeeHashDataFunc gee_hash_multi_map_get_value_hash_func (GeeHashMultiMap* self,
                                                         gpointer* result_target);
-extern GeeEqualDataFunc gee_hash_multi_map_get_value_equal_func (GeeHashMultiMap* self,
+VALA_EXTERN GeeEqualDataFunc gee_hash_multi_map_get_value_equal_func (GeeHashMultiMap* self,
                                                           gpointer* result_target);
-extern GType gee_hash_multi_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMultiSet, g_object_unref)
-extern GeeHashMultiSet* gee_hash_multi_set_new_fixed (GType g_type,
+VALA_EXTERN GType gee_hash_multi_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashMultiSet, g_object_unref)
+VALA_EXTERN GeeHashMultiSet* gee_hash_multi_set_new_fixed (GType g_type,
                                                GBoxedCopyFunc g_dup_func,
                                                GDestroyNotify g_destroy_func,
                                                GeeHashDataFunc hash_func,
@@ -1974,7 +1985,7 @@ extern GeeHashMultiSet* gee_hash_multi_set_new_fixed (GType g_type,
                                                GeeEqualDataFunc equal_func,
                                                gpointer equal_func_target,
                                                GDestroyNotify equal_func_target_destroy_notify);
-extern GeeHashMultiSet* gee_hash_multi_set_construct (GType object_type,
+VALA_EXTERN GeeHashMultiSet* gee_hash_multi_set_construct (GType object_type,
                                                GType g_type,
                                                GBoxedCopyFunc g_dup_func,
                                                GDestroyNotify g_destroy_func,
@@ -1984,28 +1995,28 @@ extern GeeHashMultiSet* gee_hash_multi_set_construct (GType object_type,
                                                GeeEqualDataFunc equal_func,
                                                gpointer equal_func_target,
                                                GDestroyNotify equal_func_target_destroy_notify);
-extern GeeHashMultiSet* gee_hash_multi_set_new (GType g_type,
+VALA_EXTERN GeeHashMultiSet* gee_hash_multi_set_new (GType g_type,
                                          GBoxedCopyFunc g_dup_func,
                                          GDestroyNotify g_destroy_func,
                                          GeeHashDataFunc hash_func,
                                          gpointer hash_func_target,
                                          GeeEqualDataFunc equal_func,
-                                         gpointer equal_func_target); //xxxxxxxxxxxx G_GNUC_DEPRECATED ;
-extern GeeHashMultiSet* gee_hash_multi_set_construct_broken (GType object_type,
+                                         gpointer equal_func_target) G_GNUC_DEPRECATED ;
+VALA_EXTERN GeeHashMultiSet* gee_hash_multi_set_construct_broken (GType object_type,
                                                       GType g_type,
                                                       GBoxedCopyFunc g_dup_func,
                                                       GDestroyNotify g_destroy_func,
                                                       GeeHashDataFunc hash_func,
                                                       gpointer hash_func_target,
                                                       GeeEqualDataFunc equal_func,
-                                                      gpointer equal_func_target); //xxxxxxxxxxxx G_GNUC_DEPRECATED ;
-extern GeeHashDataFunc gee_hash_multi_set_get_hash_func (GeeHashMultiSet* self,
+                                                      gpointer equal_func_target) G_GNUC_DEPRECATED ;
+VALA_EXTERN GeeHashDataFunc gee_hash_multi_set_get_hash_func (GeeHashMultiSet* self,
                                                   gpointer* result_target);
-extern GeeEqualDataFunc gee_hash_multi_set_get_equal_func (GeeHashMultiSet* self,
+VALA_EXTERN GeeEqualDataFunc gee_hash_multi_set_get_equal_func (GeeHashMultiSet* self,
                                                     gpointer* result_target);
-extern GType gee_hash_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashSet, g_object_unref)
-extern GeeHashSet* gee_hash_set_new (GType g_type,
+VALA_EXTERN GType gee_hash_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHashSet, g_object_unref)
+VALA_EXTERN GeeHashSet* gee_hash_set_new (GType g_type,
                               GBoxedCopyFunc g_dup_func,
                               GDestroyNotify g_destroy_func,
                               GeeHashDataFunc hash_func,
@@ -2014,7 +2025,7 @@ extern GeeHashSet* gee_hash_set_new (GType g_type,
                               GeeEqualDataFunc equal_func,
                               gpointer equal_func_target,
                               GDestroyNotify equal_func_target_destroy_notify);
-extern GeeHashSet* gee_hash_set_construct (GType object_type,
+VALA_EXTERN GeeHashSet* gee_hash_set_construct (GType object_type,
                                     GType g_type,
                                     GBoxedCopyFunc g_dup_func,
                                     GDestroyNotify g_destroy_func,
@@ -2024,34 +2035,34 @@ extern GeeHashSet* gee_hash_set_construct (GType object_type,
                                     GeeEqualDataFunc equal_func,
                                     gpointer equal_func_target,
                                     GDestroyNotify equal_func_target_destroy_notify);
-extern GeeHashDataFunc gee_hash_set_get_hash_func (GeeHashSet* self,
+VALA_EXTERN GeeHashDataFunc gee_hash_set_get_hash_func (GeeHashSet* self,
                                             gpointer* result_target);
-extern GeeEqualDataFunc gee_hash_set_get_equal_func (GeeHashSet* self,
+VALA_EXTERN GeeEqualDataFunc gee_hash_set_get_equal_func (GeeHashSet* self,
                                               gpointer* result_target);
-extern void gee_hazard_pointer_free (GeeHazardPointer * self);
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointer, gee_hazard_pointer_free)
- void gee_hazard_pointer_node_free (GeeHazardPointerNode * self);
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerNode, gee_hazard_pointer_node_free)
-extern GType gee_hazard_pointer_policy_get_type (void)  ;
-extern gboolean gee_hazard_pointer_policy_is_concrete (GeeHazardPointerPolicy self);
-extern gboolean gee_hazard_pointer_policy_is_blocking (GeeHazardPointerPolicy self);
-extern gboolean gee_hazard_pointer_policy_is_safe (GeeHazardPointerPolicy self);
-extern GeeHazardPointerPolicy gee_hazard_pointer_policy_to_concrete (GeeHazardPointerPolicy self);
-extern GType gee_hazard_pointer_release_policy_get_type (void)  ;
-extern GeeHazardPointer* gee_hazard_pointer_new (gconstpointer* ptr);
-extern GeeHazardPointer* gee_hazard_pointer_get_hazard_pointer (GType g_type,
+VALA_EXTERN void gee_hazard_pointer_free (GeeHazardPointer * self);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointer, gee_hazard_pointer_free)
+ G_GNUC_INTERNAL void gee_hazard_pointer_node_free (GeeHazardPointerNode * self);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerNode, gee_hazard_pointer_node_free)
+VALA_EXTERN GType gee_hazard_pointer_policy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN gboolean gee_hazard_pointer_policy_is_concrete (GeeHazardPointerPolicy self);
+VALA_EXTERN gboolean gee_hazard_pointer_policy_is_blocking (GeeHazardPointerPolicy self);
+VALA_EXTERN gboolean gee_hazard_pointer_policy_is_safe (GeeHazardPointerPolicy self);
+VALA_EXTERN GeeHazardPointerPolicy gee_hazard_pointer_policy_to_concrete (GeeHazardPointerPolicy self);
+VALA_EXTERN GType gee_hazard_pointer_release_policy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GeeHazardPointer* gee_hazard_pointer_new (gconstpointer* ptr);
+VALA_EXTERN GeeHazardPointer* gee_hazard_pointer_get_hazard_pointer (GType g_type,
                                                          GBoxedCopyFunc g_dup_func,
                                                          GDestroyNotify g_destroy_func,
                                                          gconstpointer** aptr,
                                                          gsize mask,
                                                          gsize* mask_out);
-extern gpointer gee_hazard_pointer_get_pointer (GType g_type,
+VALA_EXTERN gpointer gee_hazard_pointer_get_pointer (GType g_type,
                                          GBoxedCopyFunc g_dup_func,
                                          GDestroyNotify g_destroy_func,
                                          gconstpointer** aptr,
                                          gsize mask,
                                          gsize* mask_out);
-extern GeeHazardPointer* gee_hazard_pointer_exchange_hazard_pointer (GType g_type,
+VALA_EXTERN GeeHazardPointer* gee_hazard_pointer_exchange_hazard_pointer (GType g_type,
                                                               GBoxedCopyFunc g_dup_func,
                                                               GDestroyNotify g_destroy_func,
                                                               gconstpointer** aptr,
@@ -2059,14 +2070,14 @@ extern GeeHazardPointer* gee_hazard_pointer_exchange_hazard_pointer (GType g_typ
                                                               gsize mask,
                                                               gsize new_mask,
                                                               gsize* old_mask);
-extern void gee_hazard_pointer_set_pointer (GType g_type,
+VALA_EXTERN void gee_hazard_pointer_set_pointer (GType g_type,
                                      GBoxedCopyFunc g_dup_func,
                                      GDestroyNotify g_destroy_func,
                                      gconstpointer** aptr,
                                      gpointer new_ptr,
                                      gsize mask,
                                      gsize new_mask);
-extern gpointer gee_hazard_pointer_exchange_pointer (GType g_type,
+VALA_EXTERN gpointer gee_hazard_pointer_exchange_pointer (GType g_type,
                                               GBoxedCopyFunc g_dup_func,
                                               GDestroyNotify g_destroy_func,
                                               gconstpointer** aptr,
@@ -2074,7 +2085,7 @@ extern gpointer gee_hazard_pointer_exchange_pointer (GType g_type,
                                               gsize mask,
                                               gsize new_mask,
                                               gsize* old_mask);
-extern gboolean gee_hazard_pointer_compare_and_exchange_pointer (GType g_type,
+VALA_EXTERN gboolean gee_hazard_pointer_compare_and_exchange_pointer (GType g_type,
                                                           GBoxedCopyFunc g_dup_func,
                                                           GDestroyNotify g_destroy_func,
                                                           gconstpointer** aptr,
@@ -2083,410 +2094,410 @@ extern gboolean gee_hazard_pointer_compare_and_exchange_pointer (GType g_type,
                                                           gsize mask,
                                                           gsize old_mask,
                                                           gsize new_mask);
-extern gconstpointer gee_hazard_pointer_get (GeeHazardPointer* self,
+VALA_EXTERN gconstpointer gee_hazard_pointer_get (GeeHazardPointer* self,
                                       gboolean other_thread);
-extern void gee_hazard_pointer_release (GeeHazardPointer* self,
+VALA_EXTERN void gee_hazard_pointer_release (GeeHazardPointer* self,
                                  GDestroyNotify notify);
-extern void gee_hazard_pointer_set_default_policy (GeeHazardPointerPolicy policy);
-extern void gee_hazard_pointer_set_thread_exit_policy (GeeHazardPointerPolicy policy);
-extern gboolean gee_hazard_pointer_set_release_policy (GeeHazardPointerReleasePolicy policy);
-extern void gee_hazard_pointer_context_free (GeeHazardPointerContext * self);
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerContext, gee_hazard_pointer_context_free)
-void gee_hazard_pointer_free_node_free (GeeHazardPointerFreeNode * self);
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerFreeNode, gee_hazard_pointer_free_node_free)
-extern GeeHazardPointerContext* gee_hazard_pointer_context_new (GeeHazardPointerPolicy* policy);
-extern void gee_hazard_pointer_context_try_free (GeeHazardPointerContext* self);
-extern void gee_hazard_pointer_context_free_all (GeeHazardPointerContext* self);
-extern void gee_hazard_pointer_context_try_release (GeeHazardPointerContext* self);
-extern void gee_hazard_pointer_context_release (GeeHazardPointerContext* self);
-extern GeeIterator* gee_iterable_iterator (GeeIterable* self);
-extern gboolean gee_iterator_next (GeeIterator* self);
-extern gboolean gee_iterator_has_next (GeeIterator* self);
-extern gpointer gee_iterator_get (GeeIterator* self);
-extern void gee_iterator_remove (GeeIterator* self);
-extern GeeIterator* gee_iterator_unfold (GType a_type,
+VALA_EXTERN void gee_hazard_pointer_set_default_policy (GeeHazardPointerPolicy policy);
+VALA_EXTERN void gee_hazard_pointer_set_thread_exit_policy (GeeHazardPointerPolicy policy);
+VALA_EXTERN gboolean gee_hazard_pointer_set_release_policy (GeeHazardPointerReleasePolicy policy);
+VALA_EXTERN void gee_hazard_pointer_context_free (GeeHazardPointerContext * self);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerContext, gee_hazard_pointer_context_free)
+ G_GNUC_INTERNAL void gee_hazard_pointer_free_node_free (GeeHazardPointerFreeNode * self);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeHazardPointerFreeNode, gee_hazard_pointer_free_node_free)
+VALA_EXTERN GeeHazardPointerContext* gee_hazard_pointer_context_new (GeeHazardPointerPolicy* policy);
+VALA_EXTERN void gee_hazard_pointer_context_try_free (GeeHazardPointerContext* self);
+VALA_EXTERN void gee_hazard_pointer_context_free_all (GeeHazardPointerContext* self);
+VALA_EXTERN void gee_hazard_pointer_context_try_release (GeeHazardPointerContext* self);
+VALA_EXTERN void gee_hazard_pointer_context_release (GeeHazardPointerContext* self);
+VALA_EXTERN GeeIterator* gee_iterable_iterator (GeeIterable* self);
+VALA_EXTERN gboolean gee_iterator_next (GeeIterator* self);
+VALA_EXTERN gboolean gee_iterator_has_next (GeeIterator* self);
+VALA_EXTERN gpointer gee_iterator_get (GeeIterator* self);
+VALA_EXTERN void gee_iterator_remove (GeeIterator* self);
+VALA_EXTERN GeeIterator* gee_iterator_unfold (GType a_type,
                                   GBoxedCopyFunc a_dup_func,
                                   GDestroyNotify a_destroy_func,
                                   GeeUnfoldFunc f,
                                   gpointer f_target,
                                   GDestroyNotify f_target_destroy_notify,
                                   GeeLazy* current);
-extern GeeIterator* gee_iterator_concat (GType g_type,
+VALA_EXTERN GeeIterator* gee_iterator_concat (GType g_type,
                                   GBoxedCopyFunc g_dup_func,
                                   GDestroyNotify g_destroy_func,
                                   GeeIterator* iters);
-extern gboolean gee_iterator_get_valid (GeeIterator* self);
-extern gboolean gee_iterator_get_read_only (GeeIterator* self);
-extern GeeLazy* gee_lazy_new (GType g_type,
+VALA_EXTERN gboolean gee_iterator_get_valid (GeeIterator* self);
+VALA_EXTERN gboolean gee_iterator_get_read_only (GeeIterator* self);
+VALA_EXTERN GeeLazy* gee_lazy_new (GType g_type,
                        GBoxedCopyFunc g_dup_func,
                        GDestroyNotify g_destroy_func,
                        GeeLazyFunc func,
                        gpointer func_target,
                        GDestroyNotify func_target_destroy_notify);
-extern GeeLazy* gee_lazy_construct (GType object_type,
+VALA_EXTERN GeeLazy* gee_lazy_construct (GType object_type,
                              GType g_type,
                              GBoxedCopyFunc g_dup_func,
                              GDestroyNotify g_destroy_func,
                              GeeLazyFunc func,
                              gpointer func_target,
                              GDestroyNotify func_target_destroy_notify);
-extern GeeLazy* gee_lazy_new_from_value (GType g_type,
+VALA_EXTERN GeeLazy* gee_lazy_new_from_value (GType g_type,
                                   GBoxedCopyFunc g_dup_func,
                                   GDestroyNotify g_destroy_func,
                                   gconstpointer item);
-extern GeeLazy* gee_lazy_construct_from_value (GType object_type,
+VALA_EXTERN GeeLazy* gee_lazy_construct_from_value (GType object_type,
                                         GType g_type,
                                         GBoxedCopyFunc g_dup_func,
                                         GDestroyNotify g_destroy_func,
                                         gconstpointer item);
-extern void gee_lazy_eval (GeeLazy* self);
-extern gpointer gee_lazy_get (GeeLazy* self);
-extern gconstpointer gee_lazy_get_value (GeeLazy* self);
-extern GeeFuture* gee_lazy_get_future (GeeLazy* self);
-extern GType gee_linked_list_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeLinkedList, g_object_unref)
-extern GeeLinkedList* gee_linked_list_new (GType g_type,
+VALA_EXTERN void gee_lazy_eval (GeeLazy* self);
+VALA_EXTERN gpointer gee_lazy_get (GeeLazy* self);
+VALA_EXTERN gconstpointer gee_lazy_get_value (GeeLazy* self);
+VALA_EXTERN GeeFuture* gee_lazy_get_future (GeeLazy* self);
+VALA_EXTERN GType gee_linked_list_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeLinkedList, g_object_unref)
+VALA_EXTERN GeeLinkedList* gee_linked_list_new (GType g_type,
                                     GBoxedCopyFunc g_dup_func,
                                     GDestroyNotify g_destroy_func,
                                     GeeEqualDataFunc equal_func,
                                     gpointer equal_func_target,
                                     GDestroyNotify equal_func_target_destroy_notify);
-extern GeeLinkedList* gee_linked_list_construct (GType object_type,
+VALA_EXTERN GeeLinkedList* gee_linked_list_construct (GType object_type,
                                           GType g_type,
                                           GBoxedCopyFunc g_dup_func,
                                           GDestroyNotify g_destroy_func,
                                           GeeEqualDataFunc equal_func,
                                           gpointer equal_func_target,
                                           GDestroyNotify equal_func_target_destroy_notify);
-extern gpointer gee_linked_list_first (GeeLinkedList* self);
-extern gpointer gee_linked_list_last (GeeLinkedList* self);
-extern GeeEqualDataFunc gee_linked_list_get_equal_func (GeeLinkedList* self,
+VALA_EXTERN gpointer gee_linked_list_first (GeeLinkedList* self);
+VALA_EXTERN gpointer gee_linked_list_last (GeeLinkedList* self);
+VALA_EXTERN GeeEqualDataFunc gee_linked_list_get_equal_func (GeeLinkedList* self,
                                                  gpointer* result_target);
-extern GeeListIterator* gee_list_list_iterator (GeeList* self);
-extern gpointer gee_list_get (GeeList* self,
+VALA_EXTERN GeeListIterator* gee_list_list_iterator (GeeList* self);
+VALA_EXTERN gpointer gee_list_get (GeeList* self,
                        gint index);
-extern void gee_list_set (GeeList* self,
+VALA_EXTERN void gee_list_set (GeeList* self,
                    gint index,
                    gconstpointer item);
-extern gint gee_list_index_of (GeeList* self,
+VALA_EXTERN gint gee_list_index_of (GeeList* self,
                         gconstpointer item);
-extern void gee_list_insert (GeeList* self,
+VALA_EXTERN void gee_list_insert (GeeList* self,
                       gint index,
                       gconstpointer item);
-extern gpointer gee_list_remove_at (GeeList* self,
+VALA_EXTERN gpointer gee_list_remove_at (GeeList* self,
                              gint index);
-extern GeeList* gee_list_slice (GeeList* self,
+VALA_EXTERN GeeList* gee_list_slice (GeeList* self,
                          gint start,
                          gint stop);
-extern gpointer gee_list_first (GeeList* self);
-extern gpointer gee_list_last (GeeList* self);
-extern void gee_list_insert_all (GeeList* self,
+VALA_EXTERN gpointer gee_list_first (GeeList* self);
+VALA_EXTERN gpointer gee_list_last (GeeList* self);
+VALA_EXTERN void gee_list_insert_all (GeeList* self,
                           gint index,
                           GeeCollection* collection);
-extern void gee_list_sort (GeeList* self,
+VALA_EXTERN void gee_list_sort (GeeList* self,
                     GCompareDataFunc compare_func,
                     gpointer compare_func_target,
                     GDestroyNotify compare_func_target_destroy_notify);
-extern GeeList* gee_list_empty (GType g_type,
+VALA_EXTERN GeeList* gee_list_empty (GType g_type,
                          GBoxedCopyFunc g_dup_func,
                          GDestroyNotify g_destroy_func);
-extern GeeList* gee_list_get_read_only_view (GeeList* self);
-extern void gee_list_iterator_set (GeeListIterator* self,
+VALA_EXTERN GeeList* gee_list_get_read_only_view (GeeList* self);
+VALA_EXTERN void gee_list_iterator_set (GeeListIterator* self,
                             gconstpointer item);
-extern void gee_list_iterator_add (GeeListIterator* self,
+VALA_EXTERN void gee_list_iterator_add (GeeListIterator* self,
                             gconstpointer item);
-extern gint gee_list_iterator_index (GeeListIterator* self);
-extern gboolean gee_map_has_key (GeeMap* self,
+VALA_EXTERN gint gee_list_iterator_index (GeeListIterator* self);
+VALA_EXTERN gboolean gee_map_has_key (GeeMap* self,
                           gconstpointer key);
-extern gboolean gee_map_contains (GeeMap* self,
-                           gconstpointer key); //xxxxxxxxxxxx G_GNUC_DEPRECATED ;
-extern gboolean gee_map_has (GeeMap* self,
+VALA_EXTERN gboolean gee_map_contains (GeeMap* self,
+                           gconstpointer key) G_GNUC_DEPRECATED ;
+VALA_EXTERN gboolean gee_map_has (GeeMap* self,
                       gconstpointer key,
                       gconstpointer value);
-extern gpointer gee_map_get (GeeMap* self,
+VALA_EXTERN gpointer gee_map_get (GeeMap* self,
                       gconstpointer key);
-extern void gee_map_set (GeeMap* self,
+VALA_EXTERN void gee_map_set (GeeMap* self,
                   gconstpointer key,
                   gconstpointer value);
-extern gboolean gee_map_unset (GeeMap* self,
+VALA_EXTERN gboolean gee_map_unset (GeeMap* self,
                         gconstpointer key,
                         gpointer* value);
-extern gboolean gee_map_remove (GeeMap* self,
+VALA_EXTERN gboolean gee_map_remove (GeeMap* self,
                          gconstpointer key,
-                         gpointer* value); //xxxxxxxxxxxx G_GNUC_DEPRECATED ;
-extern void gee_map_clear (GeeMap* self);
-extern GeeMapIterator* gee_map_map_iterator (GeeMap* self);
-extern void gee_map_set_all (GeeMap* self,
+                         gpointer* value) G_GNUC_DEPRECATED ;
+VALA_EXTERN void gee_map_clear (GeeMap* self);
+VALA_EXTERN GeeMapIterator* gee_map_map_iterator (GeeMap* self);
+VALA_EXTERN void gee_map_set_all (GeeMap* self,
                       GeeMap* map);
-extern gboolean gee_map_unset_all (GeeMap* self,
+VALA_EXTERN gboolean gee_map_unset_all (GeeMap* self,
                             GeeMap* map);
-extern gboolean gee_map_remove_all (GeeMap* self,
-                             GeeMap* map); //xxxxxxxxxxxx G_GNUC_DEPRECATED ;
-extern gboolean gee_map_has_all (GeeMap* self,
+VALA_EXTERN gboolean gee_map_remove_all (GeeMap* self,
+                             GeeMap* map) G_GNUC_DEPRECATED ;
+VALA_EXTERN gboolean gee_map_has_all (GeeMap* self,
                           GeeMap* map);
-extern gboolean gee_map_contains_all (GeeMap* self,
-                               GeeMap* map); //xxxxxxxxxxxx G_GNUC_DEPRECATED ;
-extern GeeMap* gee_map_empty (GType k_type,
+VALA_EXTERN gboolean gee_map_contains_all (GeeMap* self,
+                               GeeMap* map) G_GNUC_DEPRECATED ;
+VALA_EXTERN GeeMap* gee_map_empty (GType k_type,
                        GBoxedCopyFunc k_dup_func,
                        GDestroyNotify k_destroy_func,
                        GType v_type,
                        GBoxedCopyFunc v_dup_func,
                        GDestroyNotify v_destroy_func);
-extern gint gee_map_get_size (GeeMap* self);
-extern gboolean gee_map_get_is_empty (GeeMap* self);
-extern gboolean gee_map_get_read_only (GeeMap* self);
-extern GeeSet* gee_map_get_keys (GeeMap* self);
-extern GeeCollection* gee_map_get_values (GeeMap* self);
-extern GeeSet* gee_map_get_entries (GeeMap* self);
-extern GeeMap* gee_map_get_read_only_view (GeeMap* self);
-extern GType gee_map_get_key_type (GeeMap* self);
-extern GType gee_map_get_value_type (GeeMap* self);
-extern GeeMapEntry* gee_map_entry_construct (GType object_type,
+VALA_EXTERN gint gee_map_get_size (GeeMap* self);
+VALA_EXTERN gboolean gee_map_get_is_empty (GeeMap* self);
+VALA_EXTERN gboolean gee_map_get_read_only (GeeMap* self);
+VALA_EXTERN GeeSet* gee_map_get_keys (GeeMap* self);
+VALA_EXTERN GeeCollection* gee_map_get_values (GeeMap* self);
+VALA_EXTERN GeeSet* gee_map_get_entries (GeeMap* self);
+VALA_EXTERN GeeMap* gee_map_get_read_only_view (GeeMap* self);
+VALA_EXTERN GType gee_map_get_key_type (GeeMap* self);
+VALA_EXTERN GType gee_map_get_value_type (GeeMap* self);
+VALA_EXTERN GeeMapEntry* gee_map_entry_construct (GType object_type,
                                       GType k_type,
                                       GBoxedCopyFunc k_dup_func,
                                       GDestroyNotify k_destroy_func,
                                       GType v_type,
                                       GBoxedCopyFunc v_dup_func,
                                       GDestroyNotify v_destroy_func);
-extern gconstpointer gee_map_entry_get_key (GeeMapEntry* self);
-extern gconstpointer gee_map_entry_get_value (GeeMapEntry* self);
-extern void gee_map_entry_set_value (GeeMapEntry* self,
+VALA_EXTERN gconstpointer gee_map_entry_get_key (GeeMapEntry* self);
+VALA_EXTERN gconstpointer gee_map_entry_get_value (GeeMapEntry* self);
+VALA_EXTERN void gee_map_entry_set_value (GeeMapEntry* self,
                               gconstpointer value);
-extern gboolean gee_map_entry_get_read_only (GeeMapEntry* self);
-extern gboolean gee_map_iterator_next (GeeMapIterator* self);
-extern gboolean gee_map_iterator_has_next (GeeMapIterator* self);
-extern gpointer gee_map_iterator_get_key (GeeMapIterator* self);
-extern gpointer gee_map_iterator_get_value (GeeMapIterator* self);
-extern void gee_map_iterator_set_value (GeeMapIterator* self,
+VALA_EXTERN gboolean gee_map_entry_get_read_only (GeeMapEntry* self);
+VALA_EXTERN gboolean gee_map_iterator_next (GeeMapIterator* self);
+VALA_EXTERN gboolean gee_map_iterator_has_next (GeeMapIterator* self);
+VALA_EXTERN gpointer gee_map_iterator_get_key (GeeMapIterator* self);
+VALA_EXTERN gpointer gee_map_iterator_get_value (GeeMapIterator* self);
+VALA_EXTERN void gee_map_iterator_set_value (GeeMapIterator* self,
                                  gconstpointer value);
-extern void gee_map_iterator_unset (GeeMapIterator* self);
-extern gpointer gee_map_iterator_fold (GeeMapIterator* self,
+VALA_EXTERN void gee_map_iterator_unset (GeeMapIterator* self);
+VALA_EXTERN gpointer gee_map_iterator_fold (GeeMapIterator* self,
                                 GType a_type,
                                 GBoxedCopyFunc a_dup_func,
                                 GDestroyNotify a_destroy_func,
                                 GeeFoldMapFunc f,
                                 gpointer f_target,
                                 gpointer seed);
-extern gboolean gee_map_iterator_foreach (GeeMapIterator* self,
+VALA_EXTERN gboolean gee_map_iterator_foreach (GeeMapIterator* self,
                                    GeeForallMapFunc f,
                                    gpointer f_target);
-extern gboolean gee_map_iterator_get_valid (GeeMapIterator* self);
-extern gboolean gee_map_iterator_get_mutable (GeeMapIterator* self);
-extern gboolean gee_map_iterator_get_read_only (GeeMapIterator* self);
-extern GeeSet* gee_multi_map_get_keys (GeeMultiMap* self);
-extern GeeMultiSet* gee_multi_map_get_all_keys (GeeMultiMap* self);
-extern GeeCollection* gee_multi_map_get_values (GeeMultiMap* self);
-extern gboolean gee_multi_map_contains (GeeMultiMap* self,
+VALA_EXTERN gboolean gee_map_iterator_get_valid (GeeMapIterator* self);
+VALA_EXTERN gboolean gee_map_iterator_get_mutable (GeeMapIterator* self);
+VALA_EXTERN gboolean gee_map_iterator_get_read_only (GeeMapIterator* self);
+VALA_EXTERN GeeSet* gee_multi_map_get_keys (GeeMultiMap* self);
+VALA_EXTERN GeeMultiSet* gee_multi_map_get_all_keys (GeeMultiMap* self);
+VALA_EXTERN GeeCollection* gee_multi_map_get_values (GeeMultiMap* self);
+VALA_EXTERN gboolean gee_multi_map_contains (GeeMultiMap* self,
                                  gconstpointer key);
-extern GeeCollection* gee_multi_map_get (GeeMultiMap* self,
+VALA_EXTERN GeeCollection* gee_multi_map_get (GeeMultiMap* self,
                                   gconstpointer key);
-extern void gee_multi_map_set (GeeMultiMap* self,
+VALA_EXTERN void gee_multi_map_set (GeeMultiMap* self,
                         gconstpointer key,
                         gconstpointer value);
-extern gboolean gee_multi_map_remove (GeeMultiMap* self,
+VALA_EXTERN gboolean gee_multi_map_remove (GeeMultiMap* self,
                                gconstpointer key,
                                gconstpointer value);
-extern gboolean gee_multi_map_remove_all (GeeMultiMap* self,
+VALA_EXTERN gboolean gee_multi_map_remove_all (GeeMultiMap* self,
                                    gconstpointer key);
-extern void gee_multi_map_clear (GeeMultiMap* self);
-extern GeeMapIterator* gee_multi_map_map_iterator (GeeMultiMap* self);
-extern gint gee_multi_map_get_size (GeeMultiMap* self);
-extern gboolean gee_multi_map_get_read_only (GeeMultiMap* self);
-extern GType gee_multi_map_get_key_type (GeeMultiMap* self);
-extern GType gee_multi_map_get_value_type (GeeMultiMap* self);
-extern GeeMultiMap* gee_multi_map_get_read_only_view (GeeMultiMap* self);
-extern gint gee_multi_set_count (GeeMultiSet* self,
+VALA_EXTERN void gee_multi_map_clear (GeeMultiMap* self);
+VALA_EXTERN GeeMapIterator* gee_multi_map_map_iterator (GeeMultiMap* self);
+VALA_EXTERN gint gee_multi_map_get_size (GeeMultiMap* self);
+VALA_EXTERN gboolean gee_multi_map_get_read_only (GeeMultiMap* self);
+VALA_EXTERN GType gee_multi_map_get_key_type (GeeMultiMap* self);
+VALA_EXTERN GType gee_multi_map_get_value_type (GeeMultiMap* self);
+VALA_EXTERN GeeMultiMap* gee_multi_map_get_read_only_view (GeeMultiMap* self);
+VALA_EXTERN gint gee_multi_set_count (GeeMultiSet* self,
                           gconstpointer item);
-extern GeeSet* gee_multi_set_empty (GType g_type,
+VALA_EXTERN GeeSet* gee_multi_set_empty (GType g_type,
                              GBoxedCopyFunc g_dup_func,
                              GDestroyNotify g_destroy_func);
-extern GeeMultiSet* gee_multi_set_get_read_only_view (GeeMultiSet* self);
-extern GType gee_priority_queue_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeePriorityQueue, g_object_unref)
-extern GeePriorityQueue* gee_priority_queue_new (GType g_type,
+VALA_EXTERN GeeMultiSet* gee_multi_set_get_read_only_view (GeeMultiSet* self);
+VALA_EXTERN GType gee_priority_queue_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeePriorityQueue, g_object_unref)
+VALA_EXTERN GeePriorityQueue* gee_priority_queue_new (GType g_type,
                                           GBoxedCopyFunc g_dup_func,
                                           GDestroyNotify g_destroy_func,
                                           GCompareDataFunc compare_func,
                                           gpointer compare_func_target,
                                           GDestroyNotify compare_func_target_destroy_notify);
-extern GeePriorityQueue* gee_priority_queue_construct (GType object_type,
+VALA_EXTERN GeePriorityQueue* gee_priority_queue_construct (GType object_type,
                                                 GType g_type,
                                                 GBoxedCopyFunc g_dup_func,
                                                 GDestroyNotify g_destroy_func,
                                                 GCompareDataFunc compare_func,
                                                 gpointer compare_func_target,
                                                 GDestroyNotify compare_func_target_destroy_notify);
-extern gboolean gee_priority_queue_offer (GeePriorityQueue* self,
+VALA_EXTERN gboolean gee_priority_queue_offer (GeePriorityQueue* self,
                                    gconstpointer element);
-extern gint gee_priority_queue_drain (GeePriorityQueue* self,
+VALA_EXTERN gint gee_priority_queue_drain (GeePriorityQueue* self,
                                GeeCollection* recipient,
                                gint amount);
-extern GCompareDataFunc gee_priority_queue_get_compare_func (GeePriorityQueue* self,
+VALA_EXTERN GCompareDataFunc gee_priority_queue_get_compare_func (GeePriorityQueue* self,
                                                       gpointer* result_target);
-extern gpointer gee_promise_ref (gpointer instance);
-extern void gee_promise_unref (gpointer instance);
-extern GParamSpec* gee_param_spec_promise (const gchar* name,
+VALA_EXTERN gpointer gee_promise_ref (gpointer instance);
+VALA_EXTERN void gee_promise_unref (gpointer instance);
+VALA_EXTERN GParamSpec* gee_param_spec_promise (const gchar* name,
                                     const gchar* nick,
                                     const gchar* blurb,
                                     GType object_type,
                                     GParamFlags flags);
-extern void gee_value_set_promise (GValue* value,
+VALA_EXTERN void gee_value_set_promise (GValue* value,
                             gpointer v_object);
-extern void gee_value_take_promise (GValue* value,
+VALA_EXTERN void gee_value_take_promise (GValue* value,
                              gpointer v_object);
-extern gpointer gee_value_get_promise (const GValue* value);
-extern GType gee_promise_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeePromise, gee_promise_unref)
-extern GeePromise* gee_promise_new (GType g_type,
+VALA_EXTERN gpointer gee_value_get_promise (const GValue* value);
+VALA_EXTERN GType gee_promise_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeePromise, gee_promise_unref)
+VALA_EXTERN GeePromise* gee_promise_new (GType g_type,
                              GBoxedCopyFunc g_dup_func,
                              GDestroyNotify g_destroy_func);
-extern GeePromise* gee_promise_construct (GType object_type,
+VALA_EXTERN GeePromise* gee_promise_construct (GType object_type,
                                    GType g_type,
                                    GBoxedCopyFunc g_dup_func,
                                    GDestroyNotify g_destroy_func);
-extern void gee_promise_set_value (GeePromise* self,
+VALA_EXTERN void gee_promise_set_value (GeePromise* self,
                             gpointer value);
-extern void gee_promise_set_exception (GeePromise* self,
+VALA_EXTERN void gee_promise_set_exception (GeePromise* self,
                                 GError* exception);
-extern GeeFuture* gee_promise_get_future (GeePromise* self);
-extern gboolean gee_queue_offer (GeeQueue* self,
+VALA_EXTERN GeeFuture* gee_promise_get_future (GeePromise* self);
+VALA_EXTERN gboolean gee_queue_offer (GeeQueue* self,
                           gconstpointer element);
-extern gpointer gee_queue_peek (GeeQueue* self);
-extern gpointer gee_queue_poll (GeeQueue* self);
-extern gint gee_queue_drain (GeeQueue* self,
+VALA_EXTERN gpointer gee_queue_peek (GeeQueue* self);
+VALA_EXTERN gpointer gee_queue_poll (GeeQueue* self);
+VALA_EXTERN gint gee_queue_drain (GeeQueue* self,
                       GeeCollection* recipient,
                       gint amount);
-extern gint gee_queue_get_capacity (GeeQueue* self);
-extern gint gee_queue_get_remaining_capacity (GeeQueue* self);
-extern gboolean gee_queue_get_is_full (GeeQueue* self);
-extern GeeSet* gee_set_empty (GType g_type,
+VALA_EXTERN gint gee_queue_get_capacity (GeeQueue* self);
+VALA_EXTERN gint gee_queue_get_remaining_capacity (GeeQueue* self);
+VALA_EXTERN gboolean gee_queue_get_is_full (GeeQueue* self);
+VALA_EXTERN GeeSet* gee_set_empty (GType g_type,
                        GBoxedCopyFunc g_dup_func,
                        GDestroyNotify g_destroy_func);
-extern GeeSet* gee_set_get_read_only_view (GeeSet* self);
-extern GeeSortedMap* gee_sorted_map_head_map (GeeSortedMap* self,
+VALA_EXTERN GeeSet* gee_set_get_read_only_view (GeeSet* self);
+VALA_EXTERN GeeSortedMap* gee_sorted_map_head_map (GeeSortedMap* self,
                                        gconstpointer before);
-extern GeeSortedMap* gee_sorted_map_tail_map (GeeSortedMap* self,
+VALA_EXTERN GeeSortedMap* gee_sorted_map_tail_map (GeeSortedMap* self,
                                        gconstpointer after);
-extern GeeSortedMap* gee_sorted_map_sub_map (GeeSortedMap* self,
+VALA_EXTERN GeeSortedMap* gee_sorted_map_sub_map (GeeSortedMap* self,
                                       gconstpointer before,
                                       gconstpointer after);
-extern GeeMap* gee_sorted_map_empty (GType k_type,
+VALA_EXTERN GeeMap* gee_sorted_map_empty (GType k_type,
                               GBoxedCopyFunc k_dup_func,
                               GDestroyNotify k_destroy_func,
                               GType v_type,
                               GBoxedCopyFunc v_dup_func,
                               GDestroyNotify v_destroy_func);
-extern GeeSortedSet* gee_sorted_map_get_ascending_keys (GeeSortedMap* self);
-extern GeeSortedSet* gee_sorted_map_get_ascending_entries (GeeSortedMap* self);
-extern GeeSortedMap* gee_sorted_map_get_read_only_view (GeeSortedMap* self);
-extern gpointer gee_sorted_set_first (GeeSortedSet* self);
-extern gpointer gee_sorted_set_last (GeeSortedSet* self);
-extern GeeIterator* gee_sorted_set_iterator_at (GeeSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_sorted_map_get_ascending_keys (GeeSortedMap* self);
+VALA_EXTERN GeeSortedSet* gee_sorted_map_get_ascending_entries (GeeSortedMap* self);
+VALA_EXTERN GeeSortedMap* gee_sorted_map_get_read_only_view (GeeSortedMap* self);
+VALA_EXTERN gpointer gee_sorted_set_first (GeeSortedSet* self);
+VALA_EXTERN gpointer gee_sorted_set_last (GeeSortedSet* self);
+VALA_EXTERN GeeIterator* gee_sorted_set_iterator_at (GeeSortedSet* self,
                                          gconstpointer element);
-extern gpointer gee_sorted_set_lower (GeeSortedSet* self,
+VALA_EXTERN gpointer gee_sorted_set_lower (GeeSortedSet* self,
                                gconstpointer element);
-extern gpointer gee_sorted_set_higher (GeeSortedSet* self,
+VALA_EXTERN gpointer gee_sorted_set_higher (GeeSortedSet* self,
                                 gconstpointer element);
-extern gpointer gee_sorted_set_floor (GeeSortedSet* self,
+VALA_EXTERN gpointer gee_sorted_set_floor (GeeSortedSet* self,
                                gconstpointer element);
-extern gpointer gee_sorted_set_ceil (GeeSortedSet* self,
+VALA_EXTERN gpointer gee_sorted_set_ceil (GeeSortedSet* self,
                               gconstpointer element);
-extern GeeSortedSet* gee_sorted_set_head_set (GeeSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_sorted_set_head_set (GeeSortedSet* self,
                                        gconstpointer before);
-extern GeeSortedSet* gee_sorted_set_tail_set (GeeSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_sorted_set_tail_set (GeeSortedSet* self,
                                        gconstpointer after);
-extern GeeSortedSet* gee_sorted_set_sub_set (GeeSortedSet* self,
+VALA_EXTERN GeeSortedSet* gee_sorted_set_sub_set (GeeSortedSet* self,
                                       gconstpointer from,
                                       gconstpointer to);
-extern GeeSortedSet* gee_sorted_set_empty (GType g_type,
+VALA_EXTERN GeeSortedSet* gee_sorted_set_empty (GType g_type,
                                     GBoxedCopyFunc g_dup_func,
                                     GDestroyNotify g_destroy_func);
-extern GeeSortedSet* gee_sorted_set_get_read_only_view (GeeSortedSet* self);
-extern GeeFuture* gee_task (GType g_type,
+VALA_EXTERN GeeSortedSet* gee_sorted_set_get_read_only_view (GeeSortedSet* self);
+VALA_EXTERN GeeFuture* gee_task (GType g_type,
                      GBoxedCopyFunc g_dup_func,
                      GDestroyNotify g_destroy_func,
                      GeeTask task,
                      gpointer task_target,
                      GError** error);
-extern void gee_async_task (GAsyncReadyCallback _callback_,
+VALA_EXTERN void gee_async_task (GAsyncReadyCallback _callback_,
                      gpointer _user_data_);
-extern void gee_async_task_finish (GAsyncResult* _res_,
+VALA_EXTERN void gee_async_task_finish (GAsyncResult* _res_,
                             GError** error);
-extern gboolean gee_traversable_foreach (GeeTraversable* self,
+VALA_EXTERN gboolean gee_traversable_foreach (GeeTraversable* self,
                                   GeeForallFunc f,
                                   gpointer f_target);
-extern GeeIterator* gee_traversable_stream (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_stream (GeeTraversable* self,
                                      GType a_type,
                                      GBoxedCopyFunc a_dup_func,
                                      GDestroyNotify a_destroy_func,
                                      GeeStreamFunc f,
                                      gpointer f_target,
                                      GDestroyNotify f_target_destroy_notify);
-extern gpointer gee_traversable_fold (GeeTraversable* self,
+VALA_EXTERN gpointer gee_traversable_fold (GeeTraversable* self,
                                GType a_type,
                                GBoxedCopyFunc a_dup_func,
                                GDestroyNotify a_destroy_func,
                                GeeFoldFunc f,
                                gpointer f_target,
                                gpointer seed);
-extern GeeIterator* gee_traversable_map (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_map (GeeTraversable* self,
                                   GType a_type,
                                   GBoxedCopyFunc a_dup_func,
                                   GDestroyNotify a_destroy_func,
                                   GeeMapFunc f,
                                   gpointer f_target);
-extern GeeIterator* gee_traversable_scan (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_scan (GeeTraversable* self,
                                    GType a_type,
                                    GBoxedCopyFunc a_dup_func,
                                    GDestroyNotify a_destroy_func,
                                    GeeFoldFunc f,
                                    gpointer f_target,
                                    gpointer seed);
-extern GeeIterator* gee_traversable_filter (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_filter (GeeTraversable* self,
                                      GeePredicate pred,
                                      gpointer pred_target,
                                      GDestroyNotify pred_target_destroy_notify);
-extern GeeIterator* gee_traversable_chop (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_chop (GeeTraversable* self,
                                    gint offset,
                                    gint length);
-extern GeeIterator* gee_traversable_flat_map (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_flat_map (GeeTraversable* self,
                                        GType a_type,
                                        GBoxedCopyFunc a_dup_func,
                                        GDestroyNotify a_destroy_func,
                                        GeeFlatMapFunc f,
                                        gpointer f_target,
                                        GDestroyNotify f_target_destroy_notify);
-extern GeeIterator** gee_traversable_tee (GeeTraversable* self,
+VALA_EXTERN GeeIterator** gee_traversable_tee (GeeTraversable* self,
                                    guint forks,
                                    gint* result_length1);
-extern gpointer gee_traversable_first_match (GeeTraversable* self,
+VALA_EXTERN gpointer gee_traversable_first_match (GeeTraversable* self,
                                       GeePredicate pred,
                                       gpointer pred_target,
                                       GDestroyNotify pred_target_destroy_notify);
-extern gboolean gee_traversable_any_match (GeeTraversable* self,
+VALA_EXTERN gboolean gee_traversable_any_match (GeeTraversable* self,
                                     GeePredicate pred,
                                     gpointer pred_target,
                                     GDestroyNotify pred_target_destroy_notify);
-extern gboolean gee_traversable_all_match (GeeTraversable* self,
+VALA_EXTERN gboolean gee_traversable_all_match (GeeTraversable* self,
                                     GeePredicate pred,
                                     gpointer pred_target,
                                     GDestroyNotify pred_target_destroy_notify);
-extern gpointer gee_traversable_max (GeeTraversable* self,
+VALA_EXTERN gpointer gee_traversable_max (GeeTraversable* self,
                               GCompareDataFunc compare,
                               gpointer compare_target,
                               GDestroyNotify compare_target_destroy_notify);
-extern gpointer gee_traversable_min (GeeTraversable* self,
+VALA_EXTERN gpointer gee_traversable_min (GeeTraversable* self,
                               GCompareDataFunc compare,
                               gpointer compare_target,
                               GDestroyNotify compare_target_destroy_notify);
-extern GeeIterator* gee_traversable_order_by (GeeTraversable* self,
+VALA_EXTERN GeeIterator* gee_traversable_order_by (GeeTraversable* self,
                                        GCompareDataFunc compare,
                                        gpointer compare_target,
                                        GDestroyNotify compare_target_destroy_notify);
-extern GType gee_traversable_get_element_type (GeeTraversable* self);
-extern GType gee_tree_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMap, g_object_unref)
-extern GeeTreeMap* gee_tree_map_new (GType k_type,
+VALA_EXTERN GType gee_traversable_get_element_type (GeeTraversable* self);
+VALA_EXTERN GType gee_tree_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMap, g_object_unref)
+VALA_EXTERN GeeTreeMap* gee_tree_map_new (GType k_type,
                               GBoxedCopyFunc k_dup_func,
                               GDestroyNotify k_destroy_func,
                               GType v_type,
@@ -2498,7 +2509,7 @@ extern GeeTreeMap* gee_tree_map_new (GType k_type,
                               GeeEqualDataFunc value_equal_func,
                               gpointer value_equal_func_target,
                               GDestroyNotify value_equal_func_target_destroy_notify);
-extern GeeTreeMap* gee_tree_map_construct (GType object_type,
+VALA_EXTERN GeeTreeMap* gee_tree_map_construct (GType object_type,
                                     GType k_type,
                                     GBoxedCopyFunc k_dup_func,
                                     GDestroyNotify k_destroy_func,
@@ -2511,13 +2522,13 @@ extern GeeTreeMap* gee_tree_map_construct (GType object_type,
                                     GeeEqualDataFunc value_equal_func,
                                     gpointer value_equal_func_target,
                                     GDestroyNotify value_equal_func_target_destroy_notify);
-extern GCompareDataFunc gee_tree_map_get_key_compare_func (GeeTreeMap* self,
+VALA_EXTERN GCompareDataFunc gee_tree_map_get_key_compare_func (GeeTreeMap* self,
                                                     gpointer* result_target);
-extern GeeEqualDataFunc gee_tree_map_get_value_equal_func (GeeTreeMap* self,
+VALA_EXTERN GeeEqualDataFunc gee_tree_map_get_value_equal_func (GeeTreeMap* self,
                                                     gpointer* result_target);
-extern GType gee_tree_multi_map_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMultiMap, g_object_unref)
-extern GeeTreeMultiMap* gee_tree_multi_map_new (GType k_type,
+VALA_EXTERN GType gee_tree_multi_map_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMultiMap, g_object_unref)
+VALA_EXTERN GeeTreeMultiMap* gee_tree_multi_map_new (GType k_type,
                                          GBoxedCopyFunc k_dup_func,
                                          GDestroyNotify k_destroy_func,
                                          GType v_type,
@@ -2529,7 +2540,7 @@ extern GeeTreeMultiMap* gee_tree_multi_map_new (GType k_type,
                                          GCompareDataFunc value_compare_func,
                                          gpointer value_compare_func_target,
                                          GDestroyNotify value_compare_func_target_destroy_notify);
-extern GeeTreeMultiMap* gee_tree_multi_map_construct (GType object_type,
+VALA_EXTERN GeeTreeMultiMap* gee_tree_multi_map_construct (GType object_type,
                                                GType k_type,
                                                GBoxedCopyFunc k_dup_func,
                                                GDestroyNotify k_destroy_func,
@@ -2542,62 +2553,62 @@ extern GeeTreeMultiMap* gee_tree_multi_map_construct (GType object_type,
                                                GCompareDataFunc value_compare_func,
                                                gpointer value_compare_func_target,
                                                GDestroyNotify value_compare_func_target_destroy_notify);
-extern GCompareDataFunc gee_tree_multi_map_get_key_compare_func (GeeTreeMultiMap* self,
+VALA_EXTERN GCompareDataFunc gee_tree_multi_map_get_key_compare_func (GeeTreeMultiMap* self,
                                                           gpointer* result_target);
-extern GCompareDataFunc gee_tree_multi_map_get_value_compare_func (GeeTreeMultiMap* self,
+VALA_EXTERN GCompareDataFunc gee_tree_multi_map_get_value_compare_func (GeeTreeMultiMap* self,
                                                             gpointer* result_target);
-extern GType gee_tree_multi_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMultiSet, g_object_unref)
-extern GeeTreeMultiSet* gee_tree_multi_set_new (GType g_type,
+VALA_EXTERN GType gee_tree_multi_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeMultiSet, g_object_unref)
+VALA_EXTERN GeeTreeMultiSet* gee_tree_multi_set_new (GType g_type,
                                          GBoxedCopyFunc g_dup_func,
                                          GDestroyNotify g_destroy_func,
                                          GCompareDataFunc compare_func,
                                          gpointer compare_func_target,
                                          GDestroyNotify compare_func_target_destroy_notify);
-extern GeeTreeMultiSet* gee_tree_multi_set_construct (GType object_type,
+VALA_EXTERN GeeTreeMultiSet* gee_tree_multi_set_construct (GType object_type,
                                                GType g_type,
                                                GBoxedCopyFunc g_dup_func,
                                                GDestroyNotify g_destroy_func,
                                                GCompareDataFunc compare_func,
                                                gpointer compare_func_target,
                                                GDestroyNotify compare_func_target_destroy_notify);
-extern GCompareDataFunc gee_tree_multi_set_get_compare_func (GeeTreeMultiSet* self,
+VALA_EXTERN GCompareDataFunc gee_tree_multi_set_get_compare_func (GeeTreeMultiSet* self,
                                                       gpointer* result_target);
-extern GType gee_tree_set_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeSet, g_object_unref)
-extern GeeTreeSet* gee_tree_set_new (GType g_type,
+VALA_EXTERN GType gee_tree_set_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeTreeSet, g_object_unref)
+VALA_EXTERN GeeTreeSet* gee_tree_set_new (GType g_type,
                               GBoxedCopyFunc g_dup_func,
                               GDestroyNotify g_destroy_func,
                               GCompareDataFunc compare_func,
                               gpointer compare_func_target,
                               GDestroyNotify compare_func_target_destroy_notify);
-extern GeeTreeSet* gee_tree_set_construct (GType object_type,
+VALA_EXTERN GeeTreeSet* gee_tree_set_construct (GType object_type,
                                     GType g_type,
                                     GBoxedCopyFunc g_dup_func,
                                     GDestroyNotify g_destroy_func,
                                     GCompareDataFunc compare_func,
                                     gpointer compare_func_target,
                                     GDestroyNotify compare_func_target_destroy_notify);
-extern GCompareDataFunc gee_tree_set_get_compare_func (GeeTreeSet* self,
+VALA_EXTERN GCompareDataFunc gee_tree_set_get_compare_func (GeeTreeSet* self,
                                                 gpointer* result_target);
-extern GType gee_unrolled_linked_list_get_type (void)  ;
-// G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeUnrolledLinkedList, g_object_unref)
-extern GeeUnrolledLinkedList* gee_unrolled_linked_list_new (GType g_type,
+VALA_EXTERN GType gee_unrolled_linked_list_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GeeUnrolledLinkedList, g_object_unref)
+VALA_EXTERN GeeUnrolledLinkedList* gee_unrolled_linked_list_new (GType g_type,
                                                      GBoxedCopyFunc g_dup_func,
                                                      GDestroyNotify g_destroy_func,
                                                      GeeEqualDataFunc equal_func,
                                                      gpointer equal_func_target,
                                                      GDestroyNotify equal_func_target_destroy_notify);
-extern GeeUnrolledLinkedList* gee_unrolled_linked_list_construct (GType object_type,
+VALA_EXTERN GeeUnrolledLinkedList* gee_unrolled_linked_list_construct (GType object_type,
                                                            GType g_type,
                                                            GBoxedCopyFunc g_dup_func,
                                                            GDestroyNotify g_destroy_func,
                                                            GeeEqualDataFunc equal_func,
                                                            gpointer equal_func_target,
                                                            GDestroyNotify equal_func_target_destroy_notify);
-extern GeeEqualDataFunc gee_unrolled_linked_list_get_equal_func (GeeUnrolledLinkedList* self,
+VALA_EXTERN GeeEqualDataFunc gee_unrolled_linked_list_get_equal_func (GeeUnrolledLinkedList* self,
                                                           gpointer* result_target);
 
-
+G_END_DECLS
 
 #endif

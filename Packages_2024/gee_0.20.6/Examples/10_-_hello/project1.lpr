@@ -19,6 +19,8 @@ uses
     gee_abstract_collection_add(GEE_ABSTRACT_COLLECTION(list), PChar('Hallo'));
     gee_abstract_collection_add(GEE_ABSTRACT_COLLECTION(list), PChar('Welt'));
     gee_abstract_collection_add(GEE_ABSTRACT_COLLECTION(list), PChar('aus Libgee'));
+    gee_abstract_collection_add(GEE_ABSTRACT_COLLECTION(list), PChar('bbb'));
+    gee_abstract_collection_add(GEE_ABSTRACT_COLLECTION(list), PChar('aaa'));
 
     it := gee_iterable_iterator(GEE_ITERABLE(list));
 

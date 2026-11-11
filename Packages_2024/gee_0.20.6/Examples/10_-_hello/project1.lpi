@@ -25,6 +25,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="fp_gee_package"/>
+      </Item>
+      <Item>
         <PackageName Value="fp_GLIB2_package"/>
       </Item>
     </RequiredPackages>

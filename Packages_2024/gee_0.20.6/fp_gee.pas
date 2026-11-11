@@ -7,11 +7,11 @@ uses
 
 const
   {$IFDEF Linux}
-  libgee = 'gee-0.8 ';
+  libgee = 'gee-0.8';
   {$ENDIF}
 
   {$IFDEF Windows}
-  {$FATAL  no supported}
+  libgee = 'libgee-0.8-2.dll';
   {$ENDIF}
 
   {$IFDEF FPC}
