@@ -132,9 +132,6 @@ type
     get_read_only: function(self: PGeeIterator): Tgboolean; cdecl;
   end;
 
-
-
-
   PGeeTraversableIface = ^TGeeTraversableIface;
   TGeeTraversableIface = record
     parent_iface: TGTypeInterface;

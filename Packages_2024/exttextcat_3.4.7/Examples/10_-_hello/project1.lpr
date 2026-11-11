@@ -1,6 +1,7 @@
 program project1;
 
-uses fp_exttextcat;
+uses
+  fp_exttextcat;
 
   procedure main;
   var
