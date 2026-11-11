@@ -1,6 +1,7 @@
 program project1;
 
 uses
+  fp_libgnome_games_support,
   fp_glib2,
   fp_GTK4;
 

@@ -20,15 +20,15 @@ uses
     Result := 0;
   end;
 
-procedure Print;
-var
-  i: Integer;
-begin
-    for i := 0 to Ord(EXTRACTOR_metatype_get_max) - 1 do
+  procedure Show_Plugins;
+  var
+    i: integer;
   begin
-    WriteLn(i, ': ', EXTRACTOR_metatype_to_string(TEXTRACTOR_MetaType(i)));
-  end;
+    for i := 0 to EXTRACTOR_metatype_get_max - 1 do begin
+      WriteLn(i:4, ': ', EXTRACTOR_metatype_to_string(TEXTRACTOR_MetaType(i)));
     end;
+    WriteLn(#10);
+  end;
 
   procedure main;
   const
@@ -36,10 +36,9 @@ begin
   var
     plugins: PEXTRACTOR_PluginList;
   begin
-    Print;
+    Show_Plugins;
 
     plugins := EXTRACTOR_plugin_add_defaults(EXTRACTOR_OPTION_DEFAULT_POLICY);
-
     if plugins = nil then begin
       WriteLn('Fehler: Plugins konnten nicht geladen werden.');
       Exit;

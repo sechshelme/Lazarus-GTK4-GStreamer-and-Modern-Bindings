@@ -21,6 +21,12 @@
 #ifndef EXTRACTOR_H
 #define EXTRACTOR_H
 
+#ifdef __cplusplus
+extern "C" {
+#if 0 /* keep Emacsens' auto-indent happy */
+}
+#endif
+#endif
 
 
 #include <stdint.h>
@@ -33,6 +39,16 @@
 
 #include <stdio.h>
 
+#ifndef _EXTRACTOR_EXTERN
+#if defined(_WIN32) && defined(MHD_W32LIB)
+#define _EXTRACTOR_EXTERN extern
+#elif defined (_WIN32) && defined(MHD_W32DLL)
+/* Define MHD_W32DLL when using MHD as W32 .DLL to speed up linker a little */
+#define _EXTRACTOR_EXTERN __declspec(dllimport)
+#else
+#define _EXTRACTOR_EXTERN extern
+#endif
+#endif
 
 /**
  * Options for how plugin execution should be done.
@@ -402,7 +418,7 @@ enum EXTRACTOR_MetaType
  *         translate using `dgettext ("libextractor", rval)`
  * @ingroup types
  */
-extern const char *
+_EXTRACTOR_EXTERN const char *
 EXTRACTOR_metatype_to_string (enum EXTRACTOR_MetaType type);
 
 
@@ -415,7 +431,7 @@ EXTRACTOR_metatype_to_string (enum EXTRACTOR_MetaType type);
  *         translate using `dgettext ("libextractor", rval)`
  * @ingroup types
  */
-extern const char *
+_EXTRACTOR_EXTERN const char *
 EXTRACTOR_metatype_to_description (enum EXTRACTOR_MetaType type);
 
 
@@ -425,7 +441,7 @@ EXTRACTOR_metatype_to_description (enum EXTRACTOR_MetaType type);
  * @return highest legal metatype number for this version of libextractor
  * @ingroup types
  */
-extern enum EXTRACTOR_MetaType
+_EXTRACTOR_EXTERN enum EXTRACTOR_MetaType
 EXTRACTOR_metatype_get_max (void);
 
 
@@ -557,7 +573,7 @@ struct EXTRACTOR_PluginList;
  * @param flags options for all of the plugins loaded
  * @return the default set of plugins, NULL if no plugins were found
  */
-extern struct EXTRACTOR_PluginList *
+_EXTRACTOR_EXTERN struct EXTRACTOR_PluginList *
 EXTRACTOR_plugin_add_defaults (enum EXTRACTOR_Options flags);
 
 
@@ -570,7 +586,7 @@ EXTRACTOR_plugin_add_defaults (enum EXTRACTOR_Options flags);
  * @param flags options to use
  * @return the new list of libraries, equal to prev iff an error occured
  */
-extern struct EXTRACTOR_PluginList *
+_EXTRACTOR_EXTERN struct EXTRACTOR_PluginList *
 EXTRACTOR_plugin_add (struct EXTRACTOR_PluginList *prev,
                       const char *library,
                       const char *options,
@@ -592,7 +608,7 @@ EXTRACTOR_plugin_add (struct EXTRACTOR_PluginList *prev,
  * @return the new list of libraries, equal to prev iff an error occured
  *         or if config was empty (or NULL).
  */
-extern struct EXTRACTOR_PluginList *
+_EXTRACTOR_EXTERN struct EXTRACTOR_PluginList *
 EXTRACTOR_plugin_add_config (struct EXTRACTOR_PluginList *prev,
                              const char *config,
                              enum EXTRACTOR_Options flags);
@@ -605,7 +621,7 @@ EXTRACTOR_plugin_add_config (struct EXTRACTOR_PluginList *prev,
  * @param library the name of the plugin to remove (short handle)
  * @return the reduced list, unchanged if the plugin was not loaded
  */
-extern struct EXTRACTOR_PluginList *
+_EXTRACTOR_EXTERN struct EXTRACTOR_PluginList *
 EXTRACTOR_plugin_remove (struct EXTRACTOR_PluginList *prev,
                          const char *library);
 
@@ -615,7 +631,7 @@ EXTRACTOR_plugin_remove (struct EXTRACTOR_PluginList *prev,
  *
  * @param plugin the list of plugins
  */
-extern void
+_EXTRACTOR_EXTERN void
 EXTRACTOR_plugin_remove_all (struct EXTRACTOR_PluginList *plugins);
 
 
@@ -630,7 +646,7 @@ EXTRACTOR_plugin_remove_all (struct EXTRACTOR_PluginList *plugins);
  * @param proc function to call for each meta data item found
  * @param proc_cls cls argument to @a proc
  */
-extern void
+_EXTRACTOR_EXTERN void
 EXTRACTOR_extract (struct EXTRACTOR_PluginList *plugins,
                    const char *filename,
                    const void *data,
@@ -655,7 +671,7 @@ EXTRACTOR_extract (struct EXTRACTOR_PluginList *plugins,
  * @param data_len number of bytes in @a data
  * @return non-zero if printing failed, otherwise 0.
  */
-extern int
+_EXTRACTOR_EXTERN int
 EXTRACTOR_meta_data_print (void *handle,
                            const char *plugin_name,
                            enum EXTRACTOR_MetaType type,
@@ -665,5 +681,11 @@ EXTRACTOR_meta_data_print (void *handle,
                            size_t data_len);
 
 
+#if 0 /* keep Emacsens' auto-indent happy */
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
 
 #endif
