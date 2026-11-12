@@ -75,7 +75,7 @@ begin
   if Editor <> nil then  begin
     Editor.Selection := pchar(TComponent(Sender).Tag);
     LazarusIDE.DoOpenEditorFile(Editor.FileName, -1, -1, [ofRegularFile, ofOnlyIfExists]);
-    end;
+  end;
 end;
 
 procedure TMacroForm.CreateButton(x, y: integer; macros_Str: pchar);
@@ -115,9 +115,21 @@ begin
   form.Show;
 end;
 
+procedure CloseAllPackageWindows(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := Screen.FormCount - 1 downto 0 do begin
+    if Screen.Forms[i].ClassNameIs('TPackageEditorForm') then begin
+      Screen.Forms[i].Close;
+    end;
+  end;
+end;
+
 procedure Macro_Key_Register;
 begin
-  RegisterIdeMenuCommand(mnuTools, 'Create Macro', 'Create Macro...', nil, @ShowMacroDialog);
+  RegisterIdeMenuCommand(mnuTools, 'Create Macro', '[Create Macro...]', nil, @ShowMacroDialog);
+  RegisterIdeMenuCommand(mnuWindow, 'Close All Package Windows', '[Alle Package-Fenster schliessen]', nil, @CloseAllPackageWindows);
 end;
 
 procedure Register;
