@@ -30,8 +30,9 @@ uses
     schema: PGSettingsSchema;
     settings: PGSettings;
     loop: PGMainLoop;
+    last_folder: Pgchar;
   begin
-    source := g_settings_schema_source_get_default();
+    source := g_settings_schema_source_get_default;
     schema := g_settings_schema_source_lookup(source, SCHEMA_ID, True);
     if schema = nil then begin
       g_printf('Fehler: Schema "%s" nicht gefunden.'#10, SCHEMA_ID);
@@ -41,7 +42,9 @@ uses
 
     settings := g_settings_new(SCHEMA_ID);
 
-    g_printf('Letzter Ordner: %s'#10, g_settings_get_string(settings,'last-folder-uri'));
+    last_folder := g_settings_get_string(settings, 'last-folder-uri');
+    g_printf('Letzter Ordner: %s'#10, last_folder);
+    g_free(last_folder);
 
     g_signal_connect(settings, 'changed', G_CALLBACK(@on_gtk_changed), nil);
 
