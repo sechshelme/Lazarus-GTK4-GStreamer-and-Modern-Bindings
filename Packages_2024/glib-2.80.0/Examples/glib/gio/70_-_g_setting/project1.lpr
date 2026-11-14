@@ -1,11 +1,14 @@
 program project1;
 
-//    glib-compile-schemas .
+// gsettings list-keys org.gtk.Settings.FileChooser
+// gsettings list-recursively org.gtk.Settings.FileChooser
+
+
 
 uses
   fp_glib2;
 
-  procedure on_nemo_changed(settings: PGSettings; key: Pgchar; user_data: Tgpointer); cdecl;
+  procedure on_gtk_changed(settings: PGSettings; key: Pgchar; user_data: Tgpointer); cdecl;
   var
     val: PGVariant;
     val_str: Pgchar;
@@ -13,7 +16,7 @@ uses
     val := g_settings_get_value(settings, key);
     val_str := g_variant_print(val, True);
 
-    g_print('[NEMO-UPDATE] "%s" -> %s'#10, key, val_str);
+    g_printf('[GTK-DIALOG-UPDATE] "%s" -> %s'#10, key, val_str);
 
     g_free(val_str);
     g_variant_unref(val);
@@ -21,34 +24,29 @@ uses
 
   procedure main;
   const
-    SCHEMA_ID = 'org.nemo.window-state';
+    SCHEMA_ID = 'org.gtk.Settings.FileChooser';
   var
     source: PGSettingsSchemaSource;
     schema: PGSettingsSchema;
     settings: PGSettings;
-    geom: Pgchar;
-    is_max: Tgboolean;
     loop: PGMainLoop;
   begin
     source := g_settings_schema_source_get_default();
     schema := g_settings_schema_source_lookup(source, SCHEMA_ID, True);
     if schema = nil then begin
-      g_print('Fehler: Schema "%s" nicht gefunden (ist Nemo installiert?).'#10, SCHEMA_ID);
+      g_printf('Fehler: Schema "%s" nicht gefunden.'#10, SCHEMA_ID);
       Exit;
     end;
     g_settings_schema_unref(schema);
 
     settings := g_settings_new(SCHEMA_ID);
 
-    geom := g_settings_get_string(settings, 'geometry');
-    is_max := g_settings_get_boolean(settings, 'maximized');
-    g_print('Aktuelle Nemo-Geometrie: %s | Maximiert: %d'#10, geom, is_max);
-    g_free(geom);
+    g_printf('Letzter Ordner: %s'#10, g_settings_get_string(settings,'last-folder-uri'));
 
-    g_signal_connect(settings, 'changed', G_CALLBACK(@on_nemo_changed), nil);
+    g_signal_connect(settings, 'changed', G_CALLBACK(@on_gtk_changed), nil);
 
     loop := g_main_loop_new(nil, False);
-    g_print('Lausche auf Nemo... (Öffne Nemo und verschiebe/vergrössere das Fenster)'#10);
+    g_printf('Lausche auf GTK-Dateidialog... (Öffne in irgendeinem Programm "Datei öffnen" und ändere die Fenstergrösse oder drücke Strg+H)'#10);
 
     g_main_loop_run(loop);
 
@@ -59,3 +57,4 @@ uses
 begin
   main;
 end.
+
