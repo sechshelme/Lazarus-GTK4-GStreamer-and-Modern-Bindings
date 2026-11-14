@@ -17,6 +17,7 @@ var
   objv: PPgchar;
   len: Tgsize;
   i: integer;
+  val_str: Pgchar;
 begin
   if variant = nil then begin
     Result := 'variant=(null)';
@@ -85,6 +86,11 @@ begin
       WriteStr(Result, '<unknow> (', g_variant_classify(variant), ')');
     end;
   end;
+
+  val_str := g_variant_print(variant, True);
+  WriteStr(Result, Result,' ---- ', val_str);
+  g_free(val_str)
+
 end;
 
 procedure GVariantShow(variant: PGVariant);

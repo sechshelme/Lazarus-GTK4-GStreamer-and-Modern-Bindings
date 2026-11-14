@@ -140,7 +140,47 @@ libgdal-d
 libbabl
 liblcms2
 libnss3
+librubberband
+libopus0      
+libmad0
+libsensors5
+libbsd0    
+libdeflate
+libidn2
+libjack-jackd2
+libmikmod
+libmypaint-1.5-1   
+libonig5
+librttopo1         
+libsecret-1-0    
+libsuperlu7
+libspatialite8t64
+libplacebo
+ibid3-3.8.3
+libatk1.0
+libassimp
+libgd
+libcfitsio10t64
+libarchive
+libmongoose            // einfacher webserver
+libapt-inst
+libproj-dev
+libspatialite
+libxslt   
+libbgfx
+libfl
+libfdt                // Geräte Tabelle
+libwacom-dev          // grafiktablett
+libcimgui             //    ImGui 
+libblkid
 
+
+# ===================
+
+libcogl                            // veraltet
+
+liblapack-dev          // fortan  algebra            gcc main.c -o main -lblas -llapack
+libpeasd-3-dev         // D Language
 
 libdbusmenu-glib-dev
 libdbusmenu-gtk3-dev
@@ -155,18 +195,15 @@ libhwasan0                       // Nur in GCC verwendbar
 libitm1                          // Nur in GCC verwendbar         
 
 
-liblapack-dev          // fortan  algebra            gcc main.c -o main -lblas -llapack
-libpeasd-3-dev         // D Language
 glib-networking   
 
-libcogl                            // veraltet
 
 
 # ====
 
 skia
 
-apt install blueprint-compiler
+apt install blueprint-compiler      /// GTK4 UI erstellrn
 
 /usr/include/unicode/char16ptr.h
 
@@ -182,8 +219,6 @@ libmount-dev
 libgusb2  
 liborcus-0      // Excel Tabellen einlesen
 
-libcolord-dev     
-libcolord-gtk4-1t64  
 
 libgoa-1.0-common  
 
@@ -196,7 +231,6 @@ libgoa-1.0-common
      libebur128-1  ( Lautheitsmessung )    
   libfluidsynth3      ( midi )
 
-libexpat1-dev   ( xml lesen )   
 
 
   libsuitesparseconfig7 ( matrix mathe )  libsuitesparse-dev
@@ -260,73 +294,17 @@ libzinnia                         // Handschrifterkennung  veraltet
 
 libbz2-dev                        // ähnlich zip
 
- libappstream-dev 
 
 
- librubberband-dev   
-  libopus0      
- libmad0-dev    
-
-
-  libsensors5
-
- libbsd0    
-libaspell
-libdeflate-dev     
-  libidn2-dev  
-     libjack-jackd2-dev   
-  libmikmod-dev   
-  libmypaint-1.5-1   
-    libonig5
-   librttopo1         
-   libsecret-1-0    
-
-  libsuperlu7
-  libspatialite8t64
-
-libplacebo-dev
-ibid3-3.8.3-dev 
-
-libatk1.0-dev   
-
-  libgusb2a
-
-libassimp-dev
-
-gvfs, gvfs-daemons, gvfs-libs
-
-libbgfx
-
- libxslt   
-
-  libfl-dev  libfl2
-
-
-
- libfdt-dev   // Geräte Tabelle
-
-
-
-
-
-libwacom-dev  // grafiktablett
-
-
-libcamel-1.2-dev, libebook-1.2-dev, libecal-2.0-dev //  sudo apt install evolution-data-server-dev
-
-libcimgui //    ImGui 
- libblkid-dev     
 
 libpdal, liblas // was ist das ???? 
-liblasem
- libgeotiff-dev
+libgeotiff-dev
 libwmf-0.2-7
 
-libtalloc2   
+libtalloc2                      // Makro verseucht
 
 thorvg und passagemath 
 
-libarchive
 libjxl
 libcbor0.10    
 
@@ -342,6 +320,25 @@ libspirv-cross-c-shared.so
  libgpg-error.so.0
 
 
+
+gvfs, gvfs-daemons, gvfs-libs
+
+
+
+
+
+
+
+
+
+
+
+
+
+libcamel-1.2-dev, libebook-1.2-dev, libecal-2.0-dev //  sudo apt install evolution-data-server-dev
+
+
+
 mingw-w64-plutovg
 mingw-w64-mupdf
 mingw-w64-json-c
@@ -354,19 +351,11 @@ libbson-dev
 mingw-w64-arrow (Apache Arrow):Ein Framework für In-Memory-Datenanalysen. Es ist zwar in C++ geschrieben, bietet aber eine sehr ausgereifte C-Schnittstelle (GObject-basiert), um hocheffiziente Datentabellen zwischen Sprachen auszutauschen.
 
 
-  libedit2                 io.
-
-// #include <stdckdint.h>
-
 
 
 Compressor name	Ratio	Compression	Decompress.
-zstd 1.5.7 -1	2.896	510 MB/s	1550 MB/s
-brotli 1.1.0 -1	2.883	290 MB/s	425 MB/s
 zlib 1.3.1 -1	2.743	105 MB/s	390 MB/s
-zstd 1.5.7 --fast=1	2.439	545 MB/s	1850 MB/s
 quicklz 1.5.0 -1	2.238	520 MB/s	750 MB/s
-zstd 1.5.7 --fast=4	2.146	665 MB/s	2050 MB/s
 lzo1x 2.10 -1	2.106	650 MB/s	780 MB/s
 lz4 1.10.0	2.101	675 MB/s	3850 MB/s
 snappy 1.2.1	2.089	520 MB/s	1500 MB/s
@@ -403,6 +392,9 @@ libgnome-qr-gtk-4-0
 libppsdocument-4.0-6,  libppsview-4.0-5  // Nicht frei gegeben 
 gstreamer1.0-gtk4    // https://github.com/GStreamer/gst-plugins-rs
 
+## GLIB2
+libgxml-dev 
+
 
 ## Sonstiges
 libdialog                                                     // https://invisible-island.net/archives/dialog/
@@ -413,8 +405,6 @@ libvectorscan-dev                                             // alt libhypersca
 # ==== Linux Libary nicht bei Ubuntu dabei
 
 https://github.com/raysan5/raylib
-
-/home/tux/Schreibtisch/von_Git/gcc/gcc/libgomp/libgomp_g.h
 
 
 
@@ -427,27 +417,8 @@ stb_image (( ?????
 
 /usr/include/x86_64-linux-gnu/openmpi
 
-gusb
-libgd-dev
-libsodium
-libcfitsio10t64
-libarchive
-libmongoose            // einfacher webserver
-libpackagekit-glib2-dev
 aptkit // ????
-libapt-inst
-xraylib
 
-libapriltag
-libmlt
-
-
-libgdal-dev
-libproj-dev
-libgeos-dev
-libspatialite-dev
-
-libgccjit
 
 
 sudo apt-get install libdispatch-dev
