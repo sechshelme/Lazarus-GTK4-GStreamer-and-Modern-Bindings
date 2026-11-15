@@ -1,0 +1,67 @@
+
+unit mb;
+interface
+
+{
+  Automatically converted by H2Pas 1.0.0 from mb.h
+  The following command line parameters were used:
+    -p
+    -T
+    -d
+    -c
+    -e
+    mb.h
+}
+
+{ Pointers to basic pascal types, inserted by h2pas conversion program.}
+Type
+  PLongint  = ^Longint;
+  PSmallInt = ^SmallInt;
+  PByte     = ^Byte;
+  PWord     = ^Word;
+  PDWord    = ^DWord;
+  PDouble   = ^Double;
+
+{$IFDEF FPC}
+{$PACKRECORDS C}
+{$ENDIF}
+
+
+{ libmb - A library of utility functions used by matchbox utilitys
+ * Copyright (C) 2003 Matthew Allum
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+  }
+{$ifndef _MB_H_}
+{$define _MB_H_}
+{ mbconfig.h is auto generated  }
+{$include <libmb/mbconfig.h>}
+{$include <libmb/mbpixbuf.h>}
+{$include <libmb/mbexp.h>}
+{$include <libmb/mbtray.h>}
+{$include <libmb/mbutil.h>}
+{$include <libmb/mbmenu.h>}
+{$include <libmb/mbdotdesktop.h>}
+{$undef USE_PNG}
+{$undef USE_JPG}
+{$undef USE_XFT}
+{$undef USE_PANGO}
+{$endif}
+
+implementation
+
+
+end.

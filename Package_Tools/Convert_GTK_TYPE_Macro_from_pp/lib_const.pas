@@ -389,6 +389,7 @@ const
     (libs: 'libvterm'; units: 'fp_vnc'),
     (libs: 'libisl'; units: 'fp_isl'),
     (libs: 'libexttextcat'; units: 'fp_exetextcat'),
+    (libs: 'libmb'; units: 'fp_mb'),
 
 
 
