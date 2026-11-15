@@ -34,8 +34,8 @@ type
 
     constructor cross_section_empty;
     constructor cross_section_copy(cs: TCrossSectionClass; clean: boolean);
-    constructor cross_section_of_simple_polygon(p: TSimplePolygonClass; clean: boolean);
-    constructor cross_section_of_polygons(p: TPolygonsClass; clean: boolean);
+    constructor cross_section_of_simple_polygon(p: TSimplePolygonClass; fr: TManifoldFillRule; clean: boolean);
+    constructor cross_section_of_polygons(p: TPolygonsClass; fr: TManifoldFillRule; clean: boolean);
     constructor cross_section_square(x, y: double; center: longint);
     constructor cross_section_circle(radius: double; circular_segments: longint);
     constructor cross_section_compose(csv: TCrossSectionVecClass; clean: boolean);
@@ -57,13 +57,11 @@ type
     constructor cross_section_warp_context(cs: TCrossSectionClass; fun: Twarp_context_func; ctx: pointer; clean: boolean);
     constructor cross_section_simplify(cs: TCrossSectionClass; epsilon: double; clean: boolean);
     constructor cross_section_offset(cs: TCrossSectionClass; delta: double; jt: TManifoldJoinType; miter_limit: double; circular_segments: longint; clean: boolean);
-    constructor cross_section_set_tolerance(cs: TCrossSectionClass; tolerance: double; clean: boolean);
 
     function cross_section_area: double;
     function cross_section_num_vert: Tsize_t;
     function cross_section_num_contour: Tsize_t;
     function cross_section_is_empty: longint;
-    function cross_section_get_tolerance: double;
 
     destructor Destroy; override;
   end;
@@ -146,7 +144,6 @@ type
     function original_id: longint;
     function get_tolerance: double;
     function num_prop_vert: Tsize_t;
-    function winding_number(x: double; y: double; z: double): longint;
 
     procedure write_obj(callback: Tmani_write_proc; args: pointer);
 
@@ -501,19 +498,20 @@ begin
   end;
 end;
 
-constructor TCrossSectionClass.cross_section_of_simple_polygon(p: TSimplePolygonClass; clean: boolean);
+constructor TCrossSectionClass.cross_section_of_simple_polygon(p: TSimplePolygonClass; fr: TManifoldFillRule; clean: boolean);
 begin
   Init;
-  Fobj := manifold_cross_section_of_simple_polygon(Pointer(Fmem), p.Fobj);
+  Fobj := manifold_cross_section_of_simple_polygon(Pointer(Fmem), p.Fobj, fr);
   if clean then begin
     p.Free;
   end;
 end;
 
-constructor TCrossSectionClass.cross_section_of_polygons(p: TPolygonsClass; clean: boolean);
+constructor TCrossSectionClass.cross_section_of_polygons(p: TPolygonsClass;
+  fr: TManifoldFillRule; clean: boolean);
 begin
   Init;
-  Fobj := manifold_cross_section_of_polygons(Pointer(Fmem), p.Fobj);
+  Fobj := manifold_cross_section_of_polygons(Pointer(Fmem), p.Fobj, fr);
   if clean then begin
     p.Free;
   end;
@@ -714,15 +712,6 @@ begin
   end;
 end;
 
-constructor TCrossSectionClass.cross_section_set_tolerance(cs: TCrossSectionClass; tolerance: double; clean: boolean);
-begin
-  Init;
-  Fobj := manifold_cross_section_set_tolerance(Pointer(Fmem), cs.Fobj, tolerance);
-  if clean then begin
-    cs.Free;
-  end;
-end;
-
 function TCrossSectionClass.cross_section_area: double;
 begin
   Result := manifold_cross_section_area(Fobj);
@@ -741,11 +730,6 @@ end;
 function TCrossSectionClass.cross_section_is_empty: longint;
 begin
   Result := manifold_cross_section_is_empty(Fobj);
-end;
-
-function TCrossSectionClass.cross_section_get_tolerance: double;
-begin
-  Result := manifold_cross_section_get_tolerance(Fobj);
 end;
 
 destructor TCrossSectionClass.Destroy;
@@ -1325,11 +1309,6 @@ begin
   Result := manifold_num_prop_vert(Fobj);
 end;
 
-function TManifoldClass.winding_number(x: double; y: double; z: double): longint;
-begin
-  Result := manifold_winding_number(Fobj, x, y, z);
-end;
-
 procedure TManifoldClass.write_obj(callback: Tmani_write_proc; args: pointer);
 begin
   manifold_write_obj(Fobj, callback, args);
@@ -1588,7 +1567,7 @@ procedure TMeshGL64Class.Init;
 var
   m_size: Tsize_t;
 begin
-  m_size := manifold_meshgl_size;
+  m_size := manifold_meshgl64_size;
   SetLength(Fmem, m_size);
 end;
 
@@ -2034,7 +2013,7 @@ end;
 
 function TTriangulationClass.triangulation_num_tri: Tsize_t;
 begin
-  Result := manifold_triangulation_num_tri(Pointer(Fmem));
+  Result := manifold_triangulation_num_tri(Pointer(Fobj));
 end;
 
 function TTriangulationClass.triangulation_tri_verts: Plongint;
@@ -2353,8 +2332,8 @@ end;
 
 destructor TManifoldManifoldPairClass.Destroy;
 begin
-  manifold_destruct_cross_section(Fobj.first);
-  manifold_destruct_cross_section(Fobj.second);
+  manifold_destruct_manifold(Fobj.first);
+  manifold_destruct_manifold(Fobj.second);
   inherited Destroy;
 end;
 

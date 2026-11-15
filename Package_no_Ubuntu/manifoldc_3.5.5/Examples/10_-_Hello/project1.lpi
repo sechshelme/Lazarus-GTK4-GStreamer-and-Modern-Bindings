@@ -25,20 +25,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="fp_glfw3_package"/>
-      </Item>
-      <Item>
-        <PackageName Value="fp_glew_package"/>
-      </Item>
-      <Item>
         <PackageName Value="fp_manifold_package"/>
       </Item>
     </RequiredPackages>
-    <Units>
-      <Unit>
-        <Filename Value="project1.lpr"/>
-      </Unit>
-    </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
@@ -55,15 +44,7 @@
         <RunWithoutDebug Value="True"/>
         <DebugInfoType Value="dsDwarf3"/>
       </Debugging>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
     </Linking>
-    <Other>
-      <CustomOptions Value="-XX"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions>
