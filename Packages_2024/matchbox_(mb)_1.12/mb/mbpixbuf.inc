@@ -1,13 +1,4 @@
-unit mbpixbuf;
-
-interface
-
-uses
-  x, xlib, fp_mb;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 type
@@ -110,7 +101,10 @@ function mb_pixbuf_img_has_alpha(image: PMBPixbufImage): longbool; inline;
 // === Konventiert am: 15-11-26 17:35:29 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 procedure mb_pixbuf_img_set_pixel_alpha(i: PMBPixbufImage; x, y: longint; a: byte); inline;
 var
@@ -142,4 +136,4 @@ begin
   Result := longbool(image^.has_alpha);
 end;
 
-end.
+{$ENDIF read_implementation}

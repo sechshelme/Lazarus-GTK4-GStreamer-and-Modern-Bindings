@@ -25,16 +25,15 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="fp_mb_package"/>
+      </Item>
+      <Item>
         <PackageName Value="fp_pango_package"/>
       </Item>
     </RequiredPackages>
     <Units>
       <Unit>
         <Filename Value="project1.lpr"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="fp_mb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
@@ -46,7 +45,6 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/libmb/"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

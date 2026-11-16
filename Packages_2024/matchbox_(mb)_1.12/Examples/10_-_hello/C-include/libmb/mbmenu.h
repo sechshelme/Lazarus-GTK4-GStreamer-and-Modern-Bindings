@@ -88,7 +88,7 @@ typedef enum {
   MBMENU_PREPEND    =     (1<<2)
 } MBMenuItemAddFlags;
 
-enum xxxxxxx{
+enum {
   MBMENU_ITEM_APP,
   MBMENU_ITEM_FOLDER,
   MBMENU_ITEM_SEPERATOR

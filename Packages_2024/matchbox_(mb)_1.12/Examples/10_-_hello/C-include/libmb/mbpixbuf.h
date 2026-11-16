@@ -171,14 +171,33 @@ typedef struct MBPixbufImage
 
 /* macros */
 
-/** xxxxxxxx
+/**
+ * @def mb_pixbuf_img_set_pixel(i, x, y, r, g, b)
+ *
+ * DEPRICIATED. Use #mb_pixbuf_img_plot_pixel instead. 
+ */
+#define mb_pixbuf_img_set_pixel(i, x, y, r, g, b) { \
+  (i)->rgba[(((y)*(i)->width*4)+((x)*4))]   = r;    \
+  (i)->rgba[(((y)*(i)->width*4)+((x)*4))+1] = g;    \
+  (i)->rgba[(((y)*(i)->width*4)+((x)*4))+2] = b;    \
+  (i)->rgba[(((y)*(i)->width*4)+((x)*4))+3] = 0;    \
+}
 
+/**
+ * @def mb_pixbuf_img_set_pixel_alpha 
+ *
+ * sets a pixels alpha value
+ */
 #define mb_pixbuf_img_set_pixel_alpha(i, x, y, a) { \
   if ((i)->has_alpha) (i)->rgba[(((y)*(i)->width*(i->internal_bytespp+1))+((x)*(i->internal_bytespp+1)))+i->internal_bytespp] = a;    \
 }
 
 
 
+/**
+ * @def mb_pixbuf_img_get_width
+ *
+ * returns image width
  */
 #define mb_pixbuf_img_get_width(image)  (image)->width
 

@@ -35,7 +35,7 @@ implementation
 { TForm1 }
 
 const
-  srcPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C';
+  srcPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/libmb';
 
   destPath = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/packagesxx';
 

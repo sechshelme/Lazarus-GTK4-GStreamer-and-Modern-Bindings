@@ -138,11 +138,19 @@ void mb_dot_desktop_folders_free(MBDotDesktopFolders* folders);
  */
 #define mb_dot_desktop_folders_get_cnt(f)        (f)->n_entries
 
-/** xxxxxxxxx
+/**
+ * @def mb_dot_desktop_folders_enumerate
+ * Enumerates the #MBDotDesktopFolderEntry entrys in a #MBDotDesktopFolders
+ * struct. 
+ */
 #define mb_dot_desktop_folders_enumerate(ddfolders, ddentry) \
      for ( (ddentry) = (ddfolders)->entries;                 \
 	   (ddentry) != NULL;                                \
 	   (ddentry) = (ddentry)->next_entry )               \
+
+/**
+ * @def mb_dot_desktop_folder_entry_get_name
+ * Gets the name of a #MBDotDesktopFolderEntry
  */
 #define mb_dot_desktop_folder_entry_get_name(f)  (f)->name 
 

@@ -34,9 +34,9 @@ struct nlist {
    unsigned char *value;
 };
 
- hash* hash_new(int size);
+struct hash* hash_new(int size);
 unsigned int hashfunc(struct hash *h, char *s);
- nlist *hash_lookup(struct hash *h, char *s);
- nlist *hash_add(struct hash *h, char *key, char *val);
+struct nlist *hash_lookup(struct hash *h, char *s);
+struct nlist *hash_add(struct hash *h, char *key, char *val);
 void hash_empty();
 void hash_destroy(struct hash *h);

@@ -1,13 +1,4 @@
-unit mbdotdesktop;
-
-interface
-
-uses
-  fp_mb;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 type
@@ -45,7 +36,10 @@ function mb_dot_desktop_folder_entry_get_match(e: PMBDotDesktopFolderEntry): PCh
 // === Konventiert am: 15-11-26 17:34:59 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 function mb_dot_desktop_folders_get_cnt(f: PMBDotDesktopFolders): longint; inline;
@@ -84,4 +78,4 @@ begin
   end;
 end;
 
-end.
+{$ENDIF read_implementation}

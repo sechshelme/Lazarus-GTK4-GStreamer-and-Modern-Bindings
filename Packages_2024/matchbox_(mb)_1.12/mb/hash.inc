@@ -1,13 +1,4 @@
-unit hash;
-
-interface
-
-uses
-  fp_mb;
-
-  {$IFDEF FPC}
-  {$PACKRECORDS C}
-  {$ENDIF}
+{$IFDEF read_interface}
 
 
 const
@@ -39,8 +30,11 @@ procedure hash_destroy(h: Phash); cdecl; external libmb;
 // === Konventiert am: 15-11-26 17:35:07 ===
 
 
-implementation
+{$ENDIF read_interface}
+
+
+{$IFDEF read_implementation}
 
 
 
-end.
+{$ENDIF read_implementation}
