@@ -31,23 +31,23 @@ const
 type
   PVector2 = ^TVector2;
   TVector2 = record
-    x: single;
-    y: single;
+    case byte of
+      1: (x, y: single);
+      2: (items: array[0..1] of single);
   end;
 
   PVector3 = ^TVector3;
   TVector3 = record
-    x: single;
-    y: single;
-    z: single;
+    case byte of
+      1: (x, y, z: single);
+      2: (items: array[0..2] of single);
   end;
 
   PVector4 = ^TVector4;
   TVector4 = record
-    x: single;
-    y: single;
-    z: single;
-    w: single;
+    case byte of
+      1: (x, y, z, w: single);
+      2: (items: array[0..3] of single);
   end;
 
   PQuaternion = ^TQuaternion;
@@ -55,39 +55,25 @@ type
 
   PMatrix = ^TMatrix;
   TMatrix = record
-    m0: single;
-    m4: single;
-    m8: single;
-    m12: single;
-    m1: single;
-    m5: single;
-    m9: single;
-    m13: single;
-    m2: single;
-    m6: single;
-    m10: single;
-    m14: single;
-    m3: single;
-    m7: single;
-    m11: single;
-    m15: single;
+    case byte of
+      1: (m0, m4, m8, m12, m1, m5, m9, m13, m2, m6, m10, m14, m3, m7, m11, m15: single);
+      2: (items: array[0..15] of single);
   end;
 
   PColor = ^TColor;
   TColor = record
-    r: byte;
-    g: byte;
-    b: byte;
-    a: byte;
+    case byte of
+      1: (r, g, b, a: byte);
+      2: (items: array[0..3] of byte);
   end;
 
+type
   PPRectangle = ^PRectangle;
   PRectangle = ^TRectangle;
   TRectangle = record
-    x: single;
-    y: single;
-    width: single;
-    height: single;
+    case byte of
+      1: (x, y, width, height: single);
+      2: (items: array[0..3] of single);
   end;
 
   PImage = ^TImage;
