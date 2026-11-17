@@ -7,77 +7,62 @@ uses
   const
     screenWidth = 800;
     screenHeight = 450;
-speed = 10.0;
-circleRadius = 32.0;
-    var
-      currentFps:Integer = 60;
-            deltaCircle:TVector2 = (items:( 0, screenHeight/3.0));
-      frameCircle:TVector2 = (items:( 0, screenHeight*(2.0/3.0)));
-      mouseWheel: Single;
+    speed = 10.0;
+    circleRadius = 32.0;
+  var
+    currentFps: integer = 60;
+    deltaCircle: TVector2 = (items: (0, screenHeight / 3.0));
+    frameCircle: TVector2 = (items: (0, screenHeight * (2.0 / 3.0)));
+    mouseWheel: single;
+    fpsText: PChar = nil;
   begin
     InitWindow(screenWidth, screenHeight, 'raylib [core] example - delta time');
-     SetTargetFPS(currentFps);
+    SetTargetFPS(currentFps);
 
-     while not WindowShouldClose do begin
-         mouseWheel := GetMouseWheelMove;
-         if (mouseWheel != 0)
-         {
-             currentFps += (int)mouseWheel;
-             if (currentFps < 0) currentFps = 0;
-             SetTargetFPS(currentFps);
-         }
+    while not WindowShouldClose do begin
+      mouseWheel := GetMouseWheelMove;
+      if mouseWheel <> 0 then begin
+        currentFps += Trunc(mouseWheel);
+        if currentFps < 0 then begin
+          currentFps := 0;
+        end;
+        SetTargetFPS(currentFps);
+      end;
 
-         // GetFrameTime() returns the time it took to draw the last frame, in seconds (usually called delta time)
-         // Uses the delta time to make the circle look like it's moving at a "consistent" speed regardless of FPS
+        deltaCircle.x += GetFrameTime() * 6.0 * speed;
+        frameCircle.x += 0.1 * speed;
 
-         // Multiply by 6.0 (an arbitrary value) in order to make the speed
-         // visually closer to the other circle (at 60 fps), for comparison
-         deltaCircle.x += GetFrameTime()*6.0f*speed;
-         // This circle can move faster or slower visually depending on the FPS
-         frameCircle.x += 0.1f*speed;
+        if deltaCircle.x > screenWidth then begin
+          deltaCircle.x := 0;
+        end;
+        if frameCircle.x > screenWidth then begin
+          frameCircle.x := 0;
+        end;
+      if IsKeyPressed(KEY_R) then begin
+        deltaCircle.x := 0;
+        frameCircle.x := 0;
+      end;
 
-         // If either circle is off the screen, reset it back to the start
-         if (deltaCircle.x > screenWidth) deltaCircle.x = 0;
-         if (frameCircle.x > screenWidth) frameCircle.x = 0;
+      BeginDrawing;
+      ClearBackground(RAYWHITE);
 
-         // Reset both circles positions
-         if (IsKeyPressed(KEY_R))
-         {
-             deltaCircle.x = 0;
-             frameCircle.x = 0;
-         }
-         //----------------------------------------------------------------------------------
+      DrawCircleV(deltaCircle, circleRadius, RED);
+      DrawCircleV(frameCircle, circleRadius, BLUE);
 
-         // Draw
-         //----------------------------------------------------------------------------------
-         BeginDrawing();
-             ClearBackground(RAYWHITE);
+      if currentFps <= 0 then begin
+        fpsText := TextFormat('FPS: unlimited (%i)', GetFPS);
+      end else begin
+        fpsText := TextFormat('FPS: %i (target: %i', GetFPS, currentFps);
+      end;
+      DrawText(fpsText, 10, 10, 20, DARKGRAY);
+      DrawText(TextFormat('Frame time: %02.02f ms', GetFrameTime * 1000.0), 10, 30, 20, DARKGRAY);
+      DrawText('Use the scroll wheel to change the fps limit, r to reset', 10, 50, 20, DARKGRAY);
 
-             // Draw both circles to the screen
-             DrawCircleV(deltaCircle, circleRadius, RED);
-             DrawCircleV(frameCircle, circleRadius, BLUE);
-
-             // Draw the help text
-             // Determine what help text to show depending on the current FPS target
-             const char *fpsText = 0;
-             if (currentFps <= 0) fpsText = TextFormat("FPS: unlimited (%i)", GetFPS());
-             else fpsText = TextFormat("FPS: %i (target: %i)", GetFPS(), currentFps);
-             DrawText(fpsText, 10, 10, 20, DARKGRAY);
-             DrawText(TextFormat("Frame time: %02.02f ms", GetFrameTime()*1000.0f), 10, 30, 20, DARKGRAY);
-             DrawText("Use the scroll wheel to change the fps limit, r to reset", 10, 50, 20, DARKGRAY);
-
-             // Draw the text above the circles
-             DrawText("FUNC: x += GetFrameTime()*speed", 10, 90, 20, RED);
-             DrawText("FUNC: x += speed", 10, 240, 20, BLUE);
-
-         EndDrawing();
-         //----------------------------------------------------------------------------------
-     }
-
-     // De-Initialization
-     //--------------------------------------------------------------------------------------
-     CloseWindow();        // Close window and OpenGL context
-     //------------------------------  end;
+      DrawText('FUNC: x += GetFrameTime()*speed', 10, 90, 20, RED);
+      DrawText('FUNC: x += speed', 10, 240, 20, BLUE);
+      EndDrawing;
+    end;
+    CloseWindow;
   end;
 
 begin
