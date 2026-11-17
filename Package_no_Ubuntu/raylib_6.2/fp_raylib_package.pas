@@ -8,7 +8,7 @@ unit fp_raylib_package;
 interface
 
 uses
-  fp_raylib, fp_rlgl, fp_raymath, LazarusPackageIntf;
+  fp_raylib, fp_rlgl, fp_raymath, fp_rcamera, LazarusPackageIntf;
 
 implementation
 

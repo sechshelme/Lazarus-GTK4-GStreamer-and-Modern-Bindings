@@ -246,7 +246,6 @@ const
     (libs: 'libheif'; units: 'fp_heif'),
     (libs: 'libgeos_c'; units: 'ctypes'),
     (libs: 'libmpv'; units: 'ctypes'),
-    (libs: 'libraylib'; units: 'ctypes'),
     (libs: 'libhpdf'; units: 'fp_hpdf'),
     (libs: 'libqrencode'; units: 'ctypes'),
     (libs: 'libdmtx'; units: 'ctypes'),
@@ -392,6 +391,7 @@ const
     (libs: 'libmb'; units: 'fp_mb'),
 
 
+    (libs: 'libraylib'; units: 'ctypes'),
 
 
     (libs: ''; units: ''));

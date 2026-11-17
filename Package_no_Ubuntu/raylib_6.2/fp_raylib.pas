@@ -1,208 +1,21 @@
+unit fp_raylib;
 
-unit raylib;
 interface
 
-{
-  Automatically converted by H2Pas 1.0.0 from raylib.h
-  The following command line parameters were used:
-    -p
-    -T
-    -d
-    -c
-    -e
-    raylib.h
-}
-
-{ Pointers to basic pascal types, inserted by h2pas conversion program.}
-Type
-  PLongint  = ^Longint;
-  PSmallInt = ^SmallInt;
-  PByte     = ^Byte;
-  PWord     = ^Word;
-  PDWord    = ^DWord;
-  PDouble   = ^Double;
-
-Type
-PAudioStream  = ^AudioStream;
-PAutomationEvent  = ^AutomationEvent;
-PAutomationEventList  = ^AutomationEventList;
-PBlendMode  = ^BlendMode;
-PBoneInfo  = ^BoneInfo;
-PBoundingBox  = ^BoundingBox;
-Pbyte  = ^byte;
-PCamera  = ^Camera;
-PCamera2D  = ^Camera2D;
-PCamera3D  = ^Camera3D;
-PCameraMode  = ^CameraMode;
-PCameraProjection  = ^CameraProjection;
-Pchar  = ^char;
-PColor  = ^Color;
-PConfigFlags  = ^ConfigFlags;
-PCubemapLayout  = ^CubemapLayout;
-Pdword  = ^dword;
-PFilePathList  = ^FilePathList;
-PFont  = ^Font;
-PFontType  = ^FontType;
-PGamepadAxis  = ^GamepadAxis;
-PGamepadButton  = ^GamepadButton;
-PGesture  = ^Gesture;
-PGlyphInfo  = ^GlyphInfo;
-PImage  = ^Image;
-PKeyboardKey  = ^KeyboardKey;
-PLoadFileDataCallback  = ^LoadFileDataCallback;
-PLoadFileTextCallback  = ^LoadFileTextCallback;
-Plongint  = ^longint;
-PMaterial  = ^Material;
-PMaterialMap  = ^MaterialMap;
-PMaterialMapIndex  = ^MaterialMapIndex;
-PMatrix  = ^Matrix;
-PMesh  = ^Mesh;
-PModel  = ^Model;
-PModelAnimation  = ^ModelAnimation;
-PModelAnimPose  = ^ModelAnimPose;
-PModelSkeleton  = ^ModelSkeleton;
-PMouseButton  = ^MouseButton;
-PMouseCursor  = ^MouseCursor;
-PMusic  = ^Music;
-PNPatchInfo  = ^NPatchInfo;
-PNPatchLayout  = ^NPatchLayout;
-PPixelFormat  = ^PixelFormat;
-PQuaternion  = ^Quaternion;
-PrAudioBuffer  = ^rAudioBuffer;
-PrAudioProcessor  = ^rAudioProcessor;
-PRay  = ^Ray;
-PRayCollision  = ^RayCollision;
-PRectangle  = ^Rectangle;
-PRenderTexture  = ^RenderTexture;
-PRenderTexture2D  = ^RenderTexture2D;
-PShader  = ^Shader;
-PShaderAttributeDataType  = ^ShaderAttributeDataType;
-PShaderLocationIndex  = ^ShaderLocationIndex;
-PShaderUniformDataType  = ^ShaderUniformDataType;
-Psingle  = ^single;
-PSound  = ^Sound;
-PTexture  = ^Texture;
-PTexture2D  = ^Texture2D;
-PTextureCubemap  = ^TextureCubemap;
-PTextureFilter  = ^TextureFilter;
-PTextureWrap  = ^TextureWrap;
-PTraceLogLevel  = ^TraceLogLevel;
-PTransform  = ^Transform;
-PVector2  = ^Vector2;
-PVector3  = ^Vector3;
-PVector4  = ^Vector4;
-PVrDeviceInfo  = ^VrDeviceInfo;
-PVrStereoConfig  = ^VrStereoConfig;
-PWave  = ^Wave;
-Pword  = ^word;
 {$IFDEF FPC}
 {$PACKRECORDS C}
 {$ENDIF}
 
-
-{*********************************************************************************************
-*
-*   raylib v6.2 - A simple and easy-to-use library to enjoy videogames programming (www.raylib.com)
-*
-*   FEATURES:
-*       - NO external dependencies, all required libraries included with raylib
-*       - Multiplatform: Windows, Linux, macOS, FreeBSD, Web, Android, Raspberry Pi, DRM native...
-*       - Written in plain C code (C99) in PascalCase/camelCase notation
-*       - Hardware accelerated with OpenGL (1.1, 2.1, 3.3, 4.3, ES2, ES3 - choose at compile)
-*       - Software renderer optional, for systems with no GPU: [rlsw]
-*       - Custom OpenGL abstraction layer (usable as standalone module): [rlgl]
-*       - Multiple Fonts formats supported (TTF, OTF, FNT, BDF, Sprite fonts)
-*       - Many texture formats supported, including compressed formats (DXT, ETC, ASTC)
-*       - Full 3d support for 3d Shapes, Models, Billboards, Heightmaps and more!
-*       - Flexible Materials system, supporting classic maps and PBR maps
-*       - Animated 3D models supported (skeletal bones animation) (IQM, M3D, GLTF)
-*       - Shaders support, including Model shaders and Postprocessing shaders
-*       - Powerful math module for Vector, Matrix and Quaternion operations: [raymath]
-*       - Audio loading and playing with streaming support (WAV, OGG, MP3, FLAC, QOA, XM, MOD)
-*       - VR stereo rendering with configurable HMD device parameters
-*       - Bindings to multiple programming languages available!
-*
-*   NOTES:
-*       - One default Font is loaded on InitWindow()->LoadFontDefault() [core, text]
-*       - One default Texture2D is loaded on rlglInit(), 1x1 white pixel R8G8B8A8 [rlgl] (OpenGL 3.3 or ES2)
-*       - One default Shader is loaded on rlglInit()->rlLoadShaderDefault() [rlgl] (OpenGL 3.3 or ES2)
-*       - One default RenderBatch is loaded on rlglInit()->rlLoadRenderBatch() [rlgl] (OpenGL 3.3 or ES2)
-*
-*   DEPENDENCIES:
-*       [rcore] Depends on the selected platform backend, check rcore.c header for details
-*       [rlgl] glad/glad_gles2 (David Herberth - github.com/Dav1dde/glad) for OpenGL extensions loading
-*       [raudio] miniaudio (David Reid - github.com/mackron/miniaudio) for audio device/context management
-*
-*   OPTIONAL DEPENDENCIES (included):
-*       [rcore] sinfl (Micha Mettke) for DEFLATE decompression algorithm
-*       [rcore] sdefl (Micha Mettke) for DEFLATE compression algorithm
-*       [rcore] rprand (Ramon Santamaria) for pseudo-random numbers generation
-*       [rtextures] qoi (Dominic Szablewski - https://phoboslab.org) for QOI image management
-*       [rtextures] stb_image (Sean Barrett) for images loading (BMP, TGA, PNG, JPEG, HDR...)
-*       [rtextures] stb_image_write (Sean Barrett) for image writing (BMP, TGA, PNG, JPG)
-*       [rtextures] stb_image_resize2 (Sean Barrett) for image resizing algorithms
-*       [rtextures] stb_perlin (Sean Barrett) for Perlin Noise image generation
-*       [rtextures] rltexgpu (Ramon Santamaria) for GPU-compressed texture formats
-*       [rtext] stb_truetype (Sean Barrett) for ttf fonts loading
-*       [rtext] stb_rect_pack (Sean Barrett) for rectangles packing
-*       [rmodels] par_shapes (Philip Rideout) for parametric 3d shapes generation
-*       [rmodels] tinyobj_loader_c (Syoyo Fujita) for models loading (OBJ, MTL)
-*       [rmodels] cgltf (Johannes Kuhlmann) for models loading (glTF)
-*       [rmodels] m3d (bzt) for models loading (M3D, https://bztsrc.gitlab.io/model3d)
-*       [rmodels] vox_loader (Johann Nadalutti) for models loading (VOX)
-*       [raudio] dr_wav (David Reid) for WAV audio file loading
-*       [raudio] dr_flac (David Reid) for FLAC audio file loading
-*       [raudio] dr_mp3 (David Reid) for MP3 audio file loading
-*       [raudio] stb_vorbis (Sean Barrett) for OGG audio loading
-*       [raudio] jar_xm (Joshua Reisenauer) for XM audio module loading
-*       [raudio] jar_mod (Joshua Reisenauer) for MOD audio module loading
-*       [raudio] qoa (Dominic Szablewski - https://phoboslab.org) for QOA audio management
-*
-*
-*   LICENSE: zlib/libpng
-*
-*   raylib is licensed under an unmodified zlib/libpng license, which is an OSI-certified,
-*   BSD-like license that allows static linking with closed source software:
-*
-*   Copyright (c) 2013-2026 Ramon Santamaria (@raysan5)
-*
-*   This software is provided "as-is", without any express or implied warranty. In no event
-*   will the authors be held liable for any damages arising from the use of this software.
-*
-*   Permission is granted to anyone to use this software for any purpose, including commercial
-*   applications, and to alter it and redistribute it freely, subject to the following restrictions:
-*
-*     1. The origin of this software must not be misrepresented; you must not claim that you
-*     wrote the original software. If you use this software in a product, an acknowledgment
-*     in the product documentation would be appreciated but is not required.
-*
-*     2. Altered source versions must be plainly marked as such, and must not be misrepresented
-*     as being the original software.
-*
-*     3. This notice may not be removed or altered from any source distribution.
-*
-********************************************************************************************* }
-{$ifndef RAYLIB_H}
-{$define RAYLIB_H}
-{$include <stdarg.h>     // Required for: va_list - Only used by TraceLogCallback}
 
 const
   RAYLIB_VERSION_MAJOR = 6;  
   RAYLIB_VERSION_MINOR = 2;  
   RAYLIB_VERSION_PATCH = 0;  
   RAYLIB_VERSION = '6.2';  
-{---------------------------------------------------------------------------------- }
-{ Defines and Macros }
-{---------------------------------------------------------------------------------- }
-{$ifndef DEG2RAD}
 
 const
   DEG2RAD = PI/180.0;  
-{$endif}
-{$ifndef RAD2DEG}
-
-const
-  RAD2DEG = 180.0/PI;  
+  RAD2DEG = 180.0/PI;
 {$endif}
 { xxxxxxxxxxxxx/ Some Basic Colors
 #define LIGHTGRAY  CLITERAL(Color) 200, 200, 200, 255    // Light Gray
@@ -1529,28 +1342,21 @@ type
 ;
 { Callbacks to hook some internal functions }
 { WARNING: These callbacks are intended for advanced users }
-(* Const before type ignored *)
 type
 
   TTraceLogCallback = procedure (logLevel:longint; text:Pchar; args:Tva_list);cdecl;
 { Logging: Redirect trace log messages }
-(* Const before type ignored *)
 
   PLoadFileDataCallback = ^TLoadFileDataCallback;
   TLoadFileDataCallback = function (fileName:Pchar; dataSize:Plongint):Pbyte;cdecl;
 { FileIO: Load binary data }
-(* Const before type ignored *)
-(* Const before type ignored *)
 
   TSaveFileDataCallback = function (fileName:Pchar; data:pointer; dataSize:longint):Tbool;cdecl;
 { FileIO: Save binary data }
-(* Const before type ignored *)
 
   PLoadFileTextCallback = ^TLoadFileTextCallback;
   TLoadFileTextCallback = function (fileName:Pchar):Pchar;cdecl;
 { FileIO: Load text data }
-(* Const before type ignored *)
-(* Const before type ignored *)
 
   TSaveFileTextCallback = function (fileName:Pchar; text:Pchar):Tbool;cdecl;
 { FileIO: Save text data }
@@ -1562,562 +1368,482 @@ type
 { Window and Graphics Device Functions (Module: core) }
 {------------------------------------------------------------------------------------ }
 { Window-related functions }
-(* Const before type ignored *)
 
-procedure InitWindow(width:longint; height:longint; title:Pchar);cdecl;external;
+procedure InitWindow(width:longint; height:longint; title:Pchar);cdecl;external libraylib;
 { Initialize window and OpenGL context }
-procedure CloseWindow;cdecl;external;
+procedure CloseWindow;cdecl;external libraylib;
 { Close window and unload OpenGL context }
-function WindowShouldClose:Tbool;cdecl;external;
+function WindowShouldClose:Tbool;cdecl;external libraylib;
 { Check if application should close (KEY_ESCAPE pressed or windows close icon clicked) }
-function IsWindowReady:Tbool;cdecl;external;
+function IsWindowReady:Tbool;cdecl;external libraylib;
 { Check if window has been initialized successfully }
-function IsWindowFullscreen:Tbool;cdecl;external;
+function IsWindowFullscreen:Tbool;cdecl;external libraylib;
 { Check if window is currently fullscreen }
-function IsWindowHidden:Tbool;cdecl;external;
+function IsWindowHidden:Tbool;cdecl;external libraylib;
 { Check if window is currently hidden }
-function IsWindowMinimized:Tbool;cdecl;external;
+function IsWindowMinimized:Tbool;cdecl;external libraylib;
 { Check if window is currently minimized }
-function IsWindowMaximized:Tbool;cdecl;external;
+function IsWindowMaximized:Tbool;cdecl;external libraylib;
 { Check if window is currently maximized }
-function IsWindowFocused:Tbool;cdecl;external;
+function IsWindowFocused:Tbool;cdecl;external libraylib;
 { Check if window is currently focused }
-function IsWindowResized:Tbool;cdecl;external;
+function IsWindowResized:Tbool;cdecl;external libraylib;
 { Check if window has been resized last frame }
-function IsWindowState(flag:dword):Tbool;cdecl;external;
+function IsWindowState(flag:dword):Tbool;cdecl;external libraylib;
 { Check if one specific window flag is enabled }
-procedure SetWindowState(flags:dword);cdecl;external;
+procedure SetWindowState(flags:dword);cdecl;external libraylib;
 { Set window configuration state using flags }
-procedure ClearWindowState(flags:dword);cdecl;external;
+procedure ClearWindowState(flags:dword);cdecl;external libraylib;
 { Clear window configuration state flags }
-procedure ToggleFullscreen;cdecl;external;
+procedure ToggleFullscreen;cdecl;external libraylib;
 { Toggle window state: fullscreen/windowed, resizes monitor to match window resolution }
-procedure ToggleBorderlessWindowed;cdecl;external;
+procedure ToggleBorderlessWindowed;cdecl;external libraylib;
 { Toggle window state: borderless windowed, resizes window to match monitor resolution }
-procedure MaximizeWindow;cdecl;external;
+procedure MaximizeWindow;cdecl;external libraylib;
 { Set window state: maximized, if resizable }
-procedure MinimizeWindow;cdecl;external;
+procedure MinimizeWindow;cdecl;external libraylib;
 { Set window state: minimized, if resizable }
-procedure RestoreWindow;cdecl;external;
+procedure RestoreWindow;cdecl;external libraylib;
 { Restore window from being minimized/maximized }
-procedure SetWindowIcon(image:TImage);cdecl;external;
+procedure SetWindowIcon(image:TImage);cdecl;external libraylib;
 { Set icon for window (single image, RGBA 32bit) }
-procedure SetWindowIcons(images:PImage; count:longint);cdecl;external;
+procedure SetWindowIcons(images:PImage; count:longint);cdecl;external libraylib;
 { Set icon for window (multiple images, RGBA 32bit) }
-(* Const before type ignored *)
-procedure SetWindowTitle(title:Pchar);cdecl;external;
+procedure SetWindowTitle(title:Pchar);cdecl;external libraylib;
 { Set title for window }
-procedure SetWindowPosition(x:longint; y:longint);cdecl;external;
+procedure SetWindowPosition(x:longint; y:longint);cdecl;external libraylib;
 { Set window position on screen }
-procedure SetWindowMonitor(monitor:longint);cdecl;external;
+procedure SetWindowMonitor(monitor:longint);cdecl;external libraylib;
 { Set monitor for the current window }
-procedure SetWindowMinSize(width:longint; height:longint);cdecl;external;
+procedure SetWindowMinSize(width:longint; height:longint);cdecl;external libraylib;
 { Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE) }
-procedure SetWindowMaxSize(width:longint; height:longint);cdecl;external;
+procedure SetWindowMaxSize(width:longint; height:longint);cdecl;external libraylib;
 { Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE) }
-procedure SetWindowSize(width:longint; height:longint);cdecl;external;
+procedure SetWindowSize(width:longint; height:longint);cdecl;external libraylib;
 { Set window dimensions }
-procedure SetWindowOpacity(opacity:single);cdecl;external;
+procedure SetWindowOpacity(opacity:single);cdecl;external libraylib;
 { Set window opacity [0.0f..1.0f] }
-procedure SetWindowFocused;cdecl;external;
+procedure SetWindowFocused;cdecl;external libraylib;
 { Set window focused }
-function GetWindowHandle:pointer;cdecl;external;
+function GetWindowHandle:pointer;cdecl;external libraylib;
 { Get native window handle }
-function GetScreenWidth:longint;cdecl;external;
+function GetScreenWidth:longint;cdecl;external libraylib;
 { Get current screen width }
-function GetScreenHeight:longint;cdecl;external;
+function GetScreenHeight:longint;cdecl;external libraylib;
 { Get current screen height }
-function GetRenderWidth:longint;cdecl;external;
+function GetRenderWidth:longint;cdecl;external libraylib;
 { Get current render width (it considers HiDPI) }
-function GetRenderHeight:longint;cdecl;external;
+function GetRenderHeight:longint;cdecl;external libraylib;
 { Get current render height (it considers HiDPI) }
-function GetMonitorCount:longint;cdecl;external;
+function GetMonitorCount:longint;cdecl;external libraylib;
 { Get number of connected monitors }
-function GetCurrentMonitor:longint;cdecl;external;
+function GetCurrentMonitor:longint;cdecl;external libraylib;
 { Get current monitor where window is placed }
-function GetMonitorPosition(monitor:longint):TVector2;cdecl;external;
+function GetMonitorPosition(monitor:longint):TVector2;cdecl;external libraylib;
 { Get specified monitor position }
-function GetMonitorWidth(monitor:longint):longint;cdecl;external;
+function GetMonitorWidth(monitor:longint):longint;cdecl;external libraylib;
 { Get specified monitor width (current video mode used by monitor) }
-function GetMonitorHeight(monitor:longint):longint;cdecl;external;
+function GetMonitorHeight(monitor:longint):longint;cdecl;external libraylib;
 { Get specified monitor height (current video mode used by monitor) }
-function GetMonitorPhysicalWidth(monitor:longint):longint;cdecl;external;
+function GetMonitorPhysicalWidth(monitor:longint):longint;cdecl;external libraylib;
 { Get specified monitor physical width in millimetres }
-function GetMonitorPhysicalHeight(monitor:longint):longint;cdecl;external;
+function GetMonitorPhysicalHeight(monitor:longint):longint;cdecl;external libraylib;
 { Get specified monitor physical height in millimetres }
-function GetMonitorRefreshRate(monitor:longint):longint;cdecl;external;
+function GetMonitorRefreshRate(monitor:longint):longint;cdecl;external libraylib;
 { Get specified monitor refresh rate }
-function GetWindowPosition:TVector2;cdecl;external;
+function GetWindowPosition:TVector2;cdecl;external libraylib;
 { Get window position XY on monitor }
-function GetWindowScaleDPI:TVector2;cdecl;external;
+function GetWindowScaleDPI:TVector2;cdecl;external libraylib;
 { Get window scale DPI factor }
-(* Const before type ignored *)
-function GetMonitorName(monitor:longint):Pchar;cdecl;external;
+function GetMonitorName(monitor:longint):Pchar;cdecl;external libraylib;
 { Get the human-readable, UTF-8 encoded name of the specified monitor }
-(* Const before type ignored *)
-procedure SetClipboardText(text:Pchar);cdecl;external;
+procedure SetClipboardText(text:Pchar);cdecl;external libraylib;
 { Set clipboard text content }
-(* Const before type ignored *)
-function GetClipboardText:Pchar;cdecl;external;
+function GetClipboardText:Pchar;cdecl;external libraylib;
 { Get clipboard text content }
-function GetClipboardImage:TImage;cdecl;external;
+function GetClipboardImage:TImage;cdecl;external libraylib;
 { Get clipboard image content }
-procedure EnableEventWaiting;cdecl;external;
+procedure EnableEventWaiting;cdecl;external libraylib;
 { Enable waiting for events on EndDrawing(), no automatic event polling }
-procedure DisableEventWaiting;cdecl;external;
+procedure DisableEventWaiting;cdecl;external libraylib;
 { Disable waiting for events on EndDrawing(), automatic events polling }
 { Cursor-related functions }
-procedure ShowCursor;cdecl;external;
+procedure ShowCursor;cdecl;external libraylib;
 { Show cursor }
-procedure HideCursor;cdecl;external;
+procedure HideCursor;cdecl;external libraylib;
 { Hide cursor }
-function IsCursorHidden:Tbool;cdecl;external;
+function IsCursorHidden:Tbool;cdecl;external libraylib;
 { Check if cursor is not visible }
-procedure EnableCursor;cdecl;external;
+procedure EnableCursor;cdecl;external libraylib;
 { Enable cursor (unlock cursor) }
-procedure DisableCursor;cdecl;external;
+procedure DisableCursor;cdecl;external libraylib;
 { Disable cursor (lock cursor) }
-function IsCursorOnScreen:Tbool;cdecl;external;
+function IsCursorOnScreen:Tbool;cdecl;external libraylib;
 { Check if cursor is on the screen }
 { Drawing-related functions }
-procedure ClearBackground(color:TColor);cdecl;external;
+procedure ClearBackground(color:TColor);cdecl;external libraylib;
 { Clear background (framebuffer) to color }
-procedure BeginDrawing;cdecl;external;
+procedure BeginDrawing;cdecl;external libraylib;
 { Begin canvas (framebuffer) drawing }
-procedure EndDrawing;cdecl;external;
+procedure EndDrawing;cdecl;external libraylib;
 { End canvas (framebuffer) drawing and swap buffers (double buffering) }
-procedure BeginMode2D(camera:TCamera2D);cdecl;external;
+procedure BeginMode2D(camera:TCamera2D);cdecl;external libraylib;
 { Begin 2D mode with custom camera (2D) }
-procedure EndMode2D;cdecl;external;
+procedure EndMode2D;cdecl;external libraylib;
 { End 2D mode with custom camera }
-procedure BeginMode3D(camera:TCamera3D);cdecl;external;
+procedure BeginMode3D(camera:TCamera3D);cdecl;external libraylib;
 { Begin 3D mode with custom camera (3D) }
-procedure EndMode3D;cdecl;external;
+procedure EndMode3D;cdecl;external libraylib;
 { End 3D mode and returns to default 2D orthographic mode }
-procedure BeginTextureMode(target:TRenderTexture2D);cdecl;external;
+procedure BeginTextureMode(target:TRenderTexture2D);cdecl;external libraylib;
 { Begin drawing to render texture }
-procedure EndTextureMode;cdecl;external;
+procedure EndTextureMode;cdecl;external libraylib;
 { End drawing to render texture }
-procedure BeginShaderMode(shader:TShader);cdecl;external;
+procedure BeginShaderMode(shader:TShader);cdecl;external libraylib;
 { Begin custom shader drawing }
-procedure EndShaderMode;cdecl;external;
+procedure EndShaderMode;cdecl;external libraylib;
 { End custom shader drawing (use default shader) }
-procedure BeginBlendMode(mode:longint);cdecl;external;
+procedure BeginBlendMode(mode:longint);cdecl;external libraylib;
 { Begin blending mode (alpha, additive, multiplied, subtract, custom) }
-procedure EndBlendMode;cdecl;external;
+procedure EndBlendMode;cdecl;external libraylib;
 { End blending mode (reset to default: alpha blending) }
-procedure BeginScissorMode(x:longint; y:longint; width:longint; height:longint);cdecl;external;
+procedure BeginScissorMode(x:longint; y:longint; width:longint; height:longint);cdecl;external libraylib;
 { Begin scissor mode (define screen area for following drawing) }
-procedure EndScissorMode;cdecl;external;
+procedure EndScissorMode;cdecl;external libraylib;
 { End scissor mode }
-procedure BeginVrStereoMode(config:TVrStereoConfig);cdecl;external;
+procedure BeginVrStereoMode(config:TVrStereoConfig);cdecl;external libraylib;
 { Begin stereo rendering (requires VR simulator) }
-procedure EndVrStereoMode;cdecl;external;
+procedure EndVrStereoMode;cdecl;external libraylib;
 { End stereo rendering (requires VR simulator) }
 { VR stereo config functions for VR simulator }
-function LoadVrStereoConfig(device:TVrDeviceInfo):TVrStereoConfig;cdecl;external;
+function LoadVrStereoConfig(device:TVrDeviceInfo):TVrStereoConfig;cdecl;external libraylib;
 { Load VR stereo config for VR simulator device parameters }
-procedure UnloadVrStereoConfig(config:TVrStereoConfig);cdecl;external;
+procedure UnloadVrStereoConfig(config:TVrStereoConfig);cdecl;external libraylib;
 { Unload VR stereo config }
 { Shader management functions }
 { NOTE: Shader functionality is not available on OpenGL 1.1 }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadShader(vsFileName:Pchar; fsFileName:Pchar):TShader;cdecl;external;
+function LoadShader(vsFileName:Pchar; fsFileName:Pchar):TShader;cdecl;external libraylib;
 { Load shader from files and bind default locations }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadShaderFromMemory(vsCode:Pchar; fsCode:Pchar):TShader;cdecl;external;
+function LoadShaderFromMemory(vsCode:Pchar; fsCode:Pchar):TShader;cdecl;external libraylib;
 { Load shader from code strings and bind default locations }
-function IsShaderValid(shader:TShader):Tbool;cdecl;external;
+function IsShaderValid(shader:TShader):Tbool;cdecl;external libraylib;
 { Check if shader is valid (loaded on GPU) }
-(* Const before type ignored *)
-function GetShaderLocation(shader:TShader; uniformName:Pchar):longint;cdecl;external;
+function GetShaderLocation(shader:TShader; uniformName:Pchar):longint;cdecl;external libraylib;
 { Get shader uniform location }
-(* Const before type ignored *)
-function GetShaderLocationAttrib(shader:TShader; attribName:Pchar):longint;cdecl;external;
+function GetShaderLocationAttrib(shader:TShader; attribName:Pchar):longint;cdecl;external libraylib;
 { Get shader attribute location }
-(* Const before type ignored *)
-procedure SetShaderValue(shader:TShader; locIndex:longint; value:pointer; uniformType:longint);cdecl;external;
+procedure SetShaderValue(shader:TShader; locIndex:longint; value:pointer; uniformType:longint);cdecl;external libraylib;
 { Set shader uniform value }
-(* Const before type ignored *)
-procedure SetShaderValueV(shader:TShader; locIndex:longint; value:pointer; uniformType:longint; count:longint);cdecl;external;
+procedure SetShaderValueV(shader:TShader; locIndex:longint; value:pointer; uniformType:longint; count:longint);cdecl;external libraylib;
 { Set shader uniform value vector }
-procedure SetShaderValueMatrix(shader:TShader; locIndex:longint; mat:TMatrix);cdecl;external;
+procedure SetShaderValueMatrix(shader:TShader; locIndex:longint; mat:TMatrix);cdecl;external libraylib;
 { Set shader uniform value (matrix 4x4) }
-procedure SetShaderValueTexture(shader:TShader; locIndex:longint; texture:TTexture2D);cdecl;external;
+procedure SetShaderValueTexture(shader:TShader; locIndex:longint; texture:TTexture2D);cdecl;external libraylib;
 { Set shader uniform value and bind the texture (sampler2d) }
-procedure UnloadShader(shader:TShader);cdecl;external;
+procedure UnloadShader(shader:TShader);cdecl;external libraylib;
 { Unload shader from GPU memory (VRAM) }
 { Screen-space-related functions }
-function GetScreenToWorldRay(position:TVector2; camera:TCamera):TRay;cdecl;external;
+function GetScreenToWorldRay(position:TVector2; camera:TCamera):TRay;cdecl;external libraylib;
 { Get a ray trace from screen position (i.e mouse) }
-function GetScreenToWorldRayEx(position:TVector2; camera:TCamera; width:longint; height:longint):TRay;cdecl;external;
+function GetScreenToWorldRayEx(position:TVector2; camera:TCamera; width:longint; height:longint):TRay;cdecl;external libraylib;
 { Get a ray trace from screen position (i.e mouse) in a viewport }
-function GetWorldToScreen(position:TVector3; camera:TCamera):TVector2;cdecl;external;
+function GetWorldToScreen(position:TVector3; camera:TCamera):TVector2;cdecl;external libraylib;
 { Get screen space position for a 3d world space position }
-function GetWorldToScreenEx(position:TVector3; camera:TCamera; width:longint; height:longint):TVector2;cdecl;external;
+function GetWorldToScreenEx(position:TVector3; camera:TCamera; width:longint; height:longint):TVector2;cdecl;external libraylib;
 { Get sized screen space position for a 3d world space position }
-function GetWorldToScreen2D(position:TVector2; camera:TCamera2D):TVector2;cdecl;external;
+function GetWorldToScreen2D(position:TVector2; camera:TCamera2D):TVector2;cdecl;external libraylib;
 { Get screen space position for a 2d camera world space position }
-function GetScreenToWorld2D(position:TVector2; camera:TCamera2D):TVector2;cdecl;external;
+function GetScreenToWorld2D(position:TVector2; camera:TCamera2D):TVector2;cdecl;external libraylib;
 { Get world space position for a 2d camera screen space position }
-function GetCameraMatrix(camera:TCamera):TMatrix;cdecl;external;
+function GetCameraMatrix(camera:TCamera):TMatrix;cdecl;external libraylib;
 { Get camera transform matrix (view matrix) }
-function GetCameraMatrix2D(camera:TCamera2D):TMatrix;cdecl;external;
+function GetCameraMatrix2D(camera:TCamera2D):TMatrix;cdecl;external libraylib;
 { Get camera 2d transform matrix }
 { Timing-related functions }
-procedure SetTargetFPS(fps:longint);cdecl;external;
+procedure SetTargetFPS(fps:longint);cdecl;external libraylib;
 { Set target FPS (maximum) }
-function GetFrameTime:single;cdecl;external;
+function GetFrameTime:single;cdecl;external libraylib;
 { Get time in seconds for last frame drawn (delta time) }
-function GetTime:Tdouble;cdecl;external;
+function GetTime:Tdouble;cdecl;external libraylib;
 { Get elapsed time in seconds since InitWindow() }
-function GetFPS:longint;cdecl;external;
+function GetFPS:longint;cdecl;external libraylib;
 { Get current FPS }
 { Custom frame control functions }
 { NOTE: Those functions are intended for advanced users that want full control over the frame processing }
 { By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents() }
 { To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL }
-procedure SwapScreenBuffer;cdecl;external;
+procedure SwapScreenBuffer;cdecl;external libraylib;
 { Swap back buffer with front buffer (screen drawing) }
-procedure PollInputEvents;cdecl;external;
+procedure PollInputEvents;cdecl;external libraylib;
 { Register all input events }
-procedure WaitTime(seconds:Tdouble);cdecl;external;
+procedure WaitTime(seconds:Tdouble);cdecl;external libraylib;
 { Wait for some time (halt program execution) }
 { Random values generation functions }
-procedure SetRandomSeed(seed:dword);cdecl;external;
+procedure SetRandomSeed(seed:dword);cdecl;external libraylib;
 { Set the seed for the random number generator }
-function GetRandomValue(min:longint; max:longint):longint;cdecl;external;
+function GetRandomValue(min:longint; max:longint):longint;cdecl;external libraylib;
 { Get a random value between min and max (both included) }
-function LoadRandomSequence(count:dword; min:longint; max:longint):Plongint;cdecl;external;
+function LoadRandomSequence(count:dword; min:longint; max:longint):Plongint;cdecl;external libraylib;
 { Load random values sequence, no values repeated }
-procedure UnloadRandomSequence(sequence:Plongint);cdecl;external;
+procedure UnloadRandomSequence(sequence:Plongint);cdecl;external libraylib;
 { Unload random values sequence }
 { Misc. functions }
-(* Const before type ignored *)
-procedure TakeScreenshot(fileName:Pchar);cdecl;external;
+procedure TakeScreenshot(fileName:Pchar);cdecl;external libraylib;
 { Takes a screenshot of current screen (filename extension defines format) }
-procedure SetConfigFlags(flags:dword);cdecl;external;
+procedure SetConfigFlags(flags:dword);cdecl;external libraylib;
 { Set init configuration flags (view FLAGS) }
-(* Const before type ignored *)
-procedure OpenURL(url:Pchar);cdecl;external;
+procedure OpenURL(url:Pchar);cdecl;external libraylib;
 { Open URL with default system browser (if available) }
 { Logging system }
-procedure SetTraceLogLevel(logLevel:longint);cdecl;external;
+procedure SetTraceLogLevel(logLevel:longint);cdecl;external libraylib;
 { Set the current threshold (minimum) log level }
-(* Const before type ignored *)
-procedure TraceLog(logLevel:longint; text:Pchar; args:array of const);cdecl;external;
-procedure TraceLog(logLevel:longint; text:Pchar);cdecl;external;
+procedure TraceLog(logLevel:longint; text:Pchar; args:array of const);cdecl;external libraylib;
+procedure TraceLog(logLevel:longint; text:Pchar);cdecl;external libraylib;
 { Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...) }
-procedure SetTraceLogCallback(callback:TTraceLogCallback);cdecl;external;
+procedure SetTraceLogCallback(callback:TTraceLogCallback);cdecl;external libraylib;
 { Set custom trace log }
 { Memory management, using internal allocators }
-function MemAlloc(size:dword):pointer;cdecl;external;
+function MemAlloc(size:dword):pointer;cdecl;external libraylib;
 { Internal memory allocator }
-function MemRealloc(ptr:pointer; size:dword):pointer;cdecl;external;
+function MemRealloc(ptr:pointer; size:dword):pointer;cdecl;external libraylib;
 { Internal memory reallocator }
-procedure MemFree(ptr:pointer);cdecl;external;
+procedure MemFree(ptr:pointer);cdecl;external libraylib;
 { Internal memory free }
 { File system management functions }
-(* Const before type ignored *)
-function LoadFileData(fileName:Pchar; dataSize:Plongint):Pbyte;cdecl;external;
+function LoadFileData(fileName:Pchar; dataSize:Plongint):Pbyte;cdecl;external libraylib;
 { Load file data as byte array (read) }
-procedure UnloadFileData(data:Pbyte);cdecl;external;
+procedure UnloadFileData(data:Pbyte);cdecl;external libraylib;
 { Unload file data allocated by LoadFileData() }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function SaveFileData(fileName:Pchar; data:pointer; dataSize:longint):Tbool;cdecl;external;
+function SaveFileData(fileName:Pchar; data:pointer; dataSize:longint):Tbool;cdecl;external libraylib;
 { Save data to file from byte array (write), returns true on success }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function ExportDataAsCode(data:Pbyte; dataSize:longint; fileName:Pchar):Tbool;cdecl;external;
+function ExportDataAsCode(data:Pbyte; dataSize:longint; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export data to code (.h), returns true on success }
-(* Const before type ignored *)
-function LoadFileText(fileName:Pchar):Pchar;cdecl;external;
+function LoadFileText(fileName:Pchar):Pchar;cdecl;external libraylib;
 { Load text data from file (read), returns a '\0' terminated string }
-procedure UnloadFileText(text:Pchar);cdecl;external;
+procedure UnloadFileText(text:Pchar);cdecl;external libraylib;
 { Unload file text data allocated by LoadFileText() }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function SaveFileText(fileName:Pchar; text:Pchar):Tbool;cdecl;external;
+function SaveFileText(fileName:Pchar; text:Pchar):Tbool;cdecl;external libraylib;
 { Save text data to file (write), string must be '\0' terminated, returns true on success }
 { File access custom callbacks }
 { WARNING: Callbacks setup is intended for advanced users }
-procedure SetLoadFileDataCallback(callback:TLoadFileDataCallback);cdecl;external;
+procedure SetLoadFileDataCallback(callback:TLoadFileDataCallback);cdecl;external libraylib;
 { Set custom file binary data loader }
-procedure SetSaveFileDataCallback(callback:TSaveFileDataCallback);cdecl;external;
+procedure SetSaveFileDataCallback(callback:TSaveFileDataCallback);cdecl;external libraylib;
 { Set custom file binary data saver }
-procedure SetLoadFileTextCallback(callback:TLoadFileTextCallback);cdecl;external;
+procedure SetLoadFileTextCallback(callback:TLoadFileTextCallback);cdecl;external libraylib;
 { Set custom file text data loader }
-procedure SetSaveFileTextCallback(callback:TSaveFileTextCallback);cdecl;external;
+procedure SetSaveFileTextCallback(callback:TSaveFileTextCallback);cdecl;external libraylib;
 { Set custom file text data saver }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function FileRename(fileName:Pchar; fileRename:Pchar):longint;cdecl;external;
+function FileRename(fileName:Pchar; fileRename:Pchar):longint;cdecl;external libraylib;
 { Rename file (if exists), returns 0 on success }
-(* Const before type ignored *)
-function FileRemove(fileName:Pchar):longint;cdecl;external;
+function FileRemove(fileName:Pchar):longint;cdecl;external libraylib;
 { Remove file (if exists), returns 0 on success }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function FileCopy(srcPath:Pchar; dstPath:Pchar):longint;cdecl;external;
+function FileCopy(srcPath:Pchar; dstPath:Pchar):longint;cdecl;external libraylib;
 { Copy file from one path to another, dstPath created if it doesn't exist, returns 0 on success }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function FileMove(srcPath:Pchar; dstPath:Pchar):longint;cdecl;external;
+function FileMove(srcPath:Pchar; dstPath:Pchar):longint;cdecl;external libraylib;
 { Move file from one directory to another, dstPath created if it doesn't exist, returns 0 on success }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-function FileTextReplace(fileName:Pchar; search:Pchar; replacement:Pchar):longint;cdecl;external;
+function FileTextReplace(fileName:Pchar; search:Pchar; replacement:Pchar):longint;cdecl;external libraylib;
 { Replace text in an existing file, returns 0 on success }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function FileTextFindIndex(fileName:Pchar; search:Pchar):longint;cdecl;external;
+function FileTextFindIndex(fileName:Pchar; search:Pchar):longint;cdecl;external libraylib;
 { Find text in existing file, returns -1 if index not found or index otherwise }
-(* Const before type ignored *)
-function FileExists(fileName:Pchar):Tbool;cdecl;external;
+function FileExists(fileName:Pchar):Tbool;cdecl;external libraylib;
 { Check if file exists }
-(* Const before type ignored *)
-function DirectoryExists(dirPath:Pchar):Tbool;cdecl;external;
+function DirectoryExists(dirPath:Pchar):Tbool;cdecl;external libraylib;
 { Check if directory path exists }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function IsFileExtension(fileName:Pchar; ext:Pchar):Tbool;cdecl;external;
+function IsFileExtension(fileName:Pchar; ext:Pchar):Tbool;cdecl;external libraylib;
 { Check file extension (recommended include point: .png, .wav) }
-(* Const before type ignored *)
-function IsFileHidden(filePath:Pchar):Tbool;cdecl;external;
+function IsFileHidden(filePath:Pchar):Tbool;cdecl;external libraylib;
 { Check if file path (file or directory) is hidden by OS }
-(* Const before type ignored *)
-function GetFileLength(fileName:Pchar):longint;cdecl;external;
+function GetFileLength(fileName:Pchar):longint;cdecl;external libraylib;
 { Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h) }
-(* Const before type ignored *)
-function GetFileModTime(fileName:Pchar):longint;cdecl;external;
+function GetFileModTime(fileName:Pchar):longint;cdecl;external libraylib;
 { Get file modification time (last write time) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetFileExtension(fileName:Pchar):Pchar;cdecl;external;
+function GetFileExtension(fileName:Pchar):Pchar;cdecl;external libraylib;
 { Get pointer to extension for a filename string (includes dot: '.png') }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetFileName(filePath:Pchar):Pchar;cdecl;external;
+function GetFileName(filePath:Pchar):Pchar;cdecl;external libraylib;
 { Get pointer to filename for a path string }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetFileNameWithoutExt(filePath:Pchar):Pchar;cdecl;external;
+function GetFileNameWithoutExt(filePath:Pchar):Pchar;cdecl;external libraylib;
 { Get filename string without extension (uses static string) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetDirectoryPath(filePath:Pchar):Pchar;cdecl;external;
+function GetDirectoryPath(filePath:Pchar):Pchar;cdecl;external libraylib;
 { Get full path for a provided fileName with path (uses static string) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetPrevDirectoryPath(dirPath:Pchar):Pchar;cdecl;external;
+function GetPrevDirectoryPath(dirPath:Pchar):Pchar;cdecl;external libraylib;
 { Get previous directory path for a provided path (uses static string) }
-(* Const before type ignored *)
-function GetWorkingDirectory:Pchar;cdecl;external;
+function GetWorkingDirectory:Pchar;cdecl;external libraylib;
 { Get current working directory (uses static string) }
-(* Const before type ignored *)
-function GetApplicationDirectory:Pchar;cdecl;external;
+function GetApplicationDirectory:Pchar;cdecl;external libraylib;
 { Get the directory of the running application (uses static string) }
-(* Const before type ignored *)
-function MakeDirectory(dirPath:Pchar):longint;cdecl;external;
+function MakeDirectory(dirPath:Pchar):longint;cdecl;external libraylib;
 { Create directories (including full path requested), returns 0 on success }
-(* Const before type ignored *)
-function ChangeDirectory(dirPath:Pchar):longint;cdecl;external;
+function ChangeDirectory(dirPath:Pchar):longint;cdecl;external libraylib;
 { Change working directory, returns 0 on success }
-(* Const before type ignored *)
-function IsPathFile(path:Pchar):Tbool;cdecl;external;
+function IsPathFile(path:Pchar):Tbool;cdecl;external libraylib;
 { Check if provided path points to a file }
-(* Const before type ignored *)
-function IsPathDirectory(path:Pchar):Tbool;cdecl;external;
+function IsPathDirectory(path:Pchar):Tbool;cdecl;external libraylib;
 { Check if provided path points to a directory }
-(* Const before type ignored *)
-function IsPathAbsolute(path:Pchar):Tbool;cdecl;external;
+function IsPathAbsolute(path:Pchar):Tbool;cdecl;external libraylib;
 { Check if provided path is an absolute path }
-(* Const before type ignored *)
-function IsFileNameValid(fileName:Pchar):Tbool;cdecl;external;
+function IsFileNameValid(fileName:Pchar):Tbool;cdecl;external libraylib;
 { Check if fileName is valid for the platform/OS }
-(* Const before type ignored *)
-function LoadDirectoryFiles(dirPath:Pchar):TFilePathList;cdecl;external;
+function LoadDirectoryFiles(dirPath:Pchar):TFilePathList;cdecl;external libraylib;
 { Load directory filepaths, files and directories, no subdirs scan }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadDirectoryFilesEx(basePath:Pchar; filter:Pchar; scanSubdirs:Tbool):TFilePathList;cdecl;external;
+function LoadDirectoryFilesEx(basePath:Pchar; filter:Pchar; scanSubdirs:Tbool):TFilePathList;cdecl;external libraylib;
 { Load directory filepaths with extension filtering and subdir scan; some filters available: '*.*','FILES*','DIRS*' }
-procedure UnloadDirectoryFiles(files:TFilePathList);cdecl;external;
+procedure UnloadDirectoryFiles(files:TFilePathList);cdecl;external libraylib;
 { Unload filepaths }
-function IsFileDropped:Tbool;cdecl;external;
+function IsFileDropped:Tbool;cdecl;external libraylib;
 { Check if file has been dropped into window }
-function LoadDroppedFiles:TFilePathList;cdecl;external;
+function LoadDroppedFiles:TFilePathList;cdecl;external libraylib;
 { Load dropped filepaths }
-procedure UnloadDroppedFiles(files:TFilePathList);cdecl;external;
+procedure UnloadDroppedFiles(files:TFilePathList);cdecl;external libraylib;
 { Unload dropped filepaths }
-(* Const before type ignored *)
-function GetDirectoryFileCount(dirPath:Pchar):dword;cdecl;external;
+function GetDirectoryFileCount(dirPath:Pchar):dword;cdecl;external libraylib;
 { Get the file count in a directory }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetDirectoryFileCountEx(basePath:Pchar; filter:Pchar; scanSubdirs:Tbool):dword;cdecl;external;
+function GetDirectoryFileCountEx(basePath:Pchar; filter:Pchar; scanSubdirs:Tbool):dword;cdecl;external libraylib;
 { Get the file count in a directory with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result }
 { Compression/Encoding functionality }
-(* Const before type ignored *)
-function CompressData(data:Pbyte; dataSize:longint; compDataSize:Plongint):Pbyte;cdecl;external;
+function CompressData(data:Pbyte; dataSize:longint; compDataSize:Plongint):Pbyte;cdecl;external libraylib;
 { Compress data (DEFLATE algorithm), memory must be MemFree() }
-(* Const before type ignored *)
-function DecompressData(compData:Pbyte; compDataSize:longint; dataSize:Plongint):Pbyte;cdecl;external;
+function DecompressData(compData:Pbyte; compDataSize:longint; dataSize:Plongint):Pbyte;cdecl;external libraylib;
 { Decompress data (DEFLATE algorithm), memory must be MemFree() }
-(* Const before type ignored *)
-function EncodeDataBase64(data:Pbyte; dataSize:longint; outputSize:Plongint):Pchar;cdecl;external;
+function EncodeDataBase64(data:Pbyte; dataSize:longint; outputSize:Plongint):Pchar;cdecl;external libraylib;
 { Encode data to Base64 string (includes NULL terminator), memory must be MemFree() }
-(* Const before type ignored *)
-function DecodeDataBase64(text:Pchar; outputSize:Plongint):Pbyte;cdecl;external;
+function DecodeDataBase64(text:Pchar; outputSize:Plongint):Pbyte;cdecl;external libraylib;
 { Decode Base64 string (expected NULL terminated), memory must be MemFree() }
-(* Const before type ignored *)
-function ComputeCRC32(data:Pbyte; dataSize:longint):dword;cdecl;external;
+function ComputeCRC32(data:Pbyte; dataSize:longint):dword;cdecl;external libraylib;
 { Compute CRC32 hash code }
-(* Const before type ignored *)
-function ComputeMD5(data:Pbyte; dataSize:longint):Pdword;cdecl;external;
+function ComputeMD5(data:Pbyte; dataSize:longint):Pdword;cdecl;external libraylib;
 { Compute MD5 hash code, returns static int[4] (16 bytes) }
-(* Const before type ignored *)
-function ComputeSHA1(data:Pbyte; dataSize:longint):Pdword;cdecl;external;
+function ComputeSHA1(data:Pbyte; dataSize:longint):Pdword;cdecl;external libraylib;
 { Compute SHA1 hash code, returns static int[5] (20 bytes) }
-(* Const before type ignored *)
-function ComputeSHA256(data:Pbyte; dataSize:longint):Pdword;cdecl;external;
+function ComputeSHA256(data:Pbyte; dataSize:longint):Pdword;cdecl;external libraylib;
 { Compute SHA256 hash code, returns static int[8] (32 bytes) }
 { Automation events functionality }
-(* Const before type ignored *)
-function LoadAutomationEventList(fileName:Pchar):TAutomationEventList;cdecl;external;
+function LoadAutomationEventList(fileName:Pchar):TAutomationEventList;cdecl;external libraylib;
 { Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS }
-procedure UnloadAutomationEventList(list:TAutomationEventList);cdecl;external;
+procedure UnloadAutomationEventList(list:TAutomationEventList);cdecl;external libraylib;
 { Unload automation events list from file }
-(* Const before type ignored *)
-function ExportAutomationEventList(list:TAutomationEventList; fileName:Pchar):Tbool;cdecl;external;
+function ExportAutomationEventList(list:TAutomationEventList; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export automation events list as text file }
-procedure SetAutomationEventList(list:PAutomationEventList);cdecl;external;
+procedure SetAutomationEventList(list:PAutomationEventList);cdecl;external libraylib;
 { Set automation event list to record to }
-procedure SetAutomationEventBaseFrame(frame:longint);cdecl;external;
+procedure SetAutomationEventBaseFrame(frame:longint);cdecl;external libraylib;
 { Set automation event internal base frame to start recording }
-procedure StartAutomationEventRecording;cdecl;external;
+procedure StartAutomationEventRecording;cdecl;external libraylib;
 { Start recording automation events (AutomationEventList must be set) }
-procedure StopAutomationEventRecording;cdecl;external;
+procedure StopAutomationEventRecording;cdecl;external libraylib;
 { Stop recording automation events }
-procedure PlayAutomationEvent(event:TAutomationEvent);cdecl;external;
+procedure PlayAutomationEvent(event:TAutomationEvent);cdecl;external libraylib;
 { Play a recorded automation event }
 {------------------------------------------------------------------------------------ }
 { Input Handling Functions (Module: core) }
 {------------------------------------------------------------------------------------ }
 { Input-related functions: keyboard }
-function IsKeyPressed(key:longint):Tbool;cdecl;external;
+function IsKeyPressed(key:longint):Tbool;cdecl;external libraylib;
 { Check if key has been pressed once }
-function IsKeyPressedRepeat(key:longint):Tbool;cdecl;external;
+function IsKeyPressedRepeat(key:longint):Tbool;cdecl;external libraylib;
 { Check if key has been pressed again }
-function IsKeyDown(key:longint):Tbool;cdecl;external;
+function IsKeyDown(key:longint):Tbool;cdecl;external libraylib;
 { Check if key is being pressed }
-function IsKeyReleased(key:longint):Tbool;cdecl;external;
+function IsKeyReleased(key:longint):Tbool;cdecl;external libraylib;
 { Check if key has been released once }
-function IsKeyUp(key:longint):Tbool;cdecl;external;
+function IsKeyUp(key:longint):Tbool;cdecl;external libraylib;
 { Check if key is NOT being pressed }
-function GetKeyPressed:longint;cdecl;external;
+function GetKeyPressed:longint;cdecl;external libraylib;
 { Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty }
-function GetCharPressed:longint;cdecl;external;
+function GetCharPressed:longint;cdecl;external libraylib;
 { Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty }
-(* Const before type ignored *)
-function GetKeyName(key:longint):Pchar;cdecl;external;
+function GetKeyName(key:longint):Pchar;cdecl;external libraylib;
 { Get name of a QWERTY key on the current keyboard layout (eg returns string 'q' for KEY_A on an AZERTY keyboard) }
-procedure SetExitKey(key:longint);cdecl;external;
+procedure SetExitKey(key:longint);cdecl;external libraylib;
 { Set a custom key to exit program (default is ESC) }
 { Input-related functions: gamepads }
-function IsGamepadAvailable(gamepad:longint):Tbool;cdecl;external;
+function IsGamepadAvailable(gamepad:longint):Tbool;cdecl;external libraylib;
 { Check if gamepad is available }
-(* Const before type ignored *)
-function GetGamepadName(gamepad:longint):Pchar;cdecl;external;
+function GetGamepadName(gamepad:longint):Pchar;cdecl;external libraylib;
 { Get gamepad internal name id }
-function IsGamepadButtonPressed(gamepad:longint; button:longint):Tbool;cdecl;external;
+function IsGamepadButtonPressed(gamepad:longint; button:longint):Tbool;cdecl;external libraylib;
 { Check if gamepad button has been pressed once }
-function IsGamepadButtonDown(gamepad:longint; button:longint):Tbool;cdecl;external;
+function IsGamepadButtonDown(gamepad:longint; button:longint):Tbool;cdecl;external libraylib;
 { Check if gamepad button is being pressed }
-function IsGamepadButtonReleased(gamepad:longint; button:longint):Tbool;cdecl;external;
+function IsGamepadButtonReleased(gamepad:longint; button:longint):Tbool;cdecl;external libraylib;
 { Check if gamepad button has been released once }
-function IsGamepadButtonUp(gamepad:longint; button:longint):Tbool;cdecl;external;
+function IsGamepadButtonUp(gamepad:longint; button:longint):Tbool;cdecl;external libraylib;
 { Check if gamepad button is NOT being pressed }
-function GetGamepadButtonPressed:longint;cdecl;external;
+function GetGamepadButtonPressed:longint;cdecl;external libraylib;
 { Get the last gamepad button pressed }
-function GetGamepadAxisCount(gamepad:longint):longint;cdecl;external;
+function GetGamepadAxisCount(gamepad:longint):longint;cdecl;external libraylib;
 { Get axis count for a gamepad }
-function GetGamepadAxisMovement(gamepad:longint; axis:longint):single;cdecl;external;
+function GetGamepadAxisMovement(gamepad:longint; axis:longint):single;cdecl;external libraylib;
 { Get movement value for a gamepad axis }
-(* Const before type ignored *)
-function SetGamepadMappings(mappings:Pchar):longint;cdecl;external;
+function SetGamepadMappings(mappings:Pchar):longint;cdecl;external libraylib;
 { Set internal gamepad mappings (SDL_GameControllerDB) }
-procedure SetGamepadVibration(gamepad:longint; leftMotor:single; rightMotor:single; duration:single);cdecl;external;
+procedure SetGamepadVibration(gamepad:longint; leftMotor:single; rightMotor:single; duration:single);cdecl;external libraylib;
 { Set gamepad vibration for both motors (duration in seconds) }
 { Input-related functions: mouse }
-function IsMouseButtonPressed(button:longint):Tbool;cdecl;external;
+function IsMouseButtonPressed(button:longint):Tbool;cdecl;external libraylib;
 { Check if mouse button has been pressed once }
-function IsMouseButtonDown(button:longint):Tbool;cdecl;external;
+function IsMouseButtonDown(button:longint):Tbool;cdecl;external libraylib;
 { Check if mouse button is being pressed }
-function IsMouseButtonReleased(button:longint):Tbool;cdecl;external;
+function IsMouseButtonReleased(button:longint):Tbool;cdecl;external libraylib;
 { Check if mouse button has been released once }
-function IsMouseButtonUp(button:longint):Tbool;cdecl;external;
+function IsMouseButtonUp(button:longint):Tbool;cdecl;external libraylib;
 { Check if mouse button is NOT being pressed }
-function GetMouseX:longint;cdecl;external;
+function GetMouseX:longint;cdecl;external libraylib;
 { Get mouse position X }
-function GetMouseY:longint;cdecl;external;
+function GetMouseY:longint;cdecl;external libraylib;
 { Get mouse position Y }
-function GetMousePosition:TVector2;cdecl;external;
+function GetMousePosition:TVector2;cdecl;external libraylib;
 { Get mouse position XY }
-function GetMouseDelta:TVector2;cdecl;external;
+function GetMouseDelta:TVector2;cdecl;external libraylib;
 { Get mouse delta between frames }
-procedure SetMousePosition(x:longint; y:longint);cdecl;external;
+procedure SetMousePosition(x:longint; y:longint);cdecl;external libraylib;
 { Set mouse position XY }
-procedure SetMouseOffset(offsetX:longint; offsetY:longint);cdecl;external;
+procedure SetMouseOffset(offsetX:longint; offsetY:longint);cdecl;external libraylib;
 { Set mouse offset }
-procedure SetMouseScale(scaleX:single; scaleY:single);cdecl;external;
+procedure SetMouseScale(scaleX:single; scaleY:single);cdecl;external libraylib;
 { Set mouse scaling }
-function GetMouseWheelMove:single;cdecl;external;
+function GetMouseWheelMove:single;cdecl;external libraylib;
 { Get mouse wheel movement for X or Y, whichever is larger }
-function GetMouseWheelMoveV:TVector2;cdecl;external;
+function GetMouseWheelMoveV:TVector2;cdecl;external libraylib;
 { Get mouse wheel movement for both X and Y }
-procedure SetMouseCursor(cursor:longint);cdecl;external;
+procedure SetMouseCursor(cursor:longint);cdecl;external libraylib;
 { Set mouse cursor }
 { Input-related functions: touch }
-function GetTouchX:longint;cdecl;external;
+function GetTouchX:longint;cdecl;external libraylib;
 { Get touch position X for touch point 0 (relative to screen size) }
-function GetTouchY:longint;cdecl;external;
+function GetTouchY:longint;cdecl;external libraylib;
 { Get touch position Y for touch point 0 (relative to screen size) }
-function GetTouchPosition(index:longint):TVector2;cdecl;external;
+function GetTouchPosition(index:longint):TVector2;cdecl;external libraylib;
 { Get touch position XY for a touch point index (relative to screen size) }
-function GetTouchPointId(index:longint):longint;cdecl;external;
+function GetTouchPointId(index:longint):longint;cdecl;external libraylib;
 { Get touch point identifier for provided index }
-function GetTouchPointCount:longint;cdecl;external;
+function GetTouchPointCount:longint;cdecl;external libraylib;
 { Get number of touch points }
 {------------------------------------------------------------------------------------ }
 { Gestures and Touch Handling Functions (Module: rgestures) }
 {------------------------------------------------------------------------------------ }
-procedure SetGesturesEnabled(flags:dword);cdecl;external;
+procedure SetGesturesEnabled(flags:dword);cdecl;external libraylib;
 { Enable a set of gestures using flags }
-function IsGestureDetected(gesture:dword):Tbool;cdecl;external;
+function IsGestureDetected(gesture:dword):Tbool;cdecl;external libraylib;
 { Check if gesture has been detected }
-function GetGestureDetected:longint;cdecl;external;
+function GetGestureDetected:longint;cdecl;external libraylib;
 { Get latest detected gesture }
-function GetGestureHoldDuration:single;cdecl;external;
+function GetGestureHoldDuration:single;cdecl;external libraylib;
 { Get gesture hold time in seconds }
-function GetGestureDragVector:TVector2;cdecl;external;
+function GetGestureDragVector:TVector2;cdecl;external libraylib;
 { Get gesture drag vector }
-function GetGestureDragAngle:single;cdecl;external;
+function GetGestureDragAngle:single;cdecl;external libraylib;
 { Get gesture drag angle }
-function GetGesturePinchVector:TVector2;cdecl;external;
+function GetGesturePinchVector:TVector2;cdecl;external libraylib;
 { Get gesture pinch delta }
-function GetGesturePinchAngle:single;cdecl;external;
+function GetGesturePinchAngle:single;cdecl;external libraylib;
 { Get gesture pinch angle }
 {------------------------------------------------------------------------------------ }
 { Camera System Functions (Module: rcamera) }
 {------------------------------------------------------------------------------------ }
-procedure UpdateCamera(camera:PCamera; mode:longint);cdecl;external;
+procedure UpdateCamera(camera:PCamera; mode:longint);cdecl;external libraylib;
 { Update camera position for selected mode }
-procedure UpdateCameraPro(camera:PCamera; movement:TVector3; rotation:TVector3; zoom:single);cdecl;external;
+procedure UpdateCameraPro(camera:PCamera; movement:TVector3; rotation:TVector3; zoom:single);cdecl;external libraylib;
 { Update camera movement/rotation }
 {------------------------------------------------------------------------------------ }
 { Basic Shapes Drawing Functions (Module: shapes) }
@@ -2125,865 +1851,756 @@ procedure UpdateCameraPro(camera:PCamera; movement:TVector3; rotation:TVector3; 
 { Set texture and rectangle to be used on shapes drawing }
 { NOTE: It can be useful when using basic shapes and one single font, }
 { defining a font char white rectangle would allow drawing everything in a single draw call }
-procedure SetShapesTexture(texture:TTexture2D; rec:TRectangle);cdecl;external;
+procedure SetShapesTexture(texture:TTexture2D; rec:TRectangle);cdecl;external libraylib;
 { Set texture and rectangle to be used on shapes drawing }
-function GetShapesTexture:TTexture2D;cdecl;external;
+function GetShapesTexture:TTexture2D;cdecl;external libraylib;
 { Get texture that is used for shapes drawing }
-function GetShapesTextureRectangle:TRectangle;cdecl;external;
+function GetShapesTextureRectangle:TRectangle;cdecl;external libraylib;
 { Get texture source rectangle that is used for shapes drawing }
 { Basic shapes drawing functions }
-procedure DrawPixel(posX:longint; posY:longint; color:TColor);cdecl;external;
+procedure DrawPixel(posX:longint; posY:longint; color:TColor);cdecl;external libraylib;
 { Draw a pixel using geometry [Can be slow, use with care] }
-procedure DrawPixelV(position:TVector2; color:TColor);cdecl;external;
+procedure DrawPixelV(position:TVector2; color:TColor);cdecl;external libraylib;
 { Draw a pixel using geometry (Vector version) [Can be slow, use with care] }
-procedure DrawLine(startPosX:longint; startPosY:longint; endPosX:longint; endPosY:longint; color:TColor);cdecl;external;
+procedure DrawLine(startPosX:longint; startPosY:longint; endPosX:longint; endPosY:longint; color:TColor);cdecl;external libraylib;
 { Draw a line }
-procedure DrawLineV(startPos:TVector2; endPos:TVector2; color:TColor);cdecl;external;
+procedure DrawLineV(startPos:TVector2; endPos:TVector2; color:TColor);cdecl;external libraylib;
 { Draw a line (using gl lines) }
-procedure DrawLineEx(startPos:TVector2; endPos:TVector2; thick:single; color:TColor);cdecl;external;
+procedure DrawLineEx(startPos:TVector2; endPos:TVector2; thick:single; color:TColor);cdecl;external libraylib;
 { Draw a line (using triangles/quads) }
-(* Const before type ignored *)
-procedure DrawLineStrip(points:PVector2; pointCount:longint; color:TColor);cdecl;external;
+procedure DrawLineStrip(points:PVector2; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw lines sequence (using gl lines) }
-procedure DrawLineBezier(startPos:TVector2; endPos:TVector2; thick:single; color:TColor);cdecl;external;
+procedure DrawLineBezier(startPos:TVector2; endPos:TVector2; thick:single; color:TColor);cdecl;external libraylib;
 { Draw line segment cubic-bezier in-out interpolation }
-procedure DrawLineDashed(startPos:TVector2; endPos:TVector2; dashSize:longint; spaceSize:longint; color:TColor);cdecl;external;
+procedure DrawLineDashed(startPos:TVector2; endPos:TVector2; dashSize:longint; spaceSize:longint; color:TColor);cdecl;external libraylib;
 { Draw a dashed line }
-procedure DrawTriangle(v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external;
+procedure DrawTriangle(v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external libraylib;
 { Draw a color-filled triangle, counter-clockwise vertex order }
 procedure DrawTriangleGradient(v1:TVector2; v2:TVector2; v3:TVector2; c1:TColor; c2:TColor; 
-            c3:TColor);cdecl;external;
+            c3:TColor);cdecl;external libraylib;
 { Draw triangle with interpolated colors, counter-clockwise vertex/color order }
-procedure DrawTriangleLines(v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external;
+procedure DrawTriangleLines(v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external libraylib;
 { Draw triangle outline, counter-clockwise vertex order }
-procedure DrawTriangleLinesEx(v1:TVector2; v2:TVector2; v3:TVector2; thick:single; color:TColor);cdecl;external;
+procedure DrawTriangleLinesEx(v1:TVector2; v2:TVector2; v3:TVector2; thick:single; color:TColor);cdecl;external libraylib;
 { Draw triangle outline with line thickness, counter-clockwise vertex order }
-(* Const before type ignored *)
-procedure DrawTriangleFan(points:PVector2; pointCount:longint; color:TColor);cdecl;external;
+procedure DrawTriangleFan(points:PVector2; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw a triangle fan defined by points (first vertex is the center) }
-(* Const before type ignored *)
-procedure DrawTriangleStrip(points:PVector2; pointCount:longint; color:TColor);cdecl;external;
+procedure DrawTriangleStrip(points:PVector2; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw a triangle strip defined by points }
-procedure DrawRectangle(posX:longint; posY:longint; width:longint; height:longint; color:TColor);cdecl;external;
+procedure DrawRectangle(posX:longint; posY:longint; width:longint; height:longint; color:TColor);cdecl;external libraylib;
 { Draw a color-filled rectangle }
-procedure DrawRectangleV(position:TVector2; size:TVector2; color:TColor);cdecl;external;
+procedure DrawRectangleV(position:TVector2; size:TVector2; color:TColor);cdecl;external libraylib;
 { Draw a color-filled rectangle (Vector version) }
-procedure DrawRectangleRec(rec:TRectangle; color:TColor);cdecl;external;
+procedure DrawRectangleRec(rec:TRectangle; color:TColor);cdecl;external libraylib;
 { Draw a color-filled rectangle }
-procedure DrawRectanglePro(rec:TRectangle; origin:TVector2; rotation:single; color:TColor);cdecl;external;
+procedure DrawRectanglePro(rec:TRectangle; origin:TVector2; rotation:single; color:TColor);cdecl;external libraylib;
 { Draw a color-filled rectangle with pro parameters }
 procedure DrawRectangleGradientV(posX:longint; posY:longint; width:longint; height:longint; top:TColor; 
-            bottom:TColor);cdecl;external;
+            bottom:TColor);cdecl;external libraylib;
 { Draw a vertical-gradient-filled rectangle }
 procedure DrawRectangleGradientH(posX:longint; posY:longint; width:longint; height:longint; left:TColor; 
-            right:TColor);cdecl;external;
+            right:TColor);cdecl;external libraylib;
 { Draw a horizontal-gradient-filled rectangle }
-procedure DrawRectangleGradientEx(rec:TRectangle; col1:TColor; col2:TColor; col3:TColor; col4:TColor);cdecl;external;
+procedure DrawRectangleGradientEx(rec:TRectangle; col1:TColor; col2:TColor; col3:TColor; col4:TColor);cdecl;external libraylib;
 { Draw a gradient-filled rectangle with custom vertex colors, counter-clockwise color order }
-procedure DrawRectangleLines(posX:longint; posY:longint; width:longint; height:longint; color:TColor);cdecl;external;
+procedure DrawRectangleLines(posX:longint; posY:longint; width:longint; height:longint; color:TColor);cdecl;external libraylib;
 { Draw rectangle outline }
-procedure DrawRectangleLinesEx(rec:TRectangle; thick:single; color:TColor);cdecl;external;
+procedure DrawRectangleLinesEx(rec:TRectangle; thick:single; color:TColor);cdecl;external libraylib;
 { Draw rectangle outline with line thickness }
-procedure DrawRectangleRounded(rec:TRectangle; roundness:single; segments:longint; color:TColor);cdecl;external;
+procedure DrawRectangleRounded(rec:TRectangle; roundness:single; segments:longint; color:TColor);cdecl;external libraylib;
 { Draw rectangle with rounded edges }
-procedure DrawRectangleRoundedLines(rec:TRectangle; roundness:single; segments:longint; color:TColor);cdecl;external;
+procedure DrawRectangleRoundedLines(rec:TRectangle; roundness:single; segments:longint; color:TColor);cdecl;external libraylib;
 { Draw rectangle lines with rounded edges }
-procedure DrawRectangleRoundedLinesEx(rec:TRectangle; roundness:single; segments:longint; thick:single; color:TColor);cdecl;external;
+procedure DrawRectangleRoundedLinesEx(rec:TRectangle; roundness:single; segments:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw rectangle lines with rounded edges outline and line thickness }
-procedure DrawPoly(center:TVector2; sides:longint; radius:single; rotation:single; color:TColor);cdecl;external;
+procedure DrawPoly(center:TVector2; sides:longint; radius:single; rotation:single; color:TColor);cdecl;external libraylib;
 { Draw a polygon of n sides }
-procedure DrawPolyLines(center:TVector2; sides:longint; radius:single; rotation:single; color:TColor);cdecl;external;
+procedure DrawPolyLines(center:TVector2; sides:longint; radius:single; rotation:single; color:TColor);cdecl;external libraylib;
 { Draw a polygon outline of n sides }
 procedure DrawPolyLinesEx(center:TVector2; sides:longint; radius:single; rotation:single; thick:single; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a polygon outline of n sides with line thickness }
-procedure DrawCircle(centerX:longint; centerY:longint; radius:single; color:TColor);cdecl;external;
+procedure DrawCircle(centerX:longint; centerY:longint; radius:single; color:TColor);cdecl;external libraylib;
 { Draw a color-filled circle }
-procedure DrawCircleV(center:TVector2; radius:single; color:TColor);cdecl;external;
+procedure DrawCircleV(center:TVector2; radius:single; color:TColor);cdecl;external libraylib;
 { Draw a color-filled circle (Vector version) }
-procedure DrawCircleGradient(center:TVector2; radius:single; inner:TColor; outer:TColor);cdecl;external;
+procedure DrawCircleGradient(center:TVector2; radius:single; inner:TColor; outer:TColor);cdecl;external libraylib;
 { Draw a gradient-filled circle }
 procedure DrawCircleSector(center:TVector2; radius:single; startAngle:single; endAngle:single; segments:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a piece of a circle }
 procedure DrawCircleSectorLines(center:TVector2; radius:single; startAngle:single; endAngle:single; segments:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw circle sector outline }
 procedure DrawCircleSectorLinesEx(center:TVector2; radius:single; startAngle:single; endAngle:single; segments:longint; 
-            thick:single; color:TColor);cdecl;external;
+            thick:single; color:TColor);cdecl;external libraylib;
 { Draw circle sector outline with thickness }
-procedure DrawCircleLines(centerX:longint; centerY:longint; radius:single; color:TColor);cdecl;external;
+procedure DrawCircleLines(centerX:longint; centerY:longint; radius:single; color:TColor);cdecl;external libraylib;
 { Draw circle outline }
-procedure DrawCircleLinesV(center:TVector2; radius:single; color:TColor);cdecl;external;
+procedure DrawCircleLinesV(center:TVector2; radius:single; color:TColor);cdecl;external libraylib;
 { Draw circle outline (Vector version) }
-procedure DrawCircleLinesEx(center:TVector2; radius:single; thick:single; color:TColor);cdecl;external;
+procedure DrawCircleLinesEx(center:TVector2; radius:single; thick:single; color:TColor);cdecl;external libraylib;
 { Draw circle outline with line thickness }
-procedure DrawEllipse(centerX:longint; centerY:longint; radiusH:single; radiusV:single; color:TColor);cdecl;external;
+procedure DrawEllipse(centerX:longint; centerY:longint; radiusH:single; radiusV:single; color:TColor);cdecl;external libraylib;
 { Draw ellipse }
-procedure DrawEllipseV(center:TVector2; radiusH:single; radiusV:single; color:TColor);cdecl;external;
+procedure DrawEllipseV(center:TVector2; radiusH:single; radiusV:single; color:TColor);cdecl;external libraylib;
 { Draw ellipse (Vector version) }
-procedure DrawEllipseLines(centerX:longint; centerY:longint; radiusH:single; radiusV:single; color:TColor);cdecl;external;
+procedure DrawEllipseLines(centerX:longint; centerY:longint; radiusH:single; radiusV:single; color:TColor);cdecl;external libraylib;
 { Draw ellipse outline }
-procedure DrawEllipseLinesV(center:TVector2; radiusH:single; radiusV:single; color:TColor);cdecl;external;
+procedure DrawEllipseLinesV(center:TVector2; radiusH:single; radiusV:single; color:TColor);cdecl;external libraylib;
 { Draw ellipse outline (Vector version) }
-procedure DrawEllipseLinesEx(center:TVector2; radiusH:single; radiusV:single; thick:single; color:TColor);cdecl;external;
+procedure DrawEllipseLinesEx(center:TVector2; radiusH:single; radiusV:single; thick:single; color:TColor);cdecl;external libraylib;
 { Draw ellipse outline with line thickness }
 procedure DrawRing(center:TVector2; innerRadius:single; outerRadius:single; startAngle:single; endAngle:single; 
-            segments:longint; color:TColor);cdecl;external;
+            segments:longint; color:TColor);cdecl;external libraylib;
 { Draw ring }
 procedure DrawRingLines(center:TVector2; innerRadius:single; outerRadius:single; startAngle:single; endAngle:single; 
-            segments:longint; color:TColor);cdecl;external;
+            segments:longint; color:TColor);cdecl;external libraylib;
 { Draw ring outline }
 procedure DrawRingLinesEx(center:TVector2; innerRadius:single; outerRadius:single; startAngle:single; endAngle:single; 
-            segments:longint; thick:single; color:TColor);cdecl;external;
+            segments:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw ring outline with line thickness }
 { Splines drawing functions }
-(* Const before type ignored *)
-procedure DrawSplineLinear(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineLinear(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline: Linear, minimum 2 points }
-(* Const before type ignored *)
-procedure DrawSplineBasis(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineBasis(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline: B-Spline, minimum 4 points }
-(* Const before type ignored *)
-procedure DrawSplineCatmullRom(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineCatmullRom(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline: Catmull-Rom, minimum 4 points }
-(* Const before type ignored *)
-procedure DrawSplineBezierQuadratic(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineBezierQuadratic(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...] }
-(* Const before type ignored *)
-procedure DrawSplineBezierCubic(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineBezierCubic(points:PVector2; pointCount:longint; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...] }
-procedure DrawSplineSegmentLinear(p1:TVector2; p2:TVector2; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineSegmentLinear(p1:TVector2; p2:TVector2; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline segment: Linear, 2 points }
 procedure DrawSplineSegmentBasis(p1:TVector2; p2:TVector2; p3:TVector2; p4:TVector2; thick:single; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw spline segment: B-Spline, 4 points }
 procedure DrawSplineSegmentCatmullRom(p1:TVector2; p2:TVector2; p3:TVector2; p4:TVector2; thick:single; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw spline segment: Catmull-Rom, 4 points }
-procedure DrawSplineSegmentBezierQuadratic(p1:TVector2; c2:TVector2; p3:TVector2; thick:single; color:TColor);cdecl;external;
+procedure DrawSplineSegmentBezierQuadratic(p1:TVector2; c2:TVector2; p3:TVector2; thick:single; color:TColor);cdecl;external libraylib;
 { Draw spline segment: Quadratic Bezier, 2 points, 1 control point }
 procedure DrawSplineSegmentBezierCubic(p1:TVector2; c2:TVector2; c3:TVector2; p4:TVector2; thick:single; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw spline segment: Cubic Bezier, 2 points, 2 control points }
 { Spline segment point evaluation functions, for a provided t [0.0f .. 1.0f] }
-function GetSplinePointLinear(startPos:TVector2; endPos:TVector2; t:single):TVector2;cdecl;external;
+function GetSplinePointLinear(startPos:TVector2; endPos:TVector2; t:single):TVector2;cdecl;external libraylib;
 { Get (evaluate) spline point: Linear }
-function GetSplinePointBasis(p1:TVector2; p2:TVector2; p3:TVector2; p4:TVector2; t:single):TVector2;cdecl;external;
+function GetSplinePointBasis(p1:TVector2; p2:TVector2; p3:TVector2; p4:TVector2; t:single):TVector2;cdecl;external libraylib;
 { Get (evaluate) spline point: B-Spline }
-function GetSplinePointCatmullRom(p1:TVector2; p2:TVector2; p3:TVector2; p4:TVector2; t:single):TVector2;cdecl;external;
+function GetSplinePointCatmullRom(p1:TVector2; p2:TVector2; p3:TVector2; p4:TVector2; t:single):TVector2;cdecl;external libraylib;
 { Get (evaluate) spline point: Catmull-Rom }
-function GetSplinePointBezierQuadratic(p1:TVector2; c2:TVector2; p3:TVector2; t:single):TVector2;cdecl;external;
+function GetSplinePointBezierQuadratic(p1:TVector2; c2:TVector2; p3:TVector2; t:single):TVector2;cdecl;external libraylib;
 { Get (evaluate) spline point: Quadratic Bezier }
-function GetSplinePointBezierCubic(p1:TVector2; c2:TVector2; c3:TVector2; p4:TVector2; t:single):TVector2;cdecl;external;
+function GetSplinePointBezierCubic(p1:TVector2; c2:TVector2; c3:TVector2; p4:TVector2; t:single):TVector2;cdecl;external libraylib;
 { Get (evaluate) spline point: Cubic Bezier }
 { Basic shapes collision detection functions }
-function CheckCollisionRecs(rec1:TRectangle; rec2:TRectangle):Tbool;cdecl;external;
+function CheckCollisionRecs(rec1:TRectangle; rec2:TRectangle):Tbool;cdecl;external libraylib;
 { Check collision between two rectangles }
-function CheckCollisionCircles(center1:TVector2; radius1:single; center2:TVector2; radius2:single):Tbool;cdecl;external;
+function CheckCollisionCircles(center1:TVector2; radius1:single; center2:TVector2; radius2:single):Tbool;cdecl;external libraylib;
 { Check collision between two circles }
-function CheckCollisionCircleRec(center:TVector2; radius:single; rec:TRectangle):Tbool;cdecl;external;
+function CheckCollisionCircleRec(center:TVector2; radius:single; rec:TRectangle):Tbool;cdecl;external libraylib;
 { Check collision between circle and rectangle }
-function CheckCollisionCircleLine(center:TVector2; radius:single; p1:TVector2; p2:TVector2):Tbool;cdecl;external;
+function CheckCollisionCircleLine(center:TVector2; radius:single; p1:TVector2; p2:TVector2):Tbool;cdecl;external libraylib;
 { Check if circle collides with a line created between two points [p1] and [p2] }
-function CheckCollisionPointRec(point:TVector2; rec:TRectangle):Tbool;cdecl;external;
+function CheckCollisionPointRec(point:TVector2; rec:TRectangle):Tbool;cdecl;external libraylib;
 { Check if point is inside rectangle }
-function CheckCollisionPointCircle(point:TVector2; center:TVector2; radius:single):Tbool;cdecl;external;
+function CheckCollisionPointCircle(point:TVector2; center:TVector2; radius:single):Tbool;cdecl;external libraylib;
 { Check if point is inside circle }
-function CheckCollisionPointTriangle(point:TVector2; p1:TVector2; p2:TVector2; p3:TVector2):Tbool;cdecl;external;
+function CheckCollisionPointTriangle(point:TVector2; p1:TVector2; p2:TVector2; p3:TVector2):Tbool;cdecl;external libraylib;
 { Check if point is inside a triangle }
-function CheckCollisionPointLine(point:TVector2; p1:TVector2; p2:TVector2; threshold:longint):Tbool;cdecl;external;
+function CheckCollisionPointLine(point:TVector2; p1:TVector2; p2:TVector2; threshold:longint):Tbool;cdecl;external libraylib;
 { Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold] }
-(* Const before type ignored *)
-function CheckCollisionPointPoly(point:TVector2; points:PVector2; pointCount:longint):Tbool;cdecl;external;
+function CheckCollisionPointPoly(point:TVector2; points:PVector2; pointCount:longint):Tbool;cdecl;external libraylib;
 { Check if point is within a polygon described by array of vertices }
-function CheckCollisionLines(startPos1:TVector2; endPos1:TVector2; startPos2:TVector2; endPos2:TVector2; collisionPoint:PVector2):Tbool;cdecl;external;
+function CheckCollisionLines(startPos1:TVector2; endPos1:TVector2; startPos2:TVector2; endPos2:TVector2; collisionPoint:PVector2):Tbool;cdecl;external libraylib;
 { Check the collision between two lines defined by two points each, returns collision point by reference }
-function GetCollisionRec(rec1:TRectangle; rec2:TRectangle):TRectangle;cdecl;external;
+function GetCollisionRec(rec1:TRectangle; rec2:TRectangle):TRectangle;cdecl;external libraylib;
 { Get collision rectangle for two rectangles collision }
 {------------------------------------------------------------------------------------ }
 { Texture Loading and Drawing Functions (Module: textures) }
 {------------------------------------------------------------------------------------ }
 { Image loading functions }
 { NOTE: These functions do not require GPU access }
-(* Const before type ignored *)
-function LoadImage(fileName:Pchar):TImage;cdecl;external;
+function LoadImage(fileName:Pchar):TImage;cdecl;external libraylib;
 { Load image from file into CPU memory (RAM) }
-(* Const before type ignored *)
-function LoadImageRaw(fileName:Pchar; width:longint; height:longint; format:longint; headerSize:longint):TImage;cdecl;external;
+function LoadImageRaw(fileName:Pchar; width:longint; height:longint; format:longint; headerSize:longint):TImage;cdecl;external libraylib;
 { Load image from RAW file data }
-(* Const before type ignored *)
-function LoadImageAnim(fileName:Pchar; frames:Plongint):TImage;cdecl;external;
+function LoadImageAnim(fileName:Pchar; frames:Plongint):TImage;cdecl;external libraylib;
 { Load image sequence from file (frames appended to image.data) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadImageAnimFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint; frames:Plongint):TImage;cdecl;external;
+function LoadImageAnimFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint; frames:Plongint):TImage;cdecl;external libraylib;
 { Load image sequence from memory buffer }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadImageFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint):TImage;cdecl;external;
+function LoadImageFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint):TImage;cdecl;external libraylib;
 { Load image from memory buffer, fileType refers to extension: i.e. '.png' }
-function LoadImageFromTexture(texture:TTexture2D):TImage;cdecl;external;
+function LoadImageFromTexture(texture:TTexture2D):TImage;cdecl;external libraylib;
 { Load image from GPU texture data }
-function LoadImageFromScreen:TImage;cdecl;external;
+function LoadImageFromScreen:TImage;cdecl;external libraylib;
 { Load image from screen buffer (screenshot) }
-function IsImageValid(image:TImage):Tbool;cdecl;external;
+function IsImageValid(image:TImage):Tbool;cdecl;external libraylib;
 { Check if an image is valid (data and parameters) }
-procedure UnloadImage(image:TImage);cdecl;external;
+procedure UnloadImage(image:TImage);cdecl;external libraylib;
 { Unload image from CPU memory (RAM) }
-(* Const before type ignored *)
-function ExportImage(image:TImage; fileName:Pchar):Tbool;cdecl;external;
+function ExportImage(image:TImage; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export image data to file, returns true on success }
-(* Const before type ignored *)
-function ExportImageToMemory(image:TImage; fileType:Pchar; fileSize:Plongint):Pbyte;cdecl;external;
+function ExportImageToMemory(image:TImage; fileType:Pchar; fileSize:Plongint):Pbyte;cdecl;external libraylib;
 { Export image to memory buffer, memory must be MemFree() }
-(* Const before type ignored *)
-function ExportImageAsCode(image:TImage; fileName:Pchar):Tbool;cdecl;external;
+function ExportImageAsCode(image:TImage; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export image as code file defining an array of bytes, returns true on success }
 { Image generation functions }
-function GenImageColor(width:longint; height:longint; color:TColor):TImage;cdecl;external;
+function GenImageColor(width:longint; height:longint; color:TColor):TImage;cdecl;external libraylib;
 { Generate image: plain color }
-function GenImageGradientLinear(width:longint; height:longint; direction:longint; start:TColor; end:TColor):TImage;cdecl;external;
+function GenImageGradientLinear(width:longint; height:longint; direction:longint; start:TColor; end:TColor):TImage;cdecl;external libraylib;
 { Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient }
-function GenImageGradientRadial(width:longint; height:longint; density:single; inner:TColor; outer:TColor):TImage;cdecl;external;
+function GenImageGradientRadial(width:longint; height:longint; density:single; inner:TColor; outer:TColor):TImage;cdecl;external libraylib;
 { Generate image: radial gradient }
-function GenImageGradientSquare(width:longint; height:longint; density:single; inner:TColor; outer:TColor):TImage;cdecl;external;
+function GenImageGradientSquare(width:longint; height:longint; density:single; inner:TColor; outer:TColor):TImage;cdecl;external libraylib;
 { Generate image: square gradient }
 function GenImageChecked(width:longint; height:longint; checksX:longint; checksY:longint; col1:TColor; 
-           col2:TColor):TImage;cdecl;external;
+           col2:TColor):TImage;cdecl;external libraylib;
 { Generate image: checked }
-function GenImageWhiteNoise(width:longint; height:longint; factor:single):TImage;cdecl;external;
+function GenImageWhiteNoise(width:longint; height:longint; factor:single):TImage;cdecl;external libraylib;
 { Generate image: white noise }
-function GenImagePerlinNoise(width:longint; height:longint; offsetX:longint; offsetY:longint; scale:single):TImage;cdecl;external;
+function GenImagePerlinNoise(width:longint; height:longint; offsetX:longint; offsetY:longint; scale:single):TImage;cdecl;external libraylib;
 { Generate image: perlin noise }
-function GenImageCellular(width:longint; height:longint; tileSize:longint):TImage;cdecl;external;
+function GenImageCellular(width:longint; height:longint; tileSize:longint):TImage;cdecl;external libraylib;
 { Generate image: cellular algorithm, bigger tileSize means bigger cells }
-(* Const before type ignored *)
-function GenImageText(width:longint; height:longint; text:Pchar):TImage;cdecl;external;
+function GenImageText(width:longint; height:longint; text:Pchar):TImage;cdecl;external libraylib;
 { Generate image: grayscale image from text data }
 { Image manipulation functions }
-function ImageCopy(image:TImage):TImage;cdecl;external;
+function ImageCopy(image:TImage):TImage;cdecl;external libraylib;
 { Create an image duplicate (useful for transformations) }
-function ImageFromImage(image:TImage; rec:TRectangle):TImage;cdecl;external;
+function ImageFromImage(image:TImage; rec:TRectangle):TImage;cdecl;external libraylib;
 { Create an image from another image piece }
-function ImageFromChannel(image:TImage; selectedChannel:longint):TImage;cdecl;external;
+function ImageFromChannel(image:TImage; selectedChannel:longint):TImage;cdecl;external libraylib;
 { Create an image from a selected channel of another image (GRAYSCALE) }
-(* Const before type ignored *)
-function ImageText(text:Pchar; fontSize:longint; color:TColor):TImage;cdecl;external;
+function ImageText(text:Pchar; fontSize:longint; color:TColor):TImage;cdecl;external libraylib;
 { Create an image from text (default font) }
-(* Const before type ignored *)
-function ImageTextEx(font:TFont; text:Pchar; fontSize:single; spacing:single; tint:TColor):TImage;cdecl;external;
+function ImageTextEx(font:TFont; text:Pchar; fontSize:single; spacing:single; tint:TColor):TImage;cdecl;external libraylib;
 { Create an image from text (custom sprite font) }
-procedure ImageFormat(image:PImage; newFormat:longint);cdecl;external;
+procedure ImageFormat(image:PImage; newFormat:longint);cdecl;external libraylib;
 { Convert image data to desired format }
-procedure ImageToPOT(image:PImage; fill:TColor);cdecl;external;
+procedure ImageToPOT(image:PImage; fill:TColor);cdecl;external libraylib;
 { Convert image to POT (power-of-two) }
-procedure ImageCrop(image:PImage; crop:TRectangle);cdecl;external;
+procedure ImageCrop(image:PImage; crop:TRectangle);cdecl;external libraylib;
 { Crop an image to a defined rectangle }
-procedure ImageAlphaCrop(image:PImage; threshold:single);cdecl;external;
+procedure ImageAlphaCrop(image:PImage; threshold:single);cdecl;external libraylib;
 { Crop image depending on alpha value }
-procedure ImageAlphaClear(image:PImage; color:TColor; threshold:single);cdecl;external;
+procedure ImageAlphaClear(image:PImage; color:TColor; threshold:single);cdecl;external libraylib;
 { Clear alpha channel to desired color }
-procedure ImageAlphaMask(image:PImage; alphaMask:TImage);cdecl;external;
+procedure ImageAlphaMask(image:PImage; alphaMask:TImage);cdecl;external libraylib;
 { Apply alpha mask to image }
-procedure ImageAlphaPremultiply(image:PImage);cdecl;external;
+procedure ImageAlphaPremultiply(image:PImage);cdecl;external libraylib;
 { Premultiply alpha channel }
-procedure ImageBlurGaussian(image:PImage; blurSize:longint);cdecl;external;
+procedure ImageBlurGaussian(image:PImage; blurSize:longint);cdecl;external libraylib;
 { Apply Gaussian blur using a box blur approximation }
-(* Const before type ignored *)
-procedure ImageKernelConvolution(image:PImage; kernel:Psingle; kernelSize:longint);cdecl;external;
+procedure ImageKernelConvolution(image:PImage; kernel:Psingle; kernelSize:longint);cdecl;external libraylib;
 { Apply custom square convolution kernel to image }
-procedure ImageResize(image:PImage; newWidth:longint; newHeight:longint);cdecl;external;
+procedure ImageResize(image:PImage; newWidth:longint; newHeight:longint);cdecl;external libraylib;
 { Resize image (Bicubic scaling algorithm) }
-procedure ImageResizeNN(image:PImage; newWidth:longint; newHeight:longint);cdecl;external;
+procedure ImageResizeNN(image:PImage; newWidth:longint; newHeight:longint);cdecl;external libraylib;
 { Resize image (Nearest-Neighbor scaling algorithm) }
 procedure ImageResizeCanvas(image:PImage; newWidth:longint; newHeight:longint; offsetX:longint; offsetY:longint; 
-            fill:TColor);cdecl;external;
+            fill:TColor);cdecl;external libraylib;
 { Resize canvas and fill with color }
-procedure ImageMipmaps(image:PImage);cdecl;external;
+procedure ImageMipmaps(image:PImage);cdecl;external libraylib;
 { Compute all mipmap levels for a provided image }
-procedure ImageDither(image:PImage; rBpp:longint; gBpp:longint; bBpp:longint; aBpp:longint);cdecl;external;
+procedure ImageDither(image:PImage; rBpp:longint; gBpp:longint; bBpp:longint; aBpp:longint);cdecl;external libraylib;
 { Dither image data to 16bpp or lower (Floyd-Steinberg dithering) }
-procedure ImageFlipVertical(image:PImage);cdecl;external;
+procedure ImageFlipVertical(image:PImage);cdecl;external libraylib;
 { Flip image vertically }
-procedure ImageFlipHorizontal(image:PImage);cdecl;external;
+procedure ImageFlipHorizontal(image:PImage);cdecl;external libraylib;
 { Flip image horizontally }
-procedure ImageRotate(image:PImage; degrees:longint);cdecl;external;
+procedure ImageRotate(image:PImage; degrees:longint);cdecl;external libraylib;
 { Rotate image by input angle in degrees (-359 to 359) }
-procedure ImageRotateCW(image:PImage);cdecl;external;
+procedure ImageRotateCW(image:PImage);cdecl;external libraylib;
 { Rotate image clockwise 90deg }
-procedure ImageRotateCCW(image:PImage);cdecl;external;
+procedure ImageRotateCCW(image:PImage);cdecl;external libraylib;
 { Rotate image counter-clockwise 90deg }
-procedure ImageColorTint(image:PImage; color:TColor);cdecl;external;
+procedure ImageColorTint(image:PImage; color:TColor);cdecl;external libraylib;
 { Modify image color: tint }
-procedure ImageColorInvert(image:PImage);cdecl;external;
+procedure ImageColorInvert(image:PImage);cdecl;external libraylib;
 { Modify image color: invert }
-procedure ImageColorGrayscale(image:PImage);cdecl;external;
+procedure ImageColorGrayscale(image:PImage);cdecl;external libraylib;
 { Modify image color: grayscale }
-procedure ImageColorContrast(image:PImage; contrast:longint);cdecl;external;
+procedure ImageColorContrast(image:PImage; contrast:longint);cdecl;external libraylib;
 { Modify image color: contrast (-100 to 100) }
-procedure ImageColorBrightness(image:PImage; brightness:longint);cdecl;external;
+procedure ImageColorBrightness(image:PImage; brightness:longint);cdecl;external libraylib;
 { Modify image color: brightness (-255 to 255) }
-procedure ImageColorReplace(image:PImage; color:TColor; replace:TColor);cdecl;external;
+procedure ImageColorReplace(image:PImage; color:TColor; replace:TColor);cdecl;external libraylib;
 { Modify image color: replace color }
-function LoadImageColors(image:TImage):PColor;cdecl;external;
+function LoadImageColors(image:TImage):PColor;cdecl;external libraylib;
 { Load color data from image as a Color array (RGBA - 32bit) }
-function LoadImagePalette(image:TImage; maxPaletteSize:longint; colorCount:Plongint):PColor;cdecl;external;
+function LoadImagePalette(image:TImage; maxPaletteSize:longint; colorCount:Plongint):PColor;cdecl;external libraylib;
 { Load colors palette from image as a Color array (RGBA - 32bit) }
-procedure UnloadImageColors(colors:PColor);cdecl;external;
+procedure UnloadImageColors(colors:PColor);cdecl;external libraylib;
 { Unload color data loaded with LoadImageColors() }
-procedure UnloadImagePalette(colors:PColor);cdecl;external;
+procedure UnloadImagePalette(colors:PColor);cdecl;external libraylib;
 { Unload colors palette loaded with LoadImagePalette() }
-function GetImageAlphaBorder(image:TImage; threshold:single):TRectangle;cdecl;external;
+function GetImageAlphaBorder(image:TImage; threshold:single):TRectangle;cdecl;external libraylib;
 { Get image alpha border rectangle }
-function GetImageColor(image:TImage; x:longint; y:longint):TColor;cdecl;external;
+function GetImageColor(image:TImage; x:longint; y:longint):TColor;cdecl;external libraylib;
 { Get image pixel color at (x, y) position }
 { Image drawing functions }
 { NOTE: Image software-rendering functions (CPU) }
-procedure ImageClearBackground(dst:PImage; color:TColor);cdecl;external;
+procedure ImageClearBackground(dst:PImage; color:TColor);cdecl;external libraylib;
 { Clear image background with provided color }
-procedure ImageDrawPixel(dst:PImage; posX:longint; posY:longint; color:TColor);cdecl;external;
+procedure ImageDrawPixel(dst:PImage; posX:longint; posY:longint; color:TColor);cdecl;external libraylib;
 { Draw pixel within an image }
-procedure ImageDrawPixelV(dst:PImage; position:TVector2; color:TColor);cdecl;external;
+procedure ImageDrawPixelV(dst:PImage; position:TVector2; color:TColor);cdecl;external libraylib;
 { Draw pixel within an image (Vector version) }
 procedure ImageDrawLine(dst:PImage; startPosX:longint; startPosY:longint; endPosX:longint; endPosY:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw line within an image }
-procedure ImageDrawLineV(dst:PImage; start:TVector2; end:TVector2; color:TColor);cdecl;external;
+procedure ImageDrawLineV(dst:PImage; start:TVector2; end:TVector2; color:TColor);cdecl;external libraylib;
 { Draw line within an image (Vector version) }
-procedure ImageDrawLineEx(dst:PImage; start:TVector2; end:TVector2; thick:longint; color:TColor);cdecl;external;
+procedure ImageDrawLineEx(dst:PImage; start:TVector2; end:TVector2; thick:longint; color:TColor);cdecl;external libraylib;
 { Draw a line defining thickness within an image }
-(* Const before type ignored *)
-procedure ImageDrawLineStrip(dst:PImage; points:PVector2; pointCount:longint; color:TColor);cdecl;external;
+procedure ImageDrawLineStrip(dst:PImage; points:PVector2; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw a lines sequence within an image }
-procedure ImageDrawTriangle(dst:PImage; v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external;
+procedure ImageDrawTriangle(dst:PImage; v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external libraylib;
 { Draw triangle within an image }
 procedure ImageDrawTriangleGradient(dst:PImage; v1:TVector2; v2:TVector2; v3:TVector2; c1:TColor; 
-            c2:TColor; c3:TColor);cdecl;external;
+            c2:TColor; c3:TColor);cdecl;external libraylib;
 { Draw triangle with interpolated colors within an image }
-procedure ImageDrawTriangleLines(dst:PImage; v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external;
+procedure ImageDrawTriangleLines(dst:PImage; v1:TVector2; v2:TVector2; v3:TVector2; color:TColor);cdecl;external libraylib;
 { Draw triangle outline within an image }
-(* Const before type ignored *)
-procedure ImageDrawTriangleFan(dst:PImage; points:PVector2; pointCount:longint; color:TColor);cdecl;external;
+procedure ImageDrawTriangleFan(dst:PImage; points:PVector2; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw a triangle fan defined by points within an image (first vertex is the center) }
-(* Const before type ignored *)
-procedure ImageDrawTriangleStrip(dst:PImage; points:PVector2; pointCount:longint; color:TColor);cdecl;external;
+procedure ImageDrawTriangleStrip(dst:PImage; points:PVector2; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw a triangle strip defined by points within an image }
 procedure ImageDrawRectangle(dst:PImage; posX:longint; posY:longint; width:longint; height:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw rectangle within an image }
-procedure ImageDrawRectangleV(dst:PImage; position:TVector2; size:TVector2; color:TColor);cdecl;external;
+procedure ImageDrawRectangleV(dst:PImage; position:TVector2; size:TVector2; color:TColor);cdecl;external libraylib;
 { Draw rectangle within an image (Vector version) }
-procedure ImageDrawRectangleRec(dst:PImage; rec:TRectangle; color:TColor);cdecl;external;
+procedure ImageDrawRectangleRec(dst:PImage; rec:TRectangle; color:TColor);cdecl;external libraylib;
 { Draw rectangle within an image }
-procedure ImageDrawRectanglePro(dst:PImage; rec:TRectangle; origin:TVector2; rotation:single; color:TColor);cdecl;external;
+procedure ImageDrawRectanglePro(dst:PImage; rec:TRectangle; origin:TVector2; rotation:single; color:TColor);cdecl;external libraylib;
 { Draw a color-filled rectangle with pro parameters within and image }
 procedure ImageDrawRectangleLines(dst:PImage; posX:longint; posY:longint; width:longint; height:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw rectangle lines within an image }
-procedure ImageDrawRectangleLinesEx(dst:PImage; rec:TRectangle; thick:longint; color:TColor);cdecl;external;
+procedure ImageDrawRectangleLinesEx(dst:PImage; rec:TRectangle; thick:longint; color:TColor);cdecl;external libraylib;
 { Draw rectangle lines within an image with line thickness }
 procedure ImageDrawRectangleGradientEx(dst:PImage; rec:TRectangle; col1:TColor; col2:TColor; col3:TColor; 
-            col4:TColor);cdecl;external;
+            col4:TColor);cdecl;external libraylib;
 { Draw rectangle with gradient colors within an image, counter-clockwise color order }
-procedure ImageDrawCircle(dst:PImage; centerX:longint; centerY:longint; radius:longint; color:TColor);cdecl;external;
+procedure ImageDrawCircle(dst:PImage; centerX:longint; centerY:longint; radius:longint; color:TColor);cdecl;external libraylib;
 { Draw a filled circle within an image }
-procedure ImageDrawCircleV(dst:PImage; center:TVector2; radius:longint; color:TColor);cdecl;external;
+procedure ImageDrawCircleV(dst:PImage; center:TVector2; radius:longint; color:TColor);cdecl;external libraylib;
 { Draw a filled circle within an image (Vector version) }
-procedure ImageDrawCircleLines(dst:PImage; centerX:longint; centerY:longint; radius:longint; color:TColor);cdecl;external;
+procedure ImageDrawCircleLines(dst:PImage; centerX:longint; centerY:longint; radius:longint; color:TColor);cdecl;external libraylib;
 { Draw circle outline within an image }
-procedure ImageDrawCircleLinesV(dst:PImage; center:TVector2; radius:longint; color:TColor);cdecl;external;
+procedure ImageDrawCircleLinesV(dst:PImage; center:TVector2; radius:longint; color:TColor);cdecl;external libraylib;
 { Draw circle outline within an image (Vector version) }
-procedure ImageDrawCircleGradient(dst:PImage; center:TVector2; radius:single; inner:TColor; outer:TColor);cdecl;external;
+procedure ImageDrawCircleGradient(dst:PImage; center:TVector2; radius:single; inner:TColor; outer:TColor);cdecl;external libraylib;
 { Draw a gradient-filled circle within an image }
-procedure ImageDrawImage(dst:PImage; src:TImage; posX:longint; posY:longint; tint:TColor);cdecl;external;
+procedure ImageDrawImage(dst:PImage; src:TImage; posX:longint; posY:longint; tint:TColor);cdecl;external libraylib;
 { Draw an image within an image }
 procedure ImageDrawImageEx(dst:PImage; src:TImage; position:TVector2; rotation:single; scale:single; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw an image with scaling and rotation within an image }
-procedure ImageDrawImageRec(dst:PImage; src:TImage; srcRec:TRectangle; position:TVector2; tint:TColor);cdecl;external;
+procedure ImageDrawImageRec(dst:PImage; src:TImage; srcRec:TRectangle; position:TVector2; tint:TColor);cdecl;external libraylib;
 { Draw a part of an image defined by a rectangle within an image }
 procedure ImageDrawImagePro(dst:PImage; src:TImage; srcRec:TRectangle; dstRec:TRectangle; origin:TVector2; 
-            rotation:single; tint:TColor);cdecl;external;
+            rotation:single; tint:TColor);cdecl;external libraylib;
 { Draw a part of an image defined by a rectangle into destination rectangle, with scaling and rotation, within an image }
-(* Const before type ignored *)
 procedure ImageDrawText(dst:PImage; text:Pchar; posX:longint; posY:longint; fontSize:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw text (using default font) within an image (destination) }
-(* Const before type ignored *)
 procedure ImageDrawTextEx(dst:PImage; font:TFont; text:Pchar; position:TVector2; fontSize:single; 
-            spacing:single; tint:TColor);cdecl;external;
+            spacing:single; tint:TColor);cdecl;external libraylib;
 { Draw text (custom sprite font) within an image (destination) }
-(* Const before type ignored *)
 procedure ImageDrawTextPro(dst:PImage; font:TFont; text:Pchar; position:TVector2; origin:TVector2; 
-            rotation:single; fontSize:single; spacing:single; tint:TColor);cdecl;external;
+            rotation:single; fontSize:single; spacing:single; tint:TColor);cdecl;external libraylib;
 { Draw text using Font and pro parameters (rotation) }
 { Texture loading functions }
 { NOTE: These functions require GPU access }
-(* Const before type ignored *)
-function LoadTexture(fileName:Pchar):TTexture2D;cdecl;external;
+function LoadTexture(fileName:Pchar):TTexture2D;cdecl;external libraylib;
 { Load texture from file into GPU memory (VRAM) }
-function LoadTextureFromImage(image:TImage):TTexture2D;cdecl;external;
+function LoadTextureFromImage(image:TImage):TTexture2D;cdecl;external libraylib;
 { Load texture from image data }
-function LoadTextureCubemap(image:TImage; layout:longint):TTextureCubemap;cdecl;external;
+function LoadTextureCubemap(image:TImage; layout:longint):TTextureCubemap;cdecl;external libraylib;
 { Load cubemap from image, multiple image cubemap layouts supported }
-function LoadRenderTexture(width:longint; height:longint):TRenderTexture2D;cdecl;external;
+function LoadRenderTexture(width:longint; height:longint):TRenderTexture2D;cdecl;external libraylib;
 { Load texture for rendering (framebuffer) }
-function LoadRenderTextureEx(width:longint; height:longint; format:longint):TRenderTexture2D;cdecl;external;
+function LoadRenderTextureEx(width:longint; height:longint; format:longint):TRenderTexture2D;cdecl;external libraylib;
 { Load texture for rendering (framebuffer), with specific format }
-function IsTextureValid(texture:TTexture2D):Tbool;cdecl;external;
+function IsTextureValid(texture:TTexture2D):Tbool;cdecl;external libraylib;
 { Check if texture is valid (loaded in GPU) }
-procedure UnloadTexture(texture:TTexture2D);cdecl;external;
+procedure UnloadTexture(texture:TTexture2D);cdecl;external libraylib;
 { Unload texture from GPU memory (VRAM) }
-function IsRenderTextureValid(target:TRenderTexture2D):Tbool;cdecl;external;
+function IsRenderTextureValid(target:TRenderTexture2D):Tbool;cdecl;external libraylib;
 { Check if render texture is valid (loaded in GPU) }
-procedure UnloadRenderTexture(target:TRenderTexture2D);cdecl;external;
+procedure UnloadRenderTexture(target:TRenderTexture2D);cdecl;external libraylib;
 { Unload render texture from GPU memory (VRAM) }
-(* Const before type ignored *)
-procedure UpdateTexture(texture:TTexture2D; pixels:pointer);cdecl;external;
+procedure UpdateTexture(texture:TTexture2D; pixels:pointer);cdecl;external libraylib;
 { Update GPU texture with new data (pixels should be able to fill texture) }
-(* Const before type ignored *)
-procedure UpdateTextureRec(texture:TTexture2D; rec:TRectangle; pixels:pointer);cdecl;external;
+procedure UpdateTextureRec(texture:TTexture2D; rec:TRectangle; pixels:pointer);cdecl;external libraylib;
 { Update GPU texture rectangle with new data (pixels and rec should fit in texture) }
 { Texture configuration functions }
-procedure GenTextureMipmaps(texture:PTexture2D);cdecl;external;
+procedure GenTextureMipmaps(texture:PTexture2D);cdecl;external libraylib;
 { Generate GPU mipmaps for a texture }
-procedure SetTextureFilter(texture:TTexture2D; filter:longint);cdecl;external;
+procedure SetTextureFilter(texture:TTexture2D; filter:longint);cdecl;external libraylib;
 { Set texture scaling filter mode }
-procedure SetTextureWrap(texture:TTexture2D; wrap:longint);cdecl;external;
+procedure SetTextureWrap(texture:TTexture2D; wrap:longint);cdecl;external libraylib;
 { Set texture wrapping mode }
 { Texture drawing functions }
-procedure DrawTexture(texture:TTexture2D; posX:longint; posY:longint; tint:TColor);cdecl;external;
+procedure DrawTexture(texture:TTexture2D; posX:longint; posY:longint; tint:TColor);cdecl;external libraylib;
 { Draw a Texture2D }
-procedure DrawTextureV(texture:TTexture2D; position:TVector2; tint:TColor);cdecl;external;
+procedure DrawTextureV(texture:TTexture2D; position:TVector2; tint:TColor);cdecl;external libraylib;
 { Draw a Texture2D with position defined as Vector2 }
-procedure DrawTextureEx(texture:TTexture2D; position:TVector2; rotation:single; scale:single; tint:TColor);cdecl;external;
+procedure DrawTextureEx(texture:TTexture2D; position:TVector2; rotation:single; scale:single; tint:TColor);cdecl;external libraylib;
 { Draw a Texture2D with rotation and scale }
-procedure DrawTextureRec(texture:TTexture2D; rec:TRectangle; position:TVector2; tint:TColor);cdecl;external;
+procedure DrawTextureRec(texture:TTexture2D; rec:TRectangle; position:TVector2; tint:TColor);cdecl;external libraylib;
 { Draw a part of a texture defined by a rectangle }
 procedure DrawTexturePro(texture:TTexture2D; srcrec:TRectangle; dstrec:TRectangle; origin:TVector2; rotation:single; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw a part of a texture defined by a source rectangle to destination rectangle, with scaling and rotation }
 procedure DrawTextureNPatch(texture:TTexture2D; nPatchInfo:TNPatchInfo; dstrec:TRectangle; origin:TVector2; rotation:single; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw a texture (or part of it) that stretches or shrinks nicely }
 { Color/pixel related functions }
-function ColorIsEqual(col1:TColor; col2:TColor):Tbool;cdecl;external;
+function ColorIsEqual(col1:TColor; col2:TColor):Tbool;cdecl;external libraylib;
 { Check if two colors are equal }
-function Fade(color:TColor; alpha:single):TColor;cdecl;external;
+function Fade(color:TColor; alpha:single):TColor;cdecl;external libraylib;
 { Get color with alpha applied, alpha goes from 0.0f to 1.0f }
-function ColorToInt(color:TColor):longint;cdecl;external;
+function ColorToInt(color:TColor):longint;cdecl;external libraylib;
 { Get hexadecimal value for a Color (0xRRGGBBAA) }
-function ColorNormalize(color:TColor):TVector4;cdecl;external;
+function ColorNormalize(color:TColor):TVector4;cdecl;external libraylib;
 { Get Color normalized as float [0..1] }
-function ColorFromNormalized(normalized:TVector4):TColor;cdecl;external;
+function ColorFromNormalized(normalized:TVector4):TColor;cdecl;external libraylib;
 { Get Color from normalized values [0..1] }
-function ColorToHSV(color:TColor):TVector3;cdecl;external;
+function ColorToHSV(color:TColor):TVector3;cdecl;external libraylib;
 { Get HSV values for a Color, hue [0..360], saturation/value [0..1] }
-function ColorFromHSV(hue:single; saturation:single; value:single):TColor;cdecl;external;
+function ColorFromHSV(hue:single; saturation:single; value:single):TColor;cdecl;external libraylib;
 { Get a Color from HSV values, hue [0..360], saturation/value [0..1] }
-function ColorTint(color:TColor; tint:TColor):TColor;cdecl;external;
+function ColorTint(color:TColor; tint:TColor):TColor;cdecl;external libraylib;
 { Get color multiplied with another color }
-function ColorBrightness(color:TColor; factor:single):TColor;cdecl;external;
+function ColorBrightness(color:TColor; factor:single):TColor;cdecl;external libraylib;
 { Get color with brightness correction, brightness factor goes from -1.0f to 1.0f }
-function ColorContrast(color:TColor; contrast:single):TColor;cdecl;external;
+function ColorContrast(color:TColor; contrast:single):TColor;cdecl;external libraylib;
 { Get color with contrast correction, contrast values between -1.0f and 1.0f }
-function ColorAlpha(color:TColor; alpha:single):TColor;cdecl;external;
+function ColorAlpha(color:TColor; alpha:single):TColor;cdecl;external libraylib;
 { Get color with alpha applied, alpha goes from 0.0f to 1.0f }
-function ColorAlphaBlend(dst:TColor; src:TColor; tint:TColor):TColor;cdecl;external;
+function ColorAlphaBlend(dst:TColor; src:TColor; tint:TColor):TColor;cdecl;external libraylib;
 { Get src alpha-blended into dst color with tint }
-function ColorLerp(color1:TColor; color2:TColor; factor:single):TColor;cdecl;external;
+function ColorLerp(color1:TColor; color2:TColor; factor:single):TColor;cdecl;external libraylib;
 { Get color lerp interpolation between two colors, factor [0.0f..1.0f] }
-function GetColor(hexValue:dword):TColor;cdecl;external;
+function GetColor(hexValue:dword):TColor;cdecl;external libraylib;
 { Get Color structure from hexadecimal value }
-(* Const before type ignored *)
-function GetPixelColor(srcPtr:pointer; format:longint):TColor;cdecl;external;
+function GetPixelColor(srcPtr:pointer; format:longint):TColor;cdecl;external libraylib;
 { Get Color from a source pixel pointer of certain format }
-procedure SetPixelColor(dstPtr:pointer; color:TColor; format:longint);cdecl;external;
+procedure SetPixelColor(dstPtr:pointer; color:TColor; format:longint);cdecl;external libraylib;
 { Set color formatted into destination pixel pointer }
-function GetPixelDataSize(width:longint; height:longint; format:longint):longint;cdecl;external;
+function GetPixelDataSize(width:longint; height:longint; format:longint):longint;cdecl;external libraylib;
 { Get pixel data size in bytes for certain format }
 {------------------------------------------------------------------------------------ }
 { Font Loading and Text Drawing Functions (Module: text) }
 {------------------------------------------------------------------------------------ }
 { Font loading/unloading functions }
-function GetFontDefault:TFont;cdecl;external;
+function GetFontDefault:TFont;cdecl;external libraylib;
 { Get the default Font }
-(* Const before type ignored *)
-function LoadFont(fileName:Pchar):TFont;cdecl;external;
+function LoadFont(fileName:Pchar):TFont;cdecl;external libraylib;
 { Load font from file into GPU memory (VRAM) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadFontEx(fileName:Pchar; fontSize:longint; codepoints:Plongint; codepointCount:longint):TFont;cdecl;external;
+function LoadFontEx(fileName:Pchar; fontSize:longint; codepoints:Plongint; codepointCount:longint):TFont;cdecl;external libraylib;
 { Load font from file with defined codepoints and generation size, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height }
-function LoadFontFromImage(image:TImage; key:TColor; firstChar:longint):TFont;cdecl;external;
+function LoadFontFromImage(image:TImage; key:TColor; firstChar:longint):TFont;cdecl;external libraylib;
 { Load font from Image (XNA style) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
 function LoadFontFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint; fontSize:longint; codepoints:Plongint; 
-           codepointCount:longint):TFont;cdecl;external;
+           codepointCount:longint):TFont;cdecl;external libraylib;
 { Load font from memory buffer, fileType refers to extension: i.e. '.ttf' }
-function IsFontValid(font:TFont):Tbool;cdecl;external;
+function IsFontValid(font:TFont):Tbool;cdecl;external libraylib;
 { Check if font is valid (font data loaded, WARNING: GPU texture not checked) }
-(* Const before type ignored *)
-(* Const before type ignored *)
 function LoadFontData(fileData:Pbyte; dataSize:longint; fontSize:longint; codepoints:Plongint; codepointCount:longint; 
-           _type:longint; glyphCount:Plongint):PGlyphInfo;cdecl;external;
+           _type:longint; glyphCount:Plongint):PGlyphInfo;cdecl;external libraylib;
 { Load font data for further use }
-(* Const before type ignored *)
 function GenImageFontAtlas(glyphs:PGlyphInfo; glyphRecs:PPRectangle; glyphCount:longint; fontSize:longint; padding:longint; 
-           packMethod:longint):TImage;cdecl;external;
+           packMethod:longint):TImage;cdecl;external libraylib;
 { Generate image font atlas using chars info }
-procedure UnloadFontData(glyphs:PGlyphInfo; glyphCount:longint);cdecl;external;
+procedure UnloadFontData(glyphs:PGlyphInfo; glyphCount:longint);cdecl;external libraylib;
 { Unload font chars info data (RAM) }
-procedure UnloadFont(font:TFont);cdecl;external;
+procedure UnloadFont(font:TFont);cdecl;external libraylib;
 { Unload font from GPU memory (VRAM) }
-(* Const before type ignored *)
-function ExportFontAsCode(font:TFont; fileName:Pchar):Tbool;cdecl;external;
+function ExportFontAsCode(font:TFont; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export font as code file, returns true on success }
 { Text drawing functions }
-procedure DrawFPS(posX:longint; posY:longint);cdecl;external;
+procedure DrawFPS(posX:longint; posY:longint);cdecl;external libraylib;
 { Draw current FPS }
-(* Const before type ignored *)
-procedure DrawText(text:Pchar; posX:longint; posY:longint; fontSize:longint; color:TColor);cdecl;external;
+procedure DrawText(text:Pchar; posX:longint; posY:longint; fontSize:longint; color:TColor);cdecl;external libraylib;
 { Draw text (using default font) }
-(* Const before type ignored *)
 procedure DrawTextEx(font:TFont; text:Pchar; position:TVector2; fontSize:single; spacing:single; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw text using font and additional parameters }
-(* Const before type ignored *)
 procedure DrawTextPro(font:TFont; text:Pchar; position:TVector2; origin:TVector2; rotation:single; 
-            fontSize:single; spacing:single; tint:TColor);cdecl;external;
+            fontSize:single; spacing:single; tint:TColor);cdecl;external libraylib;
 { Draw text using Font and pro parameters (rotation) }
-procedure DrawTextCodepoint(font:TFont; codepoint:longint; position:TVector2; fontSize:single; tint:TColor);cdecl;external;
+procedure DrawTextCodepoint(font:TFont; codepoint:longint; position:TVector2; fontSize:single; tint:TColor);cdecl;external libraylib;
 { Draw one character (codepoint) }
-(* Const before type ignored *)
 procedure DrawTextCodepoints(font:TFont; codepoints:Plongint; codepointCount:longint; position:TVector2; fontSize:single; 
-            spacing:single; tint:TColor);cdecl;external;
+            spacing:single; tint:TColor);cdecl;external libraylib;
 { Draw multiple characters (codepoint) }
 { Text font info functions }
-procedure SetTextLineSpacing(spacing:longint);cdecl;external;
+procedure SetTextLineSpacing(spacing:longint);cdecl;external libraylib;
 { Set vertical line spacing when drawing with line-breaks }
-(* Const before type ignored *)
-function MeasureText(text:Pchar; fontSize:longint):longint;cdecl;external;
+function MeasureText(text:Pchar; fontSize:longint):longint;cdecl;external libraylib;
 { Measure string width for default font }
-(* Const before type ignored *)
-function MeasureTextEx(font:TFont; text:Pchar; fontSize:single; spacing:single):TVector2;cdecl;external;
+function MeasureTextEx(font:TFont; text:Pchar; fontSize:single; spacing:single):TVector2;cdecl;external libraylib;
 { Measure string size for Font }
-(* Const before type ignored *)
-function MeasureTextCodepoints(font:TFont; codepoints:Plongint; length:longint; fontSize:single; spacing:single):TVector2;cdecl;external;
+function MeasureTextCodepoints(font:TFont; codepoints:Plongint; length:longint; fontSize:single; spacing:single):TVector2;cdecl;external libraylib;
 { Measure string size for an existing array of codepoints for Font }
-function GetGlyphIndex(font:TFont; codepoint:longint):longint;cdecl;external;
+function GetGlyphIndex(font:TFont; codepoint:longint):longint;cdecl;external libraylib;
 { Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found }
-function GetGlyphInfo(font:TFont; codepoint:longint):TGlyphInfo;cdecl;external;
+function GetGlyphInfo(font:TFont; codepoint:longint):TGlyphInfo;cdecl;external libraylib;
 { Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found }
-function GetGlyphAtlasRec(font:TFont; codepoint:longint):TRectangle;cdecl;external;
+function GetGlyphAtlasRec(font:TFont; codepoint:longint):TRectangle;cdecl;external libraylib;
 { Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found }
 { Text codepoints management functions (unicode characters) }
-(* Const before type ignored *)
-function LoadUTF8(codepoints:Plongint; length:longint):Pchar;cdecl;external;
+function LoadUTF8(codepoints:Plongint; length:longint):Pchar;cdecl;external libraylib;
 { Load UTF-8 text encoded from codepoints array }
-procedure UnloadUTF8(text:Pchar);cdecl;external;
+procedure UnloadUTF8(text:Pchar);cdecl;external libraylib;
 { Unload UTF-8 text encoded from codepoints array }
-(* Const before type ignored *)
-function LoadCodepoints(text:Pchar; count:Plongint):Plongint;cdecl;external;
+function LoadCodepoints(text:Pchar; count:Plongint):Plongint;cdecl;external libraylib;
 { Load all codepoints from a UTF-8 text string, codepoints count returned by parameter }
-procedure UnloadCodepoints(codepoints:Plongint);cdecl;external;
+procedure UnloadCodepoints(codepoints:Plongint);cdecl;external libraylib;
 { Unload codepoints data from memory }
-(* Const before type ignored *)
-function GetCodepointCount(text:Pchar):longint;cdecl;external;
+function GetCodepointCount(text:Pchar):longint;cdecl;external libraylib;
 { Get total number of codepoints in a UTF-8 encoded string }
-(* Const before type ignored *)
-function GetCodepoint(text:Pchar; codepointSize:Plongint):longint;cdecl;external;
+function GetCodepoint(text:Pchar; codepointSize:Plongint):longint;cdecl;external libraylib;
 { Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure }
-(* Const before type ignored *)
-function GetCodepointNext(text:Pchar; codepointSize:Plongint):longint;cdecl;external;
+function GetCodepointNext(text:Pchar; codepointSize:Plongint):longint;cdecl;external libraylib;
 { Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure }
-(* Const before type ignored *)
-function GetCodepointPrevious(text:Pchar; codepointSize:Plongint):longint;cdecl;external;
+function GetCodepointPrevious(text:Pchar; codepointSize:Plongint):longint;cdecl;external libraylib;
 { Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure }
-(* Const before type ignored *)
-function CodepointToUTF8(codepoint:longint; utf8Size:Plongint):Pchar;cdecl;external;
+function CodepointToUTF8(codepoint:longint; utf8Size:Plongint):Pchar;cdecl;external libraylib;
 { Encode one codepoint into UTF-8 byte array (array length returned as parameter) }
 { Text strings management functions (no UTF-8 strings, only byte chars) }
 { WARNING 1: Most of these functions use internal static buffers[], it's recommended to store returned data on user-side for re-use }
 { WARNING 2: Some functions allocate memory internally for the returned strings, those strings must be freed by user using MemFree() }
-(* Const before type ignored *)
-function LoadTextLines(text:Pchar; count:Plongint):^Pchar;cdecl;external;
+function LoadTextLines(text:Pchar; count:Plongint):^Pchar;cdecl;external libraylib;
 { Load text as separate lines ('\n') }
-procedure UnloadTextLines(text:PPchar; lineCount:longint);cdecl;external;
+procedure UnloadTextLines(text:PPchar; lineCount:longint);cdecl;external libraylib;
 { Unload text lines }
-(* Const before type ignored *)
-function TextCopy(dst:Pchar; src:Pchar):longint;cdecl;external;
+function TextCopy(dst:Pchar; src:Pchar):longint;cdecl;external libraylib;
 { Copy one string to another, returns bytes copied }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextIsEqual(text1:Pchar; text2:Pchar):Tbool;cdecl;external;
+function TextIsEqual(text1:Pchar; text2:Pchar):Tbool;cdecl;external libraylib;
 { Check if two text strings are equal }
-(* Const before type ignored *)
-function TextLength(text:Pchar):dword;cdecl;external;
+function TextLength(text:Pchar):dword;cdecl;external libraylib;
 { Get text length, checks for '\0' ending }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextFormat(text:Pchar; args:array of const):Pchar;cdecl;external;
-function TextFormat(text:Pchar):Pchar;cdecl;external;
+function TextFormat(text:Pchar; args:array of const):Pchar;cdecl;external libraylib;
+function TextFormat(text:Pchar):Pchar;cdecl;external libraylib;
 { Text formatting with variables (sprintf() style) }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextSubtext(text:Pchar; position:longint; length:longint):Pchar;cdecl;external;
+function TextSubtext(text:Pchar; position:longint; length:longint):Pchar;cdecl;external libraylib;
 { Get a piece of a text string }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextRemoveSpaces(text:Pchar):Pchar;cdecl;external;
+function TextRemoveSpaces(text:Pchar):Pchar;cdecl;external libraylib;
 { Remove text spaces, concat words }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-function GetTextBetween(text:Pchar; begin:Pchar; end:Pchar):Pchar;cdecl;external;
+function GetTextBetween(text:Pchar; begin:Pchar; end:Pchar):Pchar;cdecl;external libraylib;
 { Get text between two strings }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextReplace(text:Pchar; search:Pchar; replacement:Pchar):Pchar;cdecl;external;
+function TextReplace(text:Pchar; search:Pchar; replacement:Pchar):Pchar;cdecl;external libraylib;
 { Replace text string with new string }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextReplaceAlloc(text:Pchar; search:Pchar; replacement:Pchar):Pchar;cdecl;external;
+function TextReplaceAlloc(text:Pchar; search:Pchar; replacement:Pchar):Pchar;cdecl;external libraylib;
 { Replace text string with new string, memory must be MemFree() }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextReplaceBetween(text:Pchar; begin:Pchar; end:Pchar; replacement:Pchar):Pchar;cdecl;external;
+function TextReplaceBetween(text:Pchar; begin:Pchar; end:Pchar; replacement:Pchar):Pchar;cdecl;external libraylib;
 { Replace text between two specific strings }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextReplaceBetweenAlloc(text:Pchar; begin:Pchar; end:Pchar; replacement:Pchar):Pchar;cdecl;external;
+function TextReplaceBetweenAlloc(text:Pchar; begin:Pchar; end:Pchar; replacement:Pchar):Pchar;cdecl;external libraylib;
 { Replace text between two specific strings, memory must be MemFree() }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextInsert(text:Pchar; insert:Pchar; position:longint):Pchar;cdecl;external;
+function TextInsert(text:Pchar; insert:Pchar; position:longint):Pchar;cdecl;external libraylib;
 { Insert text in a defined byte position }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextInsertAlloc(text:Pchar; insert:Pchar; position:longint):Pchar;cdecl;external;
+function TextInsertAlloc(text:Pchar; insert:Pchar; position:longint):Pchar;cdecl;external libraylib;
 { Insert text in a defined byte position, memory must be MemFree() }
-(* Const before type ignored *)
-function TextJoin(textList:PPchar; count:longint; delimiter:Pchar):Pchar;cdecl;external;
+function TextJoin(textList:PPchar; count:longint; delimiter:Pchar):Pchar;cdecl;external libraylib;
 { Join text strings with delimiter }
-(* Const before type ignored *)
-function TextSplit(text:Pchar; delimiter:char; count:Plongint):^Pchar;cdecl;external;
+function TextSplit(text:Pchar; delimiter:char; count:Plongint):^Pchar;cdecl;external libraylib;
 { Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings }
-(* Const before type ignored *)
-procedure TextAppend(text:Pchar; append:Pchar; position:Plongint);cdecl;external;
+procedure TextAppend(text:Pchar; append:Pchar; position:Plongint);cdecl;external libraylib;
 { Append text at specific position and move cursor }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function TextFindIndex(text:Pchar; search:Pchar):longint;cdecl;external;
+function TextFindIndex(text:Pchar; search:Pchar):longint;cdecl;external libraylib;
 { Find first text occurrence within a string, -1 if not found }
-(* Const before type ignored *)
-function TextToUpper(text:Pchar):Pchar;cdecl;external;
+function TextToUpper(text:Pchar):Pchar;cdecl;external libraylib;
 { Get upper case version of provided string }
-(* Const before type ignored *)
-function TextToLower(text:Pchar):Pchar;cdecl;external;
+function TextToLower(text:Pchar):Pchar;cdecl;external libraylib;
 { Get lower case version of provided string }
-(* Const before type ignored *)
-function TextToPascal(text:Pchar):Pchar;cdecl;external;
+function TextToPascal(text:Pchar):Pchar;cdecl;external libraylib;
 { Get Pascal case notation version of provided string }
-(* Const before type ignored *)
-function TextToSnake(text:Pchar):Pchar;cdecl;external;
+function TextToSnake(text:Pchar):Pchar;cdecl;external libraylib;
 { Get Snake case notation version of provided string }
-(* Const before type ignored *)
-function TextToCamel(text:Pchar):Pchar;cdecl;external;
+function TextToCamel(text:Pchar):Pchar;cdecl;external libraylib;
 { Get Camel case notation version of provided string }
-(* Const before type ignored *)
-function TextToInteger(text:Pchar):longint;cdecl;external;
+function TextToInteger(text:Pchar):longint;cdecl;external libraylib;
 { Get integer value from text }
-(* Const before type ignored *)
-function TextToFloat(text:Pchar):single;cdecl;external;
+function TextToFloat(text:Pchar):single;cdecl;external libraylib;
 { Get float value from text }
 {------------------------------------------------------------------------------------ }
 { Basic 3d Shapes Drawing Functions (Module: models) }
 {------------------------------------------------------------------------------------ }
 { Basic geometric 3D shapes drawing functions }
-procedure DrawLine3D(startPos:TVector3; endPos:TVector3; color:TColor);cdecl;external;
+procedure DrawLine3D(startPos:TVector3; endPos:TVector3; color:TColor);cdecl;external libraylib;
 { Draw a line in 3D world space }
-procedure DrawPoint3D(position:TVector3; color:TColor);cdecl;external;
+procedure DrawPoint3D(position:TVector3; color:TColor);cdecl;external libraylib;
 { Draw a point in 3D space, actually a small line }
-procedure DrawCircle3D(center:TVector3; radius:single; rotationAxis:TVector3; rotationAngle:single; color:TColor);cdecl;external;
+procedure DrawCircle3D(center:TVector3; radius:single; rotationAxis:TVector3; rotationAngle:single; color:TColor);cdecl;external libraylib;
 { Draw a circle in 3D world space }
-procedure DrawTriangle3D(v1:TVector3; v2:TVector3; v3:TVector3; color:TColor);cdecl;external;
+procedure DrawTriangle3D(v1:TVector3; v2:TVector3; v3:TVector3; color:TColor);cdecl;external libraylib;
 { Draw a color-filled triangle, counter-clockwise vertex order }
-(* Const before type ignored *)
-procedure DrawTriangleStrip3D(points:PVector3; pointCount:longint; color:TColor);cdecl;external;
+procedure DrawTriangleStrip3D(points:PVector3; pointCount:longint; color:TColor);cdecl;external libraylib;
 { Draw a triangle strip defined by points }
-procedure DrawCube(position:TVector3; width:single; height:single; length:single; color:TColor);cdecl;external;
+procedure DrawCube(position:TVector3; width:single; height:single; length:single; color:TColor);cdecl;external libraylib;
 { Draw cube }
-procedure DrawCubeV(position:TVector3; size:TVector3; color:TColor);cdecl;external;
+procedure DrawCubeV(position:TVector3; size:TVector3; color:TColor);cdecl;external libraylib;
 { Draw cube (Vector version) }
-procedure DrawCubeWires(position:TVector3; width:single; height:single; length:single; color:TColor);cdecl;external;
+procedure DrawCubeWires(position:TVector3; width:single; height:single; length:single; color:TColor);cdecl;external libraylib;
 { Draw cube wires }
-procedure DrawCubeWiresV(position:TVector3; size:TVector3; color:TColor);cdecl;external;
+procedure DrawCubeWiresV(position:TVector3; size:TVector3; color:TColor);cdecl;external libraylib;
 { Draw cube wires (Vector version) }
-procedure DrawSphere(centerPos:TVector3; radius:single; color:TColor);cdecl;external;
+procedure DrawSphere(centerPos:TVector3; radius:single; color:TColor);cdecl;external libraylib;
 { Draw sphere }
-procedure DrawSphereEx(centerPos:TVector3; radius:single; rings:longint; slices:longint; color:TColor);cdecl;external;
+procedure DrawSphereEx(centerPos:TVector3; radius:single; rings:longint; slices:longint; color:TColor);cdecl;external libraylib;
 { Draw sphere with defined rings and slices }
-procedure DrawSphereWires(centerPos:TVector3; radius:single; rings:longint; slices:longint; color:TColor);cdecl;external;
+procedure DrawSphereWires(centerPos:TVector3; radius:single; rings:longint; slices:longint; color:TColor);cdecl;external libraylib;
 { Draw sphere wires }
 procedure DrawCylinder(position:TVector3; radiusTop:single; radiusBottom:single; height:single; sides:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a cylinder/cone }
 procedure DrawCylinderEx(startPos:TVector3; endPos:TVector3; startRadius:single; endRadius:single; sides:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a cylinder with base at startPos and top at endPos }
 procedure DrawCylinderWires(position:TVector3; radiusTop:single; radiusBottom:single; height:single; sides:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a cylinder/cone wires }
 procedure DrawCylinderWiresEx(startPos:TVector3; endPos:TVector3; startRadius:single; endRadius:single; sides:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a cylinder wires with base at startPos and top at endPos }
 procedure DrawCapsule(startPos:TVector3; endPos:TVector3; radius:single; rings:longint; slices:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw a capsule with the center of its sphere caps at startPos and endPos }
 procedure DrawCapsuleWires(startPos:TVector3; endPos:TVector3; radius:single; rings:longint; slices:longint; 
-            color:TColor);cdecl;external;
+            color:TColor);cdecl;external libraylib;
 { Draw capsule wireframe with the center of its sphere caps at startPos and endPos }
-procedure DrawPlane(centerPos:TVector3; size:TVector2; color:TColor);cdecl;external;
+procedure DrawPlane(centerPos:TVector3; size:TVector2; color:TColor);cdecl;external libraylib;
 { Draw a plane XZ }
-procedure DrawRay(ray:TRay; color:TColor);cdecl;external;
+procedure DrawRay(ray:TRay; color:TColor);cdecl;external libraylib;
 { Draw a ray line }
-procedure DrawGrid(slices:longint; spacing:single);cdecl;external;
+procedure DrawGrid(slices:longint; spacing:single);cdecl;external libraylib;
 { Draw a grid (centered at (0, 0, 0)) }
 {------------------------------------------------------------------------------------ }
 { Model 3d Loading and Drawing Functions (Module: models) }
 {------------------------------------------------------------------------------------ }
 { Model management functions }
-(* Const before type ignored *)
-function LoadModel(fileName:Pchar):TModel;cdecl;external;
+function LoadModel(fileName:Pchar):TModel;cdecl;external libraylib;
 { Load model from files (meshes and materials) }
-function LoadModelFromMesh(mesh:TMesh):TModel;cdecl;external;
+function LoadModelFromMesh(mesh:TMesh):TModel;cdecl;external libraylib;
 { Load model from generated mesh (default material) }
-function IsModelValid(model:TModel):Tbool;cdecl;external;
+function IsModelValid(model:TModel):Tbool;cdecl;external libraylib;
 { Check if model is valid (loaded in GPU, VAO/VBOs) }
-procedure UnloadModel(model:TModel);cdecl;external;
+procedure UnloadModel(model:TModel);cdecl;external libraylib;
 { Unload model (including meshes) from memory (RAM and/or VRAM) }
-function GetModelBoundingBox(model:TModel):TBoundingBox;cdecl;external;
+function GetModelBoundingBox(model:TModel):TBoundingBox;cdecl;external libraylib;
 { Compute model bounding box limits (considers all meshes) }
 { Model drawing functions }
-procedure DrawModel(model:TModel; position:TVector3; scale:single; tint:TColor);cdecl;external;
+procedure DrawModel(model:TModel; position:TVector3; scale:single; tint:TColor);cdecl;external libraylib;
 { Draw a model (with texture if set) }
 procedure DrawModelEx(model:TModel; position:TVector3; rotationAxis:TVector3; rotationAngle:single; scale:TVector3; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw a model with custom transform }
-procedure DrawModelWires(model:TModel; position:TVector3; scale:single; tint:TColor);cdecl;external;
+procedure DrawModelWires(model:TModel; position:TVector3; scale:single; tint:TColor);cdecl;external libraylib;
 { Draw a model wires (with texture if set) }
 procedure DrawModelWiresEx(model:TModel; position:TVector3; rotationAxis:TVector3; rotationAngle:single; scale:TVector3; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw a model wires with custom transform }
-procedure DrawBoundingBox(box:TBoundingBox; color:TColor);cdecl;external;
+procedure DrawBoundingBox(box:TBoundingBox; color:TColor);cdecl;external libraylib;
 { Draw bounding box (wires) }
-procedure DrawBillboard(camera:TCamera; texture:TTexture2D; position:TVector3; scale:single; tint:TColor);cdecl;external;
+procedure DrawBillboard(camera:TCamera; texture:TTexture2D; position:TVector3; scale:single; tint:TColor);cdecl;external libraylib;
 { Draw a billboard texture }
 procedure DrawBillboardRec(camera:TCamera; texture:TTexture2D; rec:TRectangle; position:TVector3; size:TVector2; 
-            tint:TColor);cdecl;external;
+            tint:TColor);cdecl;external libraylib;
 { Draw a billboard texture defined by rectangle }
 procedure DrawBillboardPro(camera:TCamera; texture:TTexture2D; rec:TRectangle; position:TVector3; up:TVector3; 
-            size:TVector2; origin:TVector2; rotation:single; tint:TColor);cdecl;external;
+            size:TVector2; origin:TVector2; rotation:single; tint:TColor);cdecl;external libraylib;
 { Draw a billboard texture defined by source rectangle with scaling and rotation }
 { Mesh management functions }
-procedure UploadMesh(mesh:PMesh; dynamic:Tbool);cdecl;external;
+procedure UploadMesh(mesh:PMesh; dynamic:Tbool);cdecl;external libraylib;
 { Upload mesh vertex data in GPU and provide VAO/VBO ids }
-(* Const before type ignored *)
-procedure UpdateMeshBuffer(mesh:TMesh; index:longint; data:pointer; dataSize:longint; offset:longint);cdecl;external;
+procedure UpdateMeshBuffer(mesh:TMesh; index:longint; data:pointer; dataSize:longint; offset:longint);cdecl;external libraylib;
 { Update mesh vertex data in GPU for a specific buffer index }
-procedure UnloadMesh(mesh:TMesh);cdecl;external;
+procedure UnloadMesh(mesh:TMesh);cdecl;external libraylib;
 { Unload mesh data from CPU and GPU }
-procedure DrawMesh(mesh:TMesh; material:TMaterial; transform:TMatrix);cdecl;external;
+procedure DrawMesh(mesh:TMesh; material:TMaterial; transform:TMatrix);cdecl;external libraylib;
 { Draw a 3d mesh with material and transform }
-(* Const before type ignored *)
-procedure DrawMeshInstanced(mesh:TMesh; material:TMaterial; transforms:PMatrix; instances:longint);cdecl;external;
+procedure DrawMeshInstanced(mesh:TMesh; material:TMaterial; transforms:PMatrix; instances:longint);cdecl;external libraylib;
 { Draw multiple mesh instances with material and different transforms }
-function GetMeshBoundingBox(mesh:TMesh):TBoundingBox;cdecl;external;
+function GetMeshBoundingBox(mesh:TMesh):TBoundingBox;cdecl;external libraylib;
 { Compute mesh bounding box limits }
-procedure GenMeshTangents(mesh:PMesh);cdecl;external;
+procedure GenMeshTangents(mesh:PMesh);cdecl;external libraylib;
 { Compute mesh tangents }
-(* Const before type ignored *)
-function ExportMesh(mesh:TMesh; fileName:Pchar):Tbool;cdecl;external;
+function ExportMesh(mesh:TMesh; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export mesh data to file, returns true on success }
-(* Const before type ignored *)
-function ExportMeshAsCode(mesh:TMesh; fileName:Pchar):Tbool;cdecl;external;
+function ExportMeshAsCode(mesh:TMesh; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export mesh as code file (.h) defining multiple arrays of vertex attributes }
 { Mesh generation functions }
-function GenMeshPoly(sides:longint; radius:single):TMesh;cdecl;external;
+function GenMeshPoly(sides:longint; radius:single):TMesh;cdecl;external libraylib;
 { Generate polygonal mesh }
-function GenMeshPlane(width:single; length:single; resX:longint; resZ:longint):TMesh;cdecl;external;
+function GenMeshPlane(width:single; length:single; resX:longint; resZ:longint):TMesh;cdecl;external libraylib;
 { Generate plane mesh (with subdivisions) }
-function GenMeshCube(width:single; height:single; length:single):TMesh;cdecl;external;
+function GenMeshCube(width:single; height:single; length:single):TMesh;cdecl;external libraylib;
 { Generate cuboid mesh }
-function GenMeshSphere(radius:single; rings:longint; slices:longint):TMesh;cdecl;external;
+function GenMeshSphere(radius:single; rings:longint; slices:longint):TMesh;cdecl;external libraylib;
 { Generate sphere mesh (standard sphere) }
-function GenMeshHemiSphere(radius:single; rings:longint; slices:longint):TMesh;cdecl;external;
+function GenMeshHemiSphere(radius:single; rings:longint; slices:longint):TMesh;cdecl;external libraylib;
 { Generate half-sphere mesh (no bottom cap) }
-function GenMeshCylinder(radius:single; height:single; slices:longint):TMesh;cdecl;external;
+function GenMeshCylinder(radius:single; height:single; slices:longint):TMesh;cdecl;external libraylib;
 { Generate cylinder mesh }
-function GenMeshCone(radius:single; height:single; slices:longint):TMesh;cdecl;external;
+function GenMeshCone(radius:single; height:single; slices:longint):TMesh;cdecl;external libraylib;
 { Generate cone/pyramid mesh }
-function GenMeshTorus(radius:single; size:single; radSeg:longint; sides:longint):TMesh;cdecl;external;
+function GenMeshTorus(radius:single; size:single; radSeg:longint; sides:longint):TMesh;cdecl;external libraylib;
 { Generate torus mesh }
-function GenMeshKnot(radius:single; size:single; radSeg:longint; sides:longint):TMesh;cdecl;external;
+function GenMeshKnot(radius:single; size:single; radSeg:longint; sides:longint):TMesh;cdecl;external libraylib;
 { Generate trefoil knot mesh }
-function GenMeshHeightmap(heightmap:TImage; size:TVector3):TMesh;cdecl;external;
+function GenMeshHeightmap(heightmap:TImage; size:TVector3):TMesh;cdecl;external libraylib;
 { Generate heightmap mesh from image data }
-function GenMeshCubicmap(cubicmap:TImage; cubeSize:TVector3):TMesh;cdecl;external;
+function GenMeshCubicmap(cubicmap:TImage; cubeSize:TVector3):TMesh;cdecl;external libraylib;
 { Generate cubes-based map mesh from image data }
 { Material loading/unloading functions }
-(* Const before type ignored *)
-function LoadMaterials(fileName:Pchar; materialCount:Plongint):PMaterial;cdecl;external;
+function LoadMaterials(fileName:Pchar; materialCount:Plongint):PMaterial;cdecl;external libraylib;
 { Load materials from model file }
-function LoadMaterialDefault:TMaterial;cdecl;external;
+function LoadMaterialDefault:TMaterial;cdecl;external libraylib;
 { Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps) }
-function IsMaterialValid(material:TMaterial):Tbool;cdecl;external;
+function IsMaterialValid(material:TMaterial):Tbool;cdecl;external libraylib;
 { Check if material is valid (shader assigned, map textures loaded in GPU) }
-procedure UnloadMaterial(material:TMaterial);cdecl;external;
+procedure UnloadMaterial(material:TMaterial);cdecl;external libraylib;
 { Unload material from GPU memory (VRAM) }
-procedure SetMaterialTexture(material:PMaterial; mapType:longint; texture:TTexture2D);cdecl;external;
+procedure SetMaterialTexture(material:PMaterial; mapType:longint; texture:TTexture2D);cdecl;external libraylib;
 { Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...) }
-procedure SetModelMeshMaterial(model:PModel; meshId:longint; materialId:longint);cdecl;external;
+procedure SetModelMeshMaterial(model:PModel; meshId:longint; materialId:longint);cdecl;external libraylib;
 { Set material for a mesh }
 { Model animations loading/unloading functions }
-(* Const before type ignored *)
-function LoadModelAnimations(fileName:Pchar; animCount:Plongint):PModelAnimation;cdecl;external;
+function LoadModelAnimations(fileName:Pchar; animCount:Plongint):PModelAnimation;cdecl;external libraylib;
 { Load model animations from file }
-procedure UpdateModelAnimation(model:TModel; anim:TModelAnimation; frame:single);cdecl;external;
+procedure UpdateModelAnimation(model:TModel; anim:TModelAnimation; frame:single);cdecl;external libraylib;
 { Update model animation pose (vertex buffers and bone matrices) }
 procedure UpdateModelAnimationEx(model:TModel; animA:TModelAnimation; frameA:single; animB:TModelAnimation; frameB:single; 
-            blend:single);cdecl;external;
+            blend:single);cdecl;external libraylib;
 { Update model animation pose, blending two animations }
-procedure UnloadModelAnimations(animations:PModelAnimation; animCount:longint);cdecl;external;
+procedure UnloadModelAnimations(animations:PModelAnimation; animCount:longint);cdecl;external libraylib;
 { Unload animation array data }
-function IsModelAnimationValid(model:TModel; anim:TModelAnimation):Tbool;cdecl;external;
+function IsModelAnimationValid(model:TModel; anim:TModelAnimation):Tbool;cdecl;external libraylib;
 { Check model animation skeleton match }
 { Collision detection functions }
-function CheckCollisionSpheres(center1:TVector3; radius1:single; center2:TVector3; radius2:single):Tbool;cdecl;external;
+function CheckCollisionSpheres(center1:TVector3; radius1:single; center2:TVector3; radius2:single):Tbool;cdecl;external libraylib;
 { Check collision between two spheres }
-function CheckCollisionBoxes(box1:TBoundingBox; box2:TBoundingBox):Tbool;cdecl;external;
+function CheckCollisionBoxes(box1:TBoundingBox; box2:TBoundingBox):Tbool;cdecl;external libraylib;
 { Check collision between two bounding boxes }
-function CheckCollisionBoxSphere(box:TBoundingBox; center:TVector3; radius:single):Tbool;cdecl;external;
+function CheckCollisionBoxSphere(box:TBoundingBox; center:TVector3; radius:single):Tbool;cdecl;external libraylib;
 { Check collision between box and sphere }
-function GetRayCollisionSphere(ray:TRay; center:TVector3; radius:single):TRayCollision;cdecl;external;
+function GetRayCollisionSphere(ray:TRay; center:TVector3; radius:single):TRayCollision;cdecl;external libraylib;
 { Get collision info between ray and sphere }
-function GetRayCollisionBox(ray:TRay; box:TBoundingBox):TRayCollision;cdecl;external;
+function GetRayCollisionBox(ray:TRay; box:TBoundingBox):TRayCollision;cdecl;external libraylib;
 { Get collision info between ray and box }
-function GetRayCollisionMesh(ray:TRay; mesh:TMesh; transform:TMatrix):TRayCollision;cdecl;external;
+function GetRayCollisionMesh(ray:TRay; mesh:TMesh; transform:TMatrix):TRayCollision;cdecl;external libraylib;
 { Get collision info between ray and mesh }
-function GetRayCollisionTriangle(ray:TRay; p1:TVector3; p2:TVector3; p3:TVector3):TRayCollision;cdecl;external;
+function GetRayCollisionTriangle(ray:TRay; p1:TVector3; p2:TVector3; p3:TVector3):TRayCollision;cdecl;external libraylib;
 { Get collision info between ray and triangle }
-function GetRayCollisionQuad(ray:TRay; p1:TVector3; p2:TVector3; p3:TVector3; p4:TVector3):TRayCollision;cdecl;external;
+function GetRayCollisionQuad(ray:TRay; p1:TVector3; p2:TVector3; p3:TVector3; p4:TVector3):TRayCollision;cdecl;external libraylib;
 { Get collision info between ray and quad }
 {------------------------------------------------------------------------------------ }
 { Audio Loading and Playing Functions (Module: audio) }
@@ -2993,155 +2610,178 @@ type
   TAudioCallback = procedure (bufferData:pointer; frames:dword);cdecl;
 { Audio device management functions }
 
-procedure InitAudioDevice;cdecl;external;
+procedure InitAudioDevice;cdecl;external libraylib;
 { Initialize audio device and context }
-procedure CloseAudioDevice;cdecl;external;
+procedure CloseAudioDevice;cdecl;external libraylib;
 { Close the audio device and context }
-function IsAudioDeviceReady:Tbool;cdecl;external;
+function IsAudioDeviceReady:Tbool;cdecl;external libraylib;
 { Check if audio device has been initialized successfully }
-procedure SetMasterVolume(volume:single);cdecl;external;
+procedure SetMasterVolume(volume:single);cdecl;external libraylib;
 { Set master volume (listener) }
-function GetMasterVolume:single;cdecl;external;
+function GetMasterVolume:single;cdecl;external libraylib;
 { Get master volume (listener) }
 { Wave/Sound loading/unloading functions }
-(* Const before type ignored *)
-function LoadWave(fileName:Pchar):TWave;cdecl;external;
+function LoadWave(fileName:Pchar):TWave;cdecl;external libraylib;
 { Load wave data from file }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadWaveFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint):TWave;cdecl;external;
+function LoadWaveFromMemory(fileType:Pchar; fileData:Pbyte; dataSize:longint):TWave;cdecl;external libraylib;
 { Load wave from memory buffer, fileType refers to extension: i.e. '.wav' }
-function IsWaveValid(wave:TWave):Tbool;cdecl;external;
+function IsWaveValid(wave:TWave):Tbool;cdecl;external libraylib;
 { Check if wave data is valid (data loaded and parameters) }
-(* Const before type ignored *)
-function LoadSound(fileName:Pchar):TSound;cdecl;external;
+function LoadSound(fileName:Pchar):TSound;cdecl;external libraylib;
 { Load sound from file }
-function LoadSoundFromWave(wave:TWave):TSound;cdecl;external;
+function LoadSoundFromWave(wave:TWave):TSound;cdecl;external libraylib;
 { Load sound from wave data }
-function LoadSoundAlias(source:TSound):TSound;cdecl;external;
+function LoadSoundAlias(source:TSound):TSound;cdecl;external libraylib;
 { Load sound alias, new sound that shares the same sample data as the source sound, does not own the sound data }
-function IsSoundValid(sound:TSound):Tbool;cdecl;external;
+function IsSoundValid(sound:TSound):Tbool;cdecl;external libraylib;
 { Check if sound is valid (data loaded and buffers initialized) }
-(* Const before type ignored *)
-procedure UpdateSound(sound:TSound; data:pointer; frameCount:longint);cdecl;external;
+procedure UpdateSound(sound:TSound; data:pointer; frameCount:longint);cdecl;external libraylib;
 { Update sound buffer with new data (default data format: 32 bit float, stereo) }
-procedure UnloadWave(wave:TWave);cdecl;external;
+procedure UnloadWave(wave:TWave);cdecl;external libraylib;
 { Unload wave data }
-procedure UnloadSound(sound:TSound);cdecl;external;
+procedure UnloadSound(sound:TSound);cdecl;external libraylib;
 { Unload sound }
-procedure UnloadSoundAlias(alias:TSound);cdecl;external;
+procedure UnloadSoundAlias(alias:TSound);cdecl;external libraylib;
 { Unload sound alias (does not deallocate sample data) }
-(* Const before type ignored *)
-function ExportWave(wave:TWave; fileName:Pchar):Tbool;cdecl;external;
+function ExportWave(wave:TWave; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export wave data to file, returns true on success }
-(* Const before type ignored *)
-function ExportWaveAsCode(wave:TWave; fileName:Pchar):Tbool;cdecl;external;
+function ExportWaveAsCode(wave:TWave; fileName:Pchar):Tbool;cdecl;external libraylib;
 { Export wave sample data to code (.h), returns true on success }
 { Wave/Sound management functions }
-procedure PlaySound(sound:TSound);cdecl;external;
+procedure PlaySound(sound:TSound);cdecl;external libraylib;
 { Play a sound }
-procedure StopSound(sound:TSound);cdecl;external;
+procedure StopSound(sound:TSound);cdecl;external libraylib;
 { Stop playing a sound }
-procedure PauseSound(sound:TSound);cdecl;external;
+procedure PauseSound(sound:TSound);cdecl;external libraylib;
 { Pause a sound }
-procedure ResumeSound(sound:TSound);cdecl;external;
+procedure ResumeSound(sound:TSound);cdecl;external libraylib;
 { Resume a paused sound }
-function IsSoundPlaying(sound:TSound):Tbool;cdecl;external;
+function IsSoundPlaying(sound:TSound):Tbool;cdecl;external libraylib;
 { Check if sound is currently playing }
-procedure SetSoundVolume(sound:TSound; volume:single);cdecl;external;
+procedure SetSoundVolume(sound:TSound; volume:single);cdecl;external libraylib;
 { Set volume for a sound (1.0 is max level) }
-procedure SetSoundPitch(sound:TSound; pitch:single);cdecl;external;
+procedure SetSoundPitch(sound:TSound; pitch:single);cdecl;external libraylib;
 { Set pitch for a sound (1.0 is base level) }
-procedure SetSoundPan(sound:TSound; pan:single);cdecl;external;
+procedure SetSoundPan(sound:TSound; pan:single);cdecl;external libraylib;
 { Set pan for a sound (-1.0 left, 0.0 center, 1.0 right) }
-function WaveCopy(wave:TWave):TWave;cdecl;external;
+function WaveCopy(wave:TWave):TWave;cdecl;external libraylib;
 { Copy a wave to a new wave }
-procedure WaveCrop(wave:PWave; initFrame:longint; finalFrame:longint);cdecl;external;
+procedure WaveCrop(wave:PWave; initFrame:longint; finalFrame:longint);cdecl;external libraylib;
 { Crop a wave to defined frames range }
-procedure WaveFormat(wave:PWave; sampleRate:longint; sampleSize:longint; channels:longint);cdecl;external;
+procedure WaveFormat(wave:PWave; sampleRate:longint; sampleSize:longint; channels:longint);cdecl;external libraylib;
 { Convert wave data to desired format }
-function LoadWaveSamples(wave:TWave):Psingle;cdecl;external;
+function LoadWaveSamples(wave:TWave):Psingle;cdecl;external libraylib;
 { Load samples data from wave as a 32bit float data array }
-procedure UnloadWaveSamples(samples:Psingle);cdecl;external;
+procedure UnloadWaveSamples(samples:Psingle);cdecl;external libraylib;
 { Unload samples data loaded with LoadWaveSamples() }
 { Music management functions }
-(* Const before type ignored *)
-function LoadMusicStream(fileName:Pchar):TMusic;cdecl;external;
+function LoadMusicStream(fileName:Pchar):TMusic;cdecl;external libraylib;
 { Load music stream from file }
-(* Const before type ignored *)
-(* Const before type ignored *)
-function LoadMusicStreamFromMemory(fileType:Pchar; data:Pbyte; dataSize:longint):TMusic;cdecl;external;
+function LoadMusicStreamFromMemory(fileType:Pchar; data:Pbyte; dataSize:longint):TMusic;cdecl;external libraylib;
 { Load music stream from data }
-function IsMusicValid(music:TMusic):Tbool;cdecl;external;
+function IsMusicValid(music:TMusic):Tbool;cdecl;external libraylib;
 { Check if music stream is valid (context and buffers initialized) }
-procedure UnloadMusicStream(music:TMusic);cdecl;external;
+procedure UnloadMusicStream(music:TMusic);cdecl;external libraylib;
 { Unload music stream }
-procedure PlayMusicStream(music:TMusic);cdecl;external;
+procedure PlayMusicStream(music:TMusic);cdecl;external libraylib;
 { Start music playing }
-function IsMusicStreamPlaying(music:TMusic):Tbool;cdecl;external;
+function IsMusicStreamPlaying(music:TMusic):Tbool;cdecl;external libraylib;
 { Check if music is playing }
-procedure UpdateMusicStream(music:TMusic);cdecl;external;
+procedure UpdateMusicStream(music:TMusic);cdecl;external libraylib;
 { Update buffers for music streaming }
-procedure StopMusicStream(music:TMusic);cdecl;external;
+procedure StopMusicStream(music:TMusic);cdecl;external libraylib;
 { Stop music playing }
-procedure PauseMusicStream(music:TMusic);cdecl;external;
+procedure PauseMusicStream(music:TMusic);cdecl;external libraylib;
 { Pause music playing }
-procedure ResumeMusicStream(music:TMusic);cdecl;external;
+procedure ResumeMusicStream(music:TMusic);cdecl;external libraylib;
 { Resume playing paused music }
-procedure SeekMusicStream(music:TMusic; position:single);cdecl;external;
+procedure SeekMusicStream(music:TMusic; position:single);cdecl;external libraylib;
 { Seek music to a position (in seconds) }
-procedure SetMusicVolume(music:TMusic; volume:single);cdecl;external;
+procedure SetMusicVolume(music:TMusic; volume:single);cdecl;external libraylib;
 { Set volume for music (1.0 is max level) }
-procedure SetMusicPitch(music:TMusic; pitch:single);cdecl;external;
+procedure SetMusicPitch(music:TMusic; pitch:single);cdecl;external libraylib;
 { Set pitch for music (1.0 is base level) }
-procedure SetMusicPan(music:TMusic; pan:single);cdecl;external;
+procedure SetMusicPan(music:TMusic; pan:single);cdecl;external libraylib;
 { Set pan for music (-1.0 left, 0.0 center, 1.0 right) }
-function GetMusicTimeLength(music:TMusic):single;cdecl;external;
+function GetMusicTimeLength(music:TMusic):single;cdecl;external libraylib;
 { Get music time length (in seconds) }
-function GetMusicTimePlayed(music:TMusic):single;cdecl;external;
+function GetMusicTimePlayed(music:TMusic):single;cdecl;external libraylib;
 { Get current music time played (in seconds) }
 { AudioStream management functions }
-function LoadAudioStream(sampleRate:dword; sampleSize:dword; channels:dword):TAudioStream;cdecl;external;
+function LoadAudioStream(sampleRate:dword; sampleSize:dword; channels:dword):TAudioStream;cdecl;external libraylib;
 { Load audio stream (to stream raw audio pcm data) }
-function IsAudioStreamValid(stream:TAudioStream):Tbool;cdecl;external;
+function IsAudioStreamValid(stream:TAudioStream):Tbool;cdecl;external libraylib;
 { Check if an audio stream is valid (buffers initialized) }
-procedure UnloadAudioStream(stream:TAudioStream);cdecl;external;
+procedure UnloadAudioStream(stream:TAudioStream);cdecl;external libraylib;
 { Unload audio stream and free memory }
-(* Const before type ignored *)
-procedure UpdateAudioStream(stream:TAudioStream; data:pointer; frameCount:longint);cdecl;external;
+procedure UpdateAudioStream(stream:TAudioStream; data:pointer; frameCount:longint);cdecl;external libraylib;
 { Update audio stream buffers with data }
-function IsAudioStreamProcessed(stream:TAudioStream):Tbool;cdecl;external;
+function IsAudioStreamProcessed(stream:TAudioStream):Tbool;cdecl;external libraylib;
 { Check if any audio stream buffers requires refill }
-procedure PlayAudioStream(stream:TAudioStream);cdecl;external;
+procedure PlayAudioStream(stream:TAudioStream);cdecl;external libraylib;
 { Play audio stream }
-procedure PauseAudioStream(stream:TAudioStream);cdecl;external;
+procedure PauseAudioStream(stream:TAudioStream);cdecl;external libraylib;
 { Pause audio stream }
-procedure ResumeAudioStream(stream:TAudioStream);cdecl;external;
+procedure ResumeAudioStream(stream:TAudioStream);cdecl;external libraylib;
 { Resume audio stream }
-function IsAudioStreamPlaying(stream:TAudioStream):Tbool;cdecl;external;
+function IsAudioStreamPlaying(stream:TAudioStream):Tbool;cdecl;external libraylib;
 { Check if audio stream is playing }
-procedure StopAudioStream(stream:TAudioStream);cdecl;external;
+procedure StopAudioStream(stream:TAudioStream);cdecl;external libraylib;
 { Stop audio stream }
-procedure SetAudioStreamVolume(stream:TAudioStream; volume:single);cdecl;external;
+procedure SetAudioStreamVolume(stream:TAudioStream; volume:single);cdecl;external libraylib;
 { Set volume for audio stream (1.0 is max level) }
-procedure SetAudioStreamPitch(stream:TAudioStream; pitch:single);cdecl;external;
+procedure SetAudioStreamPitch(stream:TAudioStream; pitch:single);cdecl;external libraylib;
 { Set pitch for audio stream (1.0 is base level) }
-procedure SetAudioStreamPan(stream:TAudioStream; pan:single);cdecl;external;
+procedure SetAudioStreamPan(stream:TAudioStream; pan:single);cdecl;external libraylib;
 { Set pan for audio stream (-1.0 left, 0.0 center, 1.0 right) }
-procedure SetAudioStreamBufferSizeDefault(size:longint);cdecl;external;
+procedure SetAudioStreamBufferSizeDefault(size:longint);cdecl;external libraylib;
 { Default size for new audio streams }
-procedure SetAudioStreamCallback(stream:TAudioStream; callback:TAudioCallback);cdecl;external;
+procedure SetAudioStreamCallback(stream:TAudioStream; callback:TAudioCallback);cdecl;external libraylib;
 { Audio thread callback to request new data }
-procedure AttachAudioStreamProcessor(stream:TAudioStream; processor:TAudioCallback);cdecl;external;
+procedure AttachAudioStreamProcessor(stream:TAudioStream; processor:TAudioCallback);cdecl;external libraylib;
 { Attach audio stream processor to stream, receives frames x 2 samples as 'float' (stereo) }
-procedure DetachAudioStreamProcessor(stream:TAudioStream; processor:TAudioCallback);cdecl;external;
+procedure DetachAudioStreamProcessor(stream:TAudioStream; processor:TAudioCallback);cdecl;external libraylib;
 { Detach audio stream processor from stream }
-procedure AttachAudioMixedProcessor(processor:TAudioCallback);cdecl;external;
+procedure AttachAudioMixedProcessor(processor:TAudioCallback);cdecl;external libraylib;
 { Attach audio stream processor to the entire audio pipeline, receives frames x 2 samples as 'float' (stereo) }
-procedure DetachAudioMixedProcessor(processor:TAudioCallback);cdecl;external;
+procedure DetachAudioMixedProcessor(processor:TAudioCallback);cdecl;external libraylib;
 { Detach audio stream processor from the entire audio pipeline }
 
+
+const
+  LIGHTGRAY: TColor = (r: 200; g: 200; b: 200; a: 255);
+  GRAY: TColor = (r: 130; g: 130; b: 130; a: 255);
+  DARKGRAY: TColor = (r: 80; g: 80; b: 80; a: 255);
+  YELLOW: TColor = (r: 253; g: 249; b: 0; a: 255);
+  GOLD: TColor = (r: 255; g: 203; b: 0; a: 255);
+  ORANGE: TColor = (r: 255; g: 161; b: 0; a: 255);
+  PINK: TColor = (r: 255; g: 109; b: 194; a: 255);
+  RED: TColor = (r: 230; g: 41; b: 55; a: 255);
+  MAROON: TColor = (r: 190; g: 33; b: 55; a: 255);
+  GREEN: TColor = (r: 0; g: 228; b: 48; a: 255);
+  LIME: TColor = (r: 0; g: 158; b: 47; a: 255);
+  DARKGREEN: TColor = (r: 0; g: 117; b: 44; a: 255);
+  SKYBLUE: TColor = (r: 102; g: 191; b: 255; a: 255);
+  BLUE: TColor = (r: 0; g: 121; b: 241; a: 255);
+  DARKBLUE: TColor = (r: 0; g: 82; b: 172; a: 255);
+  PURPLE: TColor = (r: 200; g: 122; b: 255; a: 255);
+  VIOLET: TColor = (r: 135; g: 60; b: 190; a: 255);
+  DARKPURPL: TColor = (r: 112; g: 31; b: 126; a: 255);
+  BEIGE: TColor = (r: 211; g: 176; b: 131; a: 255);
+  BROWN: TColor = (r: 127; g: 106; b: 79; a: 255);
+  DARKBROWN: TColor = (r: 76; g: 63; b: 47; a: 255);
+
+  WHITE: TColor = (r: 255; g: 255; b: 255; a: 255);
+  BLACK: TColor = (r: 0; g: 0; b: 0; a: 255);
+  BLANK: TColor = (r: 0; g: 0; b: 0; a: 0);
+  MAGENTA: TColor = (r: 255; g: 0; b: 255; a: 255);
+  RAYWHITE: TColor = (r: 245; g: 245; b: 245; a: 255);
+
+// === Konventiert am: 17-11-26 13:59:28 ===
+
+
 implementation
+
 
 
 end.

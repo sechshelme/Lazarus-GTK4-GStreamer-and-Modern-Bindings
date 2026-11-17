@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="5">
+  <Package Version="6">
     <Name Value="fp_raylib_package"/>
     <Type Value="RunAndDesignTime"/>
     <CompilerOptions>
@@ -21,6 +21,10 @@
       <Item>
         <Filename Value="fp_raymath.pas"/>
         <UnitName Value="fp_raymath"/>
+      </Item>
+      <Item>
+        <Filename Value="fp_rcamera.pas"/>
+        <UnitName Value="fp_rcamera"/>
       </Item>
     </Files>
     <RequiredPkgs>
