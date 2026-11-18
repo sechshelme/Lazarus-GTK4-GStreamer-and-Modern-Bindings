@@ -3,9 +3,6 @@ program project1;
 uses
   fp_raylib;
 
-//  wget https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt
-
-
   procedure main;
   const
     screenWidth = 800;
@@ -35,7 +32,6 @@ uses
     SetConfigFlags(FLAG_MSAA_4X_HINT);
 
     InitWindow(screenWidth, screenHeight, 'raylib [core] example - input gamepad');
-    SetGamepadMappings('03000000373500009310000010010000,GameSir Tegenaria Lite,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,');
 
     texPs3Pad := LoadTexture('../../../../../../Raylib_media/ps3.png');
     texXboxPad := LoadTexture('../../../../../../Raylib_media/xbox.png');
@@ -161,8 +157,6 @@ uses
           //DrawText(TextFormat("Xbox axis RT: %02.02f", GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_TRIGGER)), 10, 60, 10, BLACK);
         end else if ((TextFindIndex(TextToLower(GetGamepadName(gamepad)), PS_ALIAS_1) > -1)) or ((TextFindIndex(TextToLower(GetGamepadName(gamepad)), PS_ALIAS_2) > -1)) then begin
           DrawTexture(texPs3Pad, 0, 0, DARKGRAY);
-//          WriteLn(111111);
-//          WriteLn('Button: ', GetGamepadButtonPressed(), ' | Achse 0: ', GetGamepadAxisMovement(gamepad, 0):0:2);
 
           if IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_MIDDLE) then begin
             DrawCircle(396, 222, 13, RED);
@@ -303,7 +297,6 @@ uses
           DrawCircle(465, 260, 35, LIGHTGRAY);
           DrawCircle(465 + trunc(rightStickX * 20), 260 + trunc(rightStickY * 20), 25, rightGamepadColor);
 
-          // Draw axis: left-right triggers
           DrawRectangle(151, 110, 15, 70, GRAY);
           DrawRectangle(644, 110, 15, 70, GRAY);
           DrawRectangle(151, 110, 15, trunc(((1 + leftTrigger) / 2) * 70), RED);
@@ -316,7 +309,6 @@ uses
           DrawText(TextFormat('AXIS %i: %.02', i, GetGamepadAxisMovement(gamepad, i)), 20, 70 + 20 * i, 10, DARKGRAY);
         end;
 
-        // Draw vibrate button
         DrawRectangleRec(vibrateButton, SKYBLUE);
         DrawText('VIBRATE', trunc(vibrateButton.x + 14), trunc(vibrateButton.y + 1), 10, DARKGRAY);
 
