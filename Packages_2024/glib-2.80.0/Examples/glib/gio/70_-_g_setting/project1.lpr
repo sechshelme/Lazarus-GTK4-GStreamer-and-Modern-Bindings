@@ -1,10 +1,5 @@
 program project1;
 
-// gsettings list-keys org.gtk.Settings.FileChooser
-// gsettings list-recursively org.gtk.Settings.FileChooser
-
-
-
 uses
   fp_glib2;
 
