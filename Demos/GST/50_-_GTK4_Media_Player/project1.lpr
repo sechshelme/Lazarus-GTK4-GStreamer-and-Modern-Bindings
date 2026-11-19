@@ -12,6 +12,9 @@ uses
     window: PGtkWidget;
   begin
     g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
+    g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);
+//    g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Mint-Y-Dark-Red', nil);
+
     window := mp_main_window_new;
     gtk_window_set_application(GTK_WINDOW(window), app);
   end;

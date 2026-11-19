@@ -48,6 +48,7 @@ uses
     window, box, button, drawing_area: PGtkWidget;
   begin
     g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
+    g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);
 
     window := gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), 'Belt Drive');

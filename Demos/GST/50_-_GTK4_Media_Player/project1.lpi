@@ -34,51 +34,6 @@
         <PackageName Value="fp_GTK4_package"/>
       </Item>
     </RequiredPackages>
-    <Units>
-      <Unit>
-        <Filename Value="project1.lpr"/>
-      </Unit>
-      <Unit>
-        <Filename Value="loadtitledialog.pas"/>
-        <UnitName Value="LoadTitleDialog"/>
-      </Unit>
-      <Unit>
-        <Filename Value="xml_tools.pas"/>
-        <UnitName Value="XML_Tools"/>
-      </Unit>
-      <Unit>
-        <Filename Value="common.pas"/>
-        <UnitName Value="Common"/>
-      </Unit>
-      <Unit>
-        <Filename Value="loadsavesongs.pas"/>
-        <UnitName Value="LoadSaveSongs"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mpvumeterwidget.pas"/>
-        <UnitName Value="MPVUMeterWidget"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mpcolumnviewbox.pas"/>
-        <UnitName Value="MPColumnViewBox"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mpsongitem.pas"/>
-        <UnitName Value="MPSongItem"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mpdurationbox.pas"/>
-        <UnitName Value="MPDurationBox"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mpmainwindow.pas"/>
-        <UnitName Value="MPMainWindow"/>
-      </Unit>
-      <Unit>
-        <Filename Value="mpidlesongloader.pas"/>
-        <UnitName Value="MPIdleSongLoader"/>
-      </Unit>
-    </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>

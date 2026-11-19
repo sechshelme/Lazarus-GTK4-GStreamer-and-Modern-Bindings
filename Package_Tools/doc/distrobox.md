@@ -78,6 +78,10 @@ sudo ln var/run/host/n4800/ n4800 -s
 ```bash
 distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/wine
 distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/meson
+distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/blender
+
+distrobox enter ubuntu-dev -- distrobox-export --bin /home/tux/fpcupdeluxe_trunk/lazarus/lazarus
+
 ```
 
 ## OS abfragen
@@ -100,6 +104,8 @@ sudo apt install cockpit cockpit-podman
 In Browser folgenden Link eingeben [https://localhost:9090]
 
 # distroBox mit Nemo öffnen
+
+/home/tux/.local/share/nemo/actions
 
 ## Ubuntu LTS:
 in Folgenden Ordner `~/.local/share/nemo/actions` eine Datei mit `ubuntu_lts.nemo_action` erstellen.
@@ -127,6 +133,20 @@ Icon-Name=utilities-terminal
 Selection=any
 Extensions=dir;
 EscapeSpaces=true
+```
+
+## Lazarus Trunk (Distrobox):
+in Folgenden Ordner `~/.local/share/nemo/actions` eine Datei mit `lazarus_trunk.nemo_action` erstellen.
+```ini
+[Nemo Action]
+Active=true
+Name=Mit Lazarus Trunk (Distrobox) öffnen
+Comment=Öffnet diese Projekt- oder Quellcodedatei in Lazarus im ubuntu-dev Container
+Exec=/home/tux/.local/bin/lazarus_ubuntu_dev %F
+Icon-Name=lazarus
+Selection=notnone
+Extensions=lpi;lpr;pas;pp;inc;
+EscapeSpaces=false
 ```
 
 

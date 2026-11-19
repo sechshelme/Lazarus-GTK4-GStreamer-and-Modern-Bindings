@@ -94,14 +94,12 @@ Ogre3D oder IrrLicht:  // Games Engines
 
 
 # Lib zum bearbeiten
-libgnome-games-support-2   // instabil, wurde 2026 entfernt
 
-libgcrypt20 libgcrypt20
-libtasn1-6 libtasn1-6
+libassimp6
+libgcrypt20
+libtasn1-6 
 libxslt1
-libsecret-1-0 libsecret-1
-
-libsoup2.2                         // veraltet
+libsecret-1-0 
 libpng
 libbluetooth
 libopenal
@@ -173,10 +171,67 @@ libfdt                // Geräte Tabelle
 libwacom-dev          // grafiktablett
 libcimgui             //    ImGui 
 libblkid
+libnl-genl-3
+liblodepng
+libswresample              // ffmpeg
+libboost-locale1.88.0 
+liblangtag-common    
+libbinutils     
+liborcus-0      // Excel Tabellen einlesen
+libgoa-1.0-common
+libgupnp-1.6-0  
+libgupnp-dlna-2.0-4 
+libblockdev          ( mit glib )
+libchromaprint       ( audioerkennug ))
+libebur128-1         ( Lautheitsmessung )    
+libfluidsynth3      ( midi )
+librsvg2-2  
+libmm-glib0    
+libmkl-full
+libdfp-dev
+libminiaudio-dev       
+libxmlsec1-nss1  
+libxmlsec1-1 
+libgsm1   
+liburcu8t64
+libogg0
+libatk1.0-dev       // Barrierenfreiheit
+libvala-0.56-dev 
+libvalacodegen-0.56-0 
+liba52
+librdkafka-dev
+libgdbm-dev
+libdaemon-dev
+libavif
+libsodium                         // krypto
+libgcrypt20-dev 
+libopenimageio2.5                 // bild konverter
+libzita-resampler1                // C++
+libmad0-dev                       // mp3
+libqpdf30      
+libpolkit-gobject-1-0             // Rechte / Berechtigungen
+liblua5.1-0-dev                   // ähnlich tk/tcl  
+libaccountsservice0               // acount
+libzinnia                         // Handschrifterkennung  veraltet
+libbz2-dev                        // ähnlich zip
+libpdal, liblas // was ist das ???? 
+libgeotiff-dev
+libwmf-0.2-7
+libtalloc2                        // Makro verseucht
+libswresample / libswscale
+libcfitsio-dev
+libspirv-cross-c-shared.so
+libgpg-error
+libfilezilla
+libwebsockets 
+
+
 
 
 # ===================
 
+libsoup2.2                         // veraltet
+libgnome-games-support-2           // instabil, wurde 2026 entfernt
 libcogl                            // veraltet
 
 liblapack-dev          // fortan  algebra            gcc main.c -o main -lblas -llapack
@@ -209,68 +264,7 @@ apt install blueprint-compiler      /// GTK4 UI erstellrn
 
 
 
-libnl-genl-3
-liblodepng
-libswresample-dev  
-libboost-locale1.88.0 
-liblangtag-common    
-libbinutils     
-libmount-dev  
-libgusb2  
-liborcus-0      // Excel Tabellen einlesen
 
-
-libgoa-1.0-common  
-
- libgupnp-1.6-0  
-
-  libblockdev       ( mit glib )
-
- libchromaprint-dev     ( audioerkennug ))
-  libbytesize-common    ( bist byte berechnen )    
-     libebur128-1  ( Lautheitsmessung )    
-  libfluidsynth3      ( midi )
-
-
-
-  libsuitesparseconfig7 ( matrix mathe )  libsuitesparse-dev
-
- librsvg2-2  
- libmm-glib0    
-
-libmkl-full-dev  
-
-
-
-libdfp-dev
-
-libminiaudio-dev       
- libgupnp-dlna-2.0-4 
-
-libxmlsec1-nss1  
-libxmlsec1-1 
-
-libgsm1   
-libtevent0t64 
-liburcu8t64
-
-libogg0
-
- libatk1.0-dev       // Barrierenfreiheit
-
-libgegl-dev
-libvala-0.56-dev 
- libvalacodegen-0.56-0 
-libappstream-dev
-
-  liba52-0.7.4-dev      
-librdkafka-dev
-
-
-libgdbm-dev
-libdaemon-dev
-
-libavif
 gdk-pixbuf-csource 
 /usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
 
@@ -280,44 +274,6 @@ gdk-pixbuf-csource
 
 
 
-libsodium                         // krypto
-libgcrypt20-dev 
-libopenimageio2.5                 // bild konverter
-libzita-resampler1                // C++
-libmad0-dev                       // mp3
-libqpdf30      
-libpolkit-gobject-1-0             // Rechte / Berechtigungen
-liblua5.1-0-dev                   // ähnlich tk/tcl  
-libaccountsservice0               // acount
-
-libzinnia                         // Handschrifterkennung  veraltet
-
-libbz2-dev                        // ähnlich zip
-
-
-
-
-libpdal, liblas // was ist das ???? 
-libgeotiff-dev
-libwmf-0.2-7
-
-libtalloc2                      // Makro verseucht
-
-thorvg und passagemath 
-
-libjxl
-libcbor0.10    
-
-libswresample / libswscale
-libvips
-
-https://github.com/lundmar/gtkchart
-
-libcfitsio-dev
-
-libspirv-cross-c-shared.so
-
- libgpg-error.so.0
 
 
 
@@ -325,6 +281,8 @@ gvfs, gvfs-daemons, gvfs-libs
 
 
 
+
+thorvg und passagemath 
 
 
 
@@ -354,7 +312,6 @@ mingw-w64-arrow (Apache Arrow):Ein Framework für In-Memory-Datenanalysen. Es is
 
 
 Compressor name	Ratio	Compression	Decompress.
-zlib 1.3.1 -1	2.743	105 MB/s	390 MB/s
 quicklz 1.5.0 -1	2.238	520 MB/s	750 MB/s
 lzo1x 2.10 -1	2.106	650 MB/s	780 MB/s
 lz4 1.10.0	2.101	675 MB/s	3850 MB/s
@@ -720,6 +677,16 @@ sudo apt install mesa-opencl-icd
 sudo apt install hyprland   # Erst ab ubuntu 26.4
 
 
+# GTK4
+Alle verfügbaren Thema auflisten:
+```bash
+ls -d /usr/share/themes/*/gtk-4.0 2>/dev/null | cut -d'/' -f5
+```
+```delphi
+    g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
+    g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);
+//    g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Mint-Y-Dark-Red', nil);
+```
 
 
 
