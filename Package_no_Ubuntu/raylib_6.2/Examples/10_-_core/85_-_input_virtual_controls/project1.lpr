@@ -1,5 +1,7 @@
 program project1;
 
+{$mode objfpc}{$H+}
+
 uses
   fp_raylib;
 
@@ -8,136 +10,125 @@ uses
     screenWidth = 800;
     screenHeight = 450;
 
-        BUTTON_NONE = -1;
-        BUTTON_UP=0;
-        BUTTON_LEFT=1;
-        BUTTON_RIGHT=2;
-        BUTTON_DOWN=3;
-        BUTTON_MAX=4;
+    BUTTON_NONE = -1;
+    BUTTON_UP = 0;
+    BUTTON_LEFT = 1;
+    BUTTON_RIGHT = 2;
+    BUTTON_DOWN = 3;
+    BUTTON_MAX = 4;
   var
-    padPosition:TVector2  = (x: 100;y: 350 );
-   buttonRadius:Single = 30;
+    padPosition: TVector2 = (x: 100; y: 350);
+    buttonRadius: single = 30;
 
+    buttonPositions: array[0..BUTTON_MAX - 1] of TVector2;
+    arrowTris: array[0..3, 0..2] of TVector2;
+    buttonLabelColors: array[0..BUTTON_MAX - 1] of PColor = (@YELLOW, @BLUE, @RED, @GREEN);
+
+    pressedButton: integer = BUTTON_NONE;
+    inputPosition: TVector2 = (x: 0; y: 0);
+
+    playerPosition: TVector2;
+    playerSpeed: single = 75;
+
+    i: integer;
+    distX, distY: single;
+    btnColor: TColor;
   begin
     InitWindow(screenWidth, screenHeight, 'raylib [core] example - input virtual controls');
 
+    buttonPositions := [
+      vec2(padPosition.x, padPosition.y - buttonRadius * 1.5),
+      vec2(padPosition.x - buttonRadius * 1.5, padPosition.y),
+      vec2(padPosition.x + buttonRadius * 1.5, padPosition.y),
+      vec2(padPosition.x, padPosition.y + buttonRadius * 1.5)];
 
-      Vector2 buttonPositions[BUTTON_MAX] = {
-          { padPosition.x,padPosition.y - buttonRadius*1.5f },  // Up
-          { padPosition.x - buttonRadius*1.5f, padPosition.y }, // Left
-          { padPosition.x + buttonRadius*1.5f, padPosition.y }, // Right
-          { padPosition.x, padPosition.y + buttonRadius*1.5f }  // Down
-      };
+    buttonPositions := [
+      vec2(padPosition.x, padPosition.y - buttonRadius * 1.5),
+      vec2(padPosition.x - buttonRadius * 1.5, padPosition.y),
+      vec2(padPosition.x + buttonRadius * 1.5, padPosition.y),
+      vec2(padPosition.x, padPosition.y + buttonRadius * 1.5)];
 
-      Vector2 arrowTris[4][3] = {
-          // Up
-          {
-              { buttonPositions[0].x,     buttonPositions[0].y - 12 },
-              { buttonPositions[0].x - 9, buttonPositions[0].y + 9  },
-              { buttonPositions[0].x + 9, buttonPositions[0].y + 9  }
-          },
-          // Left
-          {
-              { buttonPositions[1].x + 9,  buttonPositions[1].y - 9 },
-              { buttonPositions[1].x - 12, buttonPositions[1].y     },
-              { buttonPositions[1].x + 9,  buttonPositions[1].y + 9 }
-          },
-          // Right
-          {
-              { buttonPositions[2].x + 12, buttonPositions[2].y     },
-              { buttonPositions[2].x - 9,  buttonPositions[2].y - 9 },
-              { buttonPositions[2].x - 9,  buttonPositions[2].y + 9 }
-          },
-          // Down
-          {
-              { buttonPositions[3].x - 9, buttonPositions[3].y - 9  },
-              { buttonPositions[3].x,     buttonPositions[3].y + 12 },
-              { buttonPositions[3].x + 9, buttonPositions[3].y - 9  }
-          }
-      };
+    arrowTris := [[
+      vec2(buttonPositions[0].x, buttonPositions[0].y - 12),
+      vec2(buttonPositions[0].x - 9, buttonPositions[0].y + 9),
+      vec2(buttonPositions[0].x + 9, buttonPositions[0].y + 9)
+      ], [
+      vec2(buttonPositions[1].x + 9, buttonPositions[1].y - 9),
+      vec2(buttonPositions[1].x - 12, buttonPositions[1].y),
+      vec2(buttonPositions[1].x + 9, buttonPositions[1].y + 9)
+      ], [
+      vec2(buttonPositions[2].x + 12, buttonPositions[2].y),
+      vec2(buttonPositions[2].x - 9, buttonPositions[2].y - 9),
+      vec2(buttonPositions[2].x - 9, buttonPositions[2].y + 9)
+      ], [
+      vec2(buttonPositions[3].x - 9, buttonPositions[3].y - 9),
+      vec2(buttonPositions[3].x, buttonPositions[3].y + 12),
+      vec2(buttonPositions[3].x + 9, buttonPositions[3].y - 9)
+      ]];
 
-      Color buttonLabelColors[BUTTON_MAX] = {
-          YELLOW, // Up
-          BLUE,   // Left
-          RED,    // Right
-          GREEN   // Down
-      };
+    playerPosition := vec2(screenWidth / 2, screenHeight / 2);
 
-      int pressedButton = BUTTON_NONE;
-      Vector2 inputPosition = { 0, 0 };
-
-      Vector2 playerPosition = { (float)screenWidth/2, (float)screenHeight/2 };
-      float playerSpeed = 75;
-
-      SetTargetFPS(60);
-      //-------------------------------
+    SetTargetFPS(60);
+    //--------------------------------------------------------------------------
     while not WindowShouldClose do begin
-      if ((GetTouchPointCount() > 0)) inputPosition = GetTouchPosition(0); // Use touch position
-        else inputPosition = GetMousePosition(); // Use mouse position
+      if GetTouchPointCount() > 0 then begin
+        inputPosition := GetTouchPosition(0);
+      end else begin
+        inputPosition := GetMousePosition();
+      end;
 
-        // Reset pressed button to none
-        pressedButton = BUTTON_NONE;
+      pressedButton := BUTTON_NONE;
 
-        // Make sure user is pressing left mouse button if they're from desktop
-        if ((GetTouchPointCount() > 0) ||
-            ((GetTouchPointCount() == 0) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)))
-        {
-            // Find nearest D-Pad button to the input position
-            for (int i = 0; i < BUTTON_MAX; i++)
-            {
-                float distX = fabsf(buttonPositions[i].x - inputPosition.x);
-                float distY = fabsf(buttonPositions[i].y - inputPosition.y);
+      if (GetTouchPointCount() > 0) or ((GetTouchPointCount() = 0) and IsMouseButtonDown(MOUSE_BUTTON_LEFT)) then begin
+        for i := 0 to BUTTON_MAX - 1 do begin
+          distX := Abs(buttonPositions[i].x - inputPosition.x);
+          distY := Abs(buttonPositions[i].y - inputPosition.y);
 
-                if ((distX + distY < buttonRadius))
-                {
-                    pressedButton = i;
-                    break;
-                }
-            }
-        }
+          if (distX + distY < buttonRadius) then begin
+            pressedButton := i;
+            break;
+          end;
+        end;
+      end;
 
-        // Move player according to pressed button
-        switch (pressedButton)
-        {
-            case BUTTON_UP: playerPosition.y -= playerSpeed*GetFrameTime(); break;
-            case BUTTON_LEFT: playerPosition.x -= playerSpeed*GetFrameTime(); break;
-            case BUTTON_RIGHT: playerPosition.x += playerSpeed*GetFrameTime(); break;
-            case BUTTON_DOWN: playerPosition.y += playerSpeed*GetFrameTime(); break;
-            default: break;
-        };
-        //--------------------------------------------------------------------------
+      case pressedButton of
+        BUTTON_UP: begin
+          playerPosition.y := playerPosition.y - playerSpeed * GetFrameTime();
+        end;
+        BUTTON_LEFT: begin
+          playerPosition.x := playerPosition.x - playerSpeed * GetFrameTime();
+        end;
+        BUTTON_RIGHT: begin
+          playerPosition.x := playerPosition.x + playerSpeed * GetFrameTime();
+        end;
+        BUTTON_DOWN: begin
+          playerPosition.y := playerPosition.y + playerSpeed * GetFrameTime();
+        end;
+      end;
 
-        // Draw
-        //--------------------------------------------------------------------------
-        BeginDrawing();
+      BeginDrawing();
+      ClearBackground(RAYWHITE);
 
-            ClearBackground(RAYWHITE);
+      DrawCircleV(playerPosition, 50, MAROON);
 
-            // Draw world
-            DrawCircleV(playerPosition, 50, MAROON);
+      for i := 0 to BUTTON_MAX - 1 do begin
+        if i = pressedButton then begin
+          btnColor := DARKGRAY;
+        end else begin
+          btnColor := BLACK;
+        end;
 
-            // Draw GUI
-            for (int i = 0; i < BUTTON_MAX; i++)
-            {
-                DrawCircleV(buttonPositions[i], buttonRadius, (i == pressedButton)? DARKGRAY : BLACK);
+        DrawCircleV(buttonPositions[i], buttonRadius, btnColor);
+        DrawTriangle(arrowTris[i, 0], arrowTris[i, 1], arrowTris[i, 2], buttonLabelColors[i]^);
+      end;
 
-                DrawTriangle(
-                    arrowTris[i][0],
-                    arrowTris[i][1],
-                    arrowTris[i][2],
-                    buttonLabelColors[i]
-                );
-            }
-
-            DrawText("move the player with D-Pad buttons", 10, 10, 20, DARKGRAY);
-
-        EndDrawing();
-
+      DrawText('move the player with D-Pad buttons', 10, 10, 20, DARKGRAY);
+      EndDrawing();
     end;
-    CloseWindow;
+
+    CloseWindow();
   end;
 
 begin
   main;
 end.
-end;
