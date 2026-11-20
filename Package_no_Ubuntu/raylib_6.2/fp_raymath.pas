@@ -15,29 +15,6 @@ const
   RAD2DEG = 180.0 / PI;
 
 type
-  PVector2 = ^TVector2;
-  TVector2 = record
-    x: single;
-    y: single;
-  end;
-
-  PVector3 = ^TVector3;
-  TVector3 = record
-    x: single;
-    y: single;
-    z: single;
-  end;
-
-type
-  PVector4 = ^TVector4;
-  TVector4 = record
-    x: single;
-    y: single;
-    z: single;
-    w: single;
-  end;
-
-type
   PQuaternion = ^TQuaternion;
   TQuaternion = TVector4;
 

@@ -61,8 +61,7 @@ uses
         camera.rotation := -40;
       end;
 
-      //      camera.zoom := expf(logf(camera.zoom) + (GetMouseWheelMove * 0.1));
-      camera.zoom := camera.zoom * (1.0 + GetMouseWheelMove * 0.1);
+      camera.zoom := Exp(Ln(camera.zoom) + (GetMouseWheelMove() * 0.1));
 
       if camera.zoom > 3.0 then  begin
         camera.zoom := 3.0;
