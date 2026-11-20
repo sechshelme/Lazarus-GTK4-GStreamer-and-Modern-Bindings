@@ -1,7 +1,6 @@
 program project1;
 
 uses
-  Math,
   fp_raylib,
   fp_raymath,
   fp_rlgl;
