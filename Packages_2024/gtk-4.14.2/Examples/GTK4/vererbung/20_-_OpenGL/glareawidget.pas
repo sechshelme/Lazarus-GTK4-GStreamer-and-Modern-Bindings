@@ -82,12 +82,12 @@ var
 begin
   priv := GetPriv(area);
 
-  gtk_gl_area_make_current(area);
-  if gtk_gl_area_get_error(area) <> nil then begin
-    Exit;
-  end;
-
   with priv^ do begin
+    gtk_gl_area_make_current(area);
+    if gtk_gl_area_get_error(area) <> nil then begin
+      Exit;
+    end;
+
     shader := shader_new;
     if not shader_load_shaderobject(shader, GL_VERTEX_SHADER, pchar(VertexShaderSource)) then begin
       WriteLn('Fehler im Vertex-Shader:');

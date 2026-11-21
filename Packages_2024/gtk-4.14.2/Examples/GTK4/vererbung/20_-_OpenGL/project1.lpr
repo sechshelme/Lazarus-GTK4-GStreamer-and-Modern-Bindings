@@ -22,7 +22,8 @@ uses
     c = 5;
     r = 5;
   begin
-    g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTRUE, nil);
+    g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
+    g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);
 
     window := gtk_application_window_new(app);
     gtk_window_set_decorated(GTK_WINDOW(window), True);

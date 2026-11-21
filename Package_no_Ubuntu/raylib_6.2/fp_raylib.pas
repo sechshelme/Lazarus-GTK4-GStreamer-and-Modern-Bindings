@@ -8,7 +8,7 @@ const
   {$ENDIF}
 
   {$IFDEF Windows}
-  libraylib = 'raylib.dll'; // ?????
+  libraylib = 'libraylib.dll';
   {$ENDIF}
 
 type

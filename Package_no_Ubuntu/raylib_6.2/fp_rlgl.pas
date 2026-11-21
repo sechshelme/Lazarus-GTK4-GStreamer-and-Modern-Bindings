@@ -111,27 +111,6 @@ const
   RL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCETRANSFORM = 9;
 
 type
-  PMatrix = ^TMatrix;
-  TMatrix = record
-    m0: single;
-    m4: single;
-    m8: single;
-    m12: single;
-    m1: single;
-    m5: single;
-    m9: single;
-    m13: single;
-    m2: single;
-    m6: single;
-    m10: single;
-    m14: single;
-    m3: single;
-    m7: single;
-    m11: single;
-    m15: single;
-  end;
-
-type
   PrlVertexBuffer = ^TrlVertexBuffer;
   TrlVertexBuffer = record
     elementCount: longint;

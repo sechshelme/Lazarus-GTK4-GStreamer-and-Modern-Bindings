@@ -14,19 +14,6 @@ const
   CAMERA_CULL_DISTANCE_FAR = 4000.0;
 
 type
-  PVector2 = ^TVector2;
-  TVector2 = record
-    x: single;
-    y: single;
-  end;
-
-  PVector3 = ^TVector3;
-  TVector3 = record
-    x: single;
-    y: single;
-    z: single;
-  end;
-
   PMatrix = ^TMatrix;
   TMatrix = record
     m0: single;
@@ -46,18 +33,6 @@ type
     m11: single;
     m15: single;
   end;
-
-  PCamera3D = ^TCamera3D;
-  TCamera3D = record
-    position: TVector3;
-    target: TVector3;
-    up: TVector3;
-    fovy: single;
-    projection: longint;
-  end;
-
-  PCamera = ^TCamera;
-  TCamera = TCamera3D;
 
 type
   PCameraProjection = ^TCameraProjection;
