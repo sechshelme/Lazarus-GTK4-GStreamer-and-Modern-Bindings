@@ -77,7 +77,6 @@ type
   end;
 
   PImage = ^TImage;
-
   TImage = record
     data: pointer;
     width: longint;
@@ -87,7 +86,6 @@ type
   end;
 
   PTexture = ^TTexture;
-
   TTexture = record
     id: dword;
     width: longint;
@@ -103,7 +101,6 @@ type
   TTextureCubemap = TTexture;
 
   PRenderTexture = ^TRenderTexture;
-
   TRenderTexture = record
     id: dword;
     texture: TTexture;
@@ -114,7 +111,6 @@ type
   TRenderTexture2D = TRenderTexture;
 
   PNPatchInfo = ^TNPatchInfo;
-
   TNPatchInfo = record
     source: TRectangle;
     left: longint;
@@ -125,7 +121,6 @@ type
   end;
 
   PGlyphInfo = ^TGlyphInfo;
-
   TGlyphInfo = record
     value: longint;
     offsetX: longint;
@@ -135,7 +130,6 @@ type
   end;
 
   PFont = ^TFont;
-
   TFont = record
     baseSize: longint;
     glyphCount: longint;
@@ -146,7 +140,6 @@ type
   end;
 
   PCamera3D = ^TCamera3D;
-
   TCamera3D = record
     position: TVector3;
     target: TVector3;
@@ -159,7 +152,6 @@ type
   TCamera = TCamera3D;
 
   PCamera2D = ^TCamera2D;
-
   TCamera2D = record
     offset: TVector2;
     target: TVector2;
@@ -168,7 +160,6 @@ type
   end;
 
   PMesh = ^TMesh;
-
   TMesh = record
     vertexCount: longint;
     triangleCount: longint;
@@ -189,14 +180,12 @@ type
   end;
 
   PShader = ^TShader;
-
   TShader = record
     id: dword;
     locs: Plongint;
   end;
 
   PMaterialMap = ^TMaterialMap;
-
   TMaterialMap = record
     texture: TTexture2D;
     color: TColor;
@@ -204,7 +193,6 @@ type
   end;
 
   PMaterial = ^TMaterial;
-
   TMaterial = record
     shader: TShader;
     maps: PMaterialMap;
@@ -212,7 +200,6 @@ type
   end;
 
   PTransform = ^TTransform;
-
   TTransform = record
     translation: TVector3;
     rotation: TQuaternion;
@@ -223,14 +210,12 @@ type
   TModelAnimPose = PTransform;
 
   PBoneInfo = ^TBoneInfo;
-
   TBoneInfo = record
     name: array[0..31] of char;
     parent: longint;
   end;
 
   PModelSkeleton = ^TModelSkeleton;
-
   TModelSkeleton = record
     boneCount: dword;
     bones: PBoneInfo;
@@ -238,7 +223,6 @@ type
   end;
 
   PModel = ^TModel;
-
   TModel = record
     transform: TMatrix;
     meshCount: longint;
@@ -252,7 +236,6 @@ type
   end;
 
   PModelAnimation = ^TModelAnimation;
-
   TModelAnimation = record
     name: array[0..31] of char;
     boneCount: dword;
@@ -261,14 +244,12 @@ type
   end;
 
   PRay = ^TRay;
-
   TRay = record
     position: TVector3;
     direction: TVector3;
   end;
 
   PRayCollision = ^TRayCollision;
-
   TRayCollision = record
     hit: boolean;
     distance: single;
@@ -277,14 +258,12 @@ type
   end;
 
   PBoundingBox = ^TBoundingBox;
-
   TBoundingBox = record
     min: TVector3;
     max: TVector3;
   end;
 
   PWave = ^TWave;
-
   TWave = record
     frameCount: dword;
     sampleRate: dword;
@@ -297,7 +276,6 @@ type
   PrAudioProcessor = type Pointer;
 
   PAudioStream = ^TAudioStream;
-
   TAudioStream = record
     buffer: PrAudioBuffer;
     processor: PrAudioProcessor;
@@ -307,14 +285,12 @@ type
   end;
 
   PSound = ^TSound;
-
   TSound = record
     stream: TAudioStream;
     frameCount: dword;
   end;
 
   PMusic = ^TMusic;
-
   TMusic = record
     stream: TAudioStream;
     frameCount: dword;
@@ -324,7 +300,6 @@ type
   end;
 
   PVrDeviceInfo = ^TVrDeviceInfo;
-
   TVrDeviceInfo = record
     hResolution: longint;
     vResolution: longint;
@@ -338,7 +313,6 @@ type
   end;
 
   PVrStereoConfig = ^TVrStereoConfig;
-
   TVrStereoConfig = record
     projection: array[0..1] of TMatrix;
     viewOffset: array[0..1] of TMatrix;
@@ -351,14 +325,12 @@ type
   end;
 
   PFilePathList = ^TFilePathList;
-
   TFilePathList = record
     count: dword;
     paths: ^Pchar;
   end;
 
   PAutomationEvent = ^TAutomationEvent;
-
   TAutomationEvent = record
     frame: dword;
     _type: dword;
@@ -366,7 +338,6 @@ type
   end;
 
   PAutomationEventList = ^TAutomationEventList;
-
   TAutomationEventList = record
     capacity: dword;
     count: dword;
@@ -376,7 +347,6 @@ type
 type
   PConfigFlags = ^TConfigFlags;
   TConfigFlags = longint;
-
 const
   FLAG_VSYNC_HINT = $00000040;
   FLAG_FULLSCREEN_MODE = $00000002;
@@ -398,7 +368,6 @@ const
 type
   PTraceLogLevel = ^TTraceLogLevel;
   TTraceLogLevel = longint;
-
 const
   LOG_ALL = 0;
   LOG_TRACE = 1;
@@ -412,7 +381,6 @@ const
 type
   PKeyboardKey = ^TKeyboardKey;
   TKeyboardKey = longint;
-
 const
   KEY_NULL = 0;
   KEY_APOSTROPHE = 39;
@@ -528,7 +496,6 @@ const
 type
   PMouseButton = ^TMouseButton;
   TMouseButton = longint;
-
 const
   MOUSE_BUTTON_LEFT = 0;
   MOUSE_BUTTON_RIGHT = 1;
@@ -545,7 +512,6 @@ const
 type
   PMouseCursor = ^TMouseCursor;
   TMouseCursor = longint;
-
 const
   MOUSE_CURSOR_DEFAULT = 0;
   MOUSE_CURSOR_ARROW = 1;
@@ -562,7 +528,6 @@ const
 type
   PGamepadButton = ^TGamepadButton;
   TGamepadButton = longint;
-
 const
   GAMEPAD_BUTTON_UNKNOWN = 0;
   GAMEPAD_BUTTON_LEFT_FACE_UP = 1;
@@ -586,7 +551,6 @@ const
 type
   PGamepadAxis = ^TGamepadAxis;
   TGamepadAxis = longint;
-
 const
   GAMEPAD_AXIS_LEFT_X = 0;
   GAMEPAD_AXIS_LEFT_Y = 1;
@@ -598,7 +562,6 @@ const
 type
   PMaterialMapIndex = ^TMaterialMapIndex;
   TMaterialMapIndex = longint;
-
 const
   MATERIAL_MAP_ALBEDO = 0;
   MATERIAL_MAP_METALNESS = 1;
@@ -618,7 +581,6 @@ const
 type
   PShaderLocationIndex = ^TShaderLocationIndex;
   TShaderLocationIndex = longint;
-
 const
   SHADER_LOC_VERTEX_POSITION = 0;
   SHADER_LOC_VERTEX_TEXCOORD01 = 1;
@@ -657,7 +619,6 @@ const
 type
   PShaderUniformDataType = ^TShaderUniformDataType;
   TShaderUniformDataType = longint;
-
 const
   SHADER_UNIFORM_FLOAT = 0;
   SHADER_UNIFORM_VEC2 = 1;
@@ -676,7 +637,6 @@ const
 type
   PShaderAttributeDataType = ^TShaderAttributeDataType;
   TShaderAttributeDataType = longint;
-
 const
   SHADER_ATTRIB_FLOAT = 0;
   SHADER_ATTRIB_VEC2 = 1;
@@ -686,7 +646,6 @@ const
 type
   PPixelFormat = ^TPixelFormat;
   TPixelFormat = longint;
-
 const
   PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1;
   PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA = 2;
@@ -716,7 +675,6 @@ const
 type
   PTextureFilter = ^TTextureFilter;
   TTextureFilter = longint;
-
 const
   TEXTURE_FILTER_POINT = 0;
   TEXTURE_FILTER_BILINEAR = 1;
@@ -728,7 +686,6 @@ const
 type
   PTextureWrap = ^TTextureWrap;
   TTextureWrap = longint;
-
 const
   TEXTURE_WRAP_REPEAT = 0;
   TEXTURE_WRAP_CLAMP = 1;
@@ -738,7 +695,6 @@ const
 type
   PCubemapLayout = ^TCubemapLayout;
   TCubemapLayout = longint;
-
 const
   CUBEMAP_LAYOUT_AUTO_DETECT = 0;
   CUBEMAP_LAYOUT_LINE_VERTICAL = 1;
@@ -749,7 +705,6 @@ const
 type
   PFontType = ^TFontType;
   TFontType = longint;
-
 const
   FONT_DEFAULT = 0;
   FONT_BITMAP = 1;
@@ -758,7 +713,6 @@ const
 type
   PBlendMode = ^TBlendMode;
   TBlendMode = longint;
-
 const
   BLEND_ALPHA = 0;
   BLEND_ADDITIVE = 1;
@@ -772,7 +726,6 @@ const
 type
   PGesture = ^TGesture;
   TGesture = longint;
-
 const
   GESTURE_NONE = 0;
   GESTURE_TAP = 1;
@@ -789,7 +742,6 @@ const
 type
   PCameraMode = ^TCameraMode;
   TCameraMode = longint;
-
 const
   CAMERA_CUSTOM = 0;
   CAMERA_FREE = 1;
@@ -800,7 +752,6 @@ const
 type
   PCameraProjection = ^TCameraProjection;
   TCameraProjection = longint;
-
 const
   CAMERA_PERSPECTIVE = 0;
   CAMERA_ORTHOGRAPHIC = 1;
@@ -808,7 +759,6 @@ const
 type
   PNPatchLayout = ^TNPatchLayout;
   TNPatchLayout = longint;
-
 const
   NPATCH_NINE_PATCH = 0;
   NPATCH_THREE_PATCH_VERTICAL = 1;

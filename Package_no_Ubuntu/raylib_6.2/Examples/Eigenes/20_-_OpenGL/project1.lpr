@@ -14,7 +14,7 @@ uses
 
   procedure activate(app: PGtkApplication; user_data: Tgpointer); cdecl;
   var
-    window, box, button, gl_area, grid: PGtkWidget;
+    window, box, button, gl_area: PGtkWidget;
     i: integer;
   const
     c = 1;
@@ -31,19 +31,10 @@ uses
     box := gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_window_set_child(GTK_WINDOW(window), box);
 
-
-    grid := gtk_grid_new;
-    gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
-    gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-    gtk_box_append(GTK_BOX(box), grid);
-
-    for i := 0 to c * r - 1 do begin
-      gl_area := gl_area_widget_new(g_random_double);
-      gtk_widget_set_hexpand(gl_area, True);
-      gtk_widget_set_vexpand(gl_area, True);
-
-      gtk_grid_attach(GTK_GRID(grid), gl_area, i mod c, i div c, 1, 1);
-    end;
+    gl_area := gl_area_widget_new(g_random_double);
+    gtk_widget_set_hexpand(gl_area, True);
+    gtk_widget_set_vexpand(gl_area, True);
+    gtk_box_append(GTK_BOX(box), gl_area);
 
     button := gtk_button_new_with_label('Quit');
     g_signal_connect(button, 'clicked', G_CALLBACK(@quit_cp), window);

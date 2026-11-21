@@ -41,6 +41,10 @@ end;
 
 type
   TInstPriv = record
+    cubeMesh: TMesh;
+    cubeMat: TMaterial;
+    radius:Single;
+    camera: TCamera3D;
   end;
   PInstPriv = ^TInstPriv;
 
@@ -82,6 +86,18 @@ begin
     rlglInit(width, height);
     rlEnableDepthTest;
 
+    cubeMesh:=  GenMeshCube(2.0, 2.0, 2.0);
+    cubeMat := LoadMaterialDefault;
+
+    radius:=4.0;
+    with camera do begin
+      position := vec3(radius, 4.0, 4.0);
+      target := vec3(0.0, 0.0, 0.0);
+      up := vec3(0.0, 1.0, 0.0);
+      fovy := 45.0;
+      projection := CAMERA_PERSPECTIVE;
+    end;
+
     gtk_widget_add_tick_callback(GTK_WIDGET(area), @on_tick, nil, nil);
   end;
 end;
@@ -90,10 +106,9 @@ function on_render(area: PGtkGLArea; context: PGdkGLContext): Tgboolean; cdecl;
 var
   priv: PInstPriv;
   width, height, scale: longint;
-  camera: TCamera3D;
   matProj, matView: TMatrix;
   col: TColor;
-  seconds: extended;
+  seconds, angle: extended;
 begin
   priv := GetPriv(area);
   with priv^ do begin
@@ -106,12 +121,12 @@ begin
     rlClearColor(245, 245, 245, 255);
     rlClearScreenBuffers;
 
+    seconds := gdk_frame_clock_get_frame_time(gtk_widget_get_frame_clock(GTK_WIDGET(area))) / 1000000.0;
+    angle:=seconds;;
+
     with camera do begin
-      position := vec3(4.0, 4.0, 4.0);
-      target := vec3(0.0, 0.0, 0.0);
-      up := vec3(0.0, 1.0, 0.0);
-      fovy := 45.0;
-      projection := CAMERA_PERSPECTIVE;
+      position.x:=Cos(angle)*radius;
+      position.y:=Sin(angle)*radius;
     end;
 
     matProj := MatrixPerspective(camera.fovy * DEG2RAD, width / height, 0.01, 1000.0);
@@ -120,14 +135,14 @@ begin
     rlSetMatrixProjection(matProj);
     rlSetMatrixModelview(matView);
 
-    seconds := gdk_frame_clock_get_frame_time(gtk_widget_get_frame_clock(GTK_WIDGET(area))) / 1000000.0;
-
     col.r := Round((Sin(seconds) + 1.0) * 0.5 * $FF);
     col.g := Round((Sin(seconds * 1.3) + 1.0) * 0.5 * $FF);
     col.b := Round((Sin(seconds * 1.7) + 1.0) * 0.5 * $FF);
     col.a := $FF;
 
-    DrawCube(vec3(0.0, 0.0, 0.0), 2.0, 2.0, 2.0, col);
+
+    cubeMat.maps[MATERIAL_MAP_DIFFUSE].color := col;
+    DrawMesh(cubeMesh, cubeMat, MatrixIdentity());
     DrawCubeWires(vec3(0.0, 0.0, 0.0), 2.0, 2.0, 2.0, MAROON);
     DrawGrid(10, 1.0);
 
