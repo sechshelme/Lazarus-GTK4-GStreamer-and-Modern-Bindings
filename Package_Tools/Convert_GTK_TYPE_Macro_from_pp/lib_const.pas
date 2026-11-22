@@ -391,10 +391,11 @@ const
     (libs: 'libmb'; units: 'fp_mb'),
 
 
-    (libs: 'libraylib'; units: 'ctypes'),
+    (libs: 'libraylib'; units: 'fp_raylib'),
+    (libs: 'libmb'; units: 'fp_mb'),
 
 
-    (libs: ''; units: ''));
+    (libs: 'libassimp'; units: 'fp_assimp'));
 
 implementation
 

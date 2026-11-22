@@ -75,7 +75,7 @@ var
   s: string;
 begin
   Memo1.Clear;
-  slFile := FindAllFiles('/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/isl', '*.h', True);
+  slFile := FindAllFiles('/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/GNOME/Package_Tools/include-C/assimp', '*.h', True);
   Memo1.Lines := slFile;
 
   for i := 0 to slFile.Count - 1 do begin
@@ -116,18 +116,11 @@ begin
       slHeader[j] := StringReplace(slHeader[j], 'G_DEFINE_AUTOPTR_CLEANUP_FUNC', '//G_DEFINE_AUTOPTR_CLEANUP_FUNC ', [rfReplaceAll]);
 
 
-      slHeader[j] := StringReplace(slHeader[j], 'LLVM_CLANG_C_EXTERN_C_BEGIN', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], 'LLVM_CLANG_C_EXTERN_C_END', '', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'C_STRUCT', '', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'C_ENUM', '', [rfReplaceAll]);
+      slHeader[j] := StringReplace(slHeader[j], 'ASSIMP_API', 'extern', [rfReplaceAll]);
 
-      slHeader[j] := StringReplace(slHeader[j], 'extern "C" {', '', [rfReplaceAll]);
 
-      slHeader[j] := StringReplace(slHeader[j], '__isl_export', 'extern', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], '__isl_overload', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], '__isl_give', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], '__isl_null', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], '__isl_take', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], '__isl_keep', '', [rfReplaceAll]);
-      slHeader[j] := StringReplace(slHeader[j], '__isl_constructor', '', [rfReplaceAll]);
 
 
 
