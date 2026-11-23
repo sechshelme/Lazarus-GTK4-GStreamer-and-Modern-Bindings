@@ -9,29 +9,30 @@ uses
   quaternion,
   types,
   anim,
-
   camera,
   cexport,
   cfileio,
-  cimport,
-  color4,
-  commonMetaData,
-  importerdesc,
-  light,
-  material,
   matrix3x3,
   matrix4x4,
+  importerdesc,
+  cimport,
+  color4,
+  light,
+  texture,
+  material,
   mesh,
   metadata,
   postprocess,
   scene,
-  texture,
   version,
 
   fp_assimp;
 
   procedure main;
   begin
+    WriteLn('Assimp Version: ', aiGetVersionMajor, '.', aiGetVersionMinor, '.', aiGetVersionPatch, '.', aiGetVersionRevision);
+    WriteLn('Branch:         ', aiGetBranchName);
+    WriteLn('Legal:          ', aiGetLegalString);
   end;
 
 begin

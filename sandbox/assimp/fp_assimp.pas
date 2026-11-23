@@ -15,6 +15,8 @@ const
   Tint32_t=Int32;
   Tuint32_t=UInt32;
 
+  Tsize_t=SizeUInt;
+
   {$IFDEF FPC}
   {$PACKRECORDS C}
   {$ENDIF}
