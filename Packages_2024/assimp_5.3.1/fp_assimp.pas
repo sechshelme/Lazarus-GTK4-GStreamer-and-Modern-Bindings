@@ -11,14 +11,10 @@ const
   libassimp = 'libassimp-6.dll';
   {$ENDIF}
 
-  type
-  Tint32_t=Int32;
-  Tuint32_t=UInt32;
-
-  Tsize_t=SizeUInt;
-
-//  PaiMesh=Pointer;
-//  PaiSkeleton        =Pointer;
+type
+  Tint32_t = int32;
+  Tuint32_t = uint32;
+  Tsize_t = SizeUInt;
 
   {$IFDEF FPC}
   {$PACKRECORDS C}

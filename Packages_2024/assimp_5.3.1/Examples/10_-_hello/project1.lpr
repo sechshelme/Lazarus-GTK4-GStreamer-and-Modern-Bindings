@@ -3,60 +3,73 @@ program project1;
 uses
   fp_assimp;
 
-// scene.inc ?????
-
   procedure main;
+  const
+    path = '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/OpenGL_3.3/Examples/20_-_Wavefront OBJ/obj/cube.obj';
   var
     scene: PaiScene;
+    mesh: PaiMesh;
+    m, v, f: integer;
+    p, norm: TaiVector3D;
+    face: TaiFace;
+    mat: PaiMaterial;
+    matName, texPath: TaiString;
+    diffuseColor: TaiColor4D;
   begin
     WriteLn('Assimp Version: ', aiGetVersionMajor, '.', aiGetVersionMinor, '.', aiGetVersionPatch, '.', aiGetVersionRevision);
     WriteLn('Branch:         ', aiGetBranchName);
     WriteLn('Legal:          ', aiGetLegalString);
 
+    scene := aiImportFile(path, aiProcess_Triangulate or aiProcess_JoinIdenticalVertices or aiProcess_GenNormals);
 
-scene := aiImportFile(
-        '/n4800/DATEN/Programmierung/mit_GIT/Lazarus/Tutorial/OpenGL_3.3/Examples/20_-_Wavefront OBJ/obj/cube.obj',
-        aiProcess_Triangulate or aiProcess_JoinIdenticalVertices    );
+    if (scene = nil) or (scene^.mFlags and AI_SCENE_FLAGS_INCOMPLETE <> 0) or (scene^.mRootNode = nil) then begin
+      WriteLn('Assimp Fehler: ', aiGetErrorString);
+      Exit;
+    end;
 
-    if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) {
-        fprintf(stderr, "Assimp Fehler: %s\n", aiGetErrorString());
-        return 1;
-    }
+    WriteLn('Erfolgreich geladen! Anzahl Meshes: ', LineEnding, scene^.mNumMeshes);
 
-    printf("Erfolgreich geladen! Anzahl Meshes: %u\n\n", scene->mNumMeshes);
+    for m := 0 to scene^.mNumMeshes - 1 do begin
+      mesh := scene^.mMeshes[m];
+      if (mesh^.mPrimitiveTypes and aiPrimitiveType_TRIANGLE) = 0 then begin
+        Continue;
+      end;
 
-    // Über alle geladenen Meshes iterieren
-    for (unsigned int m = 0; m < scene->mNumMeshes; m++) {
-        const struct aiMesh* mesh = scene->mMeshes[m];
-        printf("--- Mesh %u (%s) ---\n", m, mesh->mName.data);
-        printf("Vertices: %u | Faces (Dreiecke): %u\n", mesh->mNumVertices, mesh->mNumFaces);
+      WriteLn('========================================');
+      WriteLn('Mesh ', m, ': ', mesh^.mName.data);
+      WriteLn('Vertices: ', mesh^.mNumVertices, ' | Faces: ', mesh^.mNumFaces);
 
-        // Vertices (Positionen) auslesen
-for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
-    struct aiVector3D pos = mesh->mVertices[v];
+      if scene^.mMaterials <> nil then begin
+        mat := scene^.mMaterials[mesh^.mMaterialIndex];
 
-    if (mesh->mNormals != NULL) {
-        struct aiVector3D norm = mesh->mNormals[v];
-        printf("  Vertex %u: Pos(%.2f, %.2f, %.2f) | Norm(%.2f, %.2f, %.2f)\n",
-               v, pos.x, pos.y, pos.z, norm.x, norm.y, norm.z);
-    } else {
-        printf("  Vertex %u: Pos(%.2f, %.2f, %.2f) | Keine Normale\n",
-               v, pos.x, pos.y, pos.z);
-    }
-}
+        if aiGetMaterialString(mat, '?mat.name', 0, 0, @matName) = aiReturn_SUCCESS then begin
+          WriteLn('Material-Name: ', matName.data);
+        end;
 
-        // Indizes der Dreiecke auslesen
-        for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-            struct aiFace face = mesh->mFaces[f];
-            // Durch aiProcess_Triangulate hat jedes Face genau 3 Indizes
-            printf("  Dreieck %u: [%u, %u, %u]\n",
-                   f, face.mIndices[0], face.mIndices[1], face.mIndices[2]);
-        }
-    }
+        if aiGetMaterialColor(mat, '$clr.diffuse', 0, 0, @diffuseColor) = aiReturn_SUCCESS then begin
+          WriteLn('Diffuse Farbe: R=', diffuseColor.r: 0: 2, ' G=', diffuseColor.g: 0: 2, ' B=', diffuseColor.b: 0: 2);
+        end;
 
-    // Speicher der Szene sauber freigeben
+        if aiGetMaterialTexture(mat, aiTextureType_DIFFUSE, 0, @texPath, nil, nil, nil, nil, nil, nil) = aiReturn_SUCCESS then begin
+          WriteLn('Diffuse Textur: ', texPath.data);
+        end else begin
+          WriteLn('Diffuse Textur: (keine)');
+        end;
+      end;
+
+      for v := 0 to mesh^.mNumVertices - 1 do begin
+        p := mesh^.mVertices[v];
+        norm := mesh^.mNormals[v];
+        WriteLn('  V ', v: 2, ': (', p.x: 6: 2, ', ', p.y: 6: 2, ', ', p.z: 6: 2, ') | Norm: (', norm.x: 5: 2, ', ', norm.y: 5: 2, ', ', norm.z: 5: 2, ')');
+      end;
+
+      WriteLn('Faces:');
+      for f := 0 to mesh^.mNumFaces - 1 do begin
+        face := mesh^.mFaces[f];
+        WriteLn('  Dreieck ', f: 2, ': ', face.mIndices[0]: 2, ', ', face.mIndices[1]: 2, ', ', face.mIndices[2]: 2);
+      end;
+    end;
     aiReleaseImport(scene);
-
   end;
 
 begin
