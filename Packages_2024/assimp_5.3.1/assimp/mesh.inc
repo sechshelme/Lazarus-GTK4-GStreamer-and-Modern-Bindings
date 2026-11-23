@@ -25,6 +25,19 @@ type
   end;
 
 type
+  PaiNode = ^TaiNode;
+  TaiNode = record
+    mName: TaiString;
+    mTransformation: TaiMatrix4x4;
+    mParent: PaiNode;
+    mNumChildren: dword;
+    mChildren: ^PaiNode;
+    mNumMeshes: dword;
+    mMeshes: Pdword;
+    mMetaData: PaiMetadata;
+  end;
+
+type
   PaiBone = ^TaiBone;
   TaiBone = record
     mName: TaiString;
@@ -71,6 +84,7 @@ const
   _aiMorphingMethod_Force32Bit = MaxInt;
 
 type
+  PPaiMesh = ^PaiMesh;
   PaiMesh = ^TaiMesh;
   TaiMesh = record
     mPrimitiveTypes: dword;
@@ -108,6 +122,7 @@ type
     mLocalMatrix: TaiMatrix4x4;
   end;
 
+  PPaiSkeleton = ^PaiSkeleton;
   PaiSkeleton = ^TaiSkeleton;
   TaiSkeleton = record
     mName: TaiString;

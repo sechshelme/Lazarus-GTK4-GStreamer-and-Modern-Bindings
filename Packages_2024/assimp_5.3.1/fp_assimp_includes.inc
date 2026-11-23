@@ -20,8 +20,8 @@
 {$include assimp/metadata.inc}
 {$include assimp/postprocess.inc}
 {$include assimp/version.inc}
-{$include assimp/scene.inc}
 {$include assimp/mesh.inc}
+{$include assimp/scene.inc}
 {$include assimp/cimport.inc}
 {$include assimp/cexport.inc}
 

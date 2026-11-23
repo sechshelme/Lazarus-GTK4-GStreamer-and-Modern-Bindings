@@ -1,19 +1,6 @@
 {$IFDEF read_interface}
 
 
-type
-  PaiNode = ^TaiNode;
-  TaiNode = record
-    mName: TaiString;
-    mTransformation: TaiMatrix4x4;
-    mParent: PaiNode;
-    mNumChildren: dword;
-    mChildren: ^PaiNode;
-    mNumMeshes: dword;
-    mMeshes: Pdword;
-    mMetaData: PaiMetadata;
-  end;
-
 const
   AI_SCENE_FLAGS_INCOMPLETE = $1;
   AI_SCENE_FLAGS_VALIDATED = $2;
@@ -28,7 +15,7 @@ type
     mFlags: dword;
     mRootNode: PaiNode;
     mNumMeshes: dword;
-    mMeshes: Pointer; // PPaiMesh;
+    mMeshes: PPaiMesh;
     mNumMaterials: dword;
     mMaterials: ^PaiMaterial;
     mNumAnimations: dword;
@@ -42,7 +29,7 @@ type
     mMetaData: PaiMetadata;
     mName: TaiString;
     mNumSkeletons: dword;
-    mSkeletons: Pointer;   //  PPaiSkeleton;
+    mSkeletons:PPaiSkeleton;
     mPrivate: Pchar;
   end;
 
