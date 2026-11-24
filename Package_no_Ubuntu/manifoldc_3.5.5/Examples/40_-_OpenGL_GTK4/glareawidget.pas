@@ -20,13 +20,20 @@ implementation
 // ==== private
 
 type
+  TUBOBuffer = record
+    model, view, proj: Tmat4;
+  end;
+
+  {$PUSH}{$CODEALIGN RECORDMIN=16}
   TInstPriv = record
-    VAO, VBO, EBO: TGLuint;
+    UBOBuffer: TUBOBuffer;
+    VAO, VBO, EBO, UBO: TGLuint;
     shader: PShader;
     IndexCount: TGLsizei;
     w, step: single;
   end;
   PInstPriv = ^TInstPriv;
+  {$POP}
 
   TClassPriv = record
   end;
@@ -48,9 +55,13 @@ const
     'layout(location = 1) in vec3 aNormal;' + #10 +
     'out vec3 FragPos;' + #10 +
     'out vec3 Normal;' + #10 +
-    'uniform mat4 model;' + #10 +
-    'uniform mat4 view;' + #10 +
-    'uniform mat4 projection;' + #10 +
+
+    'layout (std140) uniform Material {' + #10 +
+    '  mat4 model;' + #10 +
+    '  mat4 view;' + #10 +
+    '  mat4 projection;' + #10 +
+    '};' + #10 +
+
     'void main() {' + #10 +
     '  FragPos = vec3(model * vec4(aPos, 1.0));' + #10 +
     '  Normal = mat3(transpose(inverse(model))) * aNormal;' + #10 +
@@ -177,8 +188,14 @@ begin
     glGenVertexArrays(1, @VAO);
     glGenBuffers(1, @VBO);
     glGenBuffers(1, @EBO);
-
+    glGenBuffers(1, @UBO);
     glBindVertexArray(VAO);
+
+    glUniformBlockBinding(shader_get_ID(shader), shader_uniform_block_index(shader, 'Material'), 0);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(TUBOBuffer), nil, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, UBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, n_verts * n_props * SizeOf(TGLfloat), verts_data, GL_STATIC_DRAW);
@@ -204,8 +221,6 @@ const
   scale = 1.5;
 var
   priv: PInstPriv;
-  {$CODEALIGN LOCALMIN=16}
-  proj, view, model: Tmat4;
 begin
   priv := GetPriv(area);
   with priv^ do begin
@@ -219,18 +234,17 @@ begin
 
     shader_use_program(shader);
 
-    glmc_frustum(-1.0, 1.0, -1.0, 1.0, 1.5, 100.0, proj);
-    glmc_mat4_identity(view);
-    glmc_mat4_identity(model);
+    glmc_frustum(-1.0, 1.0, -1.0, 1.0, 1.5, 100.0, UBOBuffer.proj);
+    glmc_mat4_identity(UBOBuffer.view);
+    glmc_mat4_identity(UBOBuffer.model);
 
-    glmc_translate(model, [0.0, 0.0, -30.0]);
-    glmc_scale_uni(model, scale);
-    glmc_rotate(model, w * pi / 360 * step, [1.0, 0.8, 0.3]);
+    glmc_translate(UBOBuffer.model, [0.0, 0.0, -30.0]);
+    glmc_scale_uni(UBOBuffer.model, scale);
+    glmc_rotate(UBOBuffer.model, w * pi / 360 * step, [1.0, 0.8, 0.3]);
     w := w + 0.8;
 
-    glUniformMatrix4fv(shader_uniform_location(shader, 'projection'), 1, GL_FALSE, @proj);
-    glUniformMatrix4fv(shader_uniform_location(shader, 'view'), 1, GL_FALSE, @view);
-    glUniformMatrix4fv(shader_uniform_location(shader, 'model'), 1, GL_FALSE, @model);
+    glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(TUBOBuffer), @UBOBuffer);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, IndexCount, GL_UNSIGNED_INT, nil);
@@ -249,6 +263,7 @@ begin
     glDeleteVertexArrays(1, @VAO);
     glDeleteBuffers(1, @VBO);
     glDeleteBuffers(1, @EBO);
+    glDeleteBuffers(1, @UBO);
     shader_unref(shader);
   end;
 end;

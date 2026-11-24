@@ -17,6 +17,7 @@ procedure shader_use_program(shader: PShader); cdecl;
 function shader_uniform_location(shader: PShader; ch: pchar): TGLint; cdecl;
 function shader_uniform_blockindex(shader: PShader; ch: pchar): TGLuint; cdecl;
 function shader_attrib_location(shader: PShader; ch: pchar): TGLint; cdecl;
+function shader_uniform_block_index(shader: PShader; ch: pchar): TGLint; cdecl;
 procedure shader_unref(shader: PShader); cdecl;
 
 implementation
@@ -133,6 +134,13 @@ var
   sh: PShaderPrivat absolute shader;
 begin
   Result := glGetAttribLocation(sh^.FProgramObject, ch);
+end;
+
+function shader_uniform_block_index(shader: PShader; ch: pchar): TGLint; cdecl;
+var
+  sh: PShaderPrivat absolute shader;
+begin
+  Result := glGetUniformBlockIndex(sh^.FProgramObject, ch);
 end;
 
 procedure shader_unref(shader: PShader); cdecl;
