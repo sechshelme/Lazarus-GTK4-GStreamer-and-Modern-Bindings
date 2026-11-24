@@ -5,7 +5,7 @@ unit draw_gl;
 interface
 
 uses
-  fp_epoxy,
+  fp_epoxy, fp_GL_Tools,
   fp_cglm,
   fp_manifold_obj,
   fp_manifoldc;
@@ -63,51 +63,8 @@ const
 
 var
   VAO, VBO, EBO: TGLuint;
-  ShaderProgram: TGLuint;
+  shader: PShader;
   IndexCount: TGLsizei;
-
-// --- Shader Kompilierung ---
-
-function CompileShader(ShaderType: TGLenum; Source: PChar): TGLuint;
-var
-  Success: TGLint;
-  InfoLog: array[0..511] of Char;
-begin
-  Result := glCreateShader(ShaderType);
-  glShaderSource(Result, 1, @Source, nil);
-  glCompileShader(Result);
-  glGetShaderiv(Result, GL_COMPILE_STATUS, @Success);
-  if Success = GL_FALSE then begin
-    glGetShaderInfoLog(Result, 512, nil, @InfoLog);
-    WriteLn('Shader Kompilierungsfehler: ', PChar(@InfoLog));
-  end;
-end;
-
-function CreateShaderProgram: TGLuint;
-var
-  VS, FS: TGLuint;
-  Success: TGLint;
-  InfoLog: array[0..511] of Char;
-begin
-  VS := CompileShader(GL_VERTEX_SHADER, VertexShaderSource);
-  FS := CompileShader(GL_FRAGMENT_SHADER, FragmentShaderSource);
-
-  Result := glCreateProgram();
-  glAttachShader(Result, VS);
-  glAttachShader(Result, FS);
-  glLinkProgram(Result);
-
-  glGetProgramiv(Result, GL_LINK_STATUS, @Success);
-  if Success = GL_FALSE then begin
-    glGetProgramInfoLog(Result, 512, nil, @InfoLog);
-    WriteLn('Shader Link-Fehler: ', PChar(@InfoLog));
-  end;
-
-  glDeleteShader(VS);
-  glDeleteShader(FS);
-end;
-
-// --- Szene initialisieren ---
 
 procedure InitScene;
 var
@@ -123,7 +80,7 @@ const
   Sektor = 32;
   HoleCount = 13;
 begin
-  // === Manifold CSG Geometrie
+  // === Manifold
   cube := TManifoldClass.cube(10.0, 10.0, 10.0, 15);
 
   hole := TManifoldClass.cube(20.0, 6.0, 6.0, 1);
@@ -165,8 +122,20 @@ begin
   tris_data := mesh.meshgl_tri_verts;
   verts_data := mesh.meshgl_vert_properties;
 
-  // === OpenGL 3.3 Setup (Shader, VAO, VBO, EBO)
-  ShaderProgram := CreateShaderProgram;
+  // === OpenGL
+  shader := shader_new;
+  if not shader_load_shaderobject(shader, GL_VERTEX_SHADER, pchar(VertexShaderSource)) then begin
+    WriteLn('Fehler im Vertex-Shader:');
+    WriteLn(shader_get_errortext(shader));
+  end;
+  if not shader_load_shaderobject(shader, GL_FRAGMENT_SHADER, pchar(FragmentShaderSource)) then begin
+    WriteLn('Fehler im Fragment-Shader:');
+    WriteLn(shader_get_errortext(shader));
+  end;
+  if not shader_link_program(shader) then begin
+    WriteLn('Fehler beim Linken der Shader:');
+    WriteLn(shader_get_errortext(shader));
+  end;
 
   glGenVertexArrays(1, @VAO);
   glGenBuffers(1, @VBO);
@@ -182,11 +151,8 @@ begin
 
   stride := n_props * SizeOf(single);
 
-  // Attribut 0: Position (Offset 0)
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, Pointer(0));
   glEnableVertexAttribArray(0);
-
-  // Attribut 1: Normale (Offset 6)
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, Pointer(6 * SizeOf(single)));
   glEnableVertexAttribArray(1);
 
@@ -200,6 +166,7 @@ const
   scale = 1.5;
   w: single = 0;
 var
+  {$CODEALIGN LOCALMIN=16}
   proj, view, model: Tmat4;
   transVec, scaleVec, rotAxis: Tvec3;
 begin
@@ -207,31 +174,33 @@ begin
   glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
-  glUseProgram(ShaderProgram);
+  shader_use_program(shader);
 
-  // Matrizen mit cglm berechnen
   glmc_frustum(-1.0, 1.0, -1.0, 1.0, 1.5, 100.0, proj);
   glmc_mat4_identity(view);
-
   glmc_mat4_identity(model);
 
-  transVec[0] := 0.0; transVec[1] := 0.0; transVec[2] := -30.0;
+  transVec[0] := 0.0;
+  transVec[1] := 0.0;
+  transVec[2] := -30.0;
   glmc_translate(model, transVec);
 
-  scaleVec[0] := scale; scaleVec[1] := scale; scaleVec[2] := scale;
+  scaleVec[0] := scale;
+  scaleVec[1] := scale;
+  scaleVec[2] := scale;
   glmc_scale(model, scaleVec);
 
-  rotAxis[0] := 1.0; rotAxis[1] := 0.8; rotAxis[2] := 0.3;
-//  glmc_rotate(model, glmc_rad(w), rotAxis);
-  glmc_rotate(model, w * pi / 360  , rotAxis);
+  rotAxis[0] := 1.0;
+  rotAxis[1] := 0.8;
+  rotAxis[2] := 0.3;
+  //  glmc_rotate(model, glmc_rad(w), rotAxis);
+  glmc_rotate(model, w * pi / 360, rotAxis);
   w := w + 0.8;
 
-  // Matrizen an den Shader übergeben
-  glUniformMatrix4fv(glGetUniformLocation(ShaderProgram, 'projection'), 1, GL_FALSE, @proj[0][0]);
-  glUniformMatrix4fv(glGetUniformLocation(ShaderProgram, 'view'), 1, GL_FALSE, @view[0][0]);
-  glUniformMatrix4fv(glGetUniformLocation(ShaderProgram, 'model'), 1, GL_FALSE, @model[0][0]);
+  glUniformMatrix4fv(shader_uniform_location(shader, 'projection'), 1, GL_FALSE, @proj);
+  glUniformMatrix4fv(shader_uniform_location(shader, 'view'), 1, GL_FALSE, @view);
+  glUniformMatrix4fv(shader_uniform_location(shader, 'model'), 1, GL_FALSE, @model);
 
-  // Zeichnen
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, IndexCount, GL_UNSIGNED_INT, nil);
   glBindVertexArray(0);
@@ -242,8 +211,7 @@ begin
   glDeleteVertexArrays(1, @VAO);
   glDeleteBuffers(1, @VBO);
   glDeleteBuffers(1, @EBO);
-  glDeleteProgram(ShaderProgram);
+  shader_unref(shader);
 end;
 
 end.
-

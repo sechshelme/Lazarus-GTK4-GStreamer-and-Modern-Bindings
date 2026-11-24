@@ -1,0 +1,324 @@
+unit GLAreaWidget;
+
+interface
+
+uses
+  fp_manifoldc, fp_manifold_obj,
+  fp_glib2, fp_GTK4,
+  fp_cglm,
+  fp_GL_Tools, fp_epoxy;
+
+type
+  PGLAreaWidget = type Pointer;
+  PGLAreaWidgetClass = type Pointer;
+
+function gl_area_widget_get_type: TGType;
+function gl_area_widget_new(step: single): PGTKWidget;
+
+implementation
+
+// ==== private
+
+type
+  TInstPriv = record
+    VAO, VBO, EBO: TGLuint;
+    shader: PShader;
+    IndexCount: TGLsizei;
+    w, step: single;
+  end;
+  PInstPriv = ^TInstPriv;
+
+  TClassPriv = record
+  end;
+  PClassPriv = ^TClassPriv;
+
+var
+  parent_class: PGLAreaWidgetClass = nil;
+  instance_size: integer = 0;
+
+function GetPriv(w: Tgpointer): PInstPriv; inline;
+begin
+  Result := PInstPriv(w + instance_size);
+end;
+
+const
+  VertexShaderSource: PChar =
+    '#version 330 core' + #10 +
+    'layout(location = 0) in vec3 aPos;' + #10 +
+    'layout(location = 1) in vec3 aNormal;' + #10 +
+    'out vec3 FragPos;' + #10 +
+    'out vec3 Normal;' + #10 +
+    'uniform mat4 model;' + #10 +
+    'uniform mat4 view;' + #10 +
+    'uniform mat4 projection;' + #10 +
+    'void main() {' + #10 +
+    '  FragPos = vec3(model * vec4(aPos, 1.0));' + #10 +
+    '  Normal = mat3(transpose(inverse(model))) * aNormal;' + #10 +
+    '  gl_Position = projection * view * vec4(FragPos, 1.0);' + #10 +
+    '}';
+
+  FragmentShaderSource: PChar =
+    '#version 330 core' + #10 +
+    'in vec3 FragPos;' + #10 +
+    'in vec3 Normal;' + #10 +
+    'out vec4 FragColor;' + #10 +
+    '// Fixe Licht- und Materialwerte' + #10 +
+    'const vec3 lightDir = vec3(1.0, 1.0, 1.0);' + #10 +
+    'const vec3 lightDiffuse = vec3(1.0, 1.0, 1.0);' + #10 +
+    'const vec3 lightSpecular = vec3(1.0, 1.0, 1.0);' + #10 +
+    'const vec3 objectColor = vec3(0.8, 0.0, 0.0);' + #10 +
+    'const vec3 matSpecular = vec3(1.0, 1.0, 1.0);' + #10 +
+    'const vec3 matEmission = vec3(0.2, 0.0, 0.0);' + #10 +
+    'const float matShininess = 110.0;' + #10 +
+    'void main() {' + #10 +
+    '  vec3 norm = normalize(Normal);' + #10 +
+    '  vec3 lDir = normalize(lightDir);' + #10 +
+    '  vec3 viewDir = normalize(-FragPos);' + #10 +
+    '  // Ambient & Diffuse' + #10 +
+    '  float diff = max(dot(norm, lDir), 0.0);' + #10 +
+    '  vec3 ambient = 0.2 * objectColor;' + #10 +
+    '  vec3 diffuse = diff * lightDiffuse * objectColor;' + #10 +
+    '  // Specular' + #10 +
+    '  vec3 reflectDir = reflect(-lDir, norm);' + #10 +
+    '  float spec = pow(max(dot(viewDir, reflectDir), 0.0), matShininess);' + #10 +
+    '  vec3 specular = spec * lightSpecular * matSpecular;' + #10 +
+    '  vec3 result = matEmission + ambient + diffuse + specular;' + #10 +
+    '  FragColor = vec4(result, 1.0);' + #10 +
+    '}';
+
+
+function on_tick(widget: PGtkWidget; frame_clock: PGdkFrameClock; user_data: Tgpointer): Tgboolean; cdecl;
+begin
+  gtk_gl_area_queue_render(GTK_GL_AREA(widget));
+  Result := G_SOURCE_CONTINUE;
+end;
+
+procedure on_realize(area: PGtkGLArea); cdecl;
+var
+  priv: PInstPriv;
+  i: integer;
+
+  // === Manifold
+  mesh: TMeshGLClass;
+  n_verts, n_tris, n_props: Tsize_t;
+  verts_data: Psingle = nil;
+  tris_data: Puint32_t = nil;
+  er: TManifoldError;
+  cube, hole, hole2: TManifoldClass;
+  // === OpenGL
+  stride: TGLsizei;
+const
+  Sektor = 32;
+  HoleCount = 13;
+begin
+  priv := GetPriv(area);
+
+  with priv^ do begin
+    gtk_gl_area_make_current(area);
+    if gtk_gl_area_get_error(area) <> nil then begin
+      Exit;
+    end;
+
+    // === Manifold
+    cube := TManifoldClass.cube(10.0, 10.0, 10.0, 15);
+
+    hole := TManifoldClass.cube(20.0, 6.0, 6.0, 1);
+    hole := TManifoldClass.rotate(hole, 20.0, 0.0, 0.0, True);
+    cube := TManifoldClass.difference(cube, hole, True, True);
+
+    hole := TManifoldClass.cylinder(20.0, 3.5, 3.5, Sektor, 1);
+    hole := TManifoldClass.rotate(hole, 90.0, 0.0, 0.0, True);
+    cube := TManifoldClass.difference(cube, hole, True, True);
+
+    hole := TManifoldClass.cylinder(20.0, 3.5, 3.5, Sektor + 5, 1);
+    cube := TManifoldClass.difference(cube, hole, True, True);
+
+    hole := TManifoldClass.cylinder(20.0, 0.5, 0.5, Sektor + 5, 1);
+    hole := TManifoldClass.translate(hole, 4.25, 0.0, 0.0, True);
+    for i := 0 to HoleCount - 1 do begin
+      hole2 := TManifoldClass.rotate(hole, 0.0, 0.0, 360 / HoleCount * i, False);
+      cube := TManifoldClass.difference(cube, hole2, True, True);
+    end;
+    hole.Free;
+
+    cube := TManifoldClass.calculate_normals(cube, 3, 30.0, True);
+    er := manifold_status(cube.obj);
+    if er <> MANIFOLD_NO_ERROR then begin
+      WriteLn('Fehler in Manifold Geometrie!  (', er, ')');
+    end;
+
+    mesh := TMeshGLClass.get_meshgl(cube, True);
+    n_verts := mesh.meshgl_num_vert;
+    n_tris := mesh.meshgl_num_tri;
+    n_props := mesh.meshgl_num_prop;
+    IndexCount := n_tris * 3;
+
+    WriteLn('--- MANIFOLD CSG ERGEBNIS ---');
+    WriteLn('n_verts: ', n_verts, ' | n_tris: ', n_tris, ' | n_props: ', n_props);
+
+    tris_data := mesh.meshgl_tri_verts;
+    verts_data := mesh.meshgl_vert_properties;
+
+    // === OpenGL
+    shader := shader_new;
+    if not shader_load_shaderobject(shader, GL_VERTEX_SHADER, pchar(VertexShaderSource)) then begin
+      WriteLn('Fehler im Vertex-Shader:');
+      WriteLn(shader_get_errortext(shader));
+    end;
+    if not shader_load_shaderobject(shader, GL_FRAGMENT_SHADER, pchar(FragmentShaderSource)) then begin
+      WriteLn('Fehler im Fragment-Shader:');
+      WriteLn(shader_get_errortext(shader));
+    end;
+    if not shader_link_program(shader) then begin
+      WriteLn('Fehler beim Linken der Shader:');
+      WriteLn(shader_get_errortext(shader));
+    end;
+
+    glGenVertexArrays(1, @VAO);
+    glGenBuffers(1, @VBO);
+    glGenBuffers(1, @EBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, n_verts * n_props * SizeOf(TGLfloat), verts_data, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * SizeOf(Tgint), tris_data, GL_STATIC_DRAW);
+
+    stride := n_props * SizeOf(single);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, Pointer(0));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, Pointer(6 * SizeOf(TGLfloat)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    gtk_widget_add_tick_callback(GTK_WIDGET(area), @on_tick, nil, nil);
+    mesh.Free;
+  end;
+end;
+
+function on_render(area: PGtkGLArea; context: PGdkGLContext): Tgboolean; cdecl;
+const
+  scale = 1.5;
+var
+  priv: PInstPriv;
+  {$CODEALIGN LOCALMIN=16}
+  proj, view, model: Tmat4;
+begin
+  priv := GetPriv(area);
+  with priv^ do begin
+    if gtk_gl_area_get_error(area) <> nil then begin
+      Exit(False);
+    end;
+
+    glClearColor(0.05, 0.05, 0.1, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    shader_use_program(shader);
+
+    glmc_frustum(-1.0, 1.0, -1.0, 1.0, 1.5, 100.0, proj);
+    glmc_mat4_identity(view);
+    glmc_mat4_identity(model);
+
+    glmc_translate(model, [0.0, 0.0, -30.0]);
+    glmc_scale_uni(model, scale);
+    glmc_rotate(model, w * pi / 360 * step, [1.0, 0.8, 0.3]);
+    w := w + 0.8;
+
+    glUniformMatrix4fv(shader_uniform_location(shader, 'projection'), 1, GL_FALSE, @proj);
+    glUniformMatrix4fv(shader_uniform_location(shader, 'view'), 1, GL_FALSE, @view);
+    glUniformMatrix4fv(shader_uniform_location(shader, 'model'), 1, GL_FALSE, @model);
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, IndexCount, GL_UNSIGNED_INT, nil);
+    glBindVertexArray(0);
+  end;
+  Result := True;
+end;
+
+procedure on_unrealize(area: PGtkGLArea); cdecl;
+var
+  priv: PInstPriv;
+begin
+  priv := GetPriv(area);
+  with priv^ do begin
+    gtk_gl_area_make_current(area);
+    glDeleteVertexArrays(1, @VAO);
+    glDeleteBuffers(1, @VBO);
+    glDeleteBuffers(1, @EBO);
+    shader_unref(shader);
+  end;
+end;
+
+
+procedure finalize_cp(obj: PGObject); cdecl;
+var
+  priv: PInstPriv;
+begin
+  priv := GetPriv(obj);
+  with priv^ do begin
+  end;
+  G_OBJECT_CLASS(parent_class)^.finalize(obj);
+end;
+
+procedure class_init_cp(g_class: Tgpointer; class_data: Tgpointer); cdecl;
+begin
+  G_OBJECT_CLASS(g_class)^.finalize := @finalize_cp;
+  parent_class := g_type_class_peek_parent(g_class);
+end;
+
+procedure init_cp(instance: PGTypeInstance; g_class: Tgpointer); cdecl;
+var
+  priv: PInstPriv;
+begin
+  priv := GetPriv(instance);
+  with priv^ do begin
+    step := 0.5;
+  end;
+
+  gtk_gl_area_set_required_version(GTK_GL_AREA(instance), 3, 3);
+  gtk_gl_area_set_has_depth_buffer(GTK_GL_AREA(instance), True);
+  gtk_gl_area_set_has_stencil_buffer(GTK_GL_AREA(instance), True);
+  gtk_gl_area_set_auto_render(GTK_GL_AREA(instance), True);
+  gtk_widget_set_hexpand(GTK_WIDGET(instance), True);
+  gtk_widget_set_vexpand(GTK_WIDGET(instance), True);
+  g_signal_connect(instance, 'realize', G_CALLBACK(@on_realize), nil);
+  g_signal_connect(instance, 'unrealize', G_CALLBACK(@on_unrealize), nil);
+  g_signal_connect(instance, 'render', G_CALLBACK(@on_render), nil);
+end;
+
+
+// ==== public
+
+function gl_area_widget_get_type: TGType;
+const
+  type_id: TGType = 0;
+var
+  id: TGType;
+  query: TGTypeQuery;
+begin
+  if g_once_init_enter(@type_id) then begin
+    g_type_query(GTK_TYPE_GL_AREA, @query);
+    instance_size := query.instance_size;
+
+    id := g_type_register_static_simple(GTK_TYPE_GL_AREA, 'GLWidget',
+      query.class_size + SizeOf(TClassPriv), @class_init_cp,
+      query.instance_size + SizeOf(TInstPriv), @init_cp, G_TYPE_FLAG_NONE);
+    g_once_init_leave(@type_id, id);
+  end;
+  Result := type_id;
+end;
+
+function gl_area_widget_new(step: single): PGTKWidget;
+var
+  priv: PInstPriv;
+begin
+  Result := g_object_new(gl_area_widget_get_type, nil);
+  priv := GetPriv(Result);
+  priv^.step := step;
+end;
+
+end.
