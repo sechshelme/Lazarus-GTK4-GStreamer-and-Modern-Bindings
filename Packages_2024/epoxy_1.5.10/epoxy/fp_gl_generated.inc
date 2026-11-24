@@ -70,7 +70,7 @@ type
 
   PPGLboolean = ^PGLboolean;
   PGLboolean = ^TGLboolean;
-  TGLboolean = Boolean8;
+  TGLboolean = Byte;
 
   PGLbitfield = ^TGLbitfield;
   TGLbitfield = dword;
@@ -1044,7 +1044,7 @@ const
   GL_SKIP_COMPONENTS3_NV = -(4);
   GL_SKIP_COMPONENTS2_NV = -(5);
   GL_SKIP_COMPONENTS1_NV = -(6);
-  GL_FALSE = False;
+  GL_FALSE = 0;
   GL_LAYOUT_DEFAULT_INTEL = 0;
   GL_NONE = 0;
   GL_NONE_OES = 0;
@@ -6918,7 +6918,7 @@ const
   GL_TIMEOUT_IGNORED_APPLE = $FFFFFFFFFFFFFFFF;
   GL_LAYOUT_LINEAR_INTEL = 1;
   GL_ONE = 1;
-  GL_TRUE = True;
+  GL_TRUE = 1;
   GL_VERSION_ES_CL_1_0 = 1;
   GL_VERSION_ES_CL_1_1 = 1;
   GL_VERSION_ES_CM_1_1 = 1;

@@ -5,8 +5,7 @@ unit draw_gl;
 interface
 
 uses
-  SysUtils,
-  fp_glew,
+  fp_epoxy,
   fp_cglm,
   fp_manifold_obj,
   fp_manifoldc;
@@ -224,7 +223,7 @@ begin
 
   rotAxis[0] := 1.0; rotAxis[1] := 0.8; rotAxis[2] := 0.3;
 //  glmc_rotate(model, glmc_rad(w), rotAxis);
-  glmc_rotate(model, w * pi / 180, rotAxis);
+  glmc_rotate(model, w * pi / 360  , rotAxis);
   w := w + 0.8;
 
   // Matrizen an den Shader übergeben
