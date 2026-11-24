@@ -82,8 +82,7 @@ type
 
   PPGLboolean = ^PGLboolean;
   PGLboolean = ^TGLboolean;
-  //  TGLboolean = byte;
-  TGLboolean = Boolean8;
+  TGLboolean = byte;
 
   PGLbyte = ^TGLbyte;
   TGLbyte = char;
@@ -152,14 +151,14 @@ type
 
 const
   GL_ZERO = 0;
-  GL_FALSE = False;
+  GL_FALSE = 0;
   GL_LOGIC_OP = $0BF1;
   GL_NONE = 0;
   GL_TEXTURE_COMPONENTS = $1003;
   GL_NO_ERROR = 0;
   GL_POINTS = $0000;
   GL_CURRENT_BIT = $00000001;
-  GL_TRUE = True;
+  GL_TRUE = 1;
   GL_ONE = 1;
   GL_CLIENT_PIXEL_STORE_BIT = $00000001;
   GL_LINES = $0001;
@@ -27240,15 +27239,15 @@ const
 function glewInit: TGLenum; cdecl; external libGLEW;
 function glewIsSupported(name: pchar): TGLboolean; cdecl; external libGLEW;
 
-function glewIsExtensionSupported(x: pchar): boolean;
+function glewIsExtensionSupported(x: pchar): TGLboolean;
 
 {$ifndef GLEW_GET_VAR}
 {#define GLEW_GET_VAR(x) (*(const GLboolean*)&x) }
 {$endif}
 {$ifndef GLEW_GET_FUN}
 function GLEW_GET_FUN(x: longint): longint;
-
 {$endif}
+
 var
   glewExperimental: TGLboolean; cvar;external libGLEW;
 
@@ -27263,7 +27262,7 @@ implementation
 
 
 
-function glewIsExtensionSupported(x: pchar): boolean;
+function glewIsExtensionSupported(x: pchar): TGLboolean;
 begin
   glewIsExtensionSupported := glewIsSupported(x);
 end;
