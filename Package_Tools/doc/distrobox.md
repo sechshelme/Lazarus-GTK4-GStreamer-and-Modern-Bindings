@@ -79,15 +79,22 @@ sudo ln var/run/host/n4800/ n4800 -s
 distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/wine
 distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/meson
 distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/blender
+distrobox enter ubuntu-dev -- distrobox-export --bin /usr/bin/yt-dlp
 
 distrobox enter ubuntu-dev -- distrobox-export --bin /home/tux/fpcupdeluxe_trunk/lazarus/lazarus
+```
 
+## Abfrage was gestartet wird
+```bash
+type -a yt-dlp 
+which yt-dlp 
 ```
 
 ## OS abfragen
 ```bash
 cat /etc/os-release
 ```
+
 
 # Distrobox Verwaltung
 

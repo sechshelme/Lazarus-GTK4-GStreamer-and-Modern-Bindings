@@ -22,6 +22,7 @@ implementation
 type
   TUBOBuffer = record
     model, view, proj: Tmat4;
+    objectColor: Tvec4;
   end;
 
   {$PUSH}{$CODEALIGN RECORDMIN=16}
@@ -51,16 +52,19 @@ end;
 const
   VertexShaderSource: PChar =
     '#version 330 core' + #10 +
+
     'layout(location = 0) in vec3 aPos;' + #10 +
     'layout(location = 1) in vec3 aNormal;' + #10 +
-    'out vec3 FragPos;' + #10 +
-    'out vec3 Normal;' + #10 +
 
     'layout (std140) uniform Material {' + #10 +
     '  mat4 model;' + #10 +
     '  mat4 view;' + #10 +
     '  mat4 projection;' + #10 +
+    '  vec3 objectColor;' + #10 +
     '};' + #10 +
+
+    'out vec3 FragPos;' + #10 +
+    'out vec3 Normal;' + #10 +
 
     'void main() {' + #10 +
     '  FragPos = vec3(model * vec4(aPos, 1.0));' + #10 +
@@ -70,14 +74,23 @@ const
 
   FragmentShaderSource: PChar =
     '#version 330 core' + #10 +
+
     'in vec3 FragPos;' + #10 +
     'in vec3 Normal;' + #10 +
+
+    'layout (std140) uniform Material {' + #10 +
+    '  mat4 model;' + #10 +
+    '  mat4 view;' + #10 +
+    '  mat4 projection;' + #10 +
+    '  vec3 objectColor;' + #10 +
+    '};' + #10 +
+
     'out vec4 FragColor;' + #10 +
-    '// Fixe Licht- und Materialwerte' + #10 +
+
     'const vec3 lightDir = vec3(1.0, 1.0, 1.0);' + #10 +
     'const vec3 lightDiffuse = vec3(1.0, 1.0, 1.0);' + #10 +
     'const vec3 lightSpecular = vec3(1.0, 1.0, 1.0);' + #10 +
-    'const vec3 objectColor = vec3(0.8, 0.0, 0.0);' + #10 +
+    //    'const vec3 objectColor = vec3(0.8, 0.0, 0.0);' + #10 +
     'const vec3 matSpecular = vec3(1.0, 1.0, 1.0);' + #10 +
     'const vec3 matEmission = vec3(0.2, 0.0, 0.0);' + #10 +
     'const float matShininess = 110.0;' + #10 +
@@ -171,6 +184,12 @@ begin
     verts_data := mesh.meshgl_vert_properties;
 
     // === OpenGL
+
+    with UBOBuffer do begin
+//      objectColor := [1.0, 0.0, 0.0, 0.0];
+      objectColor := [Random, Random, Random, 0.0];
+    end;
+
     shader := shader_new;
     if not shader_load_shaderobject(shader, GL_VERTEX_SHADER, pchar(VertexShaderSource)) then begin
       WriteLn('Fehler im Vertex-Shader:');
