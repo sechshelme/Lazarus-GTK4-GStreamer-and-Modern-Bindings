@@ -3,6 +3,7 @@ unit manifold;
 interface
 
 uses
+  fp_glib2,
   fp_manifoldc, fp_manifold_obj;
 
 type
@@ -12,11 +13,10 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function get_n_verts: Tsize_t;
-    function get_n_tris: Tsize_t;
-    function get_n_props: Tsize_t;
     function get_verts_data: Psingle;
+    function get_n_verts: Tsize_t;
     function get_tris_data: Puint32_t;
+    function get_n_tris: Tsize_t;
   end;
 
 implementation
@@ -56,13 +56,13 @@ begin
   cube := TManifoldClass.calculate_normals(cube, 0, 30.0, True);
   er := manifold_status(cube.obj);
   if er <> MANIFOLD_NO_ERROR then begin
-    WriteLn('Fehler in Manifold Geometrie!  (', er, ')');
+    g_print('Fehler in Manifold Geometrie!  (%d)'#10, Ord(er));
   end;
 
   mesh := TMeshGLClass.get_meshgl(cube, True);
 
-  WriteLn('--- MANIFOLD CSG ERGEBNIS ---');
-  WriteLn('n_verts: ', mesh.meshgl_num_vert, ' | n_tris: ', mesh.meshgl_num_tri, ' | n_props: ', mesh.meshgl_num_prop);
+  g_print('--- MANIFOLD CSG ERGEBNIS ---'#10);
+  g_print('n_verts: %u | n_tris: %u | n_props: %u'#10, mesh.meshgl_num_vert, mesh.meshgl_num_tri, mesh.meshgl_num_prop);
 end;
 
 destructor TMyManifold.Destroy;
@@ -71,29 +71,24 @@ begin
   inherited Destroy;
 end;
 
-function TMyManifold.get_n_verts: Tsize_t;
-begin
-  Result := mesh.meshgl_num_vert;
-end;
-
-function TMyManifold.get_n_tris: Tsize_t;
-begin
-  Result := mesh.meshgl_num_tri;
-end;
-
-function TMyManifold.get_n_props: Tsize_t;
-begin
-  Result := mesh.meshgl_num_prop;
-end;
-
 function TMyManifold.get_verts_data: Psingle;
 begin
   Result := mesh.meshgl_vert_properties;
 end;
 
+function TMyManifold.get_n_verts: Tsize_t;
+begin
+  Result := mesh.meshgl_num_vert;
+end;
+
 function TMyManifold.get_tris_data: Puint32_t;
 begin
   Result := mesh.meshgl_tri_verts;
+end;
+
+function TMyManifold.get_n_tris: Tsize_t;
+begin
+  Result := mesh.meshgl_num_tri;
 end;
 
 end.

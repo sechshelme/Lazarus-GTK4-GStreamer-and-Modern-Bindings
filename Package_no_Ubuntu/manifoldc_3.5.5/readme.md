@@ -9,4 +9,6 @@ Source so bauen :
 
 
 
+Multithareading Fähig
+cmake . -DCMAKE_BUILD_TYPE=Release -DMANIFOLD_PAR=ON -DMANIFOLD_CBIND=ON -DBUILD_SHARED_LIBS=ON
 
