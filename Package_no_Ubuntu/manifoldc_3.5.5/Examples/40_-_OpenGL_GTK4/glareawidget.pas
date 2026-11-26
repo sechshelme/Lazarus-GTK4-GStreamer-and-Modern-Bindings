@@ -6,7 +6,8 @@ uses
   fp_manifoldc, fp_manifold_obj,
   fp_glib2, fp_GTK4,
   fp_cglm,
-  fp_GL_Tools, fp_epoxy;
+  fp_GL_Tools, fp_epoxy,
+  manifold;
 
 type
   PGLAreaWidget = type Pointer;
@@ -120,20 +121,12 @@ end;
 procedure on_realize(area: PGtkGLArea); cdecl;
 var
   priv: PInstPriv;
-  i: integer;
 
   // === Manifold
-  mesh: TMeshGLClass;
-  n_verts, n_tris, n_props: Tsize_t;
-  verts_data: Psingle = nil;
-  tris_data: Puint32_t = nil;
-  er: TManifoldError;
-  cube, hole, hole2: TManifoldClass;
+  mani: TMyManifold;
+
   // === OpenGL
   stride: TGLsizei;
-const
-  Sektor = 32;
-  HoleCount = 13;
 begin
   priv := GetPriv(area);
 
@@ -144,44 +137,10 @@ begin
     end;
 
     // === Manifold
-    cube := TManifoldClass.cube(10.0, 10.0, 10.0, 15);
+    mani:=TMyManifold.Create;
 
-    hole := TManifoldClass.cube(20.0, 6.0, 6.0, 1);
-    hole := TManifoldClass.rotate(hole, 20.0, 0.0, 0.0, True);
-    cube := TManifoldClass.difference(cube, hole, True, True);
 
-    hole := TManifoldClass.cylinder(20.0, 3.5, 3.5, Sektor, 1);
-    hole := TManifoldClass.rotate(hole, 90.0, 0.0, 0.0, True);
-    cube := TManifoldClass.difference(cube, hole, True, True);
 
-    hole := TManifoldClass.cylinder(20.0, 3.5, 3.5, Sektor + 5, 1);
-    cube := TManifoldClass.difference(cube, hole, True, True);
-
-    hole := TManifoldClass.cylinder(20.0, 0.5, 0.5, Sektor + 5, 1);
-    hole := TManifoldClass.translate(hole, 4.25, 0.0, 0.0, True);
-    for i := 0 to HoleCount - 1 do begin
-      hole2 := TManifoldClass.rotate(hole, 0.0, 0.0, 360 / HoleCount * i, False);
-      cube := TManifoldClass.difference(cube, hole2, True, True);
-    end;
-    hole.Free;
-
-    cube := TManifoldClass.calculate_normals(cube, 3, 30.0, True);
-    er := manifold_status(cube.obj);
-    if er <> MANIFOLD_NO_ERROR then begin
-      WriteLn('Fehler in Manifold Geometrie!  (', er, ')');
-    end;
-
-    mesh := TMeshGLClass.get_meshgl(cube, True);
-    n_verts := mesh.meshgl_num_vert;
-    n_tris := mesh.meshgl_num_tri;
-    n_props := mesh.meshgl_num_prop;
-    IndexCount := n_tris * 3;
-
-    WriteLn('--- MANIFOLD CSG ERGEBNIS ---');
-    WriteLn('n_verts: ', n_verts, ' | n_tris: ', n_tris, ' | n_props: ', n_props);
-
-    tris_data := mesh.meshgl_tri_verts;
-    verts_data := mesh.meshgl_vert_properties;
 
     // === OpenGL
 
@@ -216,11 +175,14 @@ begin
     glBufferData(GL_UNIFORM_BUFFER, sizeof(TUBOBuffer), nil, GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, UBO);
 
+    with mani do begin
+      IndexCount:=n_tris*3;
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, n_verts * n_props * SizeOf(TGLfloat), verts_data, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * SizeOf(Tgint), tris_data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount*3 * SizeOf(Tgint), tris_data, GL_STATIC_DRAW);
 
     stride := n_props * SizeOf(single);
 
@@ -231,7 +193,11 @@ begin
     glBindVertexArray(0);
 
     gtk_widget_add_tick_callback(GTK_WIDGET(area), @on_tick, nil, nil);
+
     mesh.Free;
+    end;
+
+    mani.Free;
   end;
 end;
 
