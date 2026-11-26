@@ -121,12 +121,7 @@ end;
 procedure on_realize(area: PGtkGLArea); cdecl;
 var
   priv: PInstPriv;
-
-  // === Manifold
   mani: TMyManifold;
-
-  // === OpenGL
-  stride: TGLsizei;
 begin
   priv := GetPriv(area);
 
@@ -136,16 +131,12 @@ begin
       Exit;
     end;
 
-    // === Manifold
-    mani:=TMyManifold.Create;
-
-
-
+    mani := TMyManifold.Create;
 
     // === OpenGL
 
     with UBOBuffer do begin
-//      objectColor := [1.0, 0.0, 0.0, 0.0];
+      //      objectColor := [1.0, 0.0, 0.0, 0.0];
       objectColor := [Random, Random, Random, 0.0];
     end;
 
@@ -175,27 +166,21 @@ begin
     glBufferData(GL_UNIFORM_BUFFER, sizeof(TUBOBuffer), nil, GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, UBO);
 
-    with mani do begin
-      IndexCount:=n_tris*3;
+    IndexCount := mani.get_n_tris * 3;
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, n_verts * n_props * SizeOf(TGLfloat), verts_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mani.get_n_verts * mani.get_n_props * SizeOf(TGLfloat), mani.get_verts_data, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount*3 * SizeOf(Tgint), tris_data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * 3 * SizeOf(Tgint), mani.get_tris_data, GL_STATIC_DRAW);
 
-    stride := n_props * SizeOf(single);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, Pointer(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * SizeOf(single), Pointer(0));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, Pointer(6 * SizeOf(TGLfloat)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * SizeOf(single), Pointer(3 * SizeOf(TGLfloat)));
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 
     gtk_widget_add_tick_callback(GTK_WIDGET(area), @on_tick, nil, nil);
-
-    mesh.Free;
-    end;
 
     mani.Free;
   end;

@@ -6,38 +6,31 @@ uses
   fp_manifoldc, fp_manifold_obj;
 
 type
-
-  { TMyManifold }
-
-  TMyManifold=class (TObject)
-    public
+  TMyManifold = class(TObject)
+  private
     mesh: TMeshGLClass;
-    n_verts, n_tris, n_props: Tsize_t;
-    verts_data: Psingle;
-    tris_data: Puint32_t;
-    er: TManifoldError;
-    cube, hole, hole2: TManifoldClass;
-    public
+  public
     constructor Create;
     destructor Destroy; override;
-
+    function get_n_verts: Tsize_t;
+    function get_n_tris: Tsize_t;
+    function get_n_props: Tsize_t;
+    function get_verts_data: Psingle;
+    function get_tris_data: Puint32_t;
   end;
 
 implementation
-
-{ TMyManifold }
 
 constructor TMyManifold.Create;
 const
   Sektor = 32;
   HoleCount = 13;
 var
-  i: Integer;
+  i: integer;
+  er: TManifoldError;
+  cube, hole, hole2: TManifoldClass;
 begin
   inherited Create;
-
-  verts_data:= nil;
-  tris_data:= nil;
 
   cube := TManifoldClass.cube(10.0, 10.0, 10.0, 15);
 
@@ -60,28 +53,47 @@ begin
   end;
   hole.Free;
 
-  cube := TManifoldClass.calculate_normals(cube, 3, 30.0, True);
+  cube := TManifoldClass.calculate_normals(cube, 0, 30.0, True);
   er := manifold_status(cube.obj);
   if er <> MANIFOLD_NO_ERROR then begin
     WriteLn('Fehler in Manifold Geometrie!  (', er, ')');
   end;
 
   mesh := TMeshGLClass.get_meshgl(cube, True);
-  n_verts := mesh.meshgl_num_vert;
-  n_tris := mesh.meshgl_num_tri;
-  n_props := mesh.meshgl_num_prop;
 
   WriteLn('--- MANIFOLD CSG ERGEBNIS ---');
-  WriteLn('n_verts: ', n_verts, ' | n_tris: ', n_tris, ' | n_props: ', n_props);
-
-  tris_data := mesh.meshgl_tri_verts;
-  verts_data := mesh.meshgl_vert_properties;
+  WriteLn('n_verts: ', mesh.meshgl_num_vert, ' | n_tris: ', mesh.meshgl_num_tri, ' | n_props: ', mesh.meshgl_num_prop);
 end;
 
 destructor TMyManifold.Destroy;
 begin
+  mesh.Free;
   inherited Destroy;
 end;
 
-end.
+function TMyManifold.get_n_verts: Tsize_t;
+begin
+  Result := mesh.meshgl_num_vert;
+end;
 
+function TMyManifold.get_n_tris: Tsize_t;
+begin
+  Result := mesh.meshgl_num_tri;
+end;
+
+function TMyManifold.get_n_props: Tsize_t;
+begin
+  Result := mesh.meshgl_num_prop;
+end;
+
+function TMyManifold.get_verts_data: Psingle;
+begin
+  Result := mesh.meshgl_vert_properties;
+end;
+
+function TMyManifold.get_tris_data: Puint32_t;
+begin
+  Result := mesh.meshgl_tri_verts;
+end;
+
+end.
