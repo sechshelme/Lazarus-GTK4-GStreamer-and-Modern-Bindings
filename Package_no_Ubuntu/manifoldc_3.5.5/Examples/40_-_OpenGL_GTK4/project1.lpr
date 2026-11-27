@@ -19,8 +19,8 @@ uses
     window, box, button, gl_area, grid: PGtkWidget;
     i: integer;
   const
-    c = 4;
-    r = 4;
+    c = 2;
+    r = 2;
   begin
     g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
     g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);

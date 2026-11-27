@@ -31,7 +31,7 @@ type
     shader: PShader;
     IndexCount: TGLsizei;
     w, step: single;
-    mani: TManifold_Cube;
+    manifoldmesh: TManifold_Mesh;
     mesh_ready, is_unrealized: boolean;
   end;
   PInstPriv = ^TInstPriv;
@@ -110,15 +110,15 @@ begin
   priv := GetPriv(area);
 
   with priv^ do begin
-    if mani = nil then begin
+    if manifoldmesh = nil then begin
       if not is_unrealized then begin
-        mani := TManifold_Cube.Create;
+        manifoldmesh := TManifold_Cube.Create;
         mesh_ready := True;
         Exit;
       end;
     end else begin
-      mani.Free;
-      mani := nil;
+      manifoldmesh.Free;
+      manifoldmesh := nil;
     end;
   end;
 
@@ -141,14 +141,14 @@ begin
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, mani.get_n_verts * 6 * SizeOf(TGLfloat), mani.get_verts_data, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, manifoldmesh.get_n_verts * 6 * SizeOf(TGLfloat), manifoldmesh.get_verts_data, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mani.get_n_tris * 3 * SizeOf(TGLuint), mani.get_tris_data, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, manifoldmesh.get_n_tris * 3 * SizeOf(TGLuint), manifoldmesh.get_tris_data, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
 
-        IndexCount := mani.get_n_tris * 3;
+        IndexCount := manifoldmesh.get_n_tris * 3;
       end;
 
       g_thread_pool_push(worker_pool, area, nil);
@@ -174,7 +174,7 @@ begin
     IndexCount := 0;
     is_unrealized := False;
     mesh_ready := False;
-    mani := nil;
+    manifoldmesh := nil;
 
     with UBOBuffer do begin
       objectColor := [g_random_double, g_random_double, g_random_double, 0.0];
@@ -302,7 +302,7 @@ begin
   with priv^ do begin
     step := 0.5;
     IndexCount := 0;
-    mani := nil;
+    manifoldmesh := nil;
     mesh_ready := False;
     is_unrealized := False;
   end;

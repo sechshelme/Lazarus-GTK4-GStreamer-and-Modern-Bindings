@@ -8,41 +8,44 @@ uses
   Manifold_Mesh;
 
 type
-
-  { TManifold_Cube }
-
-  TManifold_Cube=class(TManifold_Mesh)
-    public
-    function get_verts_data: Psingle;
-    function get_n_verts: Tsize_t;
-    function get_tris_data: Puint32_t;
-    function get_n_tris: Tsize_t;
+  TManifold_Cube = class(TManifold_Mesh)
+  public
+    function CreateMesh: TManifoldClass; override;
   end;
 
 implementation
 
-{ TManifold_Cube }
-
-function TManifold_Cube.get_verts_data: Psingle;
+function TManifold_Cube.CreateMesh: TManifoldClass;
+const
+  Sektor = 32;
+var
+  i: integer;
+  er: TManifoldError;
+  hole, hole2: TManifoldClass;
+  HoleCount: integer;
 begin
-  Result := mesh.meshgl_vert_properties;
-end;
+  HoleCount := g_random_int_range(4, 16);
 
-function TManifold_Cube.get_n_verts: Tsize_t;
-begin
-  Result := mesh.meshgl_num_vert;
-end;
+  Result := TManifoldClass.cube(10.0, 10.0, 10.0, 15);
 
-function TManifold_Cube.get_tris_data: Puint32_t;
-begin
-  Result := mesh.meshgl_tri_verts;
-end;
+  hole := TManifoldClass.cube(20.0, 6.0, 6.0, 1);
+  hole := TManifoldClass.rotate(hole, 20.0, 0.0, 0.0, True);
+  Result := TManifoldClass.difference(Result, hole, True, True);
 
-function TManifold_Cube.get_n_tris: Tsize_t;
-begin
-  Result := mesh.meshgl_num_tri;
-end;
+  hole := TManifoldClass.cylinder(20.0, 3.5, 3.5, Sektor, 1);
+  hole := TManifoldClass.rotate(hole, 90.0, 0.0, 0.0, True);
+  Result := TManifoldClass.difference(Result, hole, True, True);
 
+  hole := TManifoldClass.cylinder(20.0, 3.5, 3.5, Sektor + 5, 1);
+  Result := TManifoldClass.difference(Result, hole, True, True);
+
+  hole := TManifoldClass.cylinder(20.0, 0.5, 0.5, Sektor + 5, 1);
+  hole := TManifoldClass.translate(hole, 4.25, 0.0, 0.0, True);
+  for i := 0 to HoleCount - 1 do begin
+    hole2 := TManifoldClass.rotate(hole, 0.0, 0.0, 360 / HoleCount * i, False);
+    Result := TManifoldClass.difference(Result, hole2, True, True);
+  end;
+  hole.Free;
+end;
 
 end.
-
