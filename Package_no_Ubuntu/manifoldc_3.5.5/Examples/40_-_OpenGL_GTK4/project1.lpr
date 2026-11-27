@@ -19,15 +19,15 @@ uses
     window, box, button, gl_area, grid: PGtkWidget;
     i: integer;
   const
-    c = 12;
-    r = 12;
+    c = 4;
+    r = 4;
   begin
     g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
     g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);
 
     window := gtk_application_window_new(app);
     gtk_window_set_decorated(GTK_WINDOW(window), True);
-    gtk_window_set_title(GTK_WINDOW(window), 'Window');
+    gtk_window_set_title(GTK_WINDOW(window), 'GTK4 and Manifold Demo');
     gtk_window_set_default_size(GTK_WINDOW(window), 400, 400);
 
     box := gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -39,7 +39,7 @@ uses
     gtk_box_append(GTK_BOX(box), grid);
 
     for i := 0 to c * r - 1 do begin
-      gl_area := gl_area_widget_new(g_random_double);
+      gl_area := gl_area_widget_new;
       gtk_widget_set_hexpand(gl_area, True);
       gtk_widget_set_vexpand(gl_area, True);
 
@@ -58,7 +58,7 @@ uses
   var
     app: PGtkApplication;
   begin
-    app := gtk_application_new('org.gtk.example', G_APPLICATION_DEFAULT_FLAGS);
+    app := gtk_application_new('org.gtk.manifold.example', G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, 'activate', G_CALLBACK(@activate), nil);
     g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);

@@ -7,14 +7,14 @@ uses
   fp_glib2, fp_GTK4,
   fp_cglm,
   fp_GL_Tools, fp_epoxy,
-  manifold;
+  Manifold_Mesh, Manifold_Cube;
 
 type
   PGLAreaWidget = type Pointer;
   PGLAreaWidgetClass = type Pointer;
 
 function gl_area_widget_get_type: TGType;
-function gl_area_widget_new(step: single): PGTKWidget;
+function gl_area_widget_new: PGTKWidget;
 
 implementation
 
@@ -31,7 +31,7 @@ type
     shader: PShader;
     IndexCount: TGLsizei;
     w, step: single;
-    mani: TMyManifold;
+    mani: TManifold_Cube;
     mesh_ready, is_unrealized: boolean;
   end;
   PInstPriv = ^TInstPriv;
@@ -112,7 +112,7 @@ begin
   with priv^ do begin
     if mani = nil then begin
       if not is_unrealized then begin
-        mani := TMyManifold.Create;
+        mani := TManifold_Cube.Create;
         mesh_ready := True;
         Exit;
       end;
@@ -337,13 +337,13 @@ begin
   Result := type_id;
 end;
 
-function gl_area_widget_new(step: single): PGTKWidget;
+function gl_area_widget_new: PGTKWidget;
 var
   priv: PInstPriv;
 begin
   Result := g_object_new(gl_area_widget_get_type, nil);
   priv := GetPriv(Result);
-  priv^.step := step;
+  priv^.step := g_random_double_range(0.5, 2.5);
 end;
 
 end.

@@ -1,4 +1,4 @@
-unit manifold;
+unit Manifold_Mesh;
 
 interface
 
@@ -7,30 +7,28 @@ uses
   fp_manifoldc, fp_manifold_obj;
 
 type
-  TMyManifold = class(TObject)
-  private
+  TManifold_Mesh = class(TObject)
+  protected
     mesh: TMeshGLClass;
   public
     constructor Create;
     destructor Destroy; override;
-    function get_verts_data: Psingle;
-    function get_n_verts: Tsize_t;
-    function get_tris_data: Puint32_t;
-    function get_n_tris: Tsize_t;
   end;
 
 implementation
 
-constructor TMyManifold.Create;
+constructor TManifold_Mesh.Create;
 const
   Sektor = 32;
-  HoleCount = 13;
 var
   i: integer;
   er: TManifoldError;
   cube, hole, hole2: TManifoldClass;
+  HoleCount : Integer;
 begin
   inherited Create;
+
+  HoleCount:=g_random_int_range(4, 16);
 
   cube := TManifoldClass.cube(10.0, 10.0, 10.0, 15);
 
@@ -65,30 +63,10 @@ begin
   g_print('n_verts: %u | n_tris: %u | n_props: %u'#10, mesh.meshgl_num_vert, mesh.meshgl_num_tri, mesh.meshgl_num_prop);
 end;
 
-destructor TMyManifold.Destroy;
+destructor TManifold_Mesh.Destroy;
 begin
   mesh.Free;
   inherited Destroy;
-end;
-
-function TMyManifold.get_verts_data: Psingle;
-begin
-  Result := mesh.meshgl_vert_properties;
-end;
-
-function TMyManifold.get_n_verts: Tsize_t;
-begin
-  Result := mesh.meshgl_num_vert;
-end;
-
-function TMyManifold.get_tris_data: Puint32_t;
-begin
-  Result := mesh.meshgl_tri_verts;
-end;
-
-function TMyManifold.get_n_tris: Tsize_t;
-begin
-  Result := mesh.meshgl_num_tri;
 end;
 
 end.
