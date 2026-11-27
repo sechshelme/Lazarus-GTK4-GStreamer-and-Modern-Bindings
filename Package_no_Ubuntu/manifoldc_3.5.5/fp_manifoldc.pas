@@ -529,7 +529,7 @@ procedure manifold_delete_triangulation(m: PManifoldTriangulation); cdecl; exter
 procedure manifold_delete_execution_context(ctx: PManifoldExecutionContext); cdecl; external libmanifoldc;
 
 type
-  Tmani_write_proc = procedure(para1: pchar; para2: pointer); cdecl;
+  Tmani_write_proc = procedure(str: pchar; user_data: pointer); cdecl;
 
 function manifold_read_obj(mem: pointer; obj_file: pchar): PManifoldManifold; cdecl; external libmanifoldc;
 function manifold_meshgl64_read_obj(mem: pointer; obj_file: pchar): PManifoldMeshGL64; cdecl; external libmanifoldc;

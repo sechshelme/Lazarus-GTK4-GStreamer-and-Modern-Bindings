@@ -7,7 +7,7 @@ uses
   fp_glib2, fp_GTK4,
   fp_cglm,
   fp_GL_Tools, fp_epoxy,
-  Manifold_Mesh, Manifold_Cube;
+  Manifold_Mesh, Manifold_Donut, Manifold_Cube;
 
 type
   PGLAreaWidget = type Pointer;
@@ -112,7 +112,7 @@ begin
   with priv^ do begin
     if manifoldmesh = nil then begin
       if not is_unrealized then begin
-        manifoldmesh := TManifold_Cube.Create;
+        manifoldmesh := TManifold_Donut.Create;
         mesh_ready := True;
         Exit;
       end;

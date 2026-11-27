@@ -5,7 +5,7 @@ uses
   fp_epoxy,
   fp_glib2,
   fp_GTK4,
-  GLAreaWidget;
+  GLAreaWidget, Manifold_Donut;
 
   procedure quit_cp(widget: PGtkWidget; user_data: Tgpointer); cdecl;
   var
@@ -19,8 +19,8 @@ uses
     window, box, button, gl_area, grid: PGtkWidget;
     i: integer;
   const
-    c = 2;
-    r = 2;
+    c = 4;
+    r = 4;
   begin
     g_object_set(gtk_settings_get_default, 'gtk-application-prefer-dark-theme', gTrue, nil);
     g_object_set(gtk_settings_get_default, 'gtk-theme-name', 'Adwaita-dark', nil);

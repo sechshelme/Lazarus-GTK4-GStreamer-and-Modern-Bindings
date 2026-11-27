@@ -32,12 +32,14 @@ begin
   cube := CreateMesh;
   if cube <> nil then begin
     cube := TManifoldClass.calculate_normals(cube, 0, 30.0, True);
+
     er := manifold_status(cube.obj);
     if er <> MANIFOLD_NO_ERROR then begin
       g_print('Fehler in Manifold Geometrie! (%d)'#10, Ord(er));
     end;
 
     mesh := TMeshGLClass.get_meshgl(cube, True);
+
     g_print('--- MANIFOLD CSG ERGEBNIS ---'#10);
     g_print('n_verts: %u | n_tris: %u | n_props: %u'#10, mesh.meshgl_num_vert, mesh.meshgl_num_tri, mesh.meshgl_num_prop);
   end else begin
